@@ -147,7 +147,7 @@ export default function HomePage() {
         const { data, error } = await supabase.auth.signUp({
           email: cleanEmail,
           password,
-          options: { emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined }
+          options: { emailRedirectTo: "https://emi-nu.vercel.app" }
         });
         if (error) throw error;
         if (data.user && !data.session) {
@@ -204,7 +204,7 @@ export default function HomePage() {
     setMessage("");
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
-        redirectTo: typeof window !== "undefined" ? window.location.origin : undefined
+        redirectTo: "https://emi-nu.vercel.app"
       });
       if (error) throw error;
       setMessage("Si cette adresse est enregistrée, un lien de réinitialisation vient d’être demandé. Vérifie ta boîte de réception et les courriers indésirables.");
