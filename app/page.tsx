@@ -236,6 +236,17 @@ export default function HomePage() {
 
       <section className="main-column">
         <header className="mobile-header"><a className="brand" href="#"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a><button className="icon-button" aria-label="Compte" onClick={() => user ? void logout() : setAuthOpen(true)}>{user ? <LogOut size={21}/> : <UserRound size={21}/>}</button></header>
+        <section className="welcome-hero" aria-label="Bienvenue sur EMi">
+          <img className="welcome-cover" src="/emi-cover.jpg" alt="Photo de couverture EMi" />
+          <div className="welcome-shade" />
+          <div className="welcome-content">
+            <div className="welcome-brand"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></div>
+            <span className="welcome-kicker">TON ESPACE, TES RENCONTRES</span>
+            <h2>Bienvenue sur EMi</h2>
+            <p>Partage tes moments, découvre de nouvelles histoires et reste proche de ceux qui comptent.</p>
+            <div className="welcome-actions"><button onClick={() => setComposerOpen(true)}><Plus size={17}/> Créer une publication</button><button className="welcome-secondary" onClick={() => { setActive("Accueil"); void loadFeed(); document.querySelector(".feed-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>Découvrir <Compass size={16}/></button></div>
+          </div>
+        </section>
         <div className="feed-header"><div><span className="eyebrow">TON UNIVERS, TES LIENS</span><h1>{active === "Accueil" ? "Le fil des moments" : active}</h1><p>{user ? "Connecté en tant que " + displayName : "Découvre les publications publiques."}</p></div><button className="round-action" onClick={() => setComposerOpen(true)} aria-label="Créer une publication"><Plus size={22}/></button></div>
         <div className="stories-card"><div className="section-label"><strong>Les moments</strong><button onClick={() => setComposerOpen(true)}>Partager <span>→</span></button></div><div className="stories-row"><button className="story" onClick={() => setComposerOpen(true)}><span className="story-ring story-add"><span className="story-avatar"><Plus size={18}/></span><span className="story-plus"><Plus size={13}/></span></span><span className="story-name">Ajouter</span></button><div className="story-name" style={{alignSelf:"center",maxWidth:230,lineHeight:1.6}}>Les stories apparaîtront ici quand elles seront disponibles.</div></div></div>
         <div className="feed-tabs"><button className={active === "Accueil" ? "tab-active" : ""} onClick={() => {setActive("Accueil"); void loadFeed();}}>Publications</button><button className={active === "Abonnements" ? "tab-active" : ""} onClick={() => void loadFollowingFeed()}>Abonnements</button><button className={active === "Vidéos" ? "tab-active" : ""} onClick={() => setActive("Vidéos")}>Vidéos <Video size={14}/></button></div>
