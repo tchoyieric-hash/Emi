@@ -23,6 +23,10 @@ export default function HomePage() {
   const [signup, setSignup] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [authMethod, setAuthMethod] = useState<"email" | "phone">("email");
+  const [phone, setPhone] = useState("");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
   const [caption, setCaption] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
@@ -92,6 +96,35 @@ export default function HomePage() {
     setBusy(true);
     setMessage("");
     try {
+      if (authMethod === "phone") {
+        const cleanPhone = phone.replace(/[\\s()-]/g, "");
+        if (!/^\\+[1-9]\\d{7,14}$/.test(cleanPhone)) {
+          throw new Error("Saisis ton numéro au format international, par exemple +2376XXXXXXXX.");
+        }
+        if (!otpSent) {
+          const { error } = await supabase.auth.signInWithOtp({ phone: cleanPhone });
+          if (error) throw error;
+          setPhone(cleanPhone);
+          setOtpSent(true);
+          setMessage("Code SMS demandé. Saisis le code reçu pour terminer la connexion. Si aucun SMS n’arrive, l’authentification par téléphone ou le fournisseur SMS doit être activé dans Supabase.");
+          return;
+        }
+        const { data, error } = await supabase.auth.verifyOtp({ phone: cleanPhone, token: otpCode.trim(), type: "sms" });
+        if (error) throw error;
+        if (!data.user) throw new Error("Supabase n’a pas confirmé la connexion par téléphone.");
+        const fallbackName = cleanPhone.replace(/[^0-9]/g, "").slice(-8);
+        const { data: p, error: profileReadError } = await supabase.from("profiles").select("id,username,display_name,avatar_url").eq("id", data.user.id).maybeSingle();
+        if (profileReadError) throw new Error("Connexion réussie, mais lecture du profil impossible : " + profileReadError.message);
+        if (!p) {
+          const { error: profileError } = await supabase.from("profiles").upsert({ id: data.user.id, username: "membre" + fallbackName, display_name: "Membre " + fallbackName });
+          if (profileError) throw new Error("Compte connecté, mais création du profil impossible : " + profileError.message);
+        }
+        setUser({ id: data.user.id, ...(p || {}), email: data.user.email });
+        setAuthOpen(false);
+        setOtpSent(false);
+        setOtpCode("");
+        return;
+      }
       const cleanEmail = email.trim().toLowerCase();
       if (signup) {
         const { data, error } = await supabase.auth.signUp({
@@ -273,7 +306,7 @@ export default function HomePage() {
 
       <nav className="mobile-nav" aria-label="Navigation mobile"><button className={active === "Accueil" ? "mobile-active" : ""} onClick={() => {setActive("Accueil");void loadFeed();}}><Home size={21}/><span>Accueil</span></button><button onClick={() => setActive("Découvrir")}><Compass size={21}/><span>Explorer</span></button><button className="mobile-create" onClick={() => setComposerOpen(true)}><Plus size={23}/></button><button onClick={() => setActive("Vidéos")}><Video size={21}/><span>Vidéos</span></button><button onClick={() => user ? setActive("Mon profil") : setAuthOpen(true)}><UserRound size={21}/><span>Profil</span></button></nav>
 
-      {(composerOpen || authOpen) && <div className="modal-backdrop" onClick={() => {setComposerOpen(false);setAuthOpen(false);}}><div className="modal-card" onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={() => {setComposerOpen(false);setAuthOpen(false);}} aria-label="Fermer"><X size={20}/></button>{message && <div role="alert" style={{margin:"12px 0",padding:12,borderRadius:10,border:"1px solid #8d6de0",background:"#282235",color:"#f7f3ff",fontSize:13,lineHeight:1.6,overflowWrap:"anywhere"}}>{message}</div>}{composerOpen ? <><div className="modal-icon"><Camera size={23}/></div><span className="eyebrow">EMi · TON ESPACE</span><h2>Un moment à partager ?</h2><form onSubmit={publish}><textarea value={caption} onChange={e=>setCaption(e.target.value)} placeholder="Qu’as-tu envie de partager ?" maxLength={5000} rows={4} style={{width:"100%",resize:"vertical",padding:12,margin:"12px 0",borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" onChange={e=>setFile(e.target.files?.[0] || null)} style={{display:"none"}}/><button type="button" onClick={()=>fileInput.current?.click()} className="nav-item" style={{border:"1px solid #393643",marginBottom:12}}><ImageIcon size={18}/><span>{file ? file.name : "Ajouter une photo ou vidéo (50 Mo max.)"}</span></button>{file && <button type="button" onClick={()=>setFile(null)} className="nav-item"><X size={16}/> Retirer le fichier</button>}<p style={{fontSize:11,lineHeight:1.6,color:"#aaa6b7"}}>Ta publication sera publique. Publier nécessite un compte connecté.</p><button className="modal-primary" disabled={busy} type="submit">{busy ? "Publication en cours…" : "Publier"}</button></form></> : <><div className="modal-icon"><UserRound size={23}/></div><span className="eyebrow">EMi · TON COMPTE</span><h2>{signup ? "Créer ton compte" : "Content de te revoir"}</h2><p>{signup ? "Inscris-toi avec ton adresse e-mail." : "Connecte-toi pour publier et aimer les moments."}</p><form onSubmit={authenticate}><input type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="Adresse e-mail" autoComplete="email" style={{width:"100%",padding:13,marginBottom:10,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><input type="password" required minLength={6} value={password} onChange={e=>setPassword(e.target.value)} placeholder="Mot de passe (6 caractères minimum)" autoComplete={signup?"new-password":"current-password"} style={{width:"100%",padding:13,marginBottom:14,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><button className="modal-primary" disabled={busy} type="submit">{busy ? "Patiente…" : signup ? "Créer mon compte" : "Se connecter"}</button></form><button onClick={()=>setSignup(v=>!v)} style={{width:"100%",marginTop:14,border:0,background:"none",color:"#c7b4ff",fontSize:12}}>{signup ? "J’ai déjà un compte" : "Créer un nouveau compte"}</button></>}</div></div>}
+      {(composerOpen || authOpen) && <div className="modal-backdrop" onClick={() => {setComposerOpen(false);setAuthOpen(false);}}><div className="modal-card" onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={() => {setComposerOpen(false);setAuthOpen(false);}} aria-label="Fermer"><X size={20}/></button>{message && <div role="alert" style={{margin:"12px 0",padding:12,borderRadius:10,border:"1px solid #8d6de0",background:"#282235",color:"#f7f3ff",fontSize:13,lineHeight:1.6,overflowWrap:"anywhere"}}>{message}</div>}{composerOpen ? <><div className="modal-icon"><Camera size={23}/></div><span className="eyebrow">EMi · TON ESPACE</span><h2>Un moment à partager ?</h2><form onSubmit={publish}><textarea value={caption} onChange={e=>setCaption(e.target.value)} placeholder="Qu’as-tu envie de partager ?" maxLength={5000} rows={4} style={{width:"100%",resize:"vertical",padding:12,margin:"12px 0",borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" onChange={e=>setFile(e.target.files?.[0] || null)} style={{display:"none"}}/><button type="button" onClick={()=>fileInput.current?.click()} className="nav-item" style={{border:"1px solid #393643",marginBottom:12}}><ImageIcon size={18}/><span>{file ? file.name : "Ajouter une photo ou vidéo (50 Mo max.)"}</span></button>{file && <button type="button" onClick={()=>setFile(null)} className="nav-item"><X size={16}/> Retirer le fichier</button>}<p style={{fontSize:11,lineHeight:1.6,color:"#aaa6b7"}}>Ta publication sera publique. Publier nécessite un compte connecté.</p><button className="modal-primary" disabled={busy} type="submit">{busy ? "Publication en cours…" : "Publier"}</button></form></> : <><div className="modal-icon"><UserRound size={23}/></div><span className="eyebrow">EMi · TON COMPTE</span><h2>{signup ? "Créer ton compte" : "Content de te revoir"}</h2><p>{signup ? "Inscris-toi avec ton adresse e-mail." : "Connecte-toi pour publier et aimer les moments."}</p>{!signup && <div style={{display:"flex",gap:8,margin:"12px 0"}}><button type="button" onClick={()=>{setAuthMethod("email");setMessage("");}} style={{flex:1,padding:10,borderRadius:9,border:"1px solid #8d6de0",background:authMethod==="email"?"#302443":"#121218",color:"#f7f6fb"}}>E-mail</button><button type="button" onClick={()=>{setAuthMethod("phone");setMessage("");}} style={{flex:1,padding:10,borderRadius:9,border:"1px solid #8d6de0",background:authMethod==="phone"?"#302443":"#121218",color:"#f7f6fb"}}>Téléphone / SMS</button></div>}<form onSubmit={authenticate}>{authMethod==="phone" && !signup ? <><input type="tel" required value={phone} onChange={e=>setPhone(e.target.value)} placeholder="Téléphone (ex. +2376XXXXXXXX)" autoComplete="tel" disabled={otpSent} style={{width:"100%",padding:13,marginBottom:10,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/>{otpSent && <input type="text" inputMode="numeric" autoComplete="one-time-code" required value={otpCode} onChange={e=>setOtpCode(e.target.value)} placeholder="Code reçu par SMS" style={{width:"100%",padding:13,marginBottom:14,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/>}</> : <><input type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="Adresse e-mail" autoComplete="email" style={{width:"100%",padding:13,marginBottom:10,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><input type="password" required minLength={6} value={password} onChange={e=>setPassword(e.target.value)} placeholder="Mot de passe (6 caractères minimum)" autoComplete={signup?"new-password":"current-password"} style={{width:"100%",padding:13,marginBottom:14,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/></>}<button className="modal-primary" disabled={busy} type="submit">{busy ? "Patiente…" : authMethod==="phone" && !signup ? (otpSent ? "Vérifier le code SMS" : "Recevoir un code SMS") : signup ? "Créer mon compte" : "Se connecter"}</button></form>{authMethod==="email" && <button onClick={()=>setSignup(v=>!v)} style={{width:"100%",marginTop:14,border:0,background:"none",color:"#c7b4ff",fontSize:12}}>{signup ? "J’ai déjà un compte" : "Créer un nouveau compte"}</button>}</>}</div></div>}
     </main>
   );
 }
