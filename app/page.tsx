@@ -65,29 +65,53 @@ export default function HomePage() {
   useEffect(() => { void loadFeed(); }, [loadFeed]);
 
   async function authenticate(e: React.FormEvent) {
-    e.preventDefault(); if (!supabase) return;
-    setBusy(true); setMessage("");
+    e.preventDefault();
+    if (!supabase) { setMessage("Connexion Supabase non configurée. Réessaie plus tard."); return; }
+    setBusy(true);
+    setMessage("");
     try {
+      const cleanEmail = email.trim().toLowerCase();
       if (signup) {
-        const { data, error } = await supabase.auth.signUp({ email, password });
+        const { data, error } = await supabase.auth.signUp({
+          email: cleanEmail,
+          password,
+          options: { emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined }
+        });
         if (error) throw error;
-        if (data.user && !data.session) setMessage("Compte créé. Vérifie ta boîte mail pour confirmer l’adresse avant de te connecter.");
-        else if (data.user) {
-          await supabase.from("profiles").upsert({ id: data.user.id, username: email.split("@")[0], display_name: email.split("@")[0] });
-          setUser({ id: data.user.id, email });
+        if (data.user && !data.session) {
+          setMessage("Demande d’inscription envoyée. Vérifie ta boîte de réception et les courriers indésirables pour confirmer ton adresse e-mail. Si aucun e-mail n’arrive, l’inscription doit être vérifiée dans les réglages Auth de Supabase.");
+          setPassword("");
+          return;
         }
+        if (!data.user) throw new Error("Supabase n’a pas retourné de compte. Vérifie les réglages d’inscription.");
+        const { error: profileError } = await supabase.from("profiles").upsert({
+          id: data.user.id,
+          username: cleanEmail.split("@")[0],
+          display_name: cleanEmail.split("@")[0]
+        });
+        if (profileError) setMessage("Compte créé, mais le profil n’a pas pu être créé : " + profileError.message);
+        setUser({ id: data.user.id, email: cleanEmail });
+        setAuthOpen(false);
+        setPassword("");
       } else {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password });
         if (error) throw error;
-        if (data.user) {
-          const { data: p } = await supabase.from("profiles").select("id,username,display_name,avatar_url").eq("id", data.user.id).maybeSingle();
-          if (!p) await supabase.from("profiles").upsert({ id: data.user.id, username: email.split("@")[0], display_name: email.split("@")[0] });
-          setUser({ id: data.user.id, email, ...(p || {}) });
+        if (!data.user) throw new Error("Connexion non confirmée par Supabase.");
+        const { data: p, error: profileReadError } = await supabase.from("profiles").select("id,username,display_name,avatar_url").eq("id", data.user.id).maybeSingle();
+        if (profileReadError) throw new Error("Connexion réussie, mais lecture du profil impossible : " + profileReadError.message);
+        if (!p) {
+          const { error: profileError } = await supabase.from("profiles").upsert({ id: data.user.id, username: cleanEmail.split("@")[0], display_name: cleanEmail.split("@")[0] });
+          if (profileError) throw new Error("Compte connecté, mais création du profil impossible : " + profileError.message);
         }
+        setUser({ id: data.user.id, email: cleanEmail, ...(p || {}) });
+        setAuthOpen(false);
+        setPassword("");
       }
-      setAuthOpen(false); setPassword("");
-    } catch (err) { setMessage(err instanceof Error ? err.message : "Connexion impossible."); }
-    finally { setBusy(false); }
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Inscription/connexion impossible. Vérifie les réglages Auth de Supabase.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function publish(e: React.FormEvent) {
