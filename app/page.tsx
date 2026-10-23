@@ -28,6 +28,10 @@ export default function HomePage() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [query, setQuery] = useState("");
+  const [openComments, setOpenComments] = useState<string[]>([]);
+  const [comments, setComments] = useState<Record<string, {id:string;user_id:string;content:string;created_at:string;profiles?:{username?:string|null;display_name?:string|null}|null}[]>>({});
+  const [commentDrafts, setCommentDrafts] = useState<Record<string,string>>({});
+  const [followedIds, setFollowedIds] = useState<string[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
 
   const loadFeed = useCallback(async () => {
@@ -137,6 +141,49 @@ export default function HomePage() {
     finally { setBusy(false); }
   }
 
+  async function loadComments(postId: string) {
+    if (!supabase) return;
+    const { data, error } = await supabase.from("post_comments").select("id,user_id,content,created_at,profiles(username,display_name)").eq("post_id", postId).order("created_at", { ascending: true }).limit(100);
+    if (error) { setMessage("Impossible de charger les commentaires : " + error.message); return; }
+    setComments(old => ({ ...old, [postId]: (data || []) as typeof old[string] }));
+  }
+
+  async function addComment(postId: string, e: React.FormEvent) {
+    e.preventDefault();
+    const content = (commentDrafts[postId] || "").trim();
+    if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour commenter."); return; }
+    if (!content) return;
+    setBusy(true);
+    const { error } = await supabase.from("post_comments").insert({ post_id: postId, user_id: user.id, content });
+    if (error) setMessage("Impossible d’ajouter le commentaire : " + error.message);
+    else { setCommentDrafts(old => ({ ...old, [postId]: "" })); await loadComments(postId); }
+    setBusy(false);
+  }
+
+  async function loadFollowingFeed() {
+    if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour voir tes abonnements."); return; }
+    const { data: follows, error: followError } = await supabase.from("follows").select("following_id").eq("follower_id", user.id);
+    if (followError) { setMessage("Impossible de charger les abonnements : " + followError.message); return; }
+    const ids = (follows || []).map(row => row.following_id as string);
+    setFollowedIds(ids);
+    if (!ids.length) { setPosts([]); setActive("Abonnements"); setMessage("Tu ne suis encore personne. Le fil apparaîtra quand tu suivras des membres."); return; }
+    const { data, error } = await supabase.from("posts").select("id,user_id,content,created_at,media_type,media_urls,visibility,profiles(username,display_name,avatar_url)").in("user_id", ids).in("visibility", ["public","followers"]).order("created_at", { ascending: false }).limit(40);
+    if (error) { setMessage("Impossible de charger le fil des abonnements : " + error.message); return; }
+    setPosts((data || []) as unknown as Post[]); setActive("Abonnements");
+  }
+
+  async function toggleFollow(targetId: string) {
+    if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour suivre un membre."); return; }
+    if (targetId === user.id) return;
+    const isFollowing = followedIds.includes(targetId);
+    const result = isFollowing
+      ? await supabase.from("follows").delete().eq("follower_id", user.id).eq("following_id", targetId)
+      : await supabase.from("follows").insert({ follower_id: user.id, following_id: targetId });
+    if (result.error) { setMessage("Impossible de modifier l’abonnement : " + result.error.message); return; }
+    setFollowedIds(old => isFollowing ? old.filter(id => id !== targetId) : [...old, targetId]);
+    setMessage(isFollowing ? "Abonnement supprimé." : "Tu suis maintenant ce membre.");
+  }
+
   async function toggleLike(postId: string) {
     if (!supabase) return;
     if (!user) { setAuthOpen(true); setMessage("Connecte-toi pour aimer une publication."); return; }
@@ -170,10 +217,10 @@ export default function HomePage() {
         <header className="mobile-header"><a className="brand" href="#"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a><button className="icon-button" aria-label="Compte" onClick={() => user ? void logout() : setAuthOpen(true)}>{user ? <LogOut size={21}/> : <UserRound size={21}/>}</button></header>
         <div className="feed-header"><div><span className="eyebrow">TON UNIVERS, TES LIENS</span><h1>{active === "Accueil" ? "Le fil des moments" : active}</h1><p>{user ? "Connecté en tant que " + displayName : "Découvre les publications publiques."}</p></div><button className="round-action" onClick={() => setComposerOpen(true)} aria-label="Créer une publication"><Plus size={22}/></button></div>
         <div className="stories-card"><div className="section-label"><strong>Les moments</strong><button onClick={() => setComposerOpen(true)}>Partager <span>→</span></button></div><div className="stories-row"><button className="story" onClick={() => setComposerOpen(true)}><span className="story-ring story-add"><span className="story-avatar"><Plus size={18}/></span><span className="story-plus"><Plus size={13}/></span></span><span className="story-name">Ajouter</span></button><div className="story-name" style={{alignSelf:"center",maxWidth:230,lineHeight:1.6}}>Les stories apparaîtront ici quand elles seront disponibles.</div></div></div>
-        <div className="feed-tabs"><button className={active === "Accueil" ? "tab-active" : ""} onClick={() => {setActive("Accueil"); void loadFeed();}}>Publications</button><button className={active === "Abonnements" ? "tab-active" : ""} onClick={() => { if (!user) { setAuthOpen(true); return; } setActive("Abonnements"); setMessage("Le fil des abonnements sera activé après la mise en place complète des relations."); }}>Abonnements</button><button className={active === "Vidéos" ? "tab-active" : ""} onClick={() => setActive("Vidéos")}>Vidéos <Video size={14}/></button></div>
+        <div className="feed-tabs"><button className={active === "Accueil" ? "tab-active" : ""} onClick={() => {setActive("Accueil"); void loadFeed();}}>Publications</button><button className={active === "Abonnements" ? "tab-active" : ""} onClick={() => void loadFollowingFeed()}>Abonnements</button><button className={active === "Vidéos" ? "tab-active" : ""} onClick={() => setActive("Vidéos")}>Vidéos <Video size={14}/></button></div>
         {message && <div className="demo-note" role="status"><Sparkles size={16}/><span>{message}</span><button style={{marginLeft:"auto",background:"none",border:0,color:"inherit"}} onClick={() => setMessage("")} aria-label="Fermer"><X size={15}/></button></div>}
         {!supabase ? <div className="post-card"><h2>Connexion à configurer</h2><p>Les variables d’environnement Supabase sont absentes. Vérifie NEXT_PUBLIC_SUPABASE_URL et NEXT_PUBLIC_SUPABASE_ANON_KEY dans Vercel.</p></div> : visiblePosts.length === 0 ? <div className="post-card" style={{padding:28,textAlign:"center"}}><div className="modal-icon" style={{margin:"0 auto 16px"}}><Sparkles size={23}/></div><h2 style={{fontSize:20}}>{query ? "Aucun résultat" : active === "Vidéos" ? "Aucune vidéo pour le moment" : "Le fil commence ici"}</h2><p style={{color:"#aaa6b7",fontSize:13,lineHeight:1.7}}>{query ? "Essaie un autre mot." : "Aucune publication réelle n’est encore disponible. Sois le premier à partager un moment."}</p><button className="modal-primary" style={{maxWidth:260}} onClick={() => setComposerOpen(true)}>Créer une publication</button></div> :
-        <div className="feed-list">{visiblePosts.filter(p => active !== "Vidéos" || p.media_type === "video").map(post => { const author = post.profiles?.display_name || post.profiles?.username || "Membre EMi"; return <article className="post-card" key={post.id}><div className="post-top"><div className="avatar avatar-sunset">{author.slice(0,2).toUpperCase()}</div><div className="post-author"><strong>{author}</strong><span>@{post.profiles?.username || "membre"} · {new Date(post.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</span></div></div>{post.content && <p className="post-caption">{post.content}</p>}{(post.media_urls || []).map((url,i) => post.media_type === "video" ? <video key={url+i} src={url} controls playsInline style={{width:"100%",maxHeight:420,borderRadius:13,background:"#09090d"}}/> : <img key={url+i} src={url} alt="Publication partagée sur EMi" style={{width:"100%",maxHeight:500,objectFit:"contain",borderRadius:13,background:"#09090d"}}/>)}<div className="post-actions"><button className={liked.includes(post.id) ? "liked" : ""} onClick={() => void toggleLike(post.id)}><Heart size={20} fill={liked.includes(post.id) ? "currentColor" : "none"}/><span>{likes[post.id] || 0}</span></button><button onClick={() => setMessage("Les commentaires seront connectés dans la prochaine étape.")}><MessageCircle size={20}/><span>Commentaires</span></button><button onClick={() => { if (navigator.share) void navigator.share({title:"EMi",text:post.content,url:location.href}).catch(()=>{}); else setMessage("Utilise le menu de partage de ton navigateur pour partager EMi."); }}><Send size={19}/><span>Partager</span></button></div></article>; })}</div>}
+        <div className="feed-list">{visiblePosts.filter(p => active !== "Vidéos" || p.media_type === "video").map(post => { const author = post.profiles?.display_name || post.profiles?.username || "Membre EMi"; return <article className="post-card" key={post.id}><div className="post-top"><div className="avatar avatar-sunset">{author.slice(0,2).toUpperCase()}</div><div className="post-author"><strong>{author}</strong><span>@{post.profiles?.username || "membre"} · {new Date(post.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</span></div>{user && user.id !== post.user_id && <button onClick={() => void toggleFollow(post.user_id)} style={{marginLeft:"auto",border:"1px solid #393643",borderRadius:9,padding:"7px 10px",background:followedIds.includes(post.user_id)?"#282235":"#a78bfa17",color:"#d8c9ff",fontSize:11}}>{followedIds.includes(post.user_id) ? "Suivi" : "Suivre"}</button>}</div>{post.content && <p className="post-caption">{post.content}</p>}{(post.media_urls || []).map((url,i) => post.media_type === "video" ? <video key={url+i} src={url} controls playsInline style={{width:"100%",maxHeight:420,borderRadius:13,background:"#09090d"}}/> : <img key={url+i} src={url} alt="Publication partagée sur EMi" style={{width:"100%",maxHeight:500,objectFit:"contain",borderRadius:13,background:"#09090d"}}/>)}<div className="post-actions"><button className={liked.includes(post.id) ? "liked" : ""} onClick={() => void toggleLike(post.id)}><Heart size={20} fill={liked.includes(post.id) ? "currentColor" : "none"}/><span>{likes[post.id] || 0}</span></button><button onClick={() => { const isOpen = openComments.includes(post.id); setOpenComments(old => isOpen ? old.filter(id => id !== post.id) : [...old, post.id]); if (!isOpen) void loadComments(post.id); }}><MessageCircle size={20}/><span>Commentaires{comments[post.id]?.length ? ` (${comments[post.id].length})` : ""}</span></button><button onClick={() => { if (navigator.share) void navigator.share({title:"EMi",text:post.content,url:location.href}).catch(()=>{}); else setMessage("Utilise le menu de partage de ton navigateur pour partager EMi."); }}><Send size={19}/><span>Partager</span></button></div>{openComments.includes(post.id) && <div className="comments-panel" style={{borderTop:"1px solid #2b2b35",marginTop:14,paddingTop:12}}><div style={{display:"grid",gap:10,marginBottom:12}}>{(comments[post.id] || []).map(comment => <div key={comment.id} style={{fontSize:12,lineHeight:1.6}}><strong>{comment.profiles?.display_name || comment.profiles?.username || "Membre"} </strong><span style={{color:"#d0ced9",overflowWrap:"anywhere"}}>{comment.content}</span></div>)}{comments[post.id]?.length === 0 && <p style={{fontSize:12,color:"#92919f"}}>Aucun commentaire. Lance la conversation !</p>}</div><form onSubmit={e => void addComment(post.id,e)} style={{display:"flex",gap:8}}><input aria-label="Écrire un commentaire" value={commentDrafts[post.id] || ""} onChange={e=>setCommentDrafts(old=>({...old,[post.id]:e.target.value}))} maxLength={2000} placeholder="Écrire un commentaire…" style={{flex:1,minWidth:0,padding:10,borderRadius:9,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><button type="submit" disabled={busy} className="modal-primary" style={{width:"auto",padding:"0 14px"}}>Envoyer</button></form></div>}</article>; })}</div>}
       </section>
 
       <aside className="right-column"><div className="right-search"><Search size={18}/><input aria-label="Rechercher" placeholder="Rechercher sur EMi..." value={query} onChange={e=>setQuery(e.target.value)}/></div><div className="welcome-card"><div className="welcome-orb"><Sparkles size={23}/></div><span className="eyebrow">BIENVENUE DANS TON MONDE</span><h2>Chaque moment<br/>mérite d’exister.</h2><p>Partage tes histoires et garde le lien avec ta communauté.</p><button onClick={() => setComposerOpen(true)}>Partager un moment <Plus size={16}/></button></div><div className="suggest-card"><div className="section-label"><strong>Ton compte</strong></div><p style={{fontSize:12,lineHeight:1.7,color:"#aaa6b7"}}>{user ? "Tu es connecté. Tes publications sont enregistrées dans Supabase." : "Connecte-toi pour publier et aimer les moments."}</p><button className="modal-primary" onClick={() => user ? void logout() : setAuthOpen(true)}>{user ? "Se déconnecter" : "Connexion / Inscription"}</button></div><div className="right-footer">À propos · Confidentialité · Aide<br/>© 2026 EMi</div></aside>
