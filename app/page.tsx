@@ -97,8 +97,8 @@ export default function HomePage() {
     setMessage("");
     try {
       if (authMethod === "phone") {
-        const cleanPhone = phone.replace(/[\\s()-]/g, "");
-        if (!/^\\+[1-9]\\d{7,14}$/.test(cleanPhone)) {
+        const cleanPhone = phone.replace(/[\s()-]/g, "");
+        if (!/^\+[1-9]\d{7,14}$/.test(cleanPhone)) {
           throw new Error("Saisis ton numéro au format international, par exemple +2376XXXXXXXX.");
         }
         if (!otpSent) {
