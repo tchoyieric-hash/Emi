@@ -240,9 +240,16 @@ export default function HomePage() {
 
   async function loadComments(postId: string) {
     if (!supabase) return;
-    const { data, error } = await supabase.from("post_comments").select("id,user_id,content,created_at,profiles(username,display_name)").eq("post_id", postId).order("created_at", { ascending: true }).limit(100);
+    const { data, error } = await supabase.from("post_comments").select("id,user_id,content,created_at").eq("post_id", postId).order("created_at", { ascending: true }).limit(100);
     if (error) { setMessage("Impossible de charger les commentaires : " + error.message); return; }
-    setComments(old => ({ ...old, [postId]: (data || []) as typeof old[string] }));
+    const rawComments = (data || []) as {id:string;user_id:string;content:string;created_at:string}[];
+    const authorIds = [...new Set(rawComments.map(comment => comment.user_id))];
+    const { data: authorProfiles, error: profilesError } = authorIds.length
+      ? await supabase.from("profiles").select("id,username,display_name").in("id", authorIds)
+      : { data: [], error: null };
+    if (profilesError) { setMessage("Impossible de charger les profils des commentateurs : " + profilesError.message); return; }
+    const profilesById = new Map((authorProfiles || []).map(profile => [profile.id, profile]));
+    setComments(old => ({ ...old, [postId]: rawComments.map(comment => ({ ...comment, profiles: profilesById.get(comment.user_id) || null })) }));
   }
 
   async function addComment(postId: string, e: React.FormEvent) {
