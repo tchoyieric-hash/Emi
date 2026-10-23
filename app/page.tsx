@@ -66,6 +66,17 @@ export default function HomePage() {
     return () => { alive = false; listener.subscription.unsubscribe(); };
   }, []);
 
+  useEffect(() => {
+    if (!supabase || !user) { setFollowedIds([]); return; }
+    let alive = true;
+    supabase.from("follows").select("following_id").eq("follower_id", user.id).then(({ data, error }) => {
+      if (!alive) return;
+      if (error) { setMessage("Impossible de charger tes abonnements : " + error.message); return; }
+      setFollowedIds((data || []).map(row => row.following_id as string));
+    });
+    return () => { alive = false; };
+  }, [user?.id]);
+
   useEffect(() => { void loadFeed(); }, [loadFeed]);
 
   async function authenticate(e: React.FormEvent) {
@@ -112,7 +123,17 @@ export default function HomePage() {
         setPassword("");
       }
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Inscription/connexion impossible. Vérifie les réglages Auth de Supabase.");
+      const raw = err instanceof Error ? err.message : "Inscription/connexion impossible. Vérifie les réglages Auth de Supabase.";
+      const normalized = raw.toLowerCase();
+      if (normalized.includes("email rate limit exceeded") || normalized.includes("rate limit")) {
+        setMessage("Supabase limite temporairement les e-mails d’inscription. Attends avant de réessayer, ou configure un fournisseur SMTP dans Supabase Auth pour recevoir les e-mails de confirmation.");
+      } else if (normalized.includes("user already registered") || normalized.includes("already been registered")) {
+        setMessage("Cette adresse e-mail possède déjà un compte. Connecte-toi plutôt que de créer un nouveau compte.");
+      } else if (normalized.includes("invalid login credentials")) {
+        setMessage("Adresse e-mail ou mot de passe incorrect. Vérifie tes informations puis réessaie.");
+      } else {
+        setMessage(raw);
+      }
     } finally {
       setBusy(false);
     }
