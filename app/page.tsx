@@ -237,7 +237,7 @@ export default function HomePage() {
       <section className="main-column">
         <header className="mobile-header"><a className="brand" href="#"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a><button className="icon-button" aria-label="Compte" onClick={() => user ? void logout() : setAuthOpen(true)}>{user ? <LogOut size={21}/> : <UserRound size={21}/>}</button></header>
         <section className="welcome-hero" aria-label="Bienvenue sur EMi">
-          <img className="welcome-cover" src="/emi-cover.jpg" alt="Photo de couverture EMi" />
+          <img className="welcome-cover" src="/emi-cover-3.jpg" alt="Photo de couverture EMi" />
           <div className="welcome-shade" />
           <div className="welcome-content">
             <div className="welcome-brand"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></div>
