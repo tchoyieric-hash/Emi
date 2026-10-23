@@ -211,7 +211,12 @@ export default function HomePage() {
       if (error) throw error;
       setMessage("Si cette adresse correspond à une inscription en attente, un nouveau courriel de confirmation a été envoyé. Vérifie aussi les courriers indésirables.");
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Impossible de renvoyer le courriel pour le moment.");
+      const errorText = err instanceof Error ? err.message : "";
+      if (/rate limit|too many requests|email rate/i.test(errorText)) {
+        setMessage("Trop de demandes de courriel ont été envoyées. Attends un moment avant de réessayer et vérifie ta boîte de réception ainsi que les courriers indésirables.");
+      } else {
+        setMessage(errorText || "Impossible de renvoyer le courriel pour le moment.");
+      }
     } finally {
       setBusy(false);
     }
