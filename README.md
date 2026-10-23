@@ -1,30 +1,30 @@
 # EMi
 
-EMi is a fresh social-app foundation built with Next.js, React, TypeScript and Supabase, designed for deployment on Vercel.
+EMi est une application sociale en construction, basée sur Next.js, React, TypeScript et Neon PostgreSQL, avec déploiement sur Vercel.
 
-## Current state
+## État actuel
 
-- Responsive French-language starter interface
-- Interactive navigation, story placeholders and post likes
-- Supabase browser-client helper and environment template
-- No production database credentials committed
-- No live authentication, posts, messaging, media upload or ephemeral stories yet
+- Interface responsive en français et interactions de démonstration.
+- Neon PostgreSQL configuré côté serveur via `DATABASE_URL`.
+- Endpoint de diagnostic : `/api/health/db`, qui exécute une requête réelle sur la base.
+- Le fil, les profils, les messages, l'authentification, les stories et les médias ne sont pas encore des fonctions de production.
 
-## Local development
+## Développement local
 
-1. Install Node.js 20 or newer.
-2. Run `npm install`.
-3. Copy `.env.example` to `.env.local`.
-4. Add the Supabase project URL and public anon/publishable key.
-5. Run `npm run dev`.
+1. Installer Node.js 20 ou plus récent.
+2. Exécuter `npm install`.
+3. Copier `.env.example` vers `.env.local`.
+4. Renseigner `DATABASE_URL` avec l'URI PostgreSQL de Neon (ne jamais la publier ni la mettre dans une variable `NEXT_PUBLIC_*`).
+5. Exécuter `npm run dev`.
 
-## Environment variables
+## Variables d'environnement
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `DATABASE_URL` — chaîne de connexion PostgreSQL Neon, réservée au serveur.
 
-Never put a Supabase service-role key or other server secret in a `NEXT_PUBLIC_*` variable or commit it to Git.
+## Vérification
 
-## Deployment
+Ouvrir `/api/health/db`. Une réponse avec `ok: true` confirme que l'API a exécuté une requête sur la base. Une réponse d'erreur doit être résolue avant toute fusion.
 
-Import this repository into Vercel, configure the environment variables in Preview first, then test the preview before promoting any production deployment.
+## Déploiement
+
+Tester d'abord la branche Preview sur Vercel. Ne pas fusionner vers `main` avant validation de la connexion et des fonctions concernées.
