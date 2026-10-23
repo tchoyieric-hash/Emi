@@ -36,9 +36,16 @@ export default function HomePage() {
 
   const loadFeed = useCallback(async () => {
     if (!supabase) { setMessage("Connexion Supabase non configurée. Vérifie les variables d’environnement Vercel."); return; }
-    const { data, error } = await supabase.from("posts").select("id,user_id,content,created_at,media_type,media_urls,visibility,profiles(username,display_name,avatar_url)").eq("visibility", "public").order("created_at", { ascending: false }).limit(40);
+    const { data, error } = await supabase.from("posts").select("id,user_id,content,created_at,media_type,media_urls,visibility").eq("visibility", "public").order("created_at", { ascending: false }).limit(40);
     if (error) { setMessage("Impossible de charger le fil : " + error.message); return; }
-    const realPosts = (data || []) as unknown as Post[];
+    const rawPosts = (data || []) as unknown as Post[];
+    const authorIds = [...new Set(rawPosts.map(post => post.user_id))];
+    const { data: authorProfiles, error: profilesError } = authorIds.length
+      ? await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", authorIds)
+      : { data: [], error: null };
+    if (profilesError) { setMessage("Impossible de charger les profils des auteurs : " + profilesError.message); return; }
+    const profilesById = new Map((authorProfiles || []).map(profile => [profile.id, profile]));
+    const realPosts = rawPosts.map(post => ({ ...post, profiles: profilesById.get(post.user_id) || null }));
     setPosts(realPosts);
     if (realPosts.length) {
       const ids = realPosts.map(p => p.id);
@@ -188,9 +195,16 @@ export default function HomePage() {
     const ids = (follows || []).map(row => row.following_id as string);
     setFollowedIds(ids);
     if (!ids.length) { setPosts([]); setActive("Abonnements"); setMessage("Tu ne suis encore personne. Le fil apparaîtra quand tu suivras des membres."); return; }
-    const { data, error } = await supabase.from("posts").select("id,user_id,content,created_at,media_type,media_urls,visibility,profiles(username,display_name,avatar_url)").in("user_id", ids).in("visibility", ["public","followers"]).order("created_at", { ascending: false }).limit(40);
+    const { data, error } = await supabase.from("posts").select("id,user_id,content,created_at,media_type,media_urls,visibility").in("user_id", ids).in("visibility", ["public","followers"]).order("created_at", { ascending: false }).limit(40);
     if (error) { setMessage("Impossible de charger le fil des abonnements : " + error.message); return; }
-    setPosts((data || []) as unknown as Post[]); setActive("Abonnements");
+    const rawPosts = (data || []) as unknown as Post[];
+    const authorIds = [...new Set(rawPosts.map(post => post.user_id))];
+    const { data: authorProfiles, error: profilesError } = authorIds.length
+      ? await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", authorIds)
+      : { data: [], error: null };
+    if (profilesError) { setMessage("Impossible de charger les profils des auteurs : " + profilesError.message); return; }
+    const profilesById = new Map((authorProfiles || []).map(profile => [profile.id, profile]));
+    setPosts(rawPosts.map(post => ({ ...post, profiles: profilesById.get(post.user_id) || null }))); setActive("Abonnements");
   }
 
   async function toggleFollow(targetId: string) {
