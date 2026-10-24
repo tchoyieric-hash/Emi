@@ -2,13 +2,14 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "EMi — Moments, proches, communauté",
-  description: "Partage tes moments et reste proche de ta communauté avec EMi.",
+  title: "EMi — Un lien, une histoire, une famille",
+  description: "Un lien, une histoire, une famille. Partage tes moments et reste proche de ta communauté avec EMi.",
   applicationName: "EMi",
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "EMi" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#101014",
+  themeColor: "#5520c9",
   width: "device-width",
   initialScale: 1,
 };
