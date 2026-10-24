@@ -186,3 +186,9 @@
  .chat-compose { padding:9px; }
  .chat-compose .modal-primary { padding:10px; font-size:11px; }
 }
+
+
+/* Notifications et pièces jointes de la messagerie */
+.notification-unread-dot{width:9px;height:9px;flex:none;border-radius:50%;background:#bda2ff;box-shadow:0 0 0 4px #bda2ff22}
+.chat-media{display:block;width:min(100%,360px);max-height:360px;object-fit:contain;border-radius:10px;margin-top:8px;background:#09080c}
+.chat-compose .profile-back-button{display:grid;place-items:center;min-width:42px;padding:10px}
