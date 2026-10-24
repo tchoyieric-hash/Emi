@@ -50,6 +50,13 @@ export default function HomePage() {
   const [profilePostCount, setProfilePostCount] = useState(0);
   const [profileFollowerCount, setProfileFollowerCount] = useState(0);
   const [profileFollowingCount, setProfileFollowingCount] = useState(0);
+  const [conversations, setConversations] = useState<{id:string; title:string; is_group:boolean; other?:Profile; lastMessage?:string; created_at:string}[]>([]);
+  const [activeConversation, setActiveConversation] = useState<string | null>(null);
+  const [chatMessages, setChatMessages] = useState<{id:string;conversation_id:string;sender_id:string;content:string;media_url?:string|null;created_at:string}[]>([]);
+  const [chatDraft, setChatDraft] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatSearch, setChatSearch] = useState("");
+
   const [profileEditorOpen, setProfileEditorOpen] = useState(false);
   const [profileNameDraft, setProfileNameDraft] = useState("");
   const [profileUsernameDraft, setProfileUsernameDraft] = useState("");
@@ -394,6 +401,96 @@ export default function HomePage() {
     setBusy(false);
   }
 
+
+  async function loadConversations() {
+    if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour utiliser la messagerie."); return; }
+    setChatLoading(true);
+    try {
+      const { data: memberships, error: memberError } = await supabase.from("conversation_participants").select("conversation_id").eq("user_id", user.id).order("joined_at", { ascending: false });
+      if (memberError) throw memberError;
+      const ids = (memberships || []).map(row => row.conversation_id as string);
+      if (!ids.length) { setConversations([]); setActiveConversation(null); return; }
+      const { data: convs, error: convError } = await supabase.from("conversations").select("id,title,is_group,created_at").in("id", ids).order("updated_at", { ascending: false });
+      if (convError) throw convError;
+      const { data: participants, error: partError } = await supabase.from("conversation_participants").select("conversation_id,user_id").in("conversation_id", ids);
+      if (partError) throw partError;
+      const otherIds = [...new Set((participants || []).filter(p => p.user_id !== user.id).map(p => p.user_id as string))];
+      const { data: profiles, error: profileError } = otherIds.length ? await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", otherIds) : {data:[],error:null};
+      if (profileError) throw profileError;
+      const { data: recent, error: msgError } = await supabase.from("messages").select("id,conversation_id,sender_id,content,created_at").in("conversation_id", ids).order("created_at", {ascending:false}).limit(100);
+      if (msgError) throw msgError;
+      const pMap = new Map((profiles || []).map(p => [p.id,p as Profile]));
+      const result = (convs || []).map(conv => {
+        const member = (participants || []).find(p => p.conversation_id === conv.id && p.user_id !== user.id);
+        const last = (recent || []).find(m => m.conversation_id === conv.id);
+        return {...conv, other: member ? pMap.get(member.user_id) : undefined, lastMessage: last?.content || (last ? "Média partagé" : "Commence la conversation")};
+      });
+      setConversations(result);
+      if (activeConversation && !ids.includes(activeConversation)) setActiveConversation(null);
+    } catch (err) { setMessage(err instanceof Error ? "Messagerie : " + err.message : "Impossible de charger les conversations."); }
+    finally { setChatLoading(false); }
+  }
+
+  async function openConversation(conversationId: string) {
+    if (!supabase || !user) { setAuthOpen(true); return; }
+    setActiveConversation(conversationId);
+    const { data, error } = await supabase.from("messages").select("id,conversation_id,sender_id,content,media_url,created_at").eq("conversation_id", conversationId).order("created_at", {ascending:true}).limit(200);
+    if (error) { setMessage("Impossible d’ouvrir cette conversation : " + error.message); return; }
+    setChatMessages((data || []) as typeof chatMessages);
+    await supabase.from("conversation_participants").update({last_read_at:new Date().toISOString()}).eq("conversation_id",conversationId).eq("user_id",user.id);
+  }
+
+  async function startConversation(target: Profile) {
+    if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour envoyer un message."); return; }
+    if (target.id === user.id) return;
+    setChatLoading(true);
+    try {
+      const { data: memberships, error: membershipError } = await supabase.from("conversation_participants").select("conversation_id").eq("user_id",user.id);
+      if (membershipError) throw membershipError;
+      const ids = (memberships || []).map(row => row.conversation_id as string);
+      if (ids.length) {
+        const { data: participants, error } = await supabase.from("conversation_participants").select("conversation_id,user_id").in("conversation_id",ids).eq("user_id",target.id);
+        if (error) throw error;
+        if (participants?.length) { await loadConversations(); setActive("Messages"); await openConversation(participants[0].conversation_id); return; }
+      }
+      const { data: conv, error: createError } = await supabase.from("conversations").insert({created_by:user.id,is_group:false,title:""}).select("id").single();
+      if (createError) throw createError;
+      const { error: participantError } = await supabase.from("conversation_participants").insert([{conversation_id:conv.id,user_id:user.id},{conversation_id:conv.id,user_id:target.id}]);
+      if (participantError) throw participantError;
+      await loadConversations(); setActive("Messages"); await openConversation(conv.id);
+    } catch (err) { setMessage(err instanceof Error ? "Impossible de démarrer la conversation : " + err.message : "Impossible de démarrer la conversation."); }
+    finally { setChatLoading(false); }
+  }
+
+  async function sendChatMessage(e: React.FormEvent) {
+    e.preventDefault();
+    const content = chatDraft.trim();
+    if (!supabase || !user || !activeConversation || !content) return;
+    if (content.length > 5000) { setMessage("Le message est trop long (5 000 caractères maximum)."); return; }
+    setChatDraft("");
+    const { data, error } = await supabase.from("messages").insert({conversation_id:activeConversation,sender_id:user.id,content}).select("id,conversation_id,sender_id,content,media_url,created_at").single();
+    if (error) { setChatDraft(content); setMessage("Envoi impossible : " + error.message); return; }
+    setChatMessages(old => [...old, data as typeof chatMessages[number]]);
+    await supabase.from("conversations").update({updated_at:new Date().toISOString()}).eq("id",activeConversation);
+    void loadConversations();
+  }
+
+  useEffect(() => {
+    if (active !== "Messages" || !user || !supabase) return;
+    void loadConversations();
+  }, [active, user?.id]);
+
+  useEffect(() => {
+    if (!activeConversation || !supabase) return;
+    const channel = supabase.channel("emi-chat-" + activeConversation)
+      .on("postgres_changes", {event:"INSERT",schema:"public",table:"messages",filter:"conversation_id=eq." + activeConversation}, payload => {
+        const row = payload.new as typeof chatMessages[number];
+        setChatMessages(old => old.some(message => message.id === row.id) ? old : [...old,row]);
+        void loadConversations();
+      }).subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [activeConversation]);
+
   async function loadFollowingFeed() {
     if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour voir tes abonnements."); return; }
     const { data: follows, error: followError } = await supabase.from("follows").select("following_id").eq("follower_id", user.id);
@@ -550,6 +647,24 @@ export default function HomePage() {
         <div className="stories-card" style={{display:["Reels","Vidéos","Découvrir","Messages"].includes(active) ? "none" : undefined}}><div className="section-label"><strong>Les stories</strong><button onClick={() => { if (!user) { setAuthOpen(true); setMessage("Connecte-toi pour partager une story."); } else setStoryComposerOpen(true); }}>Partager <span>→</span></button></div><div className="stories-row"><button className="story" onClick={() => { if (!user) { setAuthOpen(true); setMessage("Connecte-toi pour partager une story."); } else setStoryComposerOpen(true); }}><span className="story-ring story-add"><span className="story-avatar">{user?.avatar_url ? <img src={user.avatar_url} alt=""/> : <Plus size={18}/>}</span><span className="story-plus"><Plus size={13}/></span></span><span className="story-name">Ta story</span></button>{stories.map((story, index) => { const author = story.profiles?.display_name || story.profiles?.username || "Membre EMi"; return <button className="story" key={story.id} onClick={() => setActiveStory(story)} aria-label={"Voir la story de " + author}><span className="story-ring"><span className="story-avatar">{story.profiles?.avatar_url ? <img src={story.profiles.avatar_url} alt=""/> : <img src={story.media_type === "image" ? story.media_url : "/emi-story-video.svg"} alt=""/>}</span></span><span className="story-name">{story.user_id === user?.id ? "Votre story" : author}</span></button>; })}{stories.length === 0 && <span className="stories-empty">Les stories de la communauté apparaîtront ici.</span>}</div></div>
         <div className="feed-tabs" style={{display:["Reels","Découvrir","Messages"].includes(active) ? "none" : undefined}}><button className={active === "Accueil" ? "tab-active" : ""} onClick={() => {setActive("Accueil"); void loadFeed();}}>Publications</button><button className={active === "Abonnements" ? "tab-active" : ""} onClick={() => void loadFollowingFeed()}>Abonnements</button><button className={active === "Vidéos" ? "tab-active" : ""} onClick={() => setActive("Vidéos")}>Vidéos <Video size={14}/></button></div>
         </>}
+
+        {active === "Messages" && !viewingProfile && <section className="chat-shell">
+          <aside className="chat-sidebar">
+            <label className="discovery-search"><Search size={17}/><input value={chatSearch} onChange={e=>setChatSearch(e.target.value)} placeholder="Rechercher une conversation…" aria-label="Rechercher une conversation"/></label>
+            <div className="chat-list">
+              {conversations.filter(conv => ((conv.other?.display_name || conv.other?.username || conv.title || "Conversation").toLowerCase().includes(chatSearch.toLowerCase()))).map(conv => <button key={conv.id} className={"chat-list-item "+(activeConversation===conv.id?"chat-selected":"")} onClick={()=>void openConversation(conv.id)}><span className="chat-avatar">{conv.other?.avatar_url?<img src={conv.other.avatar_url} alt=""/>:(conv.other?.display_name||conv.other?.username||conv.title||"EM").slice(0,2).toUpperCase()}</span><span className="chat-list-copy"><strong>{conv.other?.display_name||conv.other?.username||conv.title||"Conversation"}</strong><small>{conv.lastMessage}</small></span></button>)}
+              {!conversations.length && <p className="chat-empty">{chatLoading?"Chargement…":"Pas encore de conversation. Va dans Découvrir et choisis un membre pour lui écrire."}</p>}
+            </div>
+            <button className="profile-back-button" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}>Trouver des membres</button>
+          </aside>
+          <section className="chat-window">
+            {!activeConversation ? <div className="chat-welcome"><MessageCircle size={30}/><h2>Ta messagerie EMi</h2><p>Choisis une conversation ou découvre un membre pour envoyer un message privé.</p><button className="modal-primary" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}>Découvrir des membres</button></div> : <>
+              <div className="chat-topbar"><button className="profile-back-button" onClick={()=>setActiveConversation(null)}>← Conversations</button><strong>{conversations.find(conv=>conv.id===activeConversation)?.other?.display_name || conversations.find(conv=>conv.id===activeConversation)?.other?.username || "Conversation privée"}</strong><span className="chat-secure-label">Privé · temps réel</span></div>
+              <div className="chat-messages" aria-live="polite">{chatMessages.map(msg=><div key={msg.id} className={"chat-bubble "+(msg.sender_id===user?.id?"chat-mine":"chat-theirs")}><p>{msg.content}</p><time>{new Date(msg.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</time></div>)}</div>
+              <form className="chat-compose" onSubmit={sendChatMessage}><input value={chatDraft} onChange={e=>setChatDraft(e.target.value)} maxLength={5000} placeholder="Écris un message…" aria-label="Écris un message" disabled={!user}/><button className="modal-primary" type="submit" disabled={!chatDraft.trim()}><Send size={17}/> Envoyer</button></form>
+            </>}
+          </section>
+        </section>}
         {message && <div className="demo-note" role="status"><Sparkles size={16}/><span>{message}</span><button style={{marginLeft:"auto",background:"none",border:0,color:"inherit"}} onClick={() => setMessage("")} aria-label="Fermer"><X size={15}/></button></div>}
         {active === "Découvrir" && !viewingProfile ? <section className="discovery-panel"><label className="discovery-search"><Search size={19}/><input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => { if (e.key === "Enter") void loadExploreProfiles(); }} placeholder="Rechercher un nom ou @pseudo…" aria-label="Rechercher des membres"/></label><button className="modal-primary" onClick={() => void loadExploreProfiles()} disabled={exploreLoading}>{exploreLoading ? "Recherche…" : "Rechercher"}</button><div className="discovery-list">{exploreProfiles.map(profile => <article className="discovery-person" key={profile.id}><button className="discovery-person-main" onClick={() => void openProfile(profile.id)}><span className="discovery-avatar">{profile.avatar_url ? <img src={profile.avatar_url} alt=""/> : (profile.display_name || profile.username || "M").slice(0,2).toUpperCase()}</span><span><strong>{profile.display_name || profile.username || "Membre EMi"}</strong><small>@{profile.username || "membre"}</small>{profile.bio && <small className="discovery-bio">{profile.bio}</small>}</span></button><button className="profile-back-button" onClick={() => void openProfile(profile.id)}>Voir le profil</button></article>)}{!exploreLoading && exploreProfiles.length === 0 && <div className="empty-feature"><Compass size={30}/><h2>Découvre ta communauté</h2><p>Recherche un nom ou un nom d’utilisateur pour trouver des membres EMi.</p></div>}</div></section> : active === "Messages" && !viewingProfile ? <section className="empty-feature messages-empty"><div className="modal-icon"><MessageCircle size={25}/></div><h2>Ta messagerie EMi</h2><p>Les conversations privées ne sont pas encore reliées à un service de messagerie enregistré. Les messages ne peuvent pas encore être envoyés ni reçus.</p><button className="modal-primary" onClick={() => { if (!user) setAuthOpen(true); else { setActive("Découvrir"); void loadExploreProfiles(); } }}>{user ? "Trouver des membres" : "Se connecter"}</button></section> : !supabase ? <div className="post-card"><h2>Connexion à configurer</h2><p>Les variables d’environnement Supabase sont absentes. Vérifie NEXT_PUBLIC_SUPABASE_URL et NEXT_PUBLIC_SUPABASE_ANON_KEY dans Vercel.</p></div> : filteredPosts.length === 0 ? <div className="post-card" style={{padding:28,textAlign:"center"}}><div className="modal-icon" style={{margin:"0 auto 16px"}}><Sparkles size={23}/></div><h2 style={{fontSize:20}}>{query ? "Aucun résultat" : active === "Reels" || active === "Vidéos" ? "Aucun Reel pour le moment" : "Le fil commence ici"}</h2><p style={{color:"#aaa6b7",fontSize:13,lineHeight:1.7}}>{query ? "Essaie un autre mot." : "Aucune publication réelle n’est encore disponible. Sois le premier à partager un moment."}</p><button className="modal-primary" style={{maxWidth:260}} onClick={() => setComposerOpen(true)}>Créer une publication</button></div> :
         <div className="feed-list">{filteredPosts.map(post => { const author = post.profiles?.display_name || post.profiles?.username || "Membre EMi"; return <article className={active === "Reels" && post.media_type === "video" ? "post-card reel-post" : "post-card"} key={post.id}><div className="post-top"><button className="post-avatar-button" onClick={() => void openProfile(post.user_id)} aria-label={"Voir le profil de " + author}><div className="avatar avatar-sunset">{post.profiles?.avatar_url ? <img src={post.profiles.avatar_url} alt=""/> : author.slice(0,2).toUpperCase()}</div></button><button className="post-author post-author-button" onClick={() => void openProfile(post.user_id)}><strong>{author}</strong><span>@{post.profiles?.username || "membre"} · {new Date(post.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</span></button>{user && user.id !== post.user_id && <button onClick={() => void toggleFollow(post.user_id)} style={{marginLeft:"auto",border:"1px solid #393643",borderRadius:9,padding:"7px 10px",background:followedIds.includes(post.user_id)?"#282235":"#a78bfa17",color:"#d8c9ff",fontSize:11}}>{followedIds.includes(post.user_id) ? "Suivi" : "Suivre"}</button>}</div>{post.content && <p className="post-caption">{post.content}</p>}{(post.media_urls || []).map((url,i) => post.media_type === "video" ? <video key={url+i} src={url} controls={active !== "Reels"} autoPlay={active === "Reels"} muted={active === "Reels"} loop={active === "Reels"} playsInline preload={active === "Reels" ? "metadata" : "none"} className={active === "Reels" ? "reel-video" : undefined} style={active === "Reels" ? undefined : {width:"100%",maxHeight:560,borderRadius:0,background:"#09090d",objectFit:"contain"}}/> : <img key={url+i} src={url} alt="Publication partagée sur EMi" style={{width:"100%",maxHeight:650,objectFit:"contain",borderRadius:0,background:"#09090d"}}/>)}<div className="post-actions"><button className={liked.includes(post.id) ? "liked" : ""} onClick={() => void toggleLike(post.id)}><Heart size={20} fill={liked.includes(post.id) ? "currentColor" : "none"}/><span>{likes[post.id] || 0}</span></button><button onClick={() => { const isOpen = openComments.includes(post.id); setOpenComments(old => isOpen ? old.filter(id => id !== post.id) : [...old, post.id]); if (!isOpen) void loadComments(post.id); }}><MessageCircle size={20}/><span>Commentaires{comments[post.id]?.length ? ` (${comments[post.id].length})` : ""}</span></button><button onClick={() => { if (navigator.share) void navigator.share({title:"EMi",text:post.content,url:location.href}).catch(()=>{}); else setMessage("Utilise le menu de partage de ton navigateur pour partager EMi."); }}><Send size={19}/><span>Partager</span></button></div>{openComments.includes(post.id) && <div className="comments-panel" style={{borderTop:"1px solid #2b2b35",marginTop:14,paddingTop:12}}><div style={{display:"grid",gap:10,marginBottom:12}}>{(comments[post.id] || []).map(comment => <div key={comment.id} style={{fontSize:12,lineHeight:1.6}}><strong>{comment.profiles?.display_name || comment.profiles?.username || "Membre"} </strong><span style={{color:"#d0ced9",overflowWrap:"anywhere"}}>{comment.content}</span></div>)}{comments[post.id]?.length === 0 && <p style={{fontSize:12,color:"#92919f"}}>Aucun commentaire. Lance la conversation !</p>}</div><form onSubmit={e => void addComment(post.id,e)} style={{display:"flex",gap:8}}><input aria-label="Écrire un commentaire" value={commentDrafts[post.id] || ""} onChange={e=>setCommentDrafts(old=>({...old,[post.id]:e.target.value}))} maxLength={2000} placeholder="Écrire un commentaire…" style={{flex:1,minWidth:0,padding:10,borderRadius:9,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><button type="submit" disabled={busy} className="modal-primary" style={{width:"auto",padding:"0 14px"}}>Envoyer</button></form></div>}</article>; })}</div>}
