@@ -405,3 +405,10 @@
 .emi-compose-music-label input{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:#121218;color:var(--text)}
 .emi-compose-audio-preview{width:100%;height:38px;margin-top:12px}
 .emi-compose-music-remove{margin-top:8px;border:0;background:none;color:#e87883;font-size:11px}
+
+.emi-post-music{display:grid;grid-template-columns:36px minmax(80px,1fr);gap:9px;align-items:center;margin:10px 0 14px;padding:12px;border:1px solid #c9a96645;border-radius:14px;background:linear-gradient(120deg,#251b32,#14111b)}
+.emi-post-music-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:#c9a96618;color:#dfc68c}
+.emi-post-music-title{display:grid;gap:3px;min-width:0}
+.emi-post-music-title strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--text)}
+.emi-post-music-title small{font-size:9px;color:var(--muted)}
+.emi-post-music audio{grid-column:1/-1;width:100%;height:35px}
