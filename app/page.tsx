@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bell, Camera, Compass, Heart, Home, Repeat2, LogIn, LogOut, MessageCircle, Plus, Search, Send, Settings, Sparkles, UserRound, Video, X, Image as ImageIcon, Clapperboard } from "lucide-react";
+import { Bell, Camera, ChevronLeft, Compass, Heart, Home, Repeat2, LogIn, LogOut, MessageCircle, Plus, Search, Send, Settings, Sparkles, UserRound, Video, X, Image as ImageIcon, Clapperboard } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 type Post = {
@@ -782,6 +782,23 @@ export default function HomePage() {
     finally { setExploreLoading(false); }
   }
 
+  function goBack() {
+    if (viewingProfile) {
+      setViewingProfile(null);
+      setProfileTab("posts");
+      setActive("Accueil");
+      void loadFeed();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    if (active !== "Accueil") {
+      setActive("Accueil");
+      setQuery("");
+      void loadFeed();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
   async function openProfile(targetId: string) {
     if (!supabase) return;
     setMessage("");
@@ -953,7 +970,7 @@ export default function HomePage() {
       </aside>
 
       <section className="main-column">
-        <header className="mobile-header"><a className="brand" href="#"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a><button className="icon-button" aria-label="Compte" onClick={() => user ? void logout() : setAuthOpen(true)}>{user ? <LogOut size={21}/> : <UserRound size={21}/>}</button></header>
+        <header className="mobile-header">{(viewingProfile || active !== "Accueil") && <button className="icon-button back-navigation" aria-label="Retour à l’accueil" onClick={goBack}><ChevronLeft size={23}/></button>}<a className="brand" href="#" onClick={e => { e.preventDefault(); goBack(); }}><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a><button className="icon-button" aria-label="Compte" onClick={() => user ? void logout() : setAuthOpen(true)}>{user ? <LogOut size={21}/> : <UserRound size={21}/>}</button></header>
         {!viewingProfile && !["Découvrir","Messages","Reels","Vidéos"].includes(active) && <section className="welcome-hero" aria-label="Bienvenue sur EMi">
           <img className="welcome-cover" src="https://raw.githubusercontent.com/tchoyieric-hash/Emi/main/emi-cover-3.jpg" alt="Photo de couverture EMi" />
           <div className="welcome-shade" />
@@ -965,7 +982,7 @@ export default function HomePage() {
             <div className="welcome-actions"><button onClick={() => setComposerOpen(true)}><Plus size={17}/> Créer une publication</button><button className="welcome-secondary" onClick={() => { setActive("Accueil"); void loadFeed(); document.querySelector(".feed-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>Découvrir <Compass size={16}/></button></div>
           </div>
         </section>}
-        <div className="feed-header"><div><span className="eyebrow">{viewingProfile ? "EMi · PROFIL PERSONNEL" : "TON UNIVERS, TES LIENS"}</span><h1>{viewingProfile ? currentProfileName : active === "Accueil" ? "Le fil des moments" : active === "Découvrir" ? "Découvrir la communauté" : active === "Reels" || active === "Vidéos" ? "Reels EMi" : active === "Messages" ? "Ta messagerie" : active}</h1><p>{viewingProfile ? "@" + (viewingProfile.username || "membre") : active === "Découvrir" ? "Trouve des membres et découvre leurs publications." : active === "Messages" ? "Retrouve tes conversations au même endroit." : active === "Reels" || active === "Vidéos" ? "Les vidéos de la communauté, dans un fil dédié." : user ? "Connecté en tant que " + displayName : "Découvre les publications publiques."}</p></div><button className="round-action" onClick={() => viewingProfile && user?.id === viewingProfile.id ? startProfileEdit() : setCreateStudioOpen(true)} aria-label="Action profil ou publication">{viewingProfile && user?.id === viewingProfile.id ? <Settings size={22}/> : <Plus size={22}/>}</button></div>
+        <div className="feed-header">{(viewingProfile || active !== "Accueil") && <button className="icon-button desktop-back-navigation" aria-label="Retour à l’accueil" onClick={goBack}><ChevronLeft size={22}/></button>}<div><span className="eyebrow">{viewingProfile ? "EMi · PROFIL PERSONNEL" : "TON UNIVERS, TES LIENS"}</span><h1>{viewingProfile ? currentProfileName : active === "Accueil" ? "Le fil des moments" : active === "Découvrir" ? "Découvrir la communauté" : active === "Reels" || active === "Vidéos" ? "Reels EMi" : active === "Messages" ? "Ta messagerie" : active}</h1><p>{viewingProfile ? "@" + (viewingProfile.username || "membre") : active === "Découvrir" ? "Trouve des membres et découvre leurs publications." : active === "Messages" ? "Retrouve tes conversations au même endroit." : active === "Reels" || active === "Vidéos" ? "Les vidéos de la communauté, dans un fil dédié." : user ? "Connecté en tant que " + displayName : "Découvre les publications publiques."}</p></div><button className="round-action" onClick={() => viewingProfile && user?.id === viewingProfile.id ? startProfileEdit() : setCreateStudioOpen(true)} aria-label="Action profil ou publication">{viewingProfile && user?.id === viewingProfile.id ? <Settings size={22}/> : <Plus size={22}/>}</button></div>
         {viewingProfile && <section className="profile-page"><div className="profile-page-top"><div className="profile-page-avatar-wrap"><div className="profile-page-avatar">{viewingProfile.avatar_url ? <img src={viewingProfile.avatar_url} alt={"Photo de " + currentProfileName}/> : <span>{currentProfileName.slice(0,2).toUpperCase()}</span>}</div></div><div className="profile-page-identity"><h2>{currentProfileName}</h2><span className="profile-username">@{viewingProfile.username || "membre"}</span><div className="profile-stats"><div><strong>{profilePostCount}</strong><span>publications</span></div><button type="button" onClick={() => void loadProfileConnections(viewingProfile.id, "followers")}><strong>{profileFollowerCount}</strong><span>abonnés</span></button><button type="button" onClick={() => void loadProfileConnections(viewingProfile.id, "following")}><strong>{profileFollowingCount}</strong><span>abonnements</span></button></div></div></div><p className="profile-bio">{viewingProfile.bio?.trim() || "Bienvenue sur mon profil EMi ✨"}</p><div className="profile-page-actions">{user?.id === viewingProfile.id ? <button className="modal-primary" onClick={startProfileEdit}><Settings size={16}/> Modifier le profil</button> : user ? <button className="modal-primary" onClick={() => void toggleFollow(viewingProfile.id)}>{followedIds.includes(viewingProfile.id) ? "Abonné(e)" : "Suivre"}</button> : <button className="modal-primary" onClick={() => setAuthOpen(true)}>Se connecter</button>}<button className="profile-back-button" onClick={() => { setViewingProfile(null); setActive("Accueil"); void loadFeed(); }}>Partager le profil</button><button className="profile-back-button profile-more-action" onClick={() => setCreateStudioOpen(true)} aria-label="Plus d’actions">•••</button></div><div className="profile-tabs" role="tablist" aria-label="Contenus du profil"><button role="tab" aria-selected={profileTab==="posts"} className={profileTab==="posts"?"selected":""} onClick={()=>setProfileTab("posts")} aria-label="Publications"><span>▦</span></button><button role="tab" aria-selected={profileTab==="reels"} className={profileTab==="reels"?"selected":""} onClick={()=>setProfileTab("reels")} aria-label="Reels"><Clapperboard size={19}/></button><button role="tab" aria-selected={profileTab==="shared"} className={profileTab==="shared"?"selected":""} onClick={()=>setProfileTab("shared")} aria-label="Repartages"><span>↻</span></button><button role="tab" aria-selected={profileTab==="tagged"} className={profileTab==="tagged"?"selected":""} onClick={()=>setProfileTab("tagged")} aria-label="Identifications"><UserRound size={19}/></button></div></section>}
         {!viewingProfile && <>
         <div className="stories-card" style={{display:["Reels","Vidéos","Découvrir","Messages"].includes(active) ? "none" : undefined}}><div className="section-label"><strong>Les stories</strong><button onClick={() => { if (!user) { setAuthOpen(true); setMessage("Connecte-toi pour partager une story."); } else setStoryComposerOpen(true); }}>Partager <span>→</span></button></div><div className="stories-row"><button className="story" onClick={() => { if (!user) { setAuthOpen(true); setMessage("Connecte-toi pour partager une story."); } else setStoryComposerOpen(true); }}><span className="story-ring story-add"><span className="story-avatar">{user?.avatar_url ? <img src={user.avatar_url} alt=""/> : <Plus size={18}/>}</span><span className="story-plus"><Plus size={13}/></span></span><span className="story-name">Ta story</span></button>{stories.map((story, index) => { const author = story.profiles?.display_name || story.profiles?.username || "Membre EMi"; return <button className="story" key={story.id} onClick={() => setActiveStory(story)} aria-label={"Voir la story de " + author}><span className="story-ring"><span className="story-avatar">{story.profiles?.avatar_url ? <img src={story.profiles.avatar_url} alt=""/> : <img src={story.media_type === "image" ? story.media_url : "/emi-story-video.svg"} alt=""/>}</span></span><span className="story-name">{story.user_id === user?.id ? "Votre story" : author}</span></button>; })}{stories.length === 0 && <span className="stories-empty">Les stories de la communauté apparaîtront ici.</span>}</div></div>
