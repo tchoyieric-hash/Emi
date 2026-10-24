@@ -198,7 +198,7 @@ export default function HomePage() {
       observer.disconnect();
       videos.forEach(video => video.pause());
     };
-  }, [active, filteredPosts.length]);
+  }, [active, posts.length]);
 
   useEffect(() => {
     if (!activeStory || activeStory.media_type === "video") return;
