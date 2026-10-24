@@ -37,7 +37,9 @@ export default function HomePage() {
   const [comments, setComments] = useState<Record<string, {id:string;user_id:string;content:string;created_at:string;profiles?:{username?:string|null;display_name?:string|null}|null}[]>>({});
   const [commentDrafts, setCommentDrafts] = useState<Record<string,string>>({});
   const [followedIds, setFollowedIds] = useState<string[]>([]);
-  const [viewingProfile, setViewingProfile] = useState<Profile | null>(null);\n  const [exploreProfiles, setExploreProfiles] = useState<Profile[]>([]);\n  const [exploreLoading, setExploreLoading] = useState(false);
+  const [viewingProfile, setViewingProfile] = useState<Profile | null>(null);
+  const [exploreProfiles, setExploreProfiles] = useState<Profile[]>([]);
+  const [exploreLoading, setExploreLoading] = useState(false);
   const [profilePostCount, setProfilePostCount] = useState(0);
   const [profileFollowerCount, setProfileFollowerCount] = useState(0);
   const [profileFollowingCount, setProfileFollowingCount] = useState(0);
@@ -319,7 +321,21 @@ export default function HomePage() {
     setPosts(rawPosts.map(post => ({ ...post, profiles: profilesById.get(post.user_id) || null }))); setActive("Abonnements");
   }
 
-  async function loadExploreProfiles() {\n    if (!supabase) return;\n    setExploreLoading(true);\n    try {\n      let request = supabase.from("profiles").select("id,username,display_name,avatar_url,bio").limit(60);\n      const term = query.trim().replace(/[%,()]/g, "");\n      if (term) request = request.or(`display_name.ilike.%${term}%,username.ilike.%${term}%`);\n      const { data, error } = await request;\n      if (error) throw error;\n      setExploreProfiles(((data || []) as Profile[]).filter(profile => profile.id !== user?.id));\n    } catch (err) { setMessage(err instanceof Error ? "Impossible de charger Explorer : " + err.message : "Impossible de charger Explorer."); }\n    finally { setExploreLoading(false); }\n  }\n\n  async function openProfile(targetId: string) {
+  async function loadExploreProfiles() {
+    if (!supabase) return;
+    setExploreLoading(true);
+    try {
+      let request = supabase.from("profiles").select("id,username,display_name,avatar_url,bio").limit(60);
+      const term = query.trim().replace(/[%,()]/g, "");
+      if (term) request = request.or(`display_name.ilike.%${term}%,username.ilike.%${term}%`);
+      const { data, error } = await request;
+      if (error) throw error;
+      setExploreProfiles(((data || []) as Profile[]).filter(profile => profile.id !== user?.id));
+    } catch (err) { setMessage(err instanceof Error ? "Impossible de charger Explorer : " + err.message : "Impossible de charger Explorer."); }
+    finally { setExploreLoading(false); }
+  }
+
+  async function openProfile(targetId: string) {
     if (!supabase) return;
     setMessage("");
     const { data: profile, error: profileError } = await supabase.from("profiles").select("id,username,display_name,avatar_url,bio").eq("id", targetId).maybeSingle();
@@ -408,7 +424,8 @@ export default function HomePage() {
 
   const visiblePosts = posts.filter(p => !query || p.content.toLowerCase().includes(query.toLowerCase()) || (p.profiles?.display_name || p.profiles?.username || "").toLowerCase().includes(query.toLowerCase()));
   const displayName = user?.display_name || user?.username || user?.email?.split("@")[0] || "Mon compte";
-  const currentProfileName = viewingProfile?.display_name || viewingProfile?.username || "Membre EMi";\n  const filteredPosts = visiblePosts.filter(post => !["Reels","Vidéos"].includes(active) || post.media_type === "video");
+  const currentProfileName = viewingProfile?.display_name || viewingProfile?.username || "Membre EMi";
+  const filteredPosts = visiblePosts.filter(post => !["Reels","Vidéos"].includes(active) || post.media_type === "video");
 
   return (
     <main className="app-shell">
