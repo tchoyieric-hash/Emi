@@ -10,7 +10,7 @@ type Post = {
   profiles?: { username?: string | null; display_name?: string | null; avatar_url?: string | null } | null;
 };
 type Profile = { id: string; email?: string; username?: string | null; display_name?: string | null; avatar_url?: string | null; bio?: string | null };
-type Story = { id:string; user_id:string; media_url:string; media_type:"image"|"video"; caption:string; visibility:string; created_at:string; expires_at:string; profiles?:{username?:string|null;display_name?:string|null;avatar_url?:string|null}|null };
+type Story = { id:string; user_id:string; media_url:string; media_type:"image"|"video"; caption:string; music_url?:string|null; music_title?:string|null; visibility:string; created_at:string; expires_at:string; profiles?:{username?:string|null;display_name?:string|null;avatar_url?:string|null}|null };
 const supabase = createSupabaseBrowserClient();
 
 export default function HomePage() {
@@ -58,6 +58,9 @@ export default function HomePage() {
   const [storyComposerOpen, setStoryComposerOpen] = useState(false);
   const [storyFile, setStoryFile] = useState<File | null>(null);
   const [storyCaption, setStoryCaption] = useState("");
+  const [storyMusicFile, setStoryMusicFile] = useState<File | null>(null);
+  const [storyMusicTitle, setStoryMusicTitle] = useState("");
+  const storyMusicInput = useRef<HTMLInputElement>(null);
   const [activeStory, setActiveStory] = useState<Story | null>(null);
   const storyFileInput = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -99,7 +102,7 @@ export default function HomePage() {
   const loadStories = useCallback(async () => {
     if (!supabase) return;
     const { data, error } = await supabase.from("stories")
-      .select("id,user_id,media_url,media_type,caption,visibility,created_at,expires_at")
+      .select("id,user_id,media_url,media_type,caption,music_url,music_title,visibility,created_at,expires_at")
       .gt("expires_at", new Date().toISOString())
       .order("created_at", { ascending: false }).limit(100);
     if (error) { setMessage("Impossible de charger les stories : " + error.message); return; }
@@ -234,27 +237,42 @@ export default function HomePage() {
     const allowed = ["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime"];
     if (!allowed.includes(storyFile.type)) { setMessage("Format non pris en charge. Choisis une image ou une vidéo."); return; }
     if (storyFile.size > 50 * 1024 * 1024) { setMessage("La story dépasse 50 Mo."); return; }
+    const allowedAudio = ["audio/mpeg","audio/mp3","audio/mp4","audio/aac","audio/ogg","audio/wav","audio/x-wav","audio/webm","audio/x-m4a","audio/flac"];
+    if (storyMusicFile && !allowedAudio.includes(storyMusicFile.type)) { setMessage("Format audio non pris en charge."); return; }
+    if (storyMusicFile && storyMusicFile.size > 15 * 1024 * 1024) { setMessage("La musique doit faire moins de 15 Mo."); return; }
     setBusy(true); setMessage("");
     let uploadedPath = "";
+    let uploadedMusicPath = "";
     try {
       const ext = storyFile.name.split(".").pop()?.replace(/[^a-zA-Z0-9]/g, "") || (storyFile.type.startsWith("video/") ? "mp4" : "jpg");
       uploadedPath = user.id + "/" + crypto.randomUUID() + "." + ext;
       const { error: uploadError } = await supabase.storage.from("story-media").upload(uploadedPath, storyFile, { contentType: storyFile.type, upsert: false });
       if (uploadError) throw uploadError;
       const { data: urlData } = supabase.storage.from("story-media").getPublicUrl(uploadedPath);
+      let musicUrl: string | null = null;
+      if (storyMusicFile) {
+        const musicExt = storyMusicFile.name.split(".").pop()?.replace(/[^a-zA-Z0-9]/g, "") || "mp3";
+        uploadedMusicPath = user.id + "/music-" + crypto.randomUUID() + "." + musicExt;
+        const { error: musicError } = await supabase.storage.from("story-media").upload(uploadedMusicPath, storyMusicFile, { contentType: storyMusicFile.type, upsert: false });
+        if (musicError) throw musicError;
+        musicUrl = supabase.storage.from("story-media").getPublicUrl(uploadedMusicPath).data.publicUrl;
+      }
       const now = new Date();
       const expires = new Date(now.getTime() + 24 * 60 * 60 * 1000);
       const { error: insertError } = await supabase.from("stories").insert({
         user_id: user.id, media_url: urlData.publicUrl,
         media_type: storyFile.type.startsWith("video/") ? "video" : "image",
-        caption: storyCaption.trim(), visibility: "public", created_at: now.toISOString(), expires_at: expires.toISOString()
+        caption: storyCaption.trim(), music_url: musicUrl,
+        music_title: musicUrl ? (storyMusicTitle.trim() || storyMusicFile?.name.replace(/\.[^.]+$/, "") || "Ma musique") : null,
+        visibility: "public", created_at: now.toISOString(), expires_at: expires.toISOString()
       });
       if (insertError) throw insertError;
-      setStoryComposerOpen(false); setStoryFile(null); setStoryCaption("");
-      setMessage("Story publiée ! Elle sera visible pendant 24 heures.");
+      setStoryComposerOpen(false); setStoryFile(null); setStoryCaption(""); setStoryMusicFile(null); setStoryMusicTitle("");
+      setMessage("EMi Moment publié ! Il sera visible pendant 24 heures.");
       await loadStories();
     } catch (err) {
-      if (uploadedPath) await supabase.storage.from("story-media").remove([uploadedPath]).catch(() => undefined);
+      const paths = [uploadedPath, uploadedMusicPath].filter(Boolean);
+      if (paths.length) await supabase.storage.from("story-media").remove(paths).catch(() => undefined);
       setMessage("La story n’a pas pu être publiée : " + (err instanceof Error ? err.message : "erreur inconnue"));
     } finally { setBusy(false); }
   }
