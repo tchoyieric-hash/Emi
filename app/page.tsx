@@ -969,7 +969,11 @@ export default function HomePage() {
       }
       setMessage(isFollowing ? "Abonnement supprimé." : "Tu suis maintenant ce membre.");
     } catch (err) {
-      const detail = err instanceof Error ? err.message : "Erreur inconnue";
+      // Les erreurs PostgREST sont parfois des objets simples, pas des instances d'Error.
+      const failure = err as { message?: string; details?: string; hint?: string; code?: string } | null;
+      const detail = failure?.message
+        ? [failure.message, failure.code ? "Code " + failure.code : "", failure.details || "", failure.hint || ""].filter(Boolean).join(" — ")
+        : err instanceof Error ? err.message : JSON.stringify(err) || "Erreur inconnue";
       setMessage("Impossible de modifier l’abonnement : " + detail);
     } finally {
       setFollowPendingIds(old => old.filter(id => id !== targetId));
