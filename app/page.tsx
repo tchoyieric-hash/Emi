@@ -444,6 +444,43 @@ export default function HomePage() {
     await supabase.from("conversation_participants").update({last_read_at:new Date().toISOString()}).eq("conversation_id",conversationId).eq("user_id",user.id);
   }
 
+  async function createGroupConversation() {
+    if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour créer un groupe."); return; }
+    const title = window.prompt("Nom du groupe EMi :")?.trim();
+    if (!title) return;
+    if (title.length > 80) { setMessage("Le nom du groupe doit faire 80 caractères maximum."); return; }
+    const usernamesInput = window.prompt("Pseudo(s) des membres à ajouter, séparés par des virgules (sans @) :");
+    if (!usernamesInput?.trim()) { setMessage("Ajoute au moins un membre pour créer le groupe."); return; }
+    const usernames = [...new Set(usernamesInput.split(",").map(name => name.trim().replace(/^@/, "").toLowerCase()).filter(Boolean))];
+    if (!usernames.length) { setMessage("Saisis au moins un pseudo valide."); return; }
+    setChatLoading(true);
+    try {
+      const { data: people, error: peopleError } = await supabase.from("profiles")
+        .select("id,username,display_name,avatar_url").in("username", usernames);
+      if (peopleError) throw peopleError;
+      const found = (people || []) as Profile[];
+      const notFound = usernames.filter(name => !found.some(person => person.username?.toLowerCase() === name));
+      if (notFound.length) throw new Error("Pseudo(s) introuvable(s) : " + notFound.map(name => "@" + name).join(", "));
+      const members = found.filter(person => person.id !== user.id);
+      if (!members.length) throw new Error("Choisis au moins un autre membre.");
+      const { data: conv, error: createError } = await supabase.from("conversations")
+        .insert({created_by:user.id,is_group:true,title}).select("id").single();
+      if (createError) throw createError;
+      const rows = [{conversation_id:conv.id,user_id:user.id}, ...members.map(person => ({conversation_id:conv.id,user_id:person.id}))];
+      const { error: participantError } = await supabase.from("conversation_participants").insert(rows);
+      if (participantError) {
+        await supabase.from("conversations").delete().eq("id",conv.id);
+        throw participantError;
+      }
+      await loadConversations();
+      setActive("Messages");
+      await openConversation(conv.id);
+      setMessage("Groupe créé : " + title);
+    } catch (err) {
+      setMessage(err instanceof Error ? "Création du groupe impossible : " + err.message : "Création du groupe impossible.");
+    } finally { setChatLoading(false); }
+  }
+
   async function startConversation(target: Profile) {
     if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour envoyer un message."); return; }
     if (target.id === user.id) return;
@@ -705,14 +742,15 @@ export default function HomePage() {
           <aside className="chat-sidebar">
             <label className="discovery-search"><Search size={17}/><input value={chatSearch} onChange={e=>setChatSearch(e.target.value)} placeholder="Rechercher une conversation…" aria-label="Rechercher une conversation"/></label>
             <div className="chat-list">
-              {conversations.filter(conv => ((conv.other?.display_name || conv.other?.username || conv.title || "Conversation").toLowerCase().includes(chatSearch.toLowerCase()))).map(conv => <button key={conv.id} className={"chat-list-item "+(activeConversation===conv.id?"chat-selected":"")} onClick={()=>void openConversation(conv.id)}><span className="chat-avatar">{conv.other?.avatar_url?<img src={conv.other.avatar_url} alt=""/>:(conv.other?.display_name||conv.other?.username||conv.title||"EM").slice(0,2).toUpperCase()}</span><span className="chat-list-copy"><strong>{conv.other?.display_name||conv.other?.username||conv.title||"Conversation"}</strong><small>{conv.lastMessage}</small></span></button>)}
+              {conversations.filter(conv => ((conv.is_group ? conv.title || "Groupe EMi" : conv.other?.display_name || conv.other?.username || conv.title || "Conversation").toLowerCase().includes(chatSearch.toLowerCase()))).map(conv => <button key={conv.id} className={"chat-list-item "+(activeConversation===conv.id?"chat-selected":"")} onClick={()=>void openConversation(conv.id)}><span className="chat-avatar">{conv.other?.avatar_url?<img src={conv.other.avatar_url} alt=""/>:(conv.other?.display_name||conv.other?.username||conv.title||"EM").slice(0,2).toUpperCase()}</span><span className="chat-list-copy"><strong>{conv.is_group ? conv.title || "Groupe EMi" : conv.other?.display_name||conv.other?.username||conv.title||"Conversation"}</strong><small>{conv.lastMessage}</small></span></button>)}
               {!conversations.length && <p className="chat-empty">{chatLoading?"Chargement…":"Pas encore de conversation. Va dans Découvrir et choisis un membre pour lui écrire."}</p>}
             </div>
+            <button className="modal-primary" style={{width:"100%",marginTop:10}} onClick={()=>void createGroupConversation()} disabled={chatLoading}>+ Créer un groupe</button>
             <button className="profile-back-button" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}>Trouver des membres</button>
           </aside>
           <section className="chat-window">
             {!activeConversation ? <div className="chat-welcome"><MessageCircle size={30}/><h2>Ta messagerie EMi</h2><p>Choisis une conversation ou découvre un membre pour envoyer un message privé.</p><button className="modal-primary" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}>Découvrir des membres</button></div> : <>
-              <div className="chat-topbar"><button className="profile-back-button" onClick={()=>setActiveConversation(null)}>← Conversations</button><strong>{conversations.find(conv=>conv.id===activeConversation)?.other?.display_name || conversations.find(conv=>conv.id===activeConversation)?.other?.username || "Conversation privée"}</strong><span className="chat-secure-label">Privé · temps réel</span></div>
+              <div className="chat-topbar"><button className="profile-back-button" onClick={()=>setActiveConversation(null)}>← Conversations</button><strong>{conversations.find(conv=>conv.id===activeConversation)?.is_group ? conversations.find(conv=>conv.id===activeConversation)?.title || "Groupe EMi" : conversations.find(conv=>conv.id===activeConversation)?.other?.display_name || conversations.find(conv=>conv.id===activeConversation)?.other?.username || "Conversation privée"}</strong><span className="chat-secure-label">Privé · temps réel</span></div>
               <div className="chat-messages" aria-live="polite">{chatMessages.map(msg=><div key={msg.id} className={"chat-bubble "+(msg.sender_id===user?.id?"chat-mine":"chat-theirs")}><p>{msg.content}</p>{msg.media_url && (msg.media_type === "video" ? <video src={msg.media_url} controls playsInline className="chat-media"/> : <img src={msg.media_url} alt="Média partagé" className="chat-media"/>)}<time>{new Date(msg.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</time></div>)}</div>
               <form className="chat-compose" onSubmit={sendChatMessage}><input ref={chatMediaInput} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" onChange={e=>setChatMediaFile(e.target.files?.[0]||null)} hidden/><button type="button" className="profile-back-button" aria-label="Joindre une image ou vidéo" onClick={()=>chatMediaInput.current?.click()}><ImageIcon size={17}/></button><input value={chatDraft} onChange={e=>setChatDraft(e.target.value)} maxLength={5000} placeholder={chatMediaFile ? chatMediaFile.name : "Écris un message…"} aria-label="Écris un message" disabled={!user}/><button className="modal-primary" type="submit" disabled={!chatDraft.trim()&&!chatMediaFile||chatLoading}><Send size={17}/> Envoyer</button></form>
             </>}
