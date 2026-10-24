@@ -516,7 +516,17 @@ export default function HomePage() {
         const { data: publicUrl } = supabase.storage.from("post-media").getPublicUrl(path);
         urls = [publicUrl.publicUrl]; mediaType = file.type.startsWith("video/") ? "video" : "image";
       }
-      let musicUrl = "";\n      if (musicFile) {\n        const musicPath = user.id + "/music-" + crypto.randomUUID() + "-" + musicFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");\n        const { error: musicUploadError } = await supabase.storage.from("post-media").upload(musicPath, musicFile, { contentType: musicFile.type, upsert: false });\n        if (musicUploadError) throw new Error("Impossible d’ajouter ce fichier audio. Vérifie la configuration du stockage.");\n        musicUrl = supabase.storage.from("post-media").getPublicUrl(musicPath).data.publicUrl;\n      }\n      const postContent = caption.trim() + (musicUrl ? "\\n\\n[EMI_MUSIC]" + JSON.stringify({url:musicUrl,title:musicTitle.trim() || musicFile?.name || "Ma musique"}) + "[/EMI_MUSIC]" : "");\n      const { error } = await supabase.from("posts").insert({ user_id: user.id, content: postContent, media_type: mediaType, media_urls: urls, visibility: "public" });
+      let musicUrl = "";
+      if (musicFile) {
+        const musicPath = user.id + "/music-" + crypto.randomUUID() + "-" + musicFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const { error: musicUploadError } = await supabase.storage.from("post-media").upload(musicPath, musicFile, { contentType: musicFile.type, upsert: false });
+        if (musicUploadError) throw new Error("Impossible d’ajouter ce fichier audio. Vérifie la configuration du stockage.");
+        musicUrl = supabase.storage.from("post-media").getPublicUrl(musicPath).data.publicUrl;
+      }
+      const postContent = caption.trim() + (musicUrl ? "\
+\
+[EMI_MUSIC]" + JSON.stringify({url:musicUrl,title:musicTitle.trim() || musicFile?.name || "Ma musique"}) + "[/EMI_MUSIC]" : "");
+      const { error } = await supabase.from("posts").insert({ user_id: user.id, content: postContent, media_type: mediaType, media_urls: urls, visibility: "public" });
       if (error) throw error;
       setCaption(""); setFile(null); setMusicFile(null); setMusicTitle(""); setComposerOpen(false); setMessage("Publication envoyée."); await loadFeed();
     } catch (err) { setMessage(err instanceof Error ? err.message : "La publication a échoué."); }
