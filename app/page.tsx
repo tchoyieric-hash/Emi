@@ -56,6 +56,8 @@ export default function HomePage() {
   const [chatDraft, setChatDraft] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const [chatSearch, setChatSearch] = useState("");
+  const [notifications, setNotifications] = useState<{id:string;actor_id:string|null;type:string;entity_id:string|null;content:string;is_read:boolean;created_at:string;actor?:Profile|null}[]>([]);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
 
   const [profileEditorOpen, setProfileEditorOpen] = useState(false);
   const [profileNameDraft, setProfileNameDraft] = useState("");
@@ -491,6 +493,27 @@ export default function HomePage() {
     return () => { void supabase.removeChannel(channel); };
   }, [activeConversation]);
 
+  async function loadNotifications() {
+    if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour consulter tes notifications."); return; }
+    setNotificationsLoading(true);
+    try {
+      const { data, error } = await supabase.from("notifications").select("id,actor_id,type,entity_id,content,is_read,created_at").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
+      if (error) throw error;
+      const rows = (data || []) as {id:string;actor_id:string|null;type:string;entity_id:string|null;content:string;is_read:boolean;created_at:string}[];
+      const actorIds = [...new Set(rows.map(row => row.actor_id).filter((id): id is string => !!id))];
+      const { data: people, error: peopleError } = actorIds.length ? await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", actorIds) : { data: [], error: null };
+      if (peopleError) throw peopleError;
+      const peopleById = new Map((people || []).map(person => [person.id, person as Profile]));
+      setNotifications(rows.map(row => ({ ...row, actor: row.actor_id ? peopleById.get(row.actor_id) || null : null })));
+      const unreadIds = rows.filter(row => !row.is_read).map(row => row.id);
+      if (unreadIds.length) {
+        const { error: readError } = await supabase.from("notifications").update({ is_read: true }).in("id", unreadIds).eq("recipient_id", user.id);
+        if (!readError) setNotifications(old => old.map(n => ({ ...n, is_read: true })));
+      }
+    } catch (err) { setMessage(err instanceof Error ? "Notifications : " + err.message : "Impossible de charger les notifications."); }
+    finally { setNotificationsLoading(false); }
+  }
+
   async function loadFollowingFeed() {
     if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour voir tes abonnements."); return; }
     const { data: follows, error: followError } = await supabase.from("follows").select("following_id").eq("follower_id", user.id);
@@ -622,7 +645,7 @@ export default function HomePage() {
         <a className="brand" href="#" aria-label="EMi accueil"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a>
         <button className="profile-mini profile-mini-button" onClick={() => user ? void openProfile(user.id) : setAuthOpen(true)}><div className="avatar avatar-me">{user?.avatar_url ? <img src={user.avatar_url} alt=""/> : user ? displayName.slice(0,2).toUpperCase() : "ME"}</div><div><strong>{user ? displayName : "Bienvenue sur EMi"}</strong><span>{user ? "Voir mon profil" : "Ton espace social"}</span></div></button>
         <nav className="nav-list" aria-label="Navigation principale">
-          {[[ "Accueil", Home ], [ "Découvrir", Compass ], [ "Messages", MessageCircle ], [ "Notifications", Bell ], [ "Mon profil", UserRound ]].map(([label, Icon]) => { const title = label as string; const Glyph = Icon as typeof Home; return <button key={title} className={`nav-item ${active === title ? "selected" : ""}`} onClick={() => { setActive(title); if (["Messages","Notifications","Mon profil"].includes(title) && !user) setAuthOpen(true); }}><Glyph size={20}/><span>{title}</span></button>; })}
+          {[[ "Accueil", Home ], [ "Découvrir", Compass ], [ "Messages", MessageCircle ], [ "Notifications", Bell ], [ "Mon profil", UserRound ]].map(([label, Icon]) => { const title = label as string; const Glyph = Icon as typeof Home; return <button key={title} className={`nav-item ${active === title ? "selected" : ""}`} onClick={() => { setActive(title); if (title === "Notifications") void loadNotifications(); if (["Messages","Notifications","Mon profil"].includes(title) && !user) setAuthOpen(true); }}><Glyph size={20}/><span>{title}</span></button>; })}
         </nav>
         <button className="create-button" onClick={() => setComposerOpen(true)}><Plus size={20}/> Créer une publication</button>
         <div className="sidebar-bottom">{user ? <button className="nav-item" onClick={logout}><LogOut size={20}/><span>Se déconnecter</span></button> : <button className="nav-item" onClick={() => setAuthOpen(true)}><LogIn size={20}/><span>Connexion / Inscription</span></button>}<div className="sidebar-note"><Sparkles size={16}/><p>Des moments vrais.<br/><strong>Des liens qui comptent.</strong></p></div><span className="version">EMi · Communauté</span></div>
@@ -648,6 +671,16 @@ export default function HomePage() {
         <div className="feed-tabs" style={{display:["Reels","Découvrir","Messages"].includes(active) ? "none" : undefined}}><button className={active === "Accueil" ? "tab-active" : ""} onClick={() => {setActive("Accueil"); void loadFeed();}}>Publications</button><button className={active === "Abonnements" ? "tab-active" : ""} onClick={() => void loadFollowingFeed()}>Abonnements</button><button className={active === "Vidéos" ? "tab-active" : ""} onClick={() => setActive("Vidéos")}>Vidéos <Video size={14}/></button></div>
         </>}
 
+        {active === "Notifications" && !viewingProfile && <section className="discovery-panel">
+          <div className="section-label"><strong>Notifications</strong><button onClick={() => void loadNotifications()}>Actualiser ↻</button></div>
+          {notificationsLoading && <p className="chat-empty">Chargement des notifications…</p>}
+          <div className="discovery-list">{notifications.map(note => <article key={note.id} className="discovery-person" style={{opacity:note.is_read?0.72:1,borderColor:note.is_read?"var(--line)":"#8d6de0"}}>
+            <span className="discovery-avatar">{note.actor?.avatar_url?<img src={note.actor.avatar_url} alt=""/>:(note.actor?.display_name||note.actor?.username||"EM").slice(0,2).toUpperCase()}</span>
+            <button className="discovery-person-main" onClick={() => note.actor_id ? void openProfile(note.actor_id) : undefined}><span><strong>{note.actor?.display_name||note.actor?.username||"EMi"}</strong><small>{note.content}</small><small>{new Date(note.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small></span></button>
+            {!note.is_read && <span className="notification-unread-dot" aria-label="Non lue"/>}
+          </article>)}
+          {!notificationsLoading && notifications.length===0 && <div className="empty-feature"><Bell size={28}/><h2>Tu es à jour</h2><p>Les nouveaux abonnements, likes et commentaires apparaîtront ici.</p></div>}</div>
+        </section>}
         {active === "Messages" && !viewingProfile && <section className="chat-shell">
           <aside className="chat-sidebar">
             <label className="discovery-search"><Search size={17}/><input value={chatSearch} onChange={e=>setChatSearch(e.target.value)} placeholder="Rechercher une conversation…" aria-label="Rechercher une conversation"/></label>
