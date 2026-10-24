@@ -192,3 +192,38 @@
 .notification-unread-dot{width:9px;height:9px;flex:none;border-radius:50%;background:#bda2ff;box-shadow:0 0 0 4px #bda2ff22}
 .chat-media{display:block;width:min(100%,360px);max-height:360px;object-fit:contain;border-radius:10px;margin-top:8px;background:#09080c}
 .chat-compose .profile-back-button{display:grid;place-items:center;min-width:42px;padding:10px}
+
+/* Studio de création EMi */
+.create-studio-backdrop{z-index:120;align-items:flex-end;padding:0;background:rgba(5,4,10,.78);backdrop-filter:blur(12px)}
+.create-studio{position:relative;width:min(100%,560px);max-height:94dvh;overflow:auto;padding:24px 22px max(22px,env(safe-area-inset-bottom));border:1px solid #ffffff1c;border-bottom:0;border-radius:28px 28px 0 0;background:linear-gradient(155deg,#17121f 0%,#0b0a10 60%,#15101e 100%);color:#f9f6ff;box-shadow:0 -24px 80px #0009;animation:studio-rise .28s ease-out}
+.create-studio:before{content:"";display:block;width:42px;height:4px;border-radius:8px;background:#ffffff42;margin:-11px auto 21px}
+.create-studio-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.create-studio-header h2{margin:7px 0 5px;font-size:clamp(22px,5vw,29px);letter-spacing:-.7px}
+.create-studio-header p{margin:0;color:#b8afc7;font-size:13px;line-height:1.5}
+.create-studio-header .modal-close{position:static;flex:none;background:#ffffff10;border:1px solid #ffffff16}
+.create-studio-preview{position:relative;isolation:isolate;display:flex;min-height:145px;flex-direction:column;align-items:center;justify-content:center;gap:7px;overflow:hidden;margin:22px 0 17px;padding:22px 12px;border:1px solid #ffffff25;border-radius:22px;background:radial-gradient(ellipse at 18% 15%,#dca6ff66,transparent 48%),radial-gradient(ellipse at 85% 90%,#8c62ff55,transparent 48%),linear-gradient(125deg,#382243,#171321 60%,#251637)}
+.create-studio-preview strong{font-size:15px;text-align:center;letter-spacing:-.2px}
+.create-studio-preview>span{color:#d0c4dc;font-size:11px}
+.studio-glow{position:absolute;z-index:-1;width:110px;height:110px;border-radius:50%;filter:blur(3px);border:1px solid #ffffff1c}
+.studio-glow-one{top:-65px;left:8%;background:#e6b9ff18}
+.studio-glow-two{right:4%;bottom:-80px;background:#9b6bff24}
+.studio-preview-icon{display:grid;place-items:center;width:50px;height:50px;margin-bottom:4px;border-radius:17px;border:1px solid #ffffff35;background:#ffffff15;color:#e8ceff;box-shadow:0 8px 30px #0003}
+.create-studio-options{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.studio-option{display:flex;align-items:center;gap:11px;min-width:0;padding:14px 12px;text-align:left;border:1px solid #ffffff16;border-radius:18px;background:#ffffff07;color:#fff;transition:transform .18s,border-color .18s,background .18s}
+.studio-option:active{transform:scale(.98)}
+.studio-option:hover{border-color:#bda0ff80;background:#ffffff0d}
+.studio-option-icon{display:grid;place-items:center;width:43px;height:43px;flex:none;border-radius:14px;background:#a57bea20;color:#d6baff}
+.studio-option-story .studio-option-icon{background:#ff8cae1d;color:#ffb5cb}
+.studio-option-post .studio-option-icon{background:#7ec8ff1c;color:#a7dcff}
+.studio-option-reel .studio-option-icon{background:#ffb65b1c;color:#ffd098}
+.studio-option-text .studio-option-icon{background:#8ee5c21c;color:#a6f1d6}
+.studio-option>span:nth-child(2){display:flex;flex-direction:column;gap:4px;min-width:0}
+.studio-option strong{font-size:13px;font-weight:750}
+.studio-option small{font-size:10px;line-height:1.4;color:#b5adbf}
+.studio-option-arrow{margin-left:auto;align-self:flex-start;color:#a69ab8;font-size:16px}
+.studio-text-icon{font-weight:800;font-size:22px;font-family:Georgia,serif}
+.create-studio-footer{display:flex;justify-content:space-between;gap:12px;margin-top:18px;color:#83798f;font-size:10px}
+.create-studio-footer span:first-child{display:flex;align-items:center;gap:5px;color:#b7a2d5}
+@keyframes studio-rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:600px){.create-studio-backdrop{align-items:center;padding:20px}.create-studio{border:1px solid #ffffff1c;border-radius:28px;max-height:90dvh}}
+@media(max-width:380px){.create-studio{padding:20px 15px max(18px,env(safe-area-inset-bottom))}.studio-option{gap:8px;padding:12px 9px}.studio-option-icon{width:37px;height:37px}.studio-option small{font-size:9px}.create-studio-options{gap:8px}}
