@@ -71,6 +71,8 @@ export default function HomePage() {
   const [commentDrafts, setCommentDrafts] = useState<Record<string,string>>({});
   const [followedIds, setFollowedIds] = useState<string[]>([]);
   const [followPendingIds, setFollowPendingIds] = useState<string[]>([]);
+  // Empêche une lecture initiale lente de remplacer l'état plus récent après un clic Suivre.
+  const followMutationVersion = useRef(0);
   const [viewingProfile, setViewingProfile] = useState<Profile | null>(null);
   const [profileTab, setProfileTab] = useState<"posts" | "reels" | "shared" | "tagged">("posts");
   const [connectionsOpen, setConnectionsOpen] = useState(false);
@@ -331,9 +333,12 @@ export default function HomePage() {
   useEffect(() => {
     if (!supabase || !user) { setFollowedIds([]); return; }
     let alive = true;
+    const versionAtStart = followMutationVersion.current;
     supabase.from("follows").select("following_id").eq("follower_id", user.id).then(({ data, error }) => {
       if (!alive) return;
       if (error) { setMessage("Impossible de charger tes abonnements : " + error.message); return; }
+      // Ne pas écraser une modification faite pendant que cette lecture était en cours.
+      if (versionAtStart !== followMutationVersion.current) return;
       setFollowedIds((data || []).map(row => row.following_id as string));
     });
     return () => { alive = false; };
@@ -931,6 +936,8 @@ export default function HomePage() {
     if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour suivre un membre."); return; }
     if (targetId === user.id || followPendingIds.includes(targetId)) return;
 
+    // Invalide toute lecture d'abonnements commencée avant ce clic.
+    followMutationVersion.current += 1;
     // Bloque les clics concurrents pour éviter les insertions/suppressions contradictoires.
     setFollowPendingIds(old => [...old, targetId]);
     const isFollowing = followedIds.includes(targetId);
