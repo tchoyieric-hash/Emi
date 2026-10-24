@@ -392,3 +392,16 @@
 .emi-vibes-note{display:flex;align-items:flex-start;gap:9px;padding:12px;border-radius:13px;background:#9c83d20b;color:var(--muted);font-size:10px;line-height:1.7}
 .emi-vibes-note svg{flex:none;color:#c9a966}
 @media(max-width:600px){.emi-vibes-page{padding:0 10px 24px;gap:15px}.emi-vibes-hero{padding:21px 17px;border-radius:20px}.emi-vibes-feature{gap:12px;padding:12px}.emi-vibes-feature-art{width:83px;height:83px}.emi-vibes-feature h3{font-size:13px}}
+
+.emi-compose-music{margin:12px 0;padding:14px;border:1px solid #c9a96655;border-radius:15px;background:linear-gradient(135deg,#251b32,#14111b)}
+.emi-compose-music-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.emi-compose-music-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#c9a96618;color:#dfc68c}
+.emi-compose-music-head>span:last-child{display:grid;gap:4px}
+.emi-compose-music-head strong{font-size:13px;color:var(--text)}
+.emi-compose-music-head small{font-size:10px;line-height:1.5;color:var(--muted)}
+.emi-compose-music-pick{display:flex;align-items:center;gap:8px;width:100%;padding:11px;border:1px solid #c9a96645;border-radius:11px;background:#c9a9660d;color:#dfc68c;text-align:left;font-size:11px}
+.emi-compose-music-pick svg:last-child{margin-left:auto}
+.emi-compose-music-label{display:grid;gap:6px;margin-top:12px;color:var(--muted);font-size:11px}
+.emi-compose-music-label input{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:#121218;color:var(--text)}
+.emi-compose-audio-preview{width:100%;height:38px;margin-top:12px}
+.emi-compose-music-remove{margin-top:8px;border:0;background:none;color:#e87883;font-size:11px}
