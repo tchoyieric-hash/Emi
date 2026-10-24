@@ -105,3 +105,16 @@
 .story-viewer-nav{position:absolute;left:12px;right:12px;bottom:12px;display:flex;justify-content:space-between;gap:12px}
 .story-viewer-nav button{padding:9px 12px;border:1px solid #ffffff55;border-radius:999px;background:#100e16b8;color:white;font-size:11px}
 @media(max-width:480px){.story-viewer-backdrop{padding:0}.story-viewer{width:100%;height:100dvh;min-height:0;border:0;border-radius:0}.stories-card{overflow:hidden}}
+
+
+/* EMi Reels — fil vertical dédié, format mobile immersif */
+.reel-post{position:relative;min-height:calc(100dvh - 150px);height:calc(100dvh - 150px);max-height:860px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;background:#050507;border:0;border-radius:18px;padding:0!important}
+.reel-post .post-top{position:absolute;z-index:2;top:14px;left:14px;right:14px;padding:10px;border-radius:14px;background:linear-gradient(180deg,#0009,transparent);color:#fff}
+.reel-post .post-author strong,.reel-post .post-author span{color:#fff}
+.reel-post .post-caption{position:absolute;z-index:2;bottom:70px;left:14px;right:76px;color:#fff;text-shadow:0 1px 5px #000;font-size:14px;line-height:1.5}
+.reel-post .reel-video{position:absolute;inset:0;width:100%;height:100%;max-height:none;object-fit:cover;background:#000}
+.reel-post .post-actions{position:absolute;z-index:3;right:12px;bottom:78px;display:flex;flex-direction:column;gap:17px;align-items:center;border:0;background:linear-gradient(90deg,transparent,#0003);padding:8px;color:#fff}
+.reel-post .post-actions button{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;text-shadow:0 1px 4px #000}
+.reel-post .post-actions button span{font-size:10px;color:#fff}
+.reel-post .comments-panel{position:relative;z-index:4;background:#15131c;padding:12px!important;max-height:35%;overflow:auto}
+@media(max-width:600px){.reel-post{height:calc(100dvh - 130px);min-height:500px;max-height:none;border-radius:0;margin-left:-12px;margin-right:-12px}.reel-post .post-top{top:10px;left:10px;right:10px}.reel-post .post-actions{right:7px;bottom:70px;gap:15px}.reel-post .post-caption{left:12px;right:66px;bottom:65px}}
