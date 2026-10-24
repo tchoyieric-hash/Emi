@@ -351,3 +351,10 @@
 .emi-theme-preview small{font-size:10px;color:#c6b9d4}
 .emi-theme-current{font-size:10px;color:#e0c581}
 @media(max-width:600px){.emi-settings-page{padding:0 10px 25px}.emi-settings-hero{padding:17px 14px;gap:12px;border-radius:18px}.emi-settings-crest{width:46px;height:46px}.emi-settings-row{min-height:66px;padding:10px 12px}.emi-settings-row-icon{width:36px;height:36px}.emi-settings-row-copy strong{font-size:12px}.emi-settings-row-copy small{font-size:9px}.emi-settings-group h3{padding-left:13px}}
+
+.emi-settings-logout-wrap{margin-top:20px;border:1px solid rgba(220,85,100,.28);border-radius:18px;overflow:hidden;background:var(--panel)}
+.emi-settings-logout-label{padding:15px 16px 9px;color:var(--muted);font-size:9px;font-weight:850;letter-spacing:1.8px}
+.emi-settings-logout{display:flex;align-items:center;gap:12px;width:100%;padding:15px;border:0;border-top:1px solid var(--line);background:transparent;color:#e87883;text-align:left}
+.emi-settings-logout>span{display:grid;gap:4px;flex:1}
+.emi-settings-logout strong{font-size:13px}
+.emi-settings-logout small{font-size:10px;color:var(--muted)}
