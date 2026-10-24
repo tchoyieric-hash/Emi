@@ -52,7 +52,7 @@ export default function HomePage() {
   const [profileFollowingCount, setProfileFollowingCount] = useState(0);
   const [conversations, setConversations] = useState<{id:string; title:string; is_group:boolean; other?:Profile; lastMessage?:string; created_at:string}[]>([]);
   const [activeConversation, setActiveConversation] = useState<string | null>(null);
-  const [chatMessages, setChatMessages] = useState<{id:string;conversation_id:string;sender_id:string;content:string;media_url?:string|null;created_at:string}[]>([]);
+  const [chatMessages, setChatMessages] = useState<{id:string;conversation_id:string;sender_id:string;content:string;media_url?:string|null;media_type?:string|null;created_at:string}[]>([]);
   const [chatDraft, setChatDraft] = useState("");
   const [chatMediaFile, setChatMediaFile] = useState<File | null>(null);
   const chatMediaInput = useRef<HTMLInputElement>(null);
