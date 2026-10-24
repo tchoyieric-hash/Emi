@@ -825,19 +825,36 @@ export default function HomePage() {
   async function openProfile(targetId: string) {
     if (!supabase) return;
     setMessage("");
-    const { data: profile, error: profileError } = await supabase.from("profiles").select("id,username,display_name,avatar_url,bio").eq("id", targetId).maybeSingle();
+    // Charger immédiatement les données indépendantes en parallèle pour réduire l'attente.
+    const [{ data: profile, error: profileError }, postsResult, postsCountResult, followersResult, followingResult] = await Promise.all([
+      supabase.from("profiles").select("id,username,display_name,avatar_url,bio").eq("id", targetId).maybeSingle(),
+      supabase.from("posts").select("id,user_id,content,created_at,media_type,media_urls,visibility").eq("user_id", targetId).eq("visibility", "public").order("created_at", { ascending: false }).limit(60),
+      supabase.from("posts").select("id", { count: "exact", head: true }).eq("user_id", targetId).eq("visibility", "public"),
+      supabase.from("follows").select("follower_id", { count: "exact", head: true }).eq("following_id", targetId),
+      supabase.from("follows").select("following_id", { count: "exact", head: true }).eq("follower_id", targetId)
+    ]);
     if (profileError || !profile) { setMessage("Impossible de charger ce profil." + (profileError ? " " + profileError.message : "")); return; }
-    const { count: totalPosts } = await supabase.from("posts").select("id", { count: "exact", head: true }).eq("user_id", targetId).eq("visibility", "public");
-    const { count: totalFollowers } = await supabase.from("follows").select("follower_id", { count: "exact", head: true }).eq("following_id", targetId);
-    const { count: totalFollowing } = await supabase.from("follows").select("following_id", { count: "exact", head: true }).eq("follower_id", targetId);
-    setProfilePostCount(totalPosts || 0); setProfileFollowerCount(totalFollowers || 0); setProfileFollowingCount(totalFollowing || 0);
-    const { data: profilePosts, error: postsError } = await supabase.from("posts").select("id,user_id,content,created_at,media_type,media_urls,visibility").eq("user_id", targetId).eq("visibility", "public").order("created_at", { ascending: false }).limit(60);
-    if (postsError) { setMessage("Impossible de charger les publications : " + postsError.message); return; }
-    const ids = (profilePosts || []).map(p => p.id);
-    const { data: likesData } = ids.length ? await supabase.from("post_likes").select("post_id,user_id").in("post_id", ids) : { data: [] };
-    const counts: Record<string, number> = {}; const mine: string[] = [];
-    (likesData || []).forEach((l: {post_id:string;user_id:string}) => { counts[l.post_id] = (counts[l.post_id] || 0) + 1; if (user?.id === l.user_id) mine.push(l.post_id); });
-    setViewingProfile(profile as Profile); setPosts((profilePosts || []).map(p => ({ ...p, profiles: profile as Profile } as Post))); setLikes(counts); setLiked(mine); setActive("Profil");
+    if (postsResult.error) { setMessage("Impossible de charger les publications : " + postsResult.error.message); return; }
+    const profilePosts = postsResult.data || [];
+    const ids = profilePosts.map(p => p.id);
+    const { data: likesData, error: likesError } = ids.length
+      ? await supabase.from("post_likes").select("post_id,user_id").in("post_id", ids)
+      : { data: [], error: null };
+    if (likesError) console.warn("Impossible de charger les mentions J’aime du profil :", likesError.message);
+    const counts: Record<string, number> = {};
+    const mine: string[] = [];
+    (likesData || []).forEach((l: {post_id:string;user_id:string}) => {
+      counts[l.post_id] = (counts[l.post_id] || 0) + 1;
+      if (user?.id === l.user_id) mine.push(l.post_id);
+    });
+    setProfilePostCount(postsCountResult.count || 0);
+    setProfileFollowerCount(followersResult.count || 0);
+    setProfileFollowingCount(followingResult.count || 0);
+    setViewingProfile(profile as Profile);
+    setPosts(profilePosts.map(p => ({ ...p, profiles: profile as Profile } as Post)));
+    setLikes(counts);
+    setLiked(mine);
+    setActive("Profil");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
