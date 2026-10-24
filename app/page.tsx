@@ -135,7 +135,12 @@ export default function HomePage() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
-        video: { facingMode: { ideal: facing }, width: { ideal: 1080 }, height: { ideal: 1920 } }
+        video: {
+          facingMode: { ideal: facing },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          frameRate: { ideal: 30, max: 30 }
+        }
       });
       cameraStreamRef.current = stream;
       setCameraFacing(facing);
@@ -157,10 +162,9 @@ export default function HomePage() {
       return;
     }
     const canvas = document.createElement("canvas");
-    const maxWidth = 1440;
-    const scale = Math.min(1, maxWidth / video.videoWidth);
-    canvas.width = Math.round(video.videoWidth * scale);
-    canvas.height = Math.round(video.videoHeight * scale);
+    // Conserve la résolution native réellement fournie par la caméra.
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
     const ctx = canvas.getContext("2d");
     if (!ctx) { setCameraError("La photo n’a pas pu être capturée."); return; }
     if (cameraFacing === "user") {
@@ -176,7 +180,7 @@ export default function HomePage() {
       setCreateStudioOpen(false);
       setComposerOpen(true);
       setMessage("Photo capturée ! Ajoute une légende avant de publier.");
-    }, "image/jpeg", 0.9);
+    }, "image/jpeg", 0.98);
   }
 
   function toggleVideoRecording() {
