@@ -169,6 +169,14 @@ export default function HomePage() {
     const timer = window.setInterval(() => { void loadStories(); }, 60_000);
     return () => window.clearInterval(timer);
   }, [loadStories]);
+  useEffect(() => {
+    if (!activeStory || activeStory.media_type === "video") return;
+    const timer = window.setTimeout(() => {
+      const index = stories.findIndex(story => story.id === activeStory.id);
+      setActiveStory(index >= 0 && index < stories.length - 1 ? stories[index + 1] : null);
+    }, 6000);
+    return () => window.clearTimeout(timer);
+  }, [activeStory, stories]);
 
   async function authenticate(e: React.FormEvent) {
     e.preventDefault();
