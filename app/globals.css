@@ -118,3 +118,28 @@
 .reel-post .post-actions button span{font-size:10px;color:#fff}
 .reel-post .comments-panel{position:relative;z-index:4;background:#15131c;padding:12px!important;max-height:35%;overflow:auto}
 @media(max-width:600px){.reel-post{height:calc(100dvh - 130px);min-height:500px;max-height:none;border-radius:0;margin-left:-12px;margin-right:-12px}.reel-post .post-top{top:10px;left:10px;right:10px}.reel-post .post-actions{right:7px;bottom:70px;gap:15px}.reel-post .post-caption{left:12px;right:66px;bottom:65px}}
+
+
+/* Reels immersifs : défilement vertical et lecture intelligente */
+.main-column:has(.reel-post) { min-height: 100dvh; }
+.feed-list:has(.reel-post) { gap: 14px; scroll-snap-type: y mandatory; }
+.reel-post { position: relative; min-height: min(78dvh, 850px); scroll-snap-align: start; scroll-snap-stop: always; border-radius: 22px; overflow: hidden; background: #050507; border: 1px solid #29252f; }
+.reel-post .post-top { position: absolute; z-index: 2; top: 16px; left: 16px; right: 16px; padding: 10px 12px; border-radius: 14px; background: linear-gradient(90deg,#09090dbd,#09090d35); backdrop-filter: blur(8px); }
+.reel-post .post-caption { position: absolute; z-index: 2; left: 16px; right: 70px; bottom: 58px; margin: 0; padding: 12px 14px; border-radius: 12px; background: linear-gradient(90deg,#09090da8,#09090d00); color: #fff; text-shadow: 0 1px 8px #000; }
+.reel-post .reel-video { display: block; width: 100%; height: min(78dvh, 850px); min-height: 520px; object-fit: cover; background: #050507; }
+.reel-post .post-actions { position: absolute; z-index: 3; right: 14px; bottom: 20px; display: grid; gap: 19px; padding: 12px 9px; border-radius: 16px; background: #09090d6e; backdrop-filter: blur(8px); }
+.reel-post .post-actions button { display: grid; justify-items: center; gap: 5px; color: #fff; font-size: 10px; }
+.reel-post .post-actions .post-spacer { display: none; }
+.reel-post .comments-panel { position: relative; z-index: 4; }
+.reel-post .post-top .avatar { border: 2px solid #fff8; }
+@media (max-width: 700px) {
+  .feed-list:has(.reel-post) { gap: 0; margin-left: -14px; margin-right: -14px; }
+  .reel-post { min-height: calc(100dvh - 124px); height: calc(100dvh - 124px); border-radius: 0; border-left: 0; border-right: 0; border-top: 0; border-bottom: 1px solid #27232d; }
+  .reel-post .reel-video { height: calc(100dvh - 124px); min-height: 0; object-fit: cover; }
+  .reel-post .post-top { top: 12px; left: 12px; right: 12px; }
+  .reel-post .post-caption { bottom: 24px; left: 12px; right: 70px; font-size: 13px; }
+  .reel-post .post-actions { right: 9px; bottom: 12px; gap: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .feed-list:has(.reel-post) { scroll-snap-type: none; }
+}
