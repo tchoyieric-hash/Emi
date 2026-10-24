@@ -49,3 +49,28 @@
 .profile-field-label textarea{resize:vertical}
 .profile-editor-avatar{width:74px;height:74px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#30273d;margin:10px auto;color:#d9c7ff;font-size:11px;text-align:center}
 @media(max-width:760px){.profile-page{padding:18px}.profile-page-avatar{width:82px;height:82px}.profile-page-identity h2{font-size:20px}.profile-stats{gap:32px}.profile-page-actions{display:grid;grid-template-columns:1fr 1fr}.profile-page-actions button{width:100%}.post-card{padding:13px 0 10px;border-radius:0;border-left:0;border-right:0}.post-top,.post-caption,.post-actions,.comments-panel{margin-left:14px;margin-right:14px}.post-caption{margin-top:12px}.feed-list{gap:10px}.post-card>img,.post-card>video{border-radius:0!important}}
+
+
+/* Navigation mobile et écrans de découverte EMi */
+.discovery-panel{display:grid;gap:14px;margin:8px 0 24px}
+.discovery-search{display:flex;align-items:center;gap:11px;padding:14px 15px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--muted)}
+.discovery-search input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--text);font-size:14px}
+.discovery-list{display:grid;gap:10px}
+.discovery-person{display:flex;align-items:center;gap:10px;padding:13px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
+.discovery-person-main{display:flex;align-items:center;gap:11px;min-width:0;flex:1;text-align:left;border:0;background:transparent;color:var(--text)}
+.discovery-person-main>span:last-child{display:grid;gap:4px;min-width:0}
+.discovery-person-main strong{font-size:13px}
+.discovery-person-main small{font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.discovery-person-main .discovery-bio{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.discovery-avatar{width:45px;height:45px;flex:none;display:grid;place-items:center;border-radius:50%;overflow:hidden;background:linear-gradient(135deg,#d9c7ff,#a78bfa,#f5a4c7);color:#211634;font-weight:800}
+.discovery-avatar img{width:100%;height:100%;object-fit:cover}
+.empty-feature{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;margin:16px 0;padding:36px 24px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+.empty-feature>svg{color:var(--purple)}
+.empty-feature h2{font:800 20px Manrope,sans-serif;margin:0}
+.empty-feature p{max-width:420px;color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 8px}
+.messages-empty .modal-icon{margin:0}
+.mobile-nav{gap:0}
+.mobile-nav button{flex:1;min-width:0;padding-left:1px;padding-right:1px}
+.mobile-nav button span{font-size:9px;white-space:nowrap}
+.mobile-nav .mobile-create{flex:0 0 39px;width:39px;height:39px;min-width:39px;border-radius:13px}
+@media(max-width:380px){.mobile-nav button span{font-size:8px}.mobile-nav button svg{width:18px;height:18px}.mobile-nav .mobile-create{flex-basis:34px;width:34px;height:34px;min-width:34px}}
