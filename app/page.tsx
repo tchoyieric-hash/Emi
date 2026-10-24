@@ -1050,7 +1050,7 @@ export default function HomePage() {
           </section>
         </section>}
         {message && <div className="demo-note" role="status"><Sparkles size={16}/><span>{message}</span><button style={{marginLeft:"auto",background:"none",border:0,color:"inherit"}} onClick={() => setMessage("")} aria-label="Fermer"><X size={15}/></button></div>}
-        {active === "VIBES" && !viewingProfile ? <section className="emi-vibes-page">
+        {active === "VIBES" && !viewingProfile && <section className="emi-vibes-page">
           <header className="emi-vibes-hero"><div className="emi-vibes-orb"><Music2 size={30}/></div><span className="eyebrow">EMi · MUSIC CULTURE</span><h2>Le son qui rassemble.</h2><p>Découvre les vibes, les talents et les sons qui feront demain.</p><div className="emi-vibes-badges"><span><Headphones size={13}/> Culture urbaine</span><span><Sparkles size={13}/> Made for Africa</span></div></header>
           <div className="emi-vibes-search"><Search size={18}/><input value={vibesSearch} onChange={e=>setVibesSearch(e.target.value)} placeholder="Rechercher un titre ou un artiste…" aria-label="Rechercher un titre ou un artiste"/></div>
           <div className="emi-vibes-tabs">{["Pour toi","Hits","Cameroun 🇨🇲","Afrobeats","Indépendants"].map(tab=><button key={tab} className={vibesTab===tab?"selected":""} onClick={()=>setVibesTab(tab)}>{tab}</button>)}</div>
