@@ -54,6 +54,8 @@ export default function HomePage() {
   const [activeConversation, setActiveConversation] = useState<string | null>(null);
   const [chatMessages, setChatMessages] = useState<{id:string;conversation_id:string;sender_id:string;content:string;media_url?:string|null;created_at:string}[]>([]);
   const [chatDraft, setChatDraft] = useState("");
+  const [chatMediaFile, setChatMediaFile] = useState<File | null>(null);
+  const chatMediaInput = useRef<HTMLInputElement>(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [chatSearch, setChatSearch] = useState("");
   const [notifications, setNotifications] = useState<{id:string;actor_id:string|null;type:string;entity_id:string|null;content:string;is_read:boolean;created_at:string;actor?:Profile|null}[]>([]);
@@ -436,7 +438,7 @@ export default function HomePage() {
   async function openConversation(conversationId: string) {
     if (!supabase || !user) { setAuthOpen(true); return; }
     setActiveConversation(conversationId);
-    const { data, error } = await supabase.from("messages").select("id,conversation_id,sender_id,content,media_url,created_at").eq("conversation_id", conversationId).order("created_at", {ascending:true}).limit(200);
+    const { data, error } = await supabase.from("messages").select("id,conversation_id,sender_id,content,media_url,media_type,created_at").eq("conversation_id", conversationId).order("created_at", {ascending:true}).limit(200);
     if (error) { setMessage("Impossible d’ouvrir cette conversation : " + error.message); return; }
     setChatMessages((data || []) as typeof chatMessages);
     await supabase.from("conversation_participants").update({last_read_at:new Date().toISOString()}).eq("conversation_id",conversationId).eq("user_id",user.id);
@@ -467,14 +469,32 @@ export default function HomePage() {
   async function sendChatMessage(e: React.FormEvent) {
     e.preventDefault();
     const content = chatDraft.trim();
-    if (!supabase || !user || !activeConversation || !content) return;
+    if (!supabase || !user || !activeConversation || (!content && !chatMediaFile)) return;
     if (content.length > 5000) { setMessage("Le message est trop long (5 000 caractères maximum)."); return; }
-    setChatDraft("");
-    const { data, error } = await supabase.from("messages").insert({conversation_id:activeConversation,sender_id:user.id,content}).select("id,conversation_id,sender_id,content,media_url,created_at").single();
-    if (error) { setChatDraft(content); setMessage("Envoi impossible : " + error.message); return; }
-    setChatMessages(old => [...old, data as typeof chatMessages[number]]);
-    await supabase.from("conversations").update({updated_at:new Date().toISOString()}).eq("id",activeConversation);
-    void loadConversations();
+    let mediaUrl: string | null = null;
+    let mediaType: string | null = null;
+    setChatLoading(true);
+    try {
+      if (chatMediaFile) {
+        const file = chatMediaFile;
+        if (!["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime"].includes(file.type)) throw new Error("Format non pris en charge. Choisis une image ou une vidéo.");
+        if (file.size > 25 * 1024 * 1024) throw new Error("Un média de messagerie doit faire moins de 25 Mo.");
+        const ext = file.name.split(".").pop()?.replace(/[^a-zA-Z0-9]/g,"") || "bin";
+        const path = user.id + "/chat/" + crypto.randomUUID() + "." + ext;
+        const { error: uploadError } = await supabase.storage.from("post-media").upload(path,file,{contentType:file.type,upsert:false});
+        if (uploadError) throw uploadError;
+        mediaUrl = supabase.storage.from("post-media").getPublicUrl(path).data.publicUrl;
+        mediaType = file.type.startsWith("video/") ? "video" : "image";
+      }
+      const { data, error } = await supabase.from("messages").insert({conversation_id:activeConversation,sender_id:user.id,content,media_url:mediaUrl,media_type:mediaType}).select("id,conversation_id,sender_id,content,media_url,media_type,created_at").single();
+      if (error) throw error;
+      setChatDraft(""); setChatMediaFile(null);
+      setChatMessages(old => old.some(m => m.id === data.id) ? old : [...old, data as typeof chatMessages[number]]);
+      await supabase.from("conversations").update({updated_at:new Date().toISOString()}).eq("id",activeConversation);
+      void loadConversations();
+    } catch (err) {
+      setMessage(err instanceof Error ? "Envoi impossible : " + err.message : "Envoi impossible.");
+    } finally { setChatLoading(false); }
   }
 
   useEffect(() => {
@@ -693,8 +713,8 @@ export default function HomePage() {
           <section className="chat-window">
             {!activeConversation ? <div className="chat-welcome"><MessageCircle size={30}/><h2>Ta messagerie EMi</h2><p>Choisis une conversation ou découvre un membre pour envoyer un message privé.</p><button className="modal-primary" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}>Découvrir des membres</button></div> : <>
               <div className="chat-topbar"><button className="profile-back-button" onClick={()=>setActiveConversation(null)}>← Conversations</button><strong>{conversations.find(conv=>conv.id===activeConversation)?.other?.display_name || conversations.find(conv=>conv.id===activeConversation)?.other?.username || "Conversation privée"}</strong><span className="chat-secure-label">Privé · temps réel</span></div>
-              <div className="chat-messages" aria-live="polite">{chatMessages.map(msg=><div key={msg.id} className={"chat-bubble "+(msg.sender_id===user?.id?"chat-mine":"chat-theirs")}><p>{msg.content}</p><time>{new Date(msg.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</time></div>)}</div>
-              <form className="chat-compose" onSubmit={sendChatMessage}><input value={chatDraft} onChange={e=>setChatDraft(e.target.value)} maxLength={5000} placeholder="Écris un message…" aria-label="Écris un message" disabled={!user}/><button className="modal-primary" type="submit" disabled={!chatDraft.trim()}><Send size={17}/> Envoyer</button></form>
+              <div className="chat-messages" aria-live="polite">{chatMessages.map(msg=><div key={msg.id} className={"chat-bubble "+(msg.sender_id===user?.id?"chat-mine":"chat-theirs")}><p>{msg.content}</p>{msg.media_url && (msg.media_type === "video" ? <video src={msg.media_url} controls playsInline className="chat-media"/> : <img src={msg.media_url} alt="Média partagé" className="chat-media"/>)}<time>{new Date(msg.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</time></div>)}</div>
+              <form className="chat-compose" onSubmit={sendChatMessage}><input ref={chatMediaInput} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" onChange={e=>setChatMediaFile(e.target.files?.[0]||null)} hidden/><button type="button" className="profile-back-button" aria-label="Joindre une image ou vidéo" onClick={()=>chatMediaInput.current?.click()}><ImageIcon size={17}/></button><input value={chatDraft} onChange={e=>setChatDraft(e.target.value)} maxLength={5000} placeholder={chatMediaFile ? chatMediaFile.name : "Écris un message…"} aria-label="Écris un message" disabled={!user}/><button className="modal-primary" type="submit" disabled={!chatDraft.trim()&&!chatMediaFile||chatLoading}><Send size={17}/> Envoyer</button></form>
             </>}
           </section>
         </section>}
