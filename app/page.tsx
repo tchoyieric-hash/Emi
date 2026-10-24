@@ -481,6 +481,53 @@ export default function HomePage() {
     } finally { setChatLoading(false); }
   }
 
+  async function addGroupMembers() {
+    if (!supabase || !user || !activeConversation) return;
+    const current = conversations.find(c => c.id === activeConversation);
+    if (!current?.is_group) return;
+    const input = window.prompt("Pseudo(s) des membres à ajouter, séparés par des virgules (sans @) :");
+    if (!input?.trim()) return;
+    const usernames = [...new Set(input.split(",").map(name => name.trim().replace(/^@/, "").toLowerCase()).filter(Boolean))];
+    if (!usernames.length) return;
+    setChatLoading(true);
+    try {
+      const { data: people, error } = await supabase.from("profiles").select("id,username").in("username", usernames);
+      if (error) throw error;
+      const found = people || [];
+      const missing = usernames.filter(name => !found.some(p => (p.username || "").toLowerCase() === name));
+      if (missing.length) throw new Error("Pseudo(s) introuvable(s) : " + missing.map(name => "@" + name).join(", "));
+      const { data: existing, error: existingError } = await supabase.from("conversation_participants").select("user_id").eq("conversation_id", activeConversation);
+      if (existingError) throw existingError;
+      const existingIds = new Set((existing || []).map(p => p.user_id));
+      const rows = found.filter(p => !existingIds.has(p.id)).map(p => ({conversation_id:activeConversation,user_id:p.id}));
+      if (!rows.length) { setMessage("Ces membres sont déjà dans le groupe."); return; }
+      const { error: insertError } = await supabase.from("conversation_participants").insert(rows);
+      if (insertError) throw insertError;
+      await loadConversations();
+      setMessage(rows.length === 1 ? "Membre ajouté au groupe." : rows.length + " membres ajoutés au groupe.");
+    } catch (err) {
+      setMessage(err instanceof Error ? "Ajout impossible : " + err.message : "Impossible d’ajouter ces membres.");
+    } finally { setChatLoading(false); }
+  }
+
+  async function leaveGroupConversation() {
+    if (!supabase || !user || !activeConversation) return;
+    const current = conversations.find(c => c.id === activeConversation);
+    if (!current?.is_group) return;
+    if (!window.confirm("Quitter le groupe « " + current.title + " » ?")) return;
+    setChatLoading(true);
+    try {
+      const { error } = await supabase.from("conversation_participants").delete().eq("conversation_id", activeConversation).eq("user_id", user.id);
+      if (error) throw error;
+      setActiveConversation(null);
+      setChatMessages([]);
+      await loadConversations();
+      setMessage("Tu as quitté le groupe.");
+    } catch (err) {
+      setMessage(err instanceof Error ? "Impossible de quitter le groupe : " + err.message : "Impossible de quitter le groupe.");
+    } finally { setChatLoading(false); }
+  }
+
   async function startConversation(target: Profile) {
     if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour envoyer un message."); return; }
     if (target.id === user.id) return;
@@ -750,7 +797,7 @@ export default function HomePage() {
           </aside>
           <section className="chat-window">
             {!activeConversation ? <div className="chat-welcome"><MessageCircle size={30}/><h2>Ta messagerie EMi</h2><p>Choisis une conversation ou découvre un membre pour envoyer un message privé.</p><button className="modal-primary" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}>Découvrir des membres</button></div> : <>
-              <div className="chat-topbar"><button className="profile-back-button" onClick={()=>setActiveConversation(null)}>← Conversations</button><strong>{conversations.find(conv=>conv.id===activeConversation)?.is_group ? conversations.find(conv=>conv.id===activeConversation)?.title || "Groupe EMi" : conversations.find(conv=>conv.id===activeConversation)?.other?.display_name || conversations.find(conv=>conv.id===activeConversation)?.other?.username || "Conversation privée"}</strong><span className="chat-secure-label">Privé · temps réel</span></div>
+              <div className="chat-topbar"><button className="profile-back-button" onClick={()=>setActiveConversation(null)}>← Conversations</button><strong>{conversations.find(conv=>conv.id===activeConversation)?.is_group ? conversations.find(conv=>conv.id===activeConversation)?.title || "Groupe EMi" : conversations.find(conv=>conv.id===activeConversation)?.other?.display_name || conversations.find(conv=>conv.id===activeConversation)?.other?.username || "Conversation privée"}</strong><span className="chat-secure-label">{conversations.find(c => c.id === activeConversation)?.is_group ? "Groupe · temps réel" : "Privé · temps réel"}</span>{conversations.find(c => c.id === activeConversation)?.is_group && <div className="chat-group-actions"><button className="profile-back-button" onClick={() => void addGroupMembers()} disabled={chatLoading}>+ Ajouter membres</button><button className="profile-back-button" onClick={() => void leaveGroupConversation()} disabled={chatLoading}>Quitter</button></div>}</div>
               <div className="chat-messages" aria-live="polite">{chatMessages.map(msg=><div key={msg.id} className={"chat-bubble "+(msg.sender_id===user?.id?"chat-mine":"chat-theirs")}><p>{msg.content}</p>{msg.media_url && (msg.media_type === "video" ? <video src={msg.media_url} controls playsInline className="chat-media"/> : <img src={msg.media_url} alt="Média partagé" className="chat-media"/>)}<time>{new Date(msg.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</time></div>)}</div>
               <form className="chat-compose" onSubmit={sendChatMessage}><input ref={chatMediaInput} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" onChange={e=>setChatMediaFile(e.target.files?.[0]||null)} hidden/><button type="button" className="profile-back-button" aria-label="Joindre une image ou vidéo" onClick={()=>chatMediaInput.current?.click()}><ImageIcon size={17}/></button><input value={chatDraft} onChange={e=>setChatDraft(e.target.value)} maxLength={5000} placeholder={chatMediaFile ? chatMediaFile.name : "Écris un message…"} aria-label="Écris un message" disabled={!user}/><button className="modal-primary" type="submit" disabled={!chatDraft.trim()&&!chatMediaFile||chatLoading}><Send size={17}/> Envoyer</button></form>
             </>}
