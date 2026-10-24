@@ -211,12 +211,6 @@ export default function HomePage() {
     void startCamera();
   }
 
-  useEffect(() => {
-    if (!cameraOpen) { if (cameraStreamRef.current && !cameraRecording) stopCamera(); return; }
-    void startCamera(cameraFacing);
-    return () => { if (!cameraRecording) stopCamera(); };
-  }, [cameraOpen, cameraFacing, startCamera, stopCamera, cameraRecording]);
-
   async function publishStory(e: React.FormEvent) {
     e.preventDefault();
     if (!supabase || !user) { setStoryComposerOpen(false); setAuthOpen(true); setMessage("Connecte-toi pour partager une story."); return; }
