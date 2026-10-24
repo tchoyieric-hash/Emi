@@ -21,6 +21,16 @@ export default function HomePage() {
   const [liked, setLiked] = useState<string[]>([]);
   const [composerOpen, setComposerOpen] = useState(false);
   const [createStudioOpen, setCreateStudioOpen] = useState(false);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [cameraFacing, setCameraFacing] = useState<"user" | "environment">("user");
+  const [cameraError, setCameraError] = useState("");
+  const [cameraRecording, setCameraRecording] = useState(false);
+  const [cameraMode, setCameraMode] = useState<"photo" | "video" | "text">("photo");
+  const cameraVideoRef = useRef<HTMLVideoElement>(null);
+  const cameraStreamRef = useRef<MediaStream | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordedChunksRef = useRef<Blob[]>([]);
+
   const [authOpen, setAuthOpen] = useState(false);
   const [signup, setSignup] = useState(false);
   const [email, setEmail] = useState("");
@@ -86,6 +96,126 @@ export default function HomePage() {
     const byId = new Map((profiles || []).map(p => [p.id, p]));
     setStories(rows.map(row => ({ ...row, profiles: byId.get(row.user_id) || null })));
   }, []);
+
+
+  const stopCamera = useCallback(() => {
+    cameraStreamRef.current?.getTracks().forEach(track => track.stop());
+    cameraStreamRef.current = null;
+    if (cameraVideoRef.current) cameraVideoRef.current.srcObject = null;
+    setCameraRecording(false);
+  }, []);
+
+  const startCamera = useCallback(async (facing: "user" | "environment" = cameraFacing) => {
+    setCameraError("");
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setCameraError("La caméra n’est pas disponible dans ce navigateur. Vérifie les autorisations ou utilise la galerie.");
+      return;
+    }
+    stopCamera();
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: { facingMode: { ideal: facing }, width: { ideal: 1080 }, height: { ideal: 1920 } }
+      });
+      cameraStreamRef.current = stream;
+      setCameraFacing(facing);
+      if (cameraVideoRef.current) {
+        cameraVideoRef.current.srcObject = stream;
+        await cameraVideoRef.current.play().catch(() => undefined);
+      }
+    } catch (err) {
+      setCameraError(err instanceof Error && (err.name === "NotAllowedError" || err.name === "PermissionDeniedError")
+        ? "Autorise l’accès à la caméra et au micro dans les réglages du navigateur, puis réessaie."
+        : "Impossible d’ouvrir la caméra. Vérifie qu’elle n’est pas déjà utilisée et réessaie.");
+    }
+  }, [cameraFacing, stopCamera]);
+
+  function captureCameraPhoto() {
+    const video = cameraVideoRef.current;
+    if (!video || !video.videoWidth || !video.videoHeight) {
+      setCameraError("La caméra démarre encore. Attends un instant et réessaie.");
+      return;
+    }
+    const canvas = document.createElement("canvas");
+    const maxWidth = 1440;
+    const scale = Math.min(1, maxWidth / video.videoWidth);
+    canvas.width = Math.round(video.videoWidth * scale);
+    canvas.height = Math.round(video.videoHeight * scale);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) { setCameraError("La photo n’a pas pu être capturée."); return; }
+    if (cameraFacing === "user") {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob(blob => {
+      if (!blob) { setCameraError("La photo n’a pas pu être enregistrée."); return; }
+      setFile(new File([blob], "emi-photo-" + Date.now() + ".jpg", { type: "image/jpeg" }));
+      stopCamera();
+      setCameraOpen(false);
+      setCreateStudioOpen(false);
+      setComposerOpen(true);
+      setMessage("Photo capturée ! Ajoute une légende avant de publier.");
+    }, "image/jpeg", 0.9);
+  }
+
+  function toggleVideoRecording() {
+    if (cameraRecording) {
+      mediaRecorderRef.current?.stop();
+      setCameraRecording(false);
+      return;
+    }
+    const stream = cameraStreamRef.current;
+    if (!stream) { setCameraError("Ouvre d’abord la caméra."); return; }
+    if (typeof MediaRecorder === "undefined") {
+      setCameraError("L’enregistrement vidéo n’est pas pris en charge par ce navigateur. Tu peux choisir une vidéo dans la galerie.");
+      return;
+    }
+    try {
+      const mimeType = ["video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm", "video/mp4"].find(type => MediaRecorder.isTypeSupported(type));
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      recordedChunksRef.current = [];
+      recorder.ondataavailable = event => { if (event.data.size) recordedChunksRef.current.push(event.data); };
+      recorder.onerror = () => setCameraError("L’enregistrement a rencontré une erreur.");
+      recorder.onstop = () => {
+        const blob = new Blob(recordedChunksRef.current, { type: recorder.mimeType || "video/webm" });
+        if (!blob.size) { setCameraError("Aucune vidéo n’a été enregistrée."); return; }
+        const ext = blob.type.includes("mp4") ? "mp4" : "webm";
+        setFile(new File([blob], "emi-video-" + Date.now() + "." + ext, { type: blob.type }));
+        stopCamera();
+        setCameraOpen(false);
+        setCreateStudioOpen(false);
+        setComposerOpen(true);
+        setMessage("Vidéo capturée ! Ajoute une légende avant de publier.");
+      };
+      mediaRecorderRef.current = recorder;
+      recorder.start(1000);
+      setCameraRecording(true);
+      setCameraError("Enregistrement en cours… Appuie sur le bouton rouge pour terminer.");
+    } catch {
+      setCameraError("Impossible de démarrer l’enregistrement sur cet appareil.");
+    }
+  }
+
+  function openCamera(mode: "photo" | "video" | "text" = "photo") {
+    setCreateStudioOpen(false);
+    if (mode === "text") {
+      setCameraMode("text");
+      setCaption("");
+      setFile(null);
+      setComposerOpen(true);
+      return;
+    }
+    setCameraMode(mode);
+    setCameraOpen(true);
+    void startCamera();
+  }
+
+  useEffect(() => {
+    if (!cameraOpen) { if (cameraStreamRef.current && !cameraRecording) stopCamera(); return; }
+    void startCamera(cameraFacing);
+    return () => { if (!cameraRecording) stopCamera(); };
+  }, [cameraOpen, cameraFacing, startCamera, stopCamera, cameraRecording]);
 
   async function publishStory(e: React.FormEvent) {
     e.preventDefault();
@@ -813,7 +943,8 @@ export default function HomePage() {
 
       <nav className="mobile-nav" aria-label="Navigation mobile"><button className={active === "Accueil" && !viewingProfile ? "mobile-active" : ""} onClick={() => {setViewingProfile(null);setActive("Accueil");void loadFeed();window.scrollTo({top:0,behavior:"smooth"});}}><Home size={20}/><span>Accueil</span></button><button className={active === "Découvrir" ? "mobile-active" : ""} onClick={() => {setViewingProfile(null);setActive("Découvrir");void loadExploreProfiles();window.scrollTo({top:0,behavior:"smooth"});}}><Compass size={20}/><span>Explorer</span></button><button className="mobile-create" aria-label="Ouvrir le studio de création" onClick={() => setCreateStudioOpen(true)}><Plus size={22}/></button><button className={active === "Reels" ? "mobile-active" : ""} onClick={() => {setViewingProfile(null);setActive("Reels");void loadFeed();window.scrollTo({top:0,behavior:"smooth"});}}><Clapperboard size={20}/><span>Reels</span></button><button className={active === "Messages" ? "mobile-active" : ""} onClick={() => {setViewingProfile(null);setActive("Messages");window.scrollTo({top:0,behavior:"smooth"});if(!user)setAuthOpen(true);}}><MessageCircle size={20}/><span>Messages</span></button><button className={viewingProfile ? "mobile-active" : ""} onClick={() => user ? void openProfile(user.id) : setAuthOpen(true)}><UserRound size={20}/><span>Profil</span></button></nav>
 
-      {createStudioOpen && <div className="modal-backdrop create-studio-backdrop" onClick={() => setCreateStudioOpen(false)}><section className="create-studio" role="dialog" aria-modal="true" aria-label="Studio de création EMi" onClick={e => e.stopPropagation()}><header className="create-studio-header"><div><span className="eyebrow">EMi · CRÉATION</span><h2>Que veux-tu partager ?</h2><p>Un instant, une histoire, une vidéo : à toi de jouer.</p></div><button className="modal-close" onClick={() => setCreateStudioOpen(false)} aria-label="Fermer"><X size={20}/></button></header><div className="create-studio-preview"><div className="studio-glow studio-glow-one"/><div className="studio-glow studio-glow-two"/><div className="studio-preview-icon"><Sparkles size={30}/></div><strong>Chaque moment mérite d’exister.</strong><span>Ton espace créatif, signé EMi</span></div><div className="create-studio-options"><button className="studio-option studio-option-story" onClick={() => { setCreateStudioOpen(false); if (!user) { setAuthOpen(true); setMessage("Connecte-toi pour partager une story."); } else setStoryComposerOpen(true); }}><span className="studio-option-icon"><Camera size={23}/></span><span><strong>Story</strong><small>Photo ou vidéo · 24 h</small></span><span className="studio-option-arrow">↗</span></button><button className="studio-option studio-option-post" onClick={() => { setCreateStudioOpen(false); setComposerOpen(true); }}><span className="studio-option-icon"><ImageIcon size={23}/></span><span><strong>Publication</strong><small>Photo, vidéo et légende</small></span><span className="studio-option-arrow">↗</span></button><button className="studio-option studio-option-reel" onClick={() => { setCreateStudioOpen(false); setComposerOpen(true); setMessage("Pour créer un Reel, ajoute une vidéo à ta publication. Le format vidéo sera affiché dans l’espace Reels."); }}><span className="studio-option-icon"><Clapperboard size={23}/></span><span><strong>Reel / vidéo</strong><small>Partage un moment en mouvement</small></span><span className="studio-option-arrow">↗</span></button><button className="studio-option studio-option-text" onClick={() => { setCreateStudioOpen(false); setFile(null); setComposerOpen(true); }}><span className="studio-option-icon"><span className="studio-text-icon">T</span></span><span><strong>Texte</strong><small>Une pensée, une annonce, une idée</small></span><span className="studio-option-arrow">↗</span></button></div><footer className="create-studio-footer"><span><Sparkles size={14}/> Créé avec EMi</span><span>Partage à ta façon</span></footer></section></div>}
+      {createStudioOpen && <div className="modal-backdrop create-studio-backdrop" onClick={() => setCreateStudioOpen(false)}><section className="create-studio" role="dialog" aria-modal="true" aria-label="Studio de création EMi" onClick={e => e.stopPropagation()}><header className="create-studio-header"><div><span className="eyebrow">EMi · CRÉATION</span><h2>Que veux-tu partager ?</h2><p>Un instant, une histoire, une vidéo : à toi de jouer.</p></div><button className="modal-close" onClick={() => setCreateStudioOpen(false)} aria-label="Fermer"><X size={20}/></button></header><div className="create-studio-preview"><div className="studio-glow studio-glow-one"/><div className="studio-glow studio-glow-two"/><div className="studio-preview-icon"><Sparkles size={30}/></div><strong>Chaque moment mérite d’exister.</strong><span>Ton espace créatif, signé EMi</span></div><div className="create-studio-options"><button className="studio-option studio-option-story" onClick={() => { if (!user) { setCreateStudioOpen(false); setAuthOpen(true); setMessage("Connecte-toi pour partager une story."); } else openCamera("photo"); }}><span className="studio-option-icon"><Camera size={23}/></span><span><strong>Story</strong><small>Photo ou vidéo · 24 h</small></span><span className="studio-option-arrow">↗</span></button><button className="studio-option studio-option-post" onClick={() => openCamera("photo")}><span className="studio-option-icon"><ImageIcon size={23}/></span><span><strong>Publication</strong><small>Photo, vidéo et légende</small></span><span className="studio-option-arrow">↗</span></button><button className="studio-option studio-option-reel" onClick={() => openCamera("video")}><span className="studio-option-icon"><Clapperboard size={23}/></span><span><strong>Reel / vidéo</strong><small>Partage un moment en mouvement</small></span><span className="studio-option-arrow">↗</span></button><button className="studio-option studio-option-text" onClick={() => openCamera("text")}><span className="studio-option-icon"><span className="studio-text-icon">T</span></span><span><strong>Texte</strong><small>Une pensée, une annonce, une idée</small></span><span className="studio-option-arrow">↗</span></button></div><footer className="create-studio-footer"><span><Sparkles size={14}/> Créé avec EMi</span><span>Partage à ta façon</span></footer></section></div>}
+      {cameraOpen && <div className="camera-studio-backdrop" role="dialog" aria-modal="true" aria-label="Caméra EMi"><section className="camera-studio"><video ref={cameraVideoRef} className={"camera-live-preview" + (cameraFacing === "user" ? " camera-selfie" : "")} autoPlay muted playsInline/><div className="camera-preview-shade"/><header className="camera-studio-top"><button onClick={() => { stopCamera(); setCameraOpen(false); }} aria-label="Fermer la caméra"><X size={25}/></button><span>EMi <small>STUDIO</small></span><button onClick={() => void startCamera(cameraFacing === "user" ? "environment" : "user")} aria-label="Changer de caméra"><span className="camera-flip-symbol">↻</span></button></header>{cameraError && <div className={"camera-status" + (cameraRecording ? " recording" : "")} role="status">{cameraError}</div>}{!cameraError && <div className="camera-tip">Place-toi dans le cadre et crée ton moment ✨</div>}<div className="camera-tools"><button onClick={() => { const input=document.getElementById("emi-camera-gallery") as HTMLInputElement|null; input?.click(); }}><ImageIcon size={22}/><small>Galerie</small></button><button className={"camera-shutter" + (cameraRecording ? " is-recording" : "")} onClick={() => cameraMode === "photo" ? captureCameraPhoto() : toggleVideoRecording()} aria-label={cameraMode === "photo" ? "Prendre une photo" : cameraRecording ? "Arrêter la vidéo" : "Démarrer la vidéo"}><span/></button><button onClick={() => { stopCamera(); setCameraOpen(false); setCreateStudioOpen(true); }}><Sparkles size={22}/><small>Modes</small></button></div><div className="camera-mode-switch"><button className={cameraMode === "photo" ? "selected" : ""} onClick={() => setCameraMode("photo")}>PHOTO</button><button className={cameraMode === "video" ? "selected" : ""} onClick={() => setCameraMode("video")}>VIDÉO</button><button onClick={() => { stopCamera(); setCameraOpen(false); openCamera("text"); }}>TEXTE</button></div><input id="emi-camera-gallery" type="file" accept="image/*,video/*" capture="environment" onChange={e => { const selected=e.target.files?.[0]; if(selected){setFile(selected);stopCamera();setCameraOpen(false);setComposerOpen(true);setMessage("Média sélectionné ! Ajoute une légende avant de publier.");} e.currentTarget.value=""; }} hidden/></section></div>}
       {storyComposerOpen && <div className="modal-backdrop" onClick={() => {setStoryComposerOpen(false);setStoryFile(null);}}><div className="modal-card story-composer-card" onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={() => setStoryComposerOpen(false)} aria-label="Fermer"><X size={20}/></button><div className="modal-icon"><Camera size={23}/></div><span className="eyebrow">EMi · STORY</span><h2>Partager une story</h2><p>Une photo ou vidéo visible pendant 24 heures.</p><form onSubmit={publishStory}><input ref={storyFileInput} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" onChange={e=>setStoryFile(e.target.files?.[0] || null)} style={{display:"none"}}/><button type="button" className="nav-item" style={{border:"1px solid #393643",marginBottom:12}} onClick={()=>storyFileInput.current?.click()}><ImageIcon size={18}/><span>{storyFile ? storyFile.name : "Choisir une photo ou vidéo"}</span></button>{storyFile && <div className="story-preview">{storyFile.type.startsWith("video/") ? "Aperçu vidéo sélectionné" : "Photo sélectionnée"} · {(storyFile.size/1024/1024).toFixed(1)} Mo</div>}<textarea value={storyCaption} onChange={e=>setStoryCaption(e.target.value)} maxLength={500} rows={3} placeholder="Ajouter un texte (facultatif)…" style={{width:"100%",resize:"vertical",padding:12,margin:"12px 0",borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><p style={{fontSize:11,lineHeight:1.6,color:"#aaa6b7"}}>Formats photo/vidéo courants, jusqu’à 50 Mo. La story expire dans 24 heures.</p><button className="modal-primary" disabled={busy || !storyFile} type="submit">{busy ? "Publication…" : "Publier la story"}</button></form></div></div>}
       {activeStory && <div className="story-viewer-backdrop" role="dialog" aria-modal="true" aria-label="Visionneuse de story" onClick={() => setActiveStory(null)}><div className="story-viewer" onClick={e=>e.stopPropagation()}><div className="story-progress"><span style={{animationDuration:activeStory.media_type === "video" ? "15s" : "6s"}}/></div><header><div className="story-viewer-author">{activeStory.profiles?.avatar_url ? <img src={activeStory.profiles.avatar_url} alt=""/> : <span>{(activeStory.profiles?.display_name || activeStory.profiles?.username || "M").slice(0,1).toUpperCase()}</span>}<strong>{activeStory.profiles?.display_name || activeStory.profiles?.username || "Membre EMi"}</strong><small>{new Date(activeStory.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</small></div><button onClick={() => setActiveStory(null)} aria-label="Fermer la story"><X size={22}/></button></header>{activeStory.media_type === "video" ? <video className="story-viewer-media" src={activeStory.media_url} controls autoPlay playsInline onEnded={() => setActiveStory(null)}/> : <img className="story-viewer-media" src={activeStory.media_url} alt="Story"/>}{activeStory.caption && <p className="story-viewer-caption">{activeStory.caption}</p>}<div className="story-viewer-nav"><button onClick={() => { const i=stories.findIndex(st=>st.id===activeStory.id); if(i>0)setActiveStory(stories[i-1]); else setActiveStory(null); }}>Précédente</button><button onClick={() => { const i=stories.findIndex(st=>st.id===activeStory.id); if(i>=0 && i<stories.length-1)setActiveStory(stories[i+1]); else setActiveStory(null); }}>Suivante</button></div></div></div>}
       {(composerOpen || authOpen || profileEditorOpen) && <div className="modal-backdrop" onClick={() => {setComposerOpen(false);setAuthOpen(false);setProfileEditorOpen(false);}}><div className="modal-card" onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={() => {setComposerOpen(false);setAuthOpen(false);setProfileEditorOpen(false);}} aria-label="Fermer"><X size={20}/></button>{message && <div role="alert" style={{margin:"12px 0",padding:12,borderRadius:10,border:"1px solid #8d6de0",background:"#282235",color:"#f7f3ff",fontSize:13,lineHeight:1.6,overflowWrap:"anywhere"}}>{message}</div>}{composerOpen ? <><div className="modal-icon"><Camera size={23}/></div><span className="eyebrow">EMi · TON ESPACE</span><h2>Un moment à partager ?</h2><form onSubmit={publish}><textarea value={caption} onChange={e=>setCaption(e.target.value)} placeholder="Qu’as-tu envie de partager ?" maxLength={5000} rows={4} style={{width:"100%",resize:"vertical",padding:12,margin:"12px 0",borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" onChange={e=>setFile(e.target.files?.[0] || null)} style={{display:"none"}}/><button type="button" onClick={()=>fileInput.current?.click()} className="nav-item" style={{border:"1px solid #393643",marginBottom:12}}><ImageIcon size={18}/><span>{file ? file.name : "Ajouter une photo ou vidéo (50 Mo max.)"}</span></button>{file && <button type="button" onClick={()=>setFile(null)} className="nav-item"><X size={16}/> Retirer le fichier</button>}<p style={{fontSize:11,lineHeight:1.6,color:"#aaa6b7"}}>Ta publication sera publique. Publier nécessite un compte connecté.</p><button className="modal-primary" disabled={busy} type="submit">{busy ? "Publication en cours…" : "Publier"}</button></form></> : profileEditorOpen ? <><div className="modal-icon"><UserRound size={23}/></div><span className="eyebrow">EMi · PROFIL</span><h2>Personnalise ton profil</h2><form onSubmit={saveProfile}><div className="profile-editor-avatar">{avatarFile ? avatarFile.name : user?.avatar_url ? <img src={user.avatar_url} alt="Photo actuelle"/> : <UserRound size={28}/>}</div><input ref={profileAvatarInput} type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>setAvatarFile(e.target.files?.[0] || null)} style={{display:"none"}}/><button type="button" className="profile-back-button" onClick={()=>profileAvatarInput.current?.click()}>Choisir une photo de profil</button><label className="profile-field-label">Nom affiché<input value={profileNameDraft} onChange={e=>setProfileNameDraft(e.target.value)} maxLength={80} placeholder="Ton nom"/></label><label className="profile-field-label">Nom d’utilisateur<input value={profileUsernameDraft} onChange={e=>setProfileUsernameDraft(e.target.value)} maxLength={30} placeholder="ex. emi_membre"/></label><label className="profile-field-label">Biographie<textarea value={profileBioDraft} onChange={e=>setProfileBioDraft(e.target.value)} maxLength={300} rows={4} placeholder="Présente-toi en quelques mots…"/></label><button className="modal-primary" type="submit" disabled={busy}>{busy ? "Enregistrement…" : "Enregistrer le profil"}</button></form></> : <><div className="modal-icon"><UserRound size={23}/></div><span className="eyebrow">EMi · TON COMPTE</span><h2>{recoveryMode ? "Nouveau mot de passe" : signup ? "Créer ton compte" : "Content de te revoir"}</h2><p>{recoveryMode ? "Choisis un mot de passe sûr pour retrouver ton compte." : signup ? "Inscris-toi avec ton adresse e-mail." : "Connecte-toi pour publier et aimer les moments."}</p>{!signup && !recoveryMode && <><div style={{display:"flex",gap:8,margin:"12px 0"}}><button type="button" onClick={()=>{setAuthMethod("email");setOtpSent(false);setOtpCode("");setMessage("");}} style={{flex:1,padding:10,borderRadius:9,border:"1px solid #8d6de0",background:"#302443",color:"#f7f6fb"}}>Connexion par e-mail</button></div><p style={{fontSize:12,lineHeight:1.6,color:"#aaa6b7",margin:"0 0 12px"}}>La connexion par SMS est temporairement indisponible. Utilise ton adresse e-mail et ton mot de passe.</p></>}<form onSubmit={authenticate}>{recoveryMode ? <input type="password" required minLength={8} value={password} onChange={e=>setPassword(e.target.value)} placeholder="Nouveau mot de passe (8 caractères minimum)" autoComplete="new-password" style={{width:"100%",padding:13,marginBottom:14,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/> : authMethod==="phone" && !signup ? <><input type="tel" required value={phone} onChange={e=>setPhone(e.target.value)} placeholder="Téléphone (ex. +2376XXXXXXXX)" autoComplete="tel" disabled={otpSent} style={{width:"100%",padding:13,marginBottom:10,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/>{otpSent && <input type="text" inputMode="numeric" autoComplete="one-time-code" required value={otpCode} onChange={e=>setOtpCode(e.target.value)} placeholder="Code reçu par SMS" style={{width:"100%",padding:13,marginBottom:14,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/>}</> : <><input type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="Adresse e-mail" autoComplete="email" style={{width:"100%",padding:13,marginBottom:10,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><input type="password" required minLength={6} value={password} onChange={e=>setPassword(e.target.value)} placeholder="Mot de passe (6 caractères minimum)" autoComplete={signup?"new-password":"current-password"} style={{width:"100%",padding:13,marginBottom:14,borderRadius:10,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/></>}<button className="modal-primary" disabled={busy} type="submit">{busy ? "Patiente…" : recoveryMode ? "Enregistrer le nouveau mot de passe" : authMethod==="phone" && !signup ? (otpSent ? "Vérifier le code SMS" : "Recevoir un code SMS") : signup ? "Créer mon compte" : "Se connecter"}</button></form>{authMethod==="email" && !signup && !recoveryMode && <button type="button" onClick={()=>void requestPasswordReset()} disabled={busy} style={{width:"100%",marginTop:10,border:0,background:"none",color:"#c7b4ff",fontSize:12}}>Mot de passe oublié ?</button>}{authMethod==="email" && !signup && !recoveryMode && <button type="button" onClick={()=>void resendConfirmationEmail()} disabled={busy} style={{width:"100%",marginTop:10,border:0,background:"none",color:"#c7b4ff",fontSize:12}}>Renvoyer le courriel de confirmation</button>}{authMethod==="email" && !recoveryMode && <button onClick={()=>setSignup(v=>!v)} style={{width:"100%",marginTop:14,border:0,background:"none",color:"#c7b4ff",fontSize:12}}>{signup ? "J’ai déjà un compte" : "Créer un nouveau compte"}</button>}</>}</div></div>}
