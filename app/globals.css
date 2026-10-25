@@ -643,3 +643,10 @@ input,textarea{accent-color:var(--purple)}
 .emi-catalog-track>span:nth-child(2),.emi-catalog-selected section{display:grid;gap:4px;flex:1;min-width:0}.emi-catalog-track strong,.emi-catalog-selected strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}.emi-catalog-track small,.emi-catalog-selected small{color:#a9a3b4;font-size:11px}.emi-catalog-track>svg{color:#c7ab68;flex:0 0 auto}.emi-catalog-empty{padding:14px;color:#bdb6c8;font-size:12px;line-height:1.6}
 .emi-catalog-selected{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px;border:1px solid #b99a5840;border-radius:14px;background:#b99a580c}.emi-catalog-selected>div{flex:0 0 auto}.emi-catalog-selected>button{border:0;background:transparent;color:#d6bd83;font-size:11px}.emi-compose-music-pick{width:100%;display:flex;align-items:center;gap:10px;text-align:left}.emi-compose-music-pick span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.emi-compose-music-pick:disabled{opacity:.65}
 @media(max-width:480px){.emi-catalog-panel{padding:11px}.emi-catalog-list{max-height:245px}}
+
+
+/* EMi Music: compact, non-overlay playback controls */
+.emi-post-music { display:flex; align-items:center; gap:10px; }
+.emi-post-audio { display:none; }
+.emi-music-play-button { flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid rgba(196,181,253,.35); border-radius:50%; color:#e9ddff; background:rgba(139,92,246,.16); cursor:pointer; }
+.emi-music-play-button:hover { background:rgba(139,92,246,.3); }
