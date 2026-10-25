@@ -1,0 +1,21 @@
+{
+  "name": "EMi",
+  "short_name": "EMi",
+  "description": "Un lien, une histoire, une famille.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#101014",
+  "theme_color": "#5520c9",
+  "icons": [
+    {
+      "src": "/icons/emi-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/emi-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
