@@ -19,6 +19,11 @@ export default function EspaceVendeurPage() {
   const [loading, setLoading] = useState(true);
   const [savingKyc, setSavingKyc] = useState(false);
   const [notice, setNotice] = useState("");
+  const [cash, setCash] = useState("0");
+  const [momo, setMomo] = useState("0");
+  const [caisseHistory, setCaisseHistory] = useState<Array<{date:string;cash:number;momo:number;total:number}>>([]);
+  const [caisseNotice, setCaisseNotice] = useState("");
+  const [refCopied, setRefCopied] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMap = useRef<any>(null);
 
@@ -48,7 +53,35 @@ export default function EspaceVendeurPage() {
     setLoading(false);
   }
 
-  useEffect(() => { void refresh(); }, []);
+  useEffect(() => {
+    void refresh();
+    try {
+      const saved = localStorage.getItem("emi_caisse_v1");
+      if (saved) setCaisseHistory(JSON.parse(saved));
+    } catch { /* ignore corrupted local cache */ }
+  }, []);
+
+  function enregistrerCaisse() {
+    const cashValue = Number(cash);
+    const momoValue = Number(momo);
+    if (!Number.isFinite(cashValue) || !Number.isFinite(momoValue) || cashValue < 0 || momoValue < 0) {
+      setCaisseNotice("Saisis des montants valides, positifs ou nuls."); return;
+    }
+    const entry = { date: new Date().toISOString(), cash: cashValue, momo: momoValue, total: cashValue + momoValue };
+    const updated = [entry, ...caisseHistory].slice(0, 90);
+    setCaisseHistory(updated);
+    try { localStorage.setItem("emi_caisse_v1", JSON.stringify(updated)); setCaisseNotice("Bilan enregistré sur cet appareil. Il reste disponible hors connexion sur ce navigateur."); }
+    catch { setCaisseNotice("Impossible d'enregistrer localement sur cet appareil."); }
+  }
+
+  async function copierLienParrainage() {
+    if (!userId) return;
+    const link = window.location.origin + "/annonces?ref=" + encodeURIComponent(userId);
+    try {
+      await navigator.clipboard.writeText(link);
+      setRefCopied(true); window.setTimeout(() => setRefCopied(false), 2500);
+    } catch { setNotice("Copie automatique indisponible. Copie ce lien : " + link); }
+  }
 
   useEffect(() => {
     if (!mapRef.current || !listings.length) return;
@@ -126,6 +159,24 @@ export default function EspaceVendeurPage() {
           {[["Annonces", listings.length],["Vues enregistrées", views],["Clics WhatsApp", clicks],["Taux clics / vues", views ? rate.toFixed(1) + "%" : "—"]].map(([label,value]) => <div key={String(label)} className="rounded-2xl border border-white/10 bg-white/[.04] p-5"><p className="text-sm text-white/55">{label}</p><p className="mt-2 text-3xl font-semibold text-amber-200">{value}</p></div>)}
         </section>
         <section className="mt-6 grid gap-6 lg:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6 lg:col-span-2">
+            <h2 className="text-lg font-semibold">💰 Mini-coffre · Caisse journalière</h2>
+            <p className="mt-2 text-sm text-white/55">Note tes ventes en espèces et Mobile Money. Pour l'instant, le journal est enregistré sur cet appareil et n'est pas synchronisé avec Supabase.</p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <label className="text-sm text-white/60">Ventes cash (FCFA)<input type="number" min="0" step="1" value={cash} onChange={e=>setCash(e.target.value)} className="mt-1 block w-full rounded-xl border border-white/15 bg-black/30 px-3 py-3 text-white"/></label>
+              <label className="text-sm text-white/60">Ventes Mobile Money (FCFA)<input type="number" min="0" step="1" value={momo} onChange={e=>setMomo(e.target.value)} className="mt-1 block w-full rounded-xl border border-white/15 bg-black/30 px-3 py-3 text-white"/></label>
+            </div>
+            <button onClick={enregistrerCaisse} className="mt-4 rounded-full bg-sky-500 px-5 py-3 font-semibold text-white">Enregistrer le bilan du jour</button>
+            {caisseNotice && <p role="status" className="mt-3 text-sm text-emerald-300">{caisseNotice}</p>}
+            {caisseHistory.length > 0 && <div className="mt-4 space-y-2"><p className="text-sm font-medium">Derniers bilans enregistrés</p>{caisseHistory.slice(0,5).map((entry,i)=><div key={entry.date+i} className="flex flex-wrap justify-between gap-2 rounded-xl bg-black/20 px-3 py-2 text-sm"><span className="text-white/55">{new Date(entry.date).toLocaleString("fr-FR")}</span><span>{entry.total.toLocaleString("fr-FR")} FCFA <span className="text-white/40">(Cash {entry.cash.toLocaleString("fr-FR")} · MoMo {entry.momo.toLocaleString("fr-FR")})</span></span></div>)}</div>}
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6 lg:col-span-2">
+            <h2 className="text-lg font-semibold">🤝 Programme Ambassadeur</h2>
+            <p className="mt-2 text-sm text-white/55">Partage ton lien personnel pour inviter d'autres commerçants à découvrir le marché EMi.</p>
+            <div className="mt-4 break-all rounded-xl border border-dashed border-emerald-300/40 bg-black/20 p-3 font-mono text-sm text-emerald-200">{typeof window !== "undefined" && userId ? window.location.origin + "/annonces?ref=" + encodeURIComponent(userId) : "Connexion requise pour générer le lien"}</div>
+            <button onClick={()=>void copierLienParrainage()} disabled={!userId} className="mt-3 rounded-full bg-emerald-400 px-5 py-3 font-semibold text-black disabled:opacity-50">{refCopied ? "Lien copié ✓" : "Copier mon lien de parrainage"}</button>
+            <p className="mt-2 text-xs text-white/40">Le lien est unique, mais le suivi des inscriptions parrainées et les récompenses ne sont pas encore activés.</p>
+          </div>
           <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6">
             <h2 className="text-lg font-semibold">🛡️ Badge de confiance</h2>
             <p className="mt-3 text-sm text-white/60">Statut : <span className={verification?.status === "approved" ? "text-emerald-300" : "text-amber-200"}>{statusLabel}</span></p>
