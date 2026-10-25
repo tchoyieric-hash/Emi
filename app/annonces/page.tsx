@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { MessageCircle, Plus, ShoppingBag, LoaderCircle, ImagePlus } from "lucide-react";
+import { MessageCircle, Plus, ShoppingBag, LoaderCircle, ImagePlus, Menu, X, ArrowUpRight } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 import { genererLienWhatsApp } from "@/lib/whatsapp";
 
@@ -13,6 +13,7 @@ export default function AnnoncesPage() {
   const [annonces,setAnnonces] = useState<Annonce[]>([]);
   const [user,setUser] = useState<any>(null);
   const [open,setOpen] = useState(false);
+  const [spacesOpen,setSpacesOpen] = useState(false);
   const [loading,setLoading] = useState(true);
   const [saving,setSaving] = useState(false);
   const [notice,setNotice] = useState("");
@@ -66,18 +67,32 @@ export default function AnnoncesPage() {
   }
 
   return <main className="min-h-screen bg-[#09090d] text-white">
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-[#09090d]/90 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <Link href="/" className="font-semibold tracking-[.22em] text-amber-200">EMi</Link>
-        <nav className="flex items-center gap-3 text-xs sm:gap-4 sm:text-sm"><Link href="/annonces/mesh" className="text-emerald-200 hover:text-emerald-100">↔ P2P direct</Link><Link href="/annonces/tontine" className="text-violet-200 hover:text-violet-100">🟣 Tontine-Flow</Link><Link href="/annonces/troc" className="text-amber-200 hover:text-amber-100">🔄 Troc-Chain</Link><Link href="/annonces/confiance" className="text-cyan-200 hover:text-cyan-100">🛡️ Confiance</Link><Link href="/annonces/voice-market" className="text-pink-200 hover:text-pink-100">🎙️ Voice-Market</Link><Link href="/annonces/neural-trade" className="text-violet-200 hover:text-violet-100">🧠 Neural-Trade</Link><Link href="/annonces/neural-voice" className="text-emerald-200 hover:text-emerald-100">🌐 Neural-Voice P2P</Link><Link href="/annonces/biometric-trust" className="text-rose-300 hover:text-rose-200">🧬 Biometric-Trust</Link><Link href="/annonces/quantum-mesh" className="text-indigo-300 hover:text-indigo-200">⚛️ Quantum-Mesh</Link><Link href="/annonces/live-show" className="text-rose-300 hover:text-rose-200">🔥 Live Show & Jeux</Link><Link href="/annonces/street-arena" className="text-fuchsia-300 hover:text-fuchsia-200">⚔️ Street-Arena</Link><Link href="/annonces/neural-bazaar" className="text-fuchsia-300 hover:text-fuchsia-200">⚡ Neural-Bazaar</Link><Link href="/annonces/neuro-inventory" className="text-emerald-300 hover:text-emerald-200">🏪 Neuro-Inventory</Link><Link href="/annonces/philanthropy" className="text-amber-300 hover:text-amber-200">👑 Philanthropy</Link><Link href="/annonces/black-diamond" className="text-amber-200 hover:text-amber-100">🖤 Black-Diamond</Link><Link href="/annonces/hope-bridge" className="text-rose-300 hover:text-rose-200">🎗️ Hope-Bridge</Link><Link href="/annonces/immortel-trace" className="text-violet-300 hover:text-violet-200">🕊️ Immortel-Trace</Link><Link href="/annonces/sovereign-compliance" className="text-blue-300 hover:text-blue-200">🏛️ Sovereign Trust</Link><Link href="/annonces/risk-guard" className="text-amber-300 hover:text-amber-200">🛡️ Risk-Guard AML</Link><Link href="/annonces/sovereign-governance" className="text-violet-300 hover:text-violet-200">🤝 Sovereign Governance</Link><Link href="/annonces/master-health-check" className="text-emerald-300 hover:text-emerald-200">⚡ Master Health-Check</Link><Link href="/annonces/elite-directory" className="text-amber-300 hover:text-amber-200">✨ Elite Hospitality Directory</Link><Link href="/annonces/espace-vendeur" className="text-white/70 hover:text-amber-200">📊 Espace vendeur</Link></nav><div className="hidden items-center gap-2 text-sm text-white/70 sm:flex"><ShoppingBag size={17}/> Marché EMi</div>
-        <button onClick={()=>setOpen(!open)} className="flex items-center gap-2 rounded-full bg-amber-200 px-4 py-2 text-sm font-semibold text-black"><Plus size={17}/> Vendre</button>
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#09090d]/95 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:py-4">
+        <Link href="/" aria-label="EMi accueil" className="shrink-0 text-xl font-bold tracking-[.2em] text-amber-200">EMi<span className="ml-1 text-[10px] font-medium tracking-[.12em] text-white/45">MARKET</span></Link>
+        <div className="hidden items-center gap-5 md:flex">
+          <Link href="/annonces" className="text-sm font-medium text-white">Marché</Link>
+          <Link href="/annonces/espace-vendeur" className="text-sm text-white/65 transition hover:text-amber-200">Espace vendeur</Link>
+          <button onClick={()=>setSpacesOpen(!spacesOpen)} className="flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:border-amber-200/50"><Menu size={16}/> Explorer les espaces</button>
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={()=>setOpen(!open)} className="flex items-center gap-2 rounded-full bg-amber-200 px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-amber-100"><Plus size={17}/> Vendre</button>
+          <button aria-label={spacesOpen?"Fermer le menu des espaces":"Ouvrir le menu des espaces"} aria-expanded={spacesOpen} onClick={()=>setSpacesOpen(!spacesOpen)} className="rounded-full border border-white/15 p-2.5 text-white md:hidden">{spacesOpen?<X size={19}/>:<Menu size={19}/>}</button>
+        </div>
       </div>
+      {spacesOpen&&<div className="border-t border-white/10 bg-[#0d0d13]">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-2 px-4 py-4 sm:grid-cols-3 md:grid-cols-4">
+          {[
+            ["P2P direct","/annonces/mesh"],["Tontine-Flow","/annonces/tontine"],["Troc-Chain","/annonces/troc"],["Confiance","/annonces/confiance"],["Voice-Market","/annonces/voice-market"],["Neural-Trade","/annonces/neural-trade"],["Neural-Voice P2P","/annonces/neural-voice"],["Biometric-Trust","/annonces/biometric-trust"],["Quantum-Mesh","/annonces/quantum-mesh"],["Live Show & Jeux","/annonces/live-show"],["Street-Arena","/annonces/street-arena"],["Neural-Bazaar","/annonces/neural-bazaar"],["Neuro-Inventory","/annonces/neuro-inventory"],["Philanthropy","/annonces/philanthropy"],["Black-Diamond","/annonces/black-diamond"],["Hope-Bridge","/annonces/hope-bridge"],["Immortel-Trace","/annonces/immortel-trace"],["Sovereign Compliance","/annonces/sovereign-compliance"],["Risk-Guard AML","/annonces/risk-guard"],["Sovereign Governance","/annonces/sovereign-governance"],["Master Health-Check","/annonces/master-health-check"],["Elite Hospitality Directory","/annonces/elite-directory"]
+          ].map(([label,href])=><Link key={href} href={href} onClick={()=>setSpacesOpen(false)} className="flex items-center justify-between gap-2 rounded-xl border border-white/[.07] bg-white/[.025] px-3 py-3 text-sm text-white/75 transition hover:border-amber-200/30 hover:bg-amber-200/[.06] hover:text-amber-100">{label}<ArrowUpRight size={14} className="shrink-0 text-white/35"/></Link>)}
+        </div>
+      </div>}
     </header>
-    <section className="mx-auto max-w-6xl px-4 py-8">
-      <div className="mb-7 rounded-3xl border border-amber-100/15 bg-gradient-to-br from-amber-200/10 via-white/[.03] to-transparent p-6 sm:p-9">
+    <section className="mx-auto max-w-6xl px-4 py-6 sm:py-9">
+      <div className="mb-7 overflow-hidden rounded-3xl border border-amber-100/15 bg-gradient-to-br from-amber-200/[.12] via-white/[.035] to-transparent p-5 sm:p-9">
         <p className="mb-2 text-xs font-semibold uppercase tracking-[.3em] text-amber-200">Acheter · Vendre · Échanger</p>
-        <h1 className="text-3xl font-semibold sm:text-5xl">Le marché <span className="text-amber-200">EMi</span></h1>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-white/60">Découvre les annonces et contacte directement le vendeur sur WhatsApp. Les échanges se font entre acheteurs et vendeurs.</p>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">Le marché <span className="text-amber-200">EMi</span></h1>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-white/65 sm:text-base">Achète, vends et échange en toute simplicité. Découvre les offres et contacte directement les vendeurs sur WhatsApp.</p>
       </div>
       <section aria-labelledby="modules-emi" className="mb-8">
         <div className="mb-4">
@@ -108,8 +123,8 @@ export default function AnnoncesPage() {
         <label className="grid cursor-pointer gap-2 text-sm">Photo de l'article <span className="flex items-center gap-2 rounded-xl border border-dashed border-white/20 px-4 py-3 text-white/65"><ImagePlus size={18}/>{photo?photo.name:"Ajouter une photo (12 Mo max)"}</span><input type="file" accept="image/*" className="hidden" onChange={e=>setPhoto(e.target.files?.[0]||null)}/></label>
         <div className="flex gap-3 sm:col-span-2"><button disabled={saving} className="flex items-center gap-2 rounded-full bg-amber-200 px-5 py-3 font-semibold text-black disabled:opacity-60">{saving&&<LoaderCircle className="animate-spin" size={17}/>} {saving?"Publication…":"Publier l'annonce"}</button><button type="button" onClick={()=>setOpen(false)} className="rounded-full border border-white/15 px-5 py-3 text-white/70">Annuler</button></div>
       </form>}
-      <div className="mb-5 flex items-center justify-between"><h2 className="text-xl font-semibold">Annonces récentes</h2><span className="text-sm text-white/45">{annonces.length} résultat(s)</span></div>
-      {loading?<div className="flex items-center gap-3 py-12 text-white/60"><LoaderCircle className="animate-spin"/> Chargement des annonces…</div>:annonces.length===0?<div className="rounded-3xl border border-white/10 p-10 text-center"><ShoppingBag className="mx-auto mb-4 text-amber-200" size={35}/><h3 className="text-lg font-semibold">Le marché démarre ici</h3><p className="mt-2 text-sm text-white/55">Aucune annonce publiée pour le moment. Tu peux être le premier vendeur.</p><button onClick={()=>setOpen(true)} className="mt-5 rounded-full bg-amber-200 px-5 py-3 font-semibold text-black">Publier une annonce</button></div>:<div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{annonces.map(a=><article key={a.id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/[.035]">
+      <div className="mb-5 flex items-end justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-amber-200/75">À découvrir</p><h2 className="mt-1 text-xl font-semibold sm:text-2xl">Annonces récentes</h2></div><span className="shrink-0 rounded-full border border-white/10 bg-white/[.04] px-3 py-1.5 text-xs text-white/55">{annonces.length} offre{annonces.length===1?"":"s"}</span></div>
+      {loading?<div className="flex items-center gap-3 py-12 text-white/60"><LoaderCircle className="animate-spin"/> Chargement des annonces…</div>:annonces.length===0?<div className="rounded-3xl border border-dashed border-white/15 bg-white/[.02] px-5 py-10 text-center sm:px-10"><div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/[.07]"><ShoppingBag className="text-amber-200" size={27}/></div><h3 className="text-lg font-semibold">Les premières offres arrivent bientôt</h3><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-white/55">Aucune annonce n’est encore publiée. Tu peux lancer le marché en partageant la première offre.</p><button onClick={()=>setOpen(true)} className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-200 px-5 py-3 text-sm font-semibold text-black transition hover:bg-amber-100"><Plus size={16}/> Publier la première annonce</button></div>:<div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{annonces.map(a=><article key={a.id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/[.035]">
         {a.image_urls?.[0]?<Link href={"/annonce/"+a.id}><img src={a.image_urls[0]} alt={a.titre} className="h-56 w-full object-cover" loading="lazy"/></Link>:<div className="flex h-40 items-center justify-center bg-white/[.04]"><ShoppingBag size={36} className="text-white/20"/></div>}
         <div className="p-5"><Link href={"/annonce/"+a.id} className="text-lg font-semibold hover:text-amber-200">{a.titre}</Link><p className="mt-2 text-2xl font-semibold text-amber-200">{new Intl.NumberFormat("fr-FR").format(Number(a.prix))} FCFA</p><p className="mt-3 line-clamp-3 whitespace-pre-wrap text-sm text-white/60">{a.description||"Contacte le vendeur pour plus d'informations."}</p>
           <div className="mt-5 flex gap-2"><a href={genererLienWhatsApp(a.titre,Number(a.prix),a.id,a.numero_whatsapp)} onClick={()=>{ if(supabase) void supabase.from("annonce_events").insert({annonce_id:a.id,event_type:"whatsapp_click"}); }} target="_blank" rel="noopener noreferrer" className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#25D366] px-3 py-3 text-sm font-semibold text-black"><MessageCircle size={17}/> Contacter sur WhatsApp</a><Link href={"/annonce/"+a.id} className="rounded-full border border-white/15 px-4 py-3 text-sm">Voir</Link></div>
