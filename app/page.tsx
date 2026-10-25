@@ -102,6 +102,8 @@ export default function HomePage() {
   const [chatSearch, setChatSearch] = useState("");
   const [notifications, setNotifications] = useState<{id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;message:string;is_read:boolean;created_at:string;actor?:Profile|null}[]>([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+  const [incomingMessageNotice, setIncomingMessageNotice] = useState("");
 
   const [profileEditorOpen, setProfileEditorOpen] = useState(false);
   const [profileNameDraft, setProfileNameDraft] = useState("");
@@ -793,6 +795,36 @@ export default function HomePage() {
     return () => { void supabase.removeChannel(channel); };
   }, [activeConversation]);
 
+  useEffect(() => {
+    if (!supabase || !user) { setUnreadMessages(0); return; }
+    let alive = true;
+    const refreshUnread = async () => {
+      const { data: memberships, error } = await supabase.from("conversation_participants").select("conversation_id,last_read_at").eq("user_id", user.id);
+      if (!alive || error) return;
+      let total = 0;
+      for (const membership of memberships || []) {
+        if (membership.conversation_id === activeConversation) continue;
+        let query = supabase.from("messages").select("id", { count: "exact", head: true }).eq("conversation_id", membership.conversation_id).neq("sender_id", user.id);
+        if (membership.last_read_at) query = query.gt("created_at", membership.last_read_at);
+        const { count } = await query;
+        total += count || 0;
+      }
+      if (alive) setUnreadMessages(total);
+    };
+    void refreshUnread();
+    const channel = supabase.channel("emi-incoming-messages-" + user.id)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, async payload => {
+        const row = payload.new as {conversation_id:string;sender_id:string;content?:string};
+        if (!alive || row.sender_id === user.id || row.conversation_id === activeConversation) return;
+        const { data: membership } = await supabase.from("conversation_participants").select("conversation_id").eq("conversation_id", row.conversation_id).eq("user_id", user.id).maybeSingle();
+        if (!alive || !membership) return;
+        setIncomingMessageNotice("Tu as reçu un nouveau message.");
+        window.setTimeout(() => { if (alive) setIncomingMessageNotice(""); }, 6000);
+        setUnreadMessages(old => old + 1);
+      }).subscribe();
+    return () => { alive = false; void supabase.removeChannel(channel); };
+  }, [user?.id, activeConversation]);
+
   async function loadNotifications() {
     if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour consulter tes notifications."); return; }
     setNotificationsLoading(true);
@@ -1151,7 +1183,7 @@ export default function HomePage() {
         <a className="brand" href="#" aria-label="EMi accueil"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a>
         <button className="profile-mini profile-mini-button" onClick={() => user ? void openProfile(user.id) : setAuthOpen(true)}><div className="avatar avatar-me">{user?.avatar_url ? <img src={user.avatar_url} alt=""/> : user ? displayName.slice(0,2).toUpperCase() : "ME"}</div><div><strong>{user ? displayName : "Bienvenue sur EMi"}</strong><span>{user ? "Voir mon profil" : "Ton espace social"}</span></div></button>
         <nav className="nav-list" aria-label="Navigation principale">
-          {[[ "Accueil", Home ], [ "Découvrir", Compass ], [ "Messages", MessageCircle ], [ "Notifications", Bell ], [ "Mon profil", UserRound ]].map(([label, Icon]) => { const title = label as string; const Glyph = Icon as typeof Home; return <button key={title} className={`nav-item ${active === title ? "selected" : ""}`} onClick={() => { setActive(title); if (title === "Notifications") void loadNotifications(); if (["Messages","Notifications","Mon profil"].includes(title) && !user) setAuthOpen(true); }}><Glyph size={20}/><span>{title}</span></button>; })}
+          {[[ "Accueil", Home ], [ "Découvrir", Compass ], [ "Messages", MessageCircle ], [ "Notifications", Bell ], [ "Mon profil", UserRound ]].map(([label, Icon]) => { const title = label as string; const Glyph = Icon as typeof Home; return <button key={title} className={`nav-item ${active === title ? "selected" : ""}`} onClick={() => { setActive(title); if (title === "Notifications") void loadNotifications(); if (["Messages","Notifications","Mon profil"].includes(title) && !user) setAuthOpen(true); }}><span className="nav-icon-wrap"><Glyph size={20}/>{title === "Messages" && unreadMessages > 0 && <span className="emi-nav-badge">{unreadMessages > 99 ? "99+" : unreadMessages}</span>}</span><span>{title}</span></button>; })}
         </nav>
         <button className="create-button" onClick={() => setCreateStudioOpen(true)}><Plus size={20}/> Créer</button>
         <div className="sidebar-bottom">{user ? <button className="nav-item" onClick={logout}><LogOut size={20}/><span>Se déconnecter</span></button> : <button className="nav-item" onClick={() => setAuthOpen(true)}><LogIn size={20}/><span>Connexion / Inscription</span></button>}<div className="sidebar-note"><Sparkles size={16}/><p>Des moments vrais.<br/><strong>Des liens qui comptent.</strong></p></div><span className="version">EMi · Communauté</span></div>
@@ -1214,6 +1246,7 @@ export default function HomePage() {
             </>}
           </section>
         </section>}
+        {incomingMessageNotice && <button className="emi-incoming-toast" role="status" onClick={() => { setIncomingMessageNotice(""); setActive("Messages"); }}><MessageCircle size={18}/><span><strong>EMi · Nouveau message</strong><small>{incomingMessageNotice}</small></span></button>}
         {message && <div className="demo-note" role="status"><Sparkles size={16}/><span>{message}</span><button style={{marginLeft:"auto",background:"none",border:0,color:"inherit"}} onClick={() => setMessage("")} aria-label="Fermer"><X size={15}/></button></div>}
         {active === "VIBES" && !viewingProfile && <section className="emi-vibes-page">
           <header className="emi-vibes-hero"><div className="emi-vibes-orb"><Music2 size={30}/></div><span className="eyebrow">EMi · MUSIC CULTURE</span><h2>Le son qui rassemble.</h2><p>Découvre les vibes, les talents et les sons qui feront demain.</p><div className="emi-vibes-badges"><span><Headphones size={13}/> Culture urbaine</span><span><Sparkles size={13}/> Made for Africa</span></div></header>
