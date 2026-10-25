@@ -412,3 +412,22 @@
 .emi-post-music-title strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--text)}
 .emi-post-music-title small{font-size:9px;color:var(--muted)}
 .emi-post-music audio{grid-column:1/-1;width:100%;height:35px}
+
+
+/* EMi creator studio — mobile-first, immersive creation flow */
+.emi-creator{position:relative;width:100%;max-width:560px;height:min(92dvh,900px);min-height:560px;margin:auto;display:flex;flex-direction:column;background:#08090e;color:#f7f7fb;border:1px solid #292a34;border-radius:24px;overflow:hidden}
+.emi-creator-header{height:58px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #22232c;background:#090a10}
+.emi-creator-header strong{font-size:15px;font-weight:700}.emi-creator-header button{width:38px;height:38px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:#f7f7fb}
+.emi-creator-form{display:flex;flex:1;min-height:0;flex-direction:column;overflow:auto;overscroll-behavior:contain}
+.emi-creator-preview{position:relative;flex:1;min-height:220px;max-height:55%;display:grid;place-items:center;background:#090b12;overflow:hidden}
+.emi-creator-preview>img,.emi-creator-preview>video{display:block;width:100%;height:100%;max-height:100%;object-fit:contain}
+.emi-creator-preview>button:not(.emi-creator-change){display:flex;flex-direction:column;align-items:center;gap:12px;padding:24px;border:1px dashed #555767;border-radius:20px;background:#171922;color:#e8e8f2}
+.emi-creator-change{position:absolute;right:12px;top:12px;padding:8px 12px;border:1px solid #ffffff30;border-radius:20px;background:#171923d9;color:#fff;font-size:12px}
+.emi-creator-tools{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;padding:14px 12px 10px;background:#090a10}
+.emi-creator-tools button{min-width:0;min-height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px 2px;border:0;border-radius:13px;background:#292b33;color:#f4f4f8}
+.emi-creator-tools button span:last-child{font-size:10px;white-space:nowrap}.emi-tool-aa{font-size:22px;font-weight:500;line-height:22px}
+.emi-creator-caption{padding:0 14px 14px;display:flex;flex-direction:column;gap:10px;background:#090a10}
+.emi-creator-caption>textarea{width:100%;resize:vertical;min-height:64px;max-height:120px;padding:12px 0;border:0;border-bottom:1px solid #292a34;outline:none;background:transparent;color:#f7f7fb;font:15px/1.5 inherit}
+.emi-creator-file{display:flex;align-items:center;gap:9px;min-width:0;color:#aaaebe;font-size:12px}.emi-creator-file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.emi-creator-file button,.emi-creator-file>button{display:flex;align-items:center;gap:6px;border:0;background:transparent;color:#c4b3ff;font-size:12px}
+.emi-creator-note{margin:0;color:#858796;font-size:10px;line-height:1.4}.emi-creator-next{width:100%;min-height:46px;border:0;border-radius:24px;background:#4b5cff;color:#fff;font-size:15px;font-weight:700}.emi-creator-next:disabled{opacity:.6}
+@media(max-width:600px){.modal-backdrop:has(.emi-creator){padding:0;display:block;background:#090a10}.modal-backdrop:has(.emi-creator)>.emi-creator,.modal-backdrop:has(.emi-creator)>.modal-card{max-width:none;width:100%;height:100dvh;min-height:0;border:0;border-radius:0}.emi-creator{height:100dvh;max-width:none;min-height:0}.emi-creator-header{padding-top:env(safe-area-inset-top);height:calc(54px + env(safe-area-inset-top))}.emi-creator-preview{flex:1;min-height:180px;max-height:none}.emi-creator-tools{gap:6px;padding:12px 8px}.emi-creator-tools button{min-height:64px;border-radius:12px}.emi-creator-tools button span:last-child{font-size:9px}.emi-creator-caption{padding:0 12px calc(12px + env(safe-area-inset-bottom))}.emi-creator-caption>textarea{min-height:48px}.emi-creator .emi-compose-music{padding:10px;margin:0}.emi-creator .emi-compose-music-head small{font-size:10px}}
