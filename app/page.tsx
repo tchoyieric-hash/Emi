@@ -430,7 +430,7 @@ export default function HomePage() {
     }, { threshold: [0, 0.3, 0.6, 1] });
     musicRows.forEach(row => observer.observe(row));
     return () => { observer.disconnect(); musicRows.forEach(row => { const audio=row.querySelector("audio"); if(audio) audio.pause(); }); };
-  }, [active, posts.length, filteredPosts.length]);
+  }, [active, posts.length]);
 
   useEffect(() => {
     if (active !== "Reels") return;
