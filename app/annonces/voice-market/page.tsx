@@ -17,7 +17,7 @@ type SpeechWindow = Window & { SpeechRecognition?: new () => SpeechRecognitionLi
 
 let activeRecognition: SpeechRecognitionLike | null = null;
 
-function VoiceMarketContent() {
+export default function VoiceMarketPage() {
   const [status, setStatus] = useState("Prêt à écouter");
   const [transcript, setTranscript] = useState("");
   const [busy, setBusy] = useState(false);
