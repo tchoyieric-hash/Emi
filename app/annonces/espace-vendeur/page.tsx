@@ -142,55 +142,55 @@ export default function EspaceVendeurPage() {
   const rate = views ? Math.min(100, clicks / views * 100) : 0;
   const statusLabel = verification?.status === "approved" ? "✓ Vendeur certifié" : verification?.status === "pending" ? "⏳ Vérification en attente" : verification?.status === "rejected" ? "✕ Dossier refusé" : "Non vérifié";
 
-  return <main className="min-h-screen bg-[#09090d] px-4 py-6 text-white sm:px-6">
-    <div className="mx-auto max-w-6xl">
-      <header className="mb-7 flex items-center justify-between gap-3 border-b border-white/10 pb-5">
+  return <main className="min-h-screen overflow-x-hidden bg-[#09090d] px-3 py-5 text-white sm:px-6">
+    <div className="mx-auto w-full max-w-6xl min-w-0">
+      <header className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
         <Link href="/annonces" className="text-sm text-amber-200">← Retour au marché</Link>
         <span className="font-semibold tracking-[.22em] text-amber-200">EMi · ESPACE PRO</span>
       </header>
-      <section className="mb-7 rounded-3xl border border-amber-200/15 bg-gradient-to-br from-amber-200/10 to-transparent p-6 sm:p-9">
+      <section className="mb-6 rounded-3xl border border-amber-200/15 bg-gradient-to-br from-amber-200/10 to-transparent p-5 sm:p-9">
         <p className="text-xs uppercase tracking-[.3em] text-amber-200">Espace vendeur</p>
-        <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">Ton activité, en un regard.</h1>
+        <h1 className="mt-2 text-2xl font-semibold leading-tight sm:text-4xl">Ton activité, en un regard.</h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-white/60">Des chiffres basés sur les événements enregistrés dans EMi, sans statistiques de démonstration.</p>
       </section>
       {notice && <div role="status" className="mb-5 rounded-2xl border border-amber-200/20 bg-amber-100/10 p-4 text-sm text-amber-100">{notice}</div>}
       {loading ? <p className="py-10 text-white/60">Chargement des données réelles…</p> : !userId ? <div className="rounded-2xl border border-white/10 p-6">Connecte-toi à ton compte EMi pour consulter cet espace.</div> : <>
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[["Annonces", listings.length],["Vues enregistrées", views],["Clics WhatsApp", clicks],["Taux clics / vues", views ? rate.toFixed(1) + "%" : "—"]].map(([label,value]) => <div key={String(label)} className="rounded-2xl border border-white/10 bg-white/[.04] p-5"><p className="text-sm text-white/55">{label}</p><p className="mt-2 text-3xl font-semibold text-amber-200">{value}</p></div>)}
+        <section className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+          {[["Annonces", listings.length],["Vues enregistrées", views],["Clics WhatsApp", clicks],["Taux clics / vues", views ? rate.toFixed(1) + "%" : "—"]].map(([label,value]) => <div key={String(label)} className="min-w-0 rounded-2xl border border-white/10 bg-white/[.04] p-4 sm:p-5"><p className="text-sm text-white/55">{label}</p><p className="mt-2 text-3xl font-semibold text-amber-200">{value}</p></div>)}
         </section>
-        <section className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6 lg:col-span-2">
+        <section className="mt-5 grid min-w-0 gap-4 lg:grid-cols-2 sm:gap-6">
+          <div className="min-w-0 rounded-2xl border border-white/10 bg-white/[.03] p-4 sm:p-6 lg:col-span-2">
             <h2 className="text-lg font-semibold">💰 Mini-coffre · Caisse journalière</h2>
             <p className="mt-2 text-sm text-white/55">Note tes ventes en espèces et Mobile Money. Pour l'instant, le journal est enregistré sur cet appareil et n'est pas synchronisé avec Supabase.</p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <label className="text-sm text-white/60">Ventes cash (FCFA)<input type="number" min="0" step="1" value={cash} onChange={e=>setCash(e.target.value)} className="mt-1 block w-full rounded-xl border border-white/15 bg-black/30 px-3 py-3 text-white"/></label>
+              <label className="text-sm text-white/60">Ventes cash (FCFA)<input type="number" min="0" step="1" value={cash} onChange={e=>setCash(e.target.value)} className="mt-2 block w-full min-w-0 rounded-xl border border-white/15 bg-[#101019] px-3 py-3 text-base text-white outline-none transition focus:border-amber-200 focus:ring-2 focus:ring-amber-200/20"/></label>
               <label className="text-sm text-white/60">Ventes Mobile Money (FCFA)<input type="number" min="0" step="1" value={momo} onChange={e=>setMomo(e.target.value)} className="mt-1 block w-full rounded-xl border border-white/15 bg-black/30 px-3 py-3 text-white"/></label>
             </div>
-            <button onClick={enregistrerCaisse} className="mt-4 rounded-full bg-sky-500 px-5 py-3 font-semibold text-white">Enregistrer le bilan du jour</button>
+            <button onClick={enregistrerCaisse} className="mt-4 min-h-11 w-full rounded-xl bg-sky-500 px-4 py-3 font-semibold text-white transition hover:bg-sky-400 sm:w-auto">Enregistrer le bilan du jour</button>
             {caisseNotice && <p role="status" className="mt-3 text-sm text-emerald-300">{caisseNotice}</p>}
             {caisseHistory.length > 0 && <div className="mt-4 space-y-2"><p className="text-sm font-medium">Derniers bilans enregistrés</p>{caisseHistory.slice(0,5).map((entry,i)=><div key={entry.date+i} className="flex flex-wrap justify-between gap-2 rounded-xl bg-black/20 px-3 py-2 text-sm"><span className="text-white/55">{new Date(entry.date).toLocaleString("fr-FR")}</span><span>{entry.total.toLocaleString("fr-FR")} FCFA <span className="text-white/40">(Cash {entry.cash.toLocaleString("fr-FR")} · MoMo {entry.momo.toLocaleString("fr-FR")})</span></span></div>)}</div>}
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6 lg:col-span-2">
             <h2 className="text-lg font-semibold">🤝 Programme Ambassadeur</h2>
             <p className="mt-2 text-sm text-white/55">Partage ton lien personnel pour inviter d'autres commerçants à découvrir le marché EMi.</p>
-            <div className="mt-4 break-all rounded-xl border border-dashed border-emerald-300/40 bg-black/20 p-3 font-mono text-sm text-emerald-200">{typeof window !== "undefined" && userId ? window.location.origin + "/annonces?ref=" + encodeURIComponent(userId) : "Connexion requise pour générer le lien"}</div>
-            <button onClick={()=>void copierLienParrainage()} disabled={!userId} className="mt-3 rounded-full bg-emerald-400 px-5 py-3 font-semibold text-black disabled:opacity-50">{refCopied ? "Lien copié ✓" : "Copier mon lien de parrainage"}</button>
+            <div className="mt-4 max-w-full break-all rounded-xl border border-dashed border-emerald-300/40 bg-black/20 p-3 font-mono text-xs leading-5 text-emerald-200 sm:text-sm">{typeof window !== "undefined" && userId ? window.location.origin + "/annonces?ref=" + encodeURIComponent(userId) : "Connexion requise pour générer le lien"}</div>
+            <button onClick={()=>void copierLienParrainage()} disabled={!userId} className="mt-3 min-h-11 w-full rounded-xl bg-emerald-400 px-4 py-3 font-semibold text-black transition hover:bg-emerald-300 disabled:opacity-50 sm:w-auto">{refCopied ? "Lien copié ✓" : "Copier mon lien de parrainage"}</button>
             <p className="mt-2 text-xs text-white/40">Le lien est unique, mais le suivi des inscriptions parrainées et les récompenses ne sont pas encore activés.</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6">
             <h2 className="text-lg font-semibold">🛡️ Badge de confiance</h2>
             <p className="mt-3 text-sm text-white/60">Statut : <span className={verification?.status === "approved" ? "text-emerald-300" : "text-amber-200"}>{statusLabel}</span></p>
-            {verification?.status !== "approved" && <div className="mt-4 space-y-3"><p className="text-sm text-white/55">Dépose un document lisible. Il sera conservé dans un espace privé et devra être vérifié par un administrateur autorisé.</p><input type="file" accept="image/jpeg,image/png,image/webp,application/pdf" onChange={e=>setFile(e.target.files?.[0] || null)} className="block w-full text-sm text-white/70 file:mr-3 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-white"/><button onClick={()=>void submitKyc()} disabled={savingKyc} className="rounded-full bg-emerald-400 px-5 py-3 font-semibold text-black disabled:opacity-50">{savingKyc ? "Envoi sécurisé…" : "Soumettre mon dossier"}</button><p className="text-xs text-white/40">N'envoie que les documents nécessaires. Aucun badge n'est accordé automatiquement.</p></div>}
+            {verification?.status !== "approved" && <div className="mt-4 space-y-3"><p className="text-sm text-white/55">Dépose un document lisible. Il sera conservé dans un espace privé et devra être vérifié par un administrateur autorisé.</p><input type="file" accept="image/jpeg,image/png,image/webp,application/pdf" onChange={e=>setFile(e.target.files?.[0] || null)} className="block w-full min-w-0 text-sm text-white/70 file:mr-3 file:mb-2 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-white"/><button onClick={()=>void submitKyc()} disabled={savingKyc} className="min-h-11 w-full rounded-xl bg-emerald-400 px-4 py-3 font-semibold text-black transition hover:bg-emerald-300 disabled:opacity-50 sm:w-auto">{savingKyc ? "Envoi sécurisé…" : "Soumettre mon dossier"}</button><p className="text-xs text-white/40">N'envoie que les documents nécessaires. Aucun badge n'est accordé automatiquement.</p></div>}
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6">
             <h2 className="text-lg font-semibold">📥 Rapport d’activité</h2>
             <p className="mt-2 text-sm leading-6 text-white/55">Télécharge tes indicateurs vendeur au format JSON. Les statistiques globales d’investissement ne sont pas affichées ici sans accès administrateur vérifié.</p>
-            <button onClick={exportReport} className="mt-4 rounded-full bg-sky-500 px-5 py-3 font-semibold text-white">Exporter mon rapport JSON</button>
+            <button onClick={exportReport} className="mt-4 min-h-11 w-full rounded-xl bg-sky-500 px-4 py-3 font-semibold text-white transition hover:bg-sky-400 sm:w-auto">Exporter mon rapport JSON</button>
           </div>
         </section>
         <section className="mt-6 rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6">
           <h2 className="mb-4 text-lg font-semibold">📍 Carte des annonces géolocalisées</h2>
-          <div ref={mapRef} className="h-[320px] w-full overflow-hidden rounded-xl bg-black/30" />
+          <div ref={mapRef} className="h-[280px] w-full min-w-0 overflow-hidden rounded-xl bg-black/30 sm:h-[320px]" />
           <p className="mt-3 text-xs text-white/45">La carte affiche uniquement les annonces auxquelles des coordonnées GPS ont été ajoutées. Elle ne suit pas ta position sans ton accord.</p>
         </section>
         <section className="mt-6 rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6">
