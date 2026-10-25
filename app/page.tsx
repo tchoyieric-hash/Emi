@@ -796,6 +796,16 @@ export default function HomePage() {
   }, [activeConversation]);
 
   useEffect(() => {
+    if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
+    void navigator.serviceWorker.register("/sw.js").catch(error => console.error("EMi service worker:", error));
+    const onWorkerMessage = (event: MessageEvent) => {
+      if (event.data?.type === "EMI_OPEN_MESSAGES") setActive("Messages");
+    };
+    navigator.serviceWorker.addEventListener("message", onWorkerMessage);
+    return () => navigator.serviceWorker.removeEventListener("message", onWorkerMessage);
+  }, []);
+
+  useEffect(() => {
     if (!supabase || !user) { setUnreadMessages(0); return; }
     let alive = true;
     const refreshUnread = async () => {
