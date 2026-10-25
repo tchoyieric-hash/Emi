@@ -734,21 +734,16 @@ export default function HomePage() {
     if (target.id === user.id) return;
     setChatLoading(true);
     try {
-      const { data: memberships, error: membershipError } = await supabase.from("conversation_participants").select("conversation_id").eq("user_id",user.id);
-      if (membershipError) throw membershipError;
-      const ids = (memberships || []).map(row => row.conversation_id as string);
-      if (ids.length) {
-        const { data: participants, error } = await supabase.from("conversation_participants").select("conversation_id,user_id").in("conversation_id",ids).eq("user_id",target.id);
-        if (error) throw error;
-        if (participants?.length) { await loadConversations(); setActive("Messages"); await openConversation(participants[0].conversation_id); return; }
-      }
-      const { data: conv, error: createError } = await supabase.from("conversations").insert({created_by:user.id,is_group:false,title:""}).select("id").single();
-      if (createError) throw createError;
-      const { error: participantError } = await supabase.from("conversation_participants").insert([{conversation_id:conv.id,user_id:user.id},{conversation_id:conv.id,user_id:target.id}]);
-      if (participantError) throw participantError;
-      await loadConversations(); setActive("Messages"); await openConversation(conv.id);
-    } catch (err) { setMessage(err instanceof Error ? "Impossible de démarrer la conversation : " + err.message : "Impossible de démarrer la conversation."); }
-    finally { setChatLoading(false); }
+      const { data: conversationId, error } = await supabase.rpc("start_direct_conversation", { target_user: target.id });
+      if (error) throw error;
+      if (!conversationId || typeof conversationId !== "string") throw new Error("Supabase n'a pas retourné l'identifiant de la conversation.");
+      await loadConversations();
+      setActive("Messages");
+      await openConversation(conversationId);
+    } catch (err) {
+      const detail = err && typeof err === "object" && "message" in err ? String((err as { message: unknown }).message) : err instanceof Error ? err.message : "Erreur inconnue";
+      setMessage("Impossible de démarrer la conversation : " + detail);
+    } finally { setChatLoading(false); }
   }
 
   async function sendChatMessage(e: React.FormEvent) {
