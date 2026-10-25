@@ -16,7 +16,7 @@ const rewards = [
 ];
 
 export default function LiveShowPage() {
-  const [votes, setVotes] = useState({ Akwa: 0, Bastos: 0 });
+  const [votes, setVotes] = useState<Record<string, number>>({ Akwa: 0, Bastos: 0 });
   const [voted, setVoted] = useState("");
   const [wheelResult, setWheelResult] = useState("");
   const [spinning, setSpinning] = useState(false);
