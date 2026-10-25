@@ -617,3 +617,15 @@ input,textarea{accent-color:var(--purple)}
  .chat-compose>.modal-primary{min-width:0;padding:12px 10px;font-size:12px}
  .chat-compose>input[aria-label="Écris un message"]{padding:12px 10px}
 }
+
+
+/* Premium real-time message notifications */
+.nav-icon-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.emi-nav-badge{position:absolute;top:-8px;right:-11px;min-width:17px;height:17px;padding:0 4px;display:grid;place-items:center;border:2px solid #111018;border-radius:999px;background:#ff4d7d;color:white;font-size:10px;font-weight:800;line-height:1}
+.emi-incoming-toast{position:fixed;z-index:250;right:18px;top:calc(18px + env(safe-area-inset-top));display:flex;align-items:center;gap:12px;max-width:min(360px,calc(100vw - 28px));padding:14px 18px;border:1px solid rgba(205,180,255,.42);border-radius:18px;background:linear-gradient(135deg,#261b38,#14111c);color:#f8f3ff;box-shadow:0 16px 48px #0008;text-align:left;animation:emi-toast-in .22s ease-out}
+.emi-incoming-toast>svg{flex:none;color:#d4baff}
+.emi-incoming-toast span{display:flex;flex-direction:column;gap:3px}
+.emi-incoming-toast strong{font-size:13px}
+.emi-incoming-toast small{font-size:12px;color:#c7badc}
+@keyframes emi-toast-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.emi-incoming-toast{left:14px;right:14px;max-width:none;top:calc(12px + env(safe-area-inset-top))}}
