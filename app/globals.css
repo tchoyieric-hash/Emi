@@ -606,3 +606,14 @@ input,textarea{accent-color:var(--purple)}
   html{scroll-behavior:auto}
   button,.story-ring{transition:none!important}
 }
+
+
+/* Fix mobile chat composer: keep the message field wide and usable */
+.chat-compose{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:9px}
+.chat-compose>input[aria-label="Écris un message"]{display:block;width:100%;min-width:0;max-width:100%;flex:none;box-sizing:border-box;font-size:16px}
+.chat-compose>.modal-primary{width:auto;min-width:112px;flex:none;padding:12px 16px}
+@media(max-width:600px){
+ .chat-compose{grid-template-columns:42px minmax(0,1fr) auto;gap:7px;padding:9px}
+ .chat-compose>.modal-primary{min-width:0;padding:12px 10px;font-size:12px}
+ .chat-compose>input[aria-label="Écris un message"]{padding:12px 10px}
+}
