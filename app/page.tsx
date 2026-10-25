@@ -547,8 +547,18 @@ export default function HomePage() {
       if (file) {
         if (!["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime"].includes(file.type)) throw new Error("Format non pris en charge. Choisis une image ou une vidéo courante.");
         if (file.size > 50 * 1024 * 1024) throw new Error("Le fichier dépasse 50 Mo.");
-        const path = user.id + "/" + crypto.randomUUID() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const { error: uploadError } = await supabase.storage.from("post-media").upload(path, file, { contentType: file.type, upsert: false });
+        let uploadFile = file;
+        if (file.type.startsWith("image/") && creatorFilter !== "original") {
+          const bitmap = await createImageBitmap(file);
+          const canvas = document.createElement("canvas"); canvas.width = bitmap.width; canvas.height = bitmap.height;
+          const ctx = canvas.getContext("2d"); if (!ctx) throw new Error("Impossible d’appliquer le filtre à cette image.");
+          ctx.filter = creatorFilter === "warm" ? "sepia(.22) saturate(1.25)" : creatorFilter === "mono" ? "grayscale(1)" : creatorFilter === "vivid" ? "saturate(1.45) contrast(1.08)" : "contrast(.88) brightness(1.08) saturate(.75)";
+          ctx.drawImage(bitmap, 0, 0); bitmap.close();
+          const blob = await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Échec du traitement de l’image.")), "image/jpeg", .94));
+          uploadFile = new File([blob], file.name.replace(/\.[^.]+$/, "") + "-emi.jpg", {type:"image/jpeg"});
+        }
+        const path = user.id + "/" + crypto.randomUUID() + "-" + uploadFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const { error: uploadError } = await supabase.storage.from("post-media").upload(path, uploadFile, { contentType: uploadFile.type, upsert: false });
         if (uploadError) throw uploadError;
         const { data: publicUrl } = supabase.storage.from("post-media").getPublicUrl(path);
         urls = [publicUrl.publicUrl]; mediaType = file.type.startsWith("video/") ? "video" : "image";
