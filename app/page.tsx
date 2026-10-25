@@ -964,7 +964,7 @@ export default function HomePage() {
       // INSERT/DELETE utilisent les politiques RLS explicites déjà configurées.
       // Évite l'UPSERT, qui peut exiger une politique UPDATE absente sur follows.
       const result = isFollowing
-        ? await supabase.from("follows").delete().eq("follower_id", user.id).eq("following_id", targetId)
+        ? await supabase.from("follows").delete().eq("follower_id", followerId).eq("following_id", targetId)
         : await supabase.from("follows").insert({ follower_id: followerId, following_id: targetId });
 
       if (result.error) throw result.error;
@@ -973,9 +973,16 @@ export default function HomePage() {
       const { data, error: refreshError } = await supabase
         .from("follows")
         .select("following_id")
-        .eq("follower_id", user.id);
+        .eq("follower_id", followerId);
       if (refreshError) throw refreshError;
-      setFollowedIds((data || []).map(row => row.following_id as string));
+      const refreshedIds = (data || []).map(row => row.following_id as string);
+      const confirmed = refreshedIds.includes(targetId);
+      if (confirmed === isFollowing) {
+        throw new Error(isFollowing
+          ? "La suppression de l’abonnement n’a pas été confirmée par la base de données."
+          : "La base de données n’a pas confirmé l’abonnement. Vérifie la session et les autorisations Supabase.");
+      }
+      setFollowedIds(refreshedIds);
 
       // Actualise les compteurs du profil actuellement consulté.
       if (viewingProfile?.id === targetId) {
