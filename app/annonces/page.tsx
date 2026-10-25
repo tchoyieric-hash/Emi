@@ -120,12 +120,12 @@ export default function AnnoncesPage() {
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            {name:"Mode & beauté",sub:"Style & élégance",img:"photo-衣"},
-            {name:"Électronique",sub:"Tech & innovation",img:"photo-151170制"},
+            {name:"Mode & beauté",sub:"Style & élégance",img:"photo-1483985988355-763728e1935b"},
+            {name:"Électronique",sub:"Tech & innovation",img:"photo-1512499617640-c74ae3a79d37"},
             {name:"Immobilier",sub:"Habitat & investissement",img:"photo-1600585154340-be6161a56a0c"},
             {name:"Véhicules",sub:"Mobilité & liberté",img:"photo-1492144534655-ae79c964c9d7"}
           ].map((cat,i)=><button key={cat.name} onClick={()=>{const el=document.getElementById("annonces-list");el?.scrollIntoView({behavior:"smooth"});}} className="group relative isolate h-36 overflow-hidden rounded-2xl border border-white/10 bg-[#101521] text-left sm:h-44">
-            <img src={["https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=700&q=85","https://images.unsplash.com/photo-151170制?auto=format&fit=crop&w=700&q=85","https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=700&q=85","https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=700&q=85"][i]} alt="" loading="lazy" className="absolute inset-0 -z-20 h-full w-full object-cover transition duration-500 group-hover:scale-105"/>
+            <img src={["https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=700&q=85","https://images.unsplash.com/photo-1512499617640-c74ae3a79d37?auto=format&fit=crop&w=700&q=85","https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=700&q=85","https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=700&q=85"][i]} alt="" loading="lazy" className="absolute inset-0 -z-20 h-full w-full object-cover transition duration-500 group-hover:scale-105"/>
             <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#030712] via-black/15 to-transparent"/>
             <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4"><h3 className="font-semibold text-white">{cat.name}</h3><p className="mt-1 text-xs text-white/70">{cat.sub}</p></div>
           </button>)}
