@@ -79,6 +79,25 @@ export default function AnnoncesPage() {
         <h1 className="text-3xl font-semibold sm:text-5xl">Le marché <span className="text-amber-200">EMi</span></h1>
         <p className="mt-3 max-w-xl text-sm leading-6 text-white/60">Découvre les annonces et contacte directement le vendeur sur WhatsApp. Les échanges se font entre acheteurs et vendeurs.</p>
       </div>
+      <section aria-labelledby="modules-emi" className="mb-8">
+        <div className="mb-4">
+          <p className="text-xs font-semibold uppercase tracking-[.25em] text-emerald-300">Nouveautés EMi</p>
+          <h2 id="modules-emi" className="mt-1 text-2xl font-semibold">Découvrir les nouveaux espaces</h2>
+          <p className="mt-2 text-sm text-white/55">Accède directement aux modules récemment ajoutés.</p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Link href="/annonces/master-health-check" className="group rounded-2xl border border-emerald-300/25 bg-emerald-300/[.06] p-5 transition hover:border-emerald-300/60 hover:bg-emerald-300/10">
+            <span className="text-2xl">⚡</span><h3 className="mt-3 text-lg font-semibold text-emerald-200">Master Health-Check</h3>
+            <p className="mt-2 text-sm leading-6 text-white/60">Consulte la liste de contrôle des principaux espaces et services EMi.</p>
+            <span className="mt-4 inline-block text-sm font-semibold text-emerald-200">Ouvrir le module →</span>
+          </Link>
+          <Link href="/annonces/elite-directory" className="group rounded-2xl border border-amber-300/25 bg-amber-300/[.06] p-5 transition hover:border-amber-300/60 hover:bg-amber-300/10">
+            <span className="text-2xl">✨</span><h3 className="mt-3 text-lg font-semibold text-amber-200">Elite Hospitality Directory</h3>
+            <p className="mt-2 text-sm leading-6 text-white/60">Crée et consulte les profils professionnels des métiers de l’accueil, de l’hôtellerie et de la restauration.</p>
+            <span className="mt-4 inline-block text-sm font-semibold text-amber-200">Ouvrir l’annuaire →</span>
+          </Link>
+        </div>
+      </section>
       {notice&&<div role="status" className="mb-5 rounded-2xl border border-amber-200/20 bg-amber-100/10 p-4 text-sm text-amber-100">{notice}</div>}
       {open&&<form onSubmit={publier} className="mb-8 grid gap-4 rounded-3xl border border-white/10 bg-white/[.04] p-5 sm:grid-cols-2 sm:p-7">
         <h2 className="sm:col-span-2 text-xl font-semibold">Publier une annonce</h2>
