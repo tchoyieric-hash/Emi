@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Mic, MicOff, LoaderCircle, Sparkles, Search, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Mic, MicOff, Sparkles, Search, ShoppingBag } from "lucide-react";
 
 type SpeechResult = { transcript: string };
 type SpeechRecognitionEventLike = { results: ArrayLike<ArrayLike<SpeechResult>> };
@@ -14,57 +14,6 @@ type SpeechRecognitionLike = {
   start: () => void; stop: () => void;
 };
 type SpeechWindow = Window & { SpeechRecognition?: new () => SpeechRecognitionLike; webkitSpeechRecognition?: new () => SpeechRecognitionLike };
-
-export default function VoiceMarketPage() {
-  const [status, setStatus] = useState("Prêt à écouter");
-  const [transcript, setTranscript] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [kind, setKind] = useState<"vente" | "recherche">("vente");
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [details, setDetails] = useState("");
-
-  function startListening() {
-    setError("");
-    const speechWindow = window as SpeechWindow;
-    const Recognition = speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition;
-    if (!Recognition) {
-      setError("La reconnaissance vocale n'est pas disponible dans ce navigateur. Essaie un navigateur compatible ou saisis ton annonce ci-dessous.");
-      setStatus("Micro non pris en charge");
-      return;
-    }
-    const recognition = new Recognition();
-    recognition.lang = "fr-FR";
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
-    setBusy(true);
-    setStatus("Écoute en cours… parle maintenant");
-    recognition.onresult = (event) => {
-      const text = Array.from(event.results).map(r => r[0]?.transcript ?? "").join(" ").trim();
-      setTranscript(text);
-      setTitle(text);
-      setStatus("Transcription prête — vérifie le texte avant publication");
-    };
-    recognition.onerror = (event) => {
-      setError(event.error === "not-allowed" ? "Autorise l'accès au microphone dans les paramètres du navigateur." : "La capture vocale a échoué. Réessaie ou saisis ton texte manuellement.");
-      setStatus("Erreur du microphone");
-      setBusy(false);
-    };
-    recognition.onend = () => { setBusy(false); };
-    try { recognition.start(); } catch { setBusy(false); setStatus("Impossible de démarrer le microphone"); }
-  }
-
-  function stopListening() {
-    const speechWindow = window as SpeechWindow;
-    // Recognition instances are controlled through the active instance below.
-    if (activeRecognition) activeRecognition.stop();
-    setBusy(false);
-    setStatus("Écoute arrêtée");
-  }
-  let unused = 0;
-  return <VoiceMarketContent />;
-}
 
 let activeRecognition: SpeechRecognitionLike | null = null;
 
