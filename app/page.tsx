@@ -100,7 +100,7 @@ export default function HomePage() {
   const chatMediaInput = useRef<HTMLInputElement>(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [chatSearch, setChatSearch] = useState("");
-  const [notifications, setNotifications] = useState<{id:string;actor_id:string|null;type:string;entity_id:string|null;content:string;is_read:boolean;created_at:string;actor?:Profile|null}[]>([]);
+  const [notifications, setNotifications] = useState<{id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;message:string;is_read:boolean;created_at:string;actor?:Profile|null}[]>([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
 
   const [profileEditorOpen, setProfileEditorOpen] = useState(false);
@@ -802,9 +802,9 @@ export default function HomePage() {
     if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour consulter tes notifications."); return; }
     setNotificationsLoading(true);
     try {
-      const { data, error } = await supabase.from("notifications").select("id,actor_id,type,entity_id,content,is_read,created_at").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
+      const { data, error } = await supabase.from("notifications").select("id,actor_id,type,post_id,comment_id,message,is_read,created_at").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
       if (error) throw error;
-      const rows = (data || []) as {id:string;actor_id:string|null;type:string;entity_id:string|null;content:string;is_read:boolean;created_at:string}[];
+      const rows = (data || []) as {id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;message:string;is_read:boolean;created_at:string}[];
       const actorIds = [...new Set(rows.map(row => row.actor_id).filter((id): id is string => !!id))];
       const { data: people, error: peopleError } = actorIds.length ? await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", actorIds) : { data: [], error: null };
       if (peopleError) throw peopleError;
@@ -1196,7 +1196,7 @@ export default function HomePage() {
           {notificationsLoading && <p className="chat-empty">Chargement des notifications…</p>}
           <div className="discovery-list">{notifications.map(note => <article key={note.id} className="discovery-person" style={{opacity:note.is_read?0.72:1,borderColor:note.is_read?"var(--line)":"#8d6de0"}}>
             <span className="discovery-avatar">{note.actor?.avatar_url?<img src={note.actor.avatar_url} alt=""/>:(note.actor?.display_name||note.actor?.username||"EM").slice(0,2).toUpperCase()}</span>
-            <button className="discovery-person-main" onClick={() => note.actor_id ? void openProfile(note.actor_id) : undefined}><span><strong>{note.actor?.display_name||note.actor?.username||"EMi"}</strong><small>{note.content}</small><small>{new Date(note.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small></span></button>
+            <button className="discovery-person-main" onClick={() => note.actor_id ? void openProfile(note.actor_id) : undefined}><span><strong>{note.actor?.display_name||note.actor?.username||"EMi"}</strong><small>{note.message}</small><small>{new Date(note.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small></span></button>
             {!note.is_read && <span className="notification-unread-dot" aria-label="Non lue"/>}
           </article>)}
           {!notificationsLoading && notifications.length===0 && <div className="empty-feature"><Bell size={28}/><h2>Tu es à jour</h2><p>Les nouveaux abonnements, likes et commentaires apparaîtront ici.</p></div>}</div>
