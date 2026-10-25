@@ -16,6 +16,11 @@ export default function MeshPage() {
   const [received, setReceived] = useState<SharedListing[]>([]);
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const [qrImage, setQrImage] = useState("");
+  const [scanActive, setScanActive] = useState(false);
+  const [scanError, setScanError] = useState("");
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const peerRef = useRef<PeerWithChannel | null>(null);
   const channelRef = useRef<RTCDataChannel | null>(null);
   const receivedRef = useRef<HTMLDivElement>(null);
@@ -23,7 +28,61 @@ export default function MeshPage() {
   useEffect(() => () => {
     channelRef.current?.close();
     peerRef.current?.close();
+    streamRef.current?.getTracks().forEach(track => track.stop());
   }, []);
+
+  async function makeQr(text: string) {
+    try {
+      const qr = await import("qrcode");
+      setQrImage(await qr.toDataURL(text, { width: 280, margin: 2, errorCorrectionLevel: "L" }));
+    } catch {
+      setNotice("QR code indisponible. Tu peux copier la clé manuellement.");
+    }
+  }
+
+  async function startScan() {
+    setScanError("");
+    if (!("BarcodeDetector" in window)) {
+      setScanError("Ce navigateur ne propose pas de lecteur QR intégré. Colle la clé manuellement ou utilise un navigateur compatible.");
+      return;
+    }
+    try {
+      const Detector = (window as any).BarcodeDetector;
+      const detector = new Detector({ formats: ["qr_code"] });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false });
+      streamRef.current = stream;
+      setScanActive(true);
+      window.setTimeout(() => { if (videoRef.current && streamRef.current) { videoRef.current.srcObject = stream; void videoRef.current.play(); } }, 100);
+      const scan = async () => {
+        if (!streamRef.current) return;
+        try {
+          const video = videoRef.current;
+          if (video && video.readyState >= 2) {
+            const codes = await detector.detect(video);
+            if (codes[0]?.rawValue) {
+              setRemoteText(codes[0].rawValue);
+              streamRef.current?.getTracks().forEach(track => track.stop());
+              streamRef.current = null;
+              setScanActive(false);
+              setNotice("QR code lu. Appuie sur le bouton correspondant : accepter l'offre ou appliquer la réponse.");
+              return;
+            }
+          }
+        } catch {}
+        window.setTimeout(() => void scan(), 250);
+      };
+      void scan();
+    } catch {
+      setScanError("Caméra inaccessible. Autorise son accès ou colle la clé manuellement.");
+      setScanActive(false);
+    }
+  }
+
+  function stopScan() {
+    streamRef.current?.getTracks().forEach(track => track.stop());
+    streamRef.current = null;
+    setScanActive(false);
+  }
 
   function setConnectionStatus(text: string, kind: "idle" | "busy" | "ok" | "error" = "idle") {
     setStatus(text);
@@ -78,7 +137,9 @@ export default function MeshPage() {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
       await waitForIce(pc);
-      setOfferText(JSON.stringify(pc.localDescription));
+      const localKey = JSON.stringify(pc.localDescription);
+      setOfferText(localKey);
+      await makeQr(localKey);
       setConnectionStatus("Offre prête — en attente du téléphone 2", "busy");
       setNotice("Copie l'offre complète et transfère-la au téléphone 2. Aucun serveur de signalisation n'est utilisé.");
     } catch (e) { setConnectionStatus("Erreur de préparation", "error"); setNotice(e instanceof Error ? e.message : "Impossible de créer l'offre."); }
@@ -96,7 +157,9 @@ export default function MeshPage() {
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
       await waitForIce(pc);
-      setOfferText(JSON.stringify(pc.localDescription));
+      const localKey = JSON.stringify(pc.localDescription);
+      setOfferText(localKey);
+      await makeQr(localKey);
       setConnectionStatus("Réponse prête — à renvoyer au téléphone 1", "busy");
       setNotice("Copie cette réponse et renvoie-la au téléphone 1. Sur le téléphone 1, colle-la dans le champ de clé distante puis appuie sur « Appliquer la réponse ».");
     } catch (e) { setConnectionStatus("Clé invalide", "error"); setNotice(e instanceof Error ? e.message : "Impossible d'accepter l'offre."); }
@@ -159,6 +222,10 @@ export default function MeshPage() {
         <label className="mt-4 block text-sm text-white/60">Clé locale (offre ou réponse)</label>
         <textarea readOnly rows={4} value={offerText} className="mt-2 block w-full min-w-0 rounded-xl border border-white/15 bg-[#101019] p-3 font-mono text-xs text-white outline-none focus:border-emerald-200" placeholder="La clé générée apparaîtra ici…"/>
         <button disabled={!offerText || busy} onClick={() => void copyOffer()} className="mt-3 min-h-11 w-full rounded-xl bg-emerald-400 px-4 py-3 font-semibold text-black disabled:opacity-40">Copier la clé locale</button>
+        {qrImage && <div className="mt-4 rounded-2xl bg-white p-4 text-center"><img src={qrImage} alt="QR code de connexion P2P" className="mx-auto h-auto w-full max-w-[280px]" /><p className="mt-2 text-xs text-slate-700">Scanne ce code depuis l'autre téléphone.</p></div>}
+        <button onClick={() => void startScan()} className="mt-4 min-h-11 w-full rounded-xl border border-emerald-200/30 bg-white/5 px-4 py-3 font-semibold text-white">📷 Scanner un QR code</button>
+        {scanActive && <div className="mt-3 rounded-xl border border-white/10 p-3"><video ref={videoRef} playsInline muted className="w-full rounded-lg" /><button onClick={stopScan} className="mt-2 min-h-10 w-full rounded-lg bg-rose-500 px-3 py-2 font-semibold">Arrêter le scanner</button></div>}
+        {scanError && <p role="status" className="mt-2 text-sm text-amber-200">{scanError}</p>}
         <label className="mt-5 block text-sm text-white/60">Clé distante (offre ou réponse)</label>
         <textarea rows={5} value={remoteText} onChange={e=>setRemoteText(e.target.value)} className="mt-2 block w-full min-w-0 rounded-xl border border-white/15 bg-[#101019] p-3 font-mono text-xs text-white outline-none focus:border-emerald-200" placeholder="Colle ici l'offre ou la réponse de l'autre téléphone…"/>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
