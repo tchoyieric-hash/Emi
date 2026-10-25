@@ -89,10 +89,10 @@ export default function AnnoncesPage() {
       </div>}
     </header>
     <section className="mx-auto max-w-6xl px-4 py-6 sm:py-9">
-      <div className="mb-7 overflow-hidden rounded-3xl border border-amber-100/15 bg-gradient-to-br from-amber-200/[.12] via-white/[.035] to-transparent p-5 sm:p-9">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[.3em] text-amber-200">Acheter · Vendre · Échanger</p>
+      <div className="relative mb-7 min-h-[250px] overflow-hidden rounded-3xl border border-amber-100/15 bg-[#07101f] p-5 sm:min-h-[300px] sm:p-9">
+        <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1800&q=90" alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover object-center opacity-45"/><div className="absolute inset-0 bg-gradient-to-r from-[#030712] via-[#030712]/85 to-[#030712]/10"/><div className="relative z-10"><p className="mb-2 text-xs font-semibold uppercase tracking-[.3em] text-amber-200">Acheter · Vendre · Échanger</p>
         <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">Le marché <span className="text-amber-200">EMi</span></h1>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-white/65 sm:text-base">Achète, vends et échange en toute simplicité. Découvre les offres et contacte directement les vendeurs sur WhatsApp.</p>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-white/75 sm:text-base">Achète, vends et échange en toute simplicité. Découvre les offres et contacte directement les vendeurs sur WhatsApp.</p><div className="mt-6 flex flex-wrap gap-4 text-xs font-medium text-white/85 sm:gap-6"><span>♢ Sécurisé</span><span>ϟ Rapide</span><span>✧ Fiable</span><span>☆ Premium</span></div></div>
       </div>
       <section aria-labelledby="modules-emi" className="mb-8">
         <div className="mb-4">
@@ -113,6 +113,24 @@ export default function AnnoncesPage() {
           </Link>
         </div>
       </section>
+      <section className="mb-9">
+        <div className="mb-4 flex items-end justify-between gap-3">
+          <div><p className="text-xs font-semibold uppercase tracking-[.22em] text-amber-200/75">Explorer</p><h2 className="mt-1 text-xl font-semibold sm:text-2xl">Catégories populaires</h2></div>
+          <span className="text-xs text-white/45">Sélection EMi</span>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[
+            {name:"Mode & beauté",sub:"Style & élégance",img:"photo-衣"},
+            {name:"Électronique",sub:"Tech & innovation",img:"photo-151170制"},
+            {name:"Immobilier",sub:"Habitat & investissement",img:"photo-1600585154340-be6161a56a0c"},
+            {name:"Véhicules",sub:"Mobilité & liberté",img:"photo-1492144534655-ae79c964c9d7"}
+          ].map((cat,i)=><button key={cat.name} onClick={()=>{const el=document.getElementById("annonces-list");el?.scrollIntoView({behavior:"smooth"});}} className="group relative isolate h-36 overflow-hidden rounded-2xl border border-white/10 bg-[#101521] text-left sm:h-44">
+            <img src={["https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=700&q=85","https://images.unsplash.com/photo-151170制?auto=format&fit=crop&w=700&q=85","https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=700&q=85","https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=700&q=85"][i]} alt="" loading="lazy" className="absolute inset-0 -z-20 h-full w-full object-cover transition duration-500 group-hover:scale-105"/>
+            <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#030712] via-black/15 to-transparent"/>
+            <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4"><h3 className="font-semibold text-white">{cat.name}</h3><p className="mt-1 text-xs text-white/70">{cat.sub}</p></div>
+          </button>)}
+        </div>
+      </section>
       {notice&&<div role="status" className="mb-5 rounded-2xl border border-amber-200/20 bg-amber-100/10 p-4 text-sm text-amber-100">{notice}</div>}
       {open&&<form onSubmit={publier} className="mb-8 grid gap-4 rounded-3xl border border-white/10 bg-white/[.04] p-5 sm:grid-cols-2 sm:p-7">
         <h2 className="sm:col-span-2 text-xl font-semibold">Publier une annonce</h2>
@@ -123,7 +141,7 @@ export default function AnnoncesPage() {
         <label className="grid cursor-pointer gap-2 text-sm">Photo de l'article <span className="flex items-center gap-2 rounded-xl border border-dashed border-white/20 px-4 py-3 text-white/65"><ImagePlus size={18}/>{photo?photo.name:"Ajouter une photo (12 Mo max)"}</span><input type="file" accept="image/*" className="hidden" onChange={e=>setPhoto(e.target.files?.[0]||null)}/></label>
         <div className="flex gap-3 sm:col-span-2"><button disabled={saving} className="flex items-center gap-2 rounded-full bg-amber-200 px-5 py-3 font-semibold text-black disabled:opacity-60">{saving&&<LoaderCircle className="animate-spin" size={17}/>} {saving?"Publication…":"Publier l'annonce"}</button><button type="button" onClick={()=>setOpen(false)} className="rounded-full border border-white/15 px-5 py-3 text-white/70">Annuler</button></div>
       </form>}
-      <div className="mb-5 flex items-end justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-amber-200/75">À découvrir</p><h2 className="mt-1 text-xl font-semibold sm:text-2xl">Annonces récentes</h2></div><span className="shrink-0 rounded-full border border-white/10 bg-white/[.04] px-3 py-1.5 text-xs text-white/55">{annonces.length} offre{annonces.length===1?"":"s"}</span></div>
+      <div id="annonces-list" className="mb-5 flex items-end justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-amber-200/75">À découvrir</p><h2 className="mt-1 text-xl font-semibold sm:text-2xl">Annonces récentes</h2></div><span className="shrink-0 rounded-full border border-white/10 bg-white/[.04] px-3 py-1.5 text-xs text-white/55">{annonces.length} offre{annonces.length===1?"":"s"}</span></div>
       {loading?<div className="flex items-center gap-3 py-12 text-white/60"><LoaderCircle className="animate-spin"/> Chargement des annonces…</div>:annonces.length===0?<div className="rounded-3xl border border-dashed border-white/15 bg-white/[.02] px-5 py-10 text-center sm:px-10"><div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/[.07]"><ShoppingBag className="text-amber-200" size={27}/></div><h3 className="text-lg font-semibold">Les premières offres arrivent bientôt</h3><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-white/55">Aucune annonce n’est encore publiée. Tu peux lancer le marché en partageant la première offre.</p><button onClick={()=>setOpen(true)} className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-200 px-5 py-3 text-sm font-semibold text-black transition hover:bg-amber-100"><Plus size={16}/> Publier la première annonce</button></div>:<div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{annonces.map(a=><article key={a.id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/[.035]">
         {a.image_urls?.[0]?<Link href={"/annonce/"+a.id}><img src={a.image_urls[0]} alt={a.titre} className="h-56 w-full object-cover" loading="lazy"/></Link>:<div className="flex h-40 items-center justify-center bg-white/[.04]"><ShoppingBag size={36} className="text-white/20"/></div>}
         <div className="p-5"><Link href={"/annonce/"+a.id} className="text-lg font-semibold hover:text-amber-200">{a.titre}</Link><p className="mt-2 text-2xl font-semibold text-amber-200">{new Intl.NumberFormat("fr-FR").format(Number(a.prix))} FCFA</p><p className="mt-3 line-clamp-3 whitespace-pre-wrap text-sm text-white/60">{a.description||"Contacte le vendeur pour plus d'informations."}</p>
