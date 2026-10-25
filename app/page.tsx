@@ -940,14 +940,23 @@ export default function HomePage() {
     followMutationVersion.current += 1;
     // Bloque les clics concurrents pour éviter les insertions/suppressions contradictoires.
     setFollowPendingIds(old => [...old, targetId]);
-    const isFollowing = followedIds.includes(targetId);
+    let isFollowing = false;
     try {
+      // Lit l'état réel en base avant de décider : l'état React peut être périmé.
+      const { data: existingFollow, error: checkError } = await supabase
+        .from("follows")
+        .select("following_id")
+        .eq("follower_id", user.id)
+        .eq("following_id", targetId)
+        .maybeSingle();
+      if (checkError) throw checkError;
+      isFollowing = Boolean(existingFollow);
+
+      // INSERT/DELETE utilisent les politiques RLS explicites déjà configurées.
+      // Évite l'UPSERT, qui peut exiger une politique UPDATE absente sur follows.
       const result = isFollowing
         ? await supabase.from("follows").delete().eq("follower_id", user.id).eq("following_id", targetId)
-        : await supabase.from("follows").upsert(
-            { follower_id: user.id, following_id: targetId },
-            { onConflict: "follower_id,following_id", ignoreDuplicates: true }
-          );
+        : await supabase.from("follows").insert({ follower_id: user.id, following_id: targetId });
 
       if (result.error) throw result.error;
 
