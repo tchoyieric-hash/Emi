@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "EMi — Un lien, une histoire, une famille",
   description: "Un lien, une histoire, une famille. Partage tes moments et reste proche de ta communauté avec EMi.",
   applicationName: "EMi",
+  manifest: "/manifest.json",
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "EMi" },
 };
 
