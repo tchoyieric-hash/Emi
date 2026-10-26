@@ -76,15 +76,15 @@ export default function TontineFlowPage() {
   }
 
   const fmt = (n: number) => Number(n).toLocaleString("fr-FR") + " FCFA";
-  return <main className="min-h-screen w-full overflow-x-hidden bg-[#09090d] px-3 pb-12 text-white sm:px-4">
+  return <main className="min-h-screen w-full overflow-x-hidden emi-space-page bg-[#061b14] px-3 pb-12 text-white sm:px-4">
     <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 border-b border-white/10 py-4 sm:py-5">
       <Link href="/annonces" className="inline-flex min-w-0 items-center gap-2 text-xs text-white/70 hover:text-amber-200 sm:text-sm"><ArrowLeft size={17} className="shrink-0"/> <span>Marché EMi</span></Link>
       <span className="font-semibold tracking-[.2em] text-amber-200">EMi</span>
       <button onClick={() => { setLoading(true); void charger(); }} aria-label="Actualiser" className="rounded-full border border-white/15 p-2"><RefreshCw size={17}/></button>
     </header>
     <section className="mx-auto w-full max-w-5xl pt-5 sm:pt-8">
-      <div className="relative overflow-hidden rounded-3xl border border-violet-300/20 bg-[radial-gradient(ellipse_at_top_right,rgba(167,139,250,.22),transparent_50%),linear-gradient(145deg,#171321,#0d0d13_70%)] p-5 shadow-2xl shadow-violet-950/20 sm:p-9">
-        <div className="mb-5 flex items-center gap-3"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-violet-200/20 bg-violet-300/10 text-violet-200"><Users size={21}/></div><div><p className="text-[10px] font-bold uppercase tracking-[.22em] text-violet-200 sm:text-xs">EMi · Communauté</p><p className="mt-1 text-xs text-white/45">Achat groupé solidaire</p></div></div>
+      <div className="relative overflow-hidden rounded-3xl border border-amber-200/25 bg-[radial-gradient(ellipse_at_top_right,rgba(231,199,85,.18),transparent_50%),linear-gradient(145deg,#075039,#06291e_70%)] p-5 shadow-2xl shadow-violet-950/20 sm:p-9">
+        <div className="mb-5 flex items-center gap-3"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-amber-200/20 bg-amber-300/10 text-amber-200"><Users size={21}/></div><div><p className="text-[10px] font-bold uppercase tracking-[.22em] text-violet-200 sm:text-xs">EMi · Communauté</p><p className="mt-1 text-xs text-white/45">Achat groupé solidaire</p></div></div>
         <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">Tontine<span className="text-violet-300"> Flow</span></h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-white/65 sm:text-base">Réunissez votre communauté pour financer ensemble un achat utile. Créez un cercle, invitez des membres et suivez les engagements en toute transparence.</p>
         <div className="mt-5 flex items-start gap-3 rounded-2xl border border-amber-200/20 bg-amber-100/[.04] p-3 text-xs leading-5 text-amber-100/90 sm:p-4 sm:text-sm sm:leading-6"><ShieldCheck className="mt-0.5 shrink-0" size={19}/><p>Pour le moment, rejoindre un cercle enregistre une intention de participation uniquement. Aucun argent n’est encaissé et aucun paiement Mobile Money n’est lancé automatiquement.</p></div>
@@ -108,8 +108,8 @@ export default function TontineFlowPage() {
           <div className="flex items-start justify-between gap-3"><h3 className="min-w-0 break-words text-base font-semibold sm:text-lg">{c.nom_article}</h3><span className={"shrink-0 rounded-full px-3 py-1 text-xs " + (full || c.statut === "complet" ? "bg-emerald-400/15 text-emerald-200" : "bg-violet-400/15 text-violet-200")}>{full ? "Complet" : c.statut === "annule" ? "Annulé" : "Ouvert"}</span></div>
           <p className="mt-3 text-xl font-semibold text-emerald-200 sm:text-2xl">{fmt(Number(c.prix_cible))}</p>
           <div className="mt-4 flex justify-between text-xs text-white/55"><span className="inline-flex items-center gap-1"><Users size={14}/>{parts.length}/{c.membres_max} membres</span><span>{progress}% des engagements</span></div>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-black/40"><div className="h-full rounded-full bg-gradient-to-r from-violet-400 to-emerald-400 transition-all" style={{width: progress + "%"}}/></div>
-          <div className="mt-4 flex items-center justify-between gap-3"><span className="text-sm text-white/65"><HandCoins className="mr-1 inline" size={16}/>{fmt(Math.ceil(Number(c.prix_cible)/c.membres_max))} / personne</span><button onClick={() => void rejoindre(c)} disabled={full || c.statut !== "ouvert" || parts.some(p=>p.user_id===userId)} className="rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-semibold hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-40">{parts.some(p=>p.user_id===userId) ? "Déjà inscrit" : full ? "Cercle complet" : "Rejoindre"}</button></div>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-black/40"><div className="h-full rounded-full bg-gradient-to-r from-amber-300 to-emerald-400 transition-all" style={{width: progress + "%"}}/></div>
+          <div className="mt-4 flex items-center justify-between gap-3"><span className="text-sm text-white/65"><HandCoins className="mr-1 inline" size={16}/>{fmt(Math.ceil(Number(c.prix_cible)/c.membres_max))} / personne</span><button onClick={() => void rejoindre(c)} disabled={full || c.statut !== "ouvert" || parts.some(p=>p.user_id===userId)} className="rounded-xl bg-amber-300 px-4 py-2.5 text-sm font-semibold hover:bg-amber-200 text-[#09251a] disabled:cursor-not-allowed disabled:opacity-40">{parts.some(p=>p.user_id===userId) ? "Déjà inscrit" : full ? "Cercle complet" : "Rejoindre"}</button></div>
           <p className="mt-3 text-xs text-white/35">Les montants représentent des engagements déclarés, pas des paiements vérifiés.</p>
         </article>;
       })}</div>}
