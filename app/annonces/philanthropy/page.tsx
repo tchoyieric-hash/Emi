@@ -16,7 +16,18 @@ export default function PhilanthropyPage() {
  const [search,setSearch]=useState("");
  const [notice,setNotice]=useState("");
  const filtered=useMemo(()=>initiatives.filter(x=>(x.tag+" "+x.title+" "+x.meta).toLowerCase().includes(search.toLowerCase())),[search]);
- return <main id="top" className="emi-foundation min-h-screen bg-[#031b14] pb-24 text-white">\n  <style jsx global>{`\n    .emi-foundation{background:radial-gradient(ellipse at 75% 0%,rgba(17,103,70,.32),transparent 42%),#031b14!important;color:#f7f5ec;font-family:Inter,ui-sans-serif,system-ui,sans-serif}\n    .emi-foundation input{background:transparent!important;color:#fff!important;border:0!important;outline:none!important;box-shadow:none!important;font-size:16px!important;width:100%;min-width:0}\n    .emi-foundation input::placeholder{color:#a7b9af!important}\n    .emi-foundation a,.emi-foundation button{transition:transform .18s ease,border-color .18s ease,filter .18s ease}\n    .emi-foundation a:active,.emi-foundation button:active{transform:scale(.98)}\n    .emi-foundation .foundation-card{border:1px solid rgba(233,202,91,.62);background:linear-gradient(145deg,rgba(9,54,39,.98),rgba(2,22,16,.98));box-shadow:0 10px 28px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.04)}\n    .emi-foundation .foundation-image{display:block;width:100%;height:180px;object-fit:cover;border-radius:13px}\n    .emi-foundation .foundation-action{background:linear-gradient(100deg,#f5dc72,#d7b848);color:#10291c;border:1px solid rgba(255,236,154,.8);box-shadow:0 5px 18px rgba(226,192,66,.14)}\n    @media(min-width:640px){.emi-foundation .foundation-image{height:220px}}\n  `}</style>
+ return <main id="top" className="emi-foundation min-h-screen bg-[#031b14] pb-24 text-white">
+  <style jsx global>{`
+    .emi-foundation{background:radial-gradient(ellipse at 75% 0%,rgba(17,103,70,.32),transparent 42%),#031b14!important;color:#f7f5ec;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+    .emi-foundation input{background:transparent!important;color:#fff!important;border:0!important;outline:none!important;box-shadow:none!important;font-size:16px!important;width:100%;min-width:0}
+    .emi-foundation input::placeholder{color:#a7b9af!important}
+    .emi-foundation a,.emi-foundation button{transition:transform .18s ease,border-color .18s ease,filter .18s ease}
+    .emi-foundation a:active,.emi-foundation button:active{transform:scale(.98)}
+    .emi-foundation .foundation-card{border:1px solid rgba(233,202,91,.62);background:linear-gradient(145deg,rgba(9,54,39,.98),rgba(2,22,16,.98));box-shadow:0 10px 28px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.04)}
+    .emi-foundation .foundation-image{display:block;width:100%;height:180px;object-fit:cover;border-radius:13px}
+    .emi-foundation .foundation-action{background:linear-gradient(100deg,#f5dc72,#d7b848);color:#10291c;border:1px solid rgba(255,236,154,.8);box-shadow:0 5px 18px rgba(226,192,66,.14)}
+    @media(min-width:640px){.emi-foundation .foundation-image{height:220px}}
+  `}</style>
   <header className="sticky top-0 z-30 border-b border-amber-200/15 bg-[#05271d]/95 px-4 pb-3 pt-3 text-white backdrop-blur">
    <div className="mx-auto flex max-w-5xl items-center gap-3">
     <Link href="/annonces" aria-label="Retour aux espaces EMi" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-amber-200/35 text-amber-200"><ArrowLeft size={21}/></Link>
