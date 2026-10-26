@@ -92,15 +92,21 @@ export default function AnnoncesPage() {
             <div><p style={{fontSize:"10px",fontWeight:800,letterSpacing:"0.18em",color:"#d9bd53",margin:0}}>LA COMMUNAUTÉ EMi</p><h2 style={{fontSize:"clamp(20px,5vw,26px)",fontWeight:800,lineHeight:1.2,color:"#fff",margin:"5px 0 0"}}>Découvrir tous les espaces</h2></div>
             <span style={{fontSize:"11px",color:"#c6d6ce",whiteSpace:"nowrap"}}>Nos services</span>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:"10px"}}>
+          <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
             {[
-              {title:"EMi Fondation",desc:"Solidarité et projets à soutenir",href:"/annonces/philanthropy",icon:"♥",tone:"#d8c36b"},
-              {title:"EMi Troc",desc:"Échanger et donner une seconde vie",href:"/annonces/troc",icon:"⇄",tone:"#9dd7b3"},
-              {title:"EMi Help",desc:"Découvrir les services d’aide",href:"/annonces/master-health-check",icon:"✚",tone:"#e8c66d"},
-              {title:"Espace vendeur",desc:"Publier et gérer vos annonces",href:"/annonces/espace-vendeur",icon:"▣",tone:"#9dd7b3"},
-            ].map((space)=><Link key={space.href} href={space.href} style={{display:"flex",minHeight:"126px",flexDirection:"column",justifyContent:"space-between",padding:"14px",borderRadius:"16px",border:"1px solid rgba(222,199,105,.38)",background:"linear-gradient(145deg,#104d3a,#082d22)",color:"#fff",textDecoration:"none",minWidth:0}}>
-              <span style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}><span style={{display:"grid",placeItems:"center",width:"36px",height:"36px",borderRadius:"12px",background:"rgba(235,210,105,.14)",color:space.tone,fontSize:"23px"}}>{space.icon}</span><ArrowUpRight size={17} color={space.tone}/></span>
-              <span><strong style={{display:"block",fontSize:"14px",lineHeight:1.25}}>{space.title}</strong><small style={{display:"block",marginTop:"5px",fontSize:"11px",lineHeight:1.4,color:"rgba(255,255,255,.72)"}}>{space.desc}</small></span>
+              {title:"EMi Fondation",desc:"Ensemble, faisons grandir l’espoir. Découvrez les initiatives solidaires et les projets à soutenir.",href:"/annonces/philanthropy",kicker:"SOLIDARITÉ · IMPACT COMMUNAUTAIRE",cta:"Découvrir la Fondation",image:"https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=1200&q=85",position:"center 42%"},
+              {title:"EMi Troc",desc:"Donnez une seconde vie aux objets et trouvez des échanges utiles dans la communauté.",href:"/annonces/troc",kicker:"ÉCHANGE · ÉCONOMIE CIRCULAIRE",cta:"Explorer les échanges",image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=85",position:"center"},
+              {title:"EMi Help",desc:"Retrouvez les services d’aide disponibles et découvrez comment la communauté peut se soutenir.",href:"/annonces/master-health-check",kicker:"ENTRAIDE · SERVICES COMMUNAUTAIRES",cta:"Découvrir EMi Help",image:"https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1200&q=85",position:"center 40%"},
+              {title:"Espace vendeur",desc:"Présentez vos produits et gérez vos annonces pour toucher la communauté EMi.",href:"/annonces/espace-vendeur",kicker:"ENTREPRENDRE · VENDRE SUR EMi",cta:"Accéder à l’espace vendeur",image:"https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=85",position:"center"},
+            ].map((space)=><Link key={space.href} href={space.href} aria-label={space.cta} style={{position:"relative",display:"flex",alignItems:"flex-end",height:"min(230px, 30svh)",minHeight:"190px",maxHeight:"260px",width:"100%",overflow:"hidden",borderRadius:"22px",border:"1px solid rgba(231,205,101,.65)",color:"#fff",textDecoration:"none",background:"#063b2a"}}>
+              <img src={space.image} alt="" loading="lazy" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:space.position}} />
+              <span aria-hidden="true" style={{position:"absolute",inset:0,background:"linear-gradient(90deg,rgba(2,29,21,.94),rgba(2,29,21,.65) 62%,rgba(2,29,21,.12))"}} />
+              <span style={{position:"relative",display:"flex",flexDirection:"column",alignItems:"flex-start",gap:"7px",maxWidth:"560px",padding:"18px"}}>
+                <span style={{fontSize:"10px",fontWeight:800,letterSpacing:"0.14em",color:"#f2d86a"}}>{space.kicker}</span>
+                <strong style={{fontSize:"clamp(21px,5vw,28px)",lineHeight:1.1}}>{space.title}</strong>
+                <span style={{fontSize:"13px",lineHeight:1.5,color:"rgba(255,255,255,.92)"}}>{space.desc}</span>
+                <span style={{display:"inline-flex",alignItems:"center",gap:"7px",marginTop:"4px",borderRadius:"999px",background:"#f0d45f",color:"#12392c",padding:"10px 14px",fontSize:"12px",fontWeight:800}}>{space.cta}<ArrowUpRight size={16}/></span>
+              </span>
             </Link>)}
           </div>
           <Link href="/annonces" style={{display:"flex",alignItems:"center",justifyContent:"center",marginTop:"10px",padding:"12px",borderRadius:"14px",border:"1px solid rgba(222,199,105,.32)",color:"#e8d47c",fontWeight:700,fontSize:"13px",textDecoration:"none"}}>Voir toutes les annonces du Marché <ArrowUpRight size={15}/></Link>
