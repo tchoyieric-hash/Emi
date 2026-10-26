@@ -672,7 +672,8 @@ export default function HomePage() {
   }
 
   async function publish(e: React.FormEvent) {
-    e.preventDefault(); if (!supabase) return;
+    e.preventDefault();
+    let publishStage = "préparation de la publication"; if (!supabase) return;
     if (!user) { setComposerOpen(false); setAuthOpen(true); setMessage("Connecte-toi pour publier."); return; }
     if (!caption.trim() && !file && selectedFiles.length===0) { setMessage("Ajoute un texte ou une photo/vidéo."); return; }
     if (musicFile && !file && selectedFiles.length===0) { setMessage("Ajoute une photo ou une vidéo pour accompagner ta musique."); return; }
@@ -684,6 +685,7 @@ export default function HomePage() {
       const filesToUpload = selectedFiles.length ? selectedFiles : file ? [file] : [];
       if (filesToUpload.length > 10) throw new Error("Tu peux sélectionner jusqu’à 10 photos par publication.");
       if (filesToUpload.some(f=>f.type.startsWith("video/")) && filesToUpload.length > 1) throw new Error("Pour une publication multiple, sélectionne des photos uniquement. Une vidéo peut être publiée seule.");
+      publishStage = "envoi de la photo/vidéo";
       for (const sourceFile of filesToUpload) {
         if (!["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime"].includes(sourceFile.type)) throw new Error("Format non pris en charge. Choisis des photos ou une vidéo courante.");
         if (sourceFile.size > 50 * 1024 * 1024) throw new Error("Chaque fichier doit faire moins de 50 Mo.");
@@ -708,17 +710,23 @@ export default function HomePage() {
       let musicUrl = selectedMusic?.audio_url ?? "";
       let musicMeta: {title:string;artist:string;start:number;end:number;trackId?:string} | null = selectedMusic ? {title:selectedMusic.title,artist:selectedMusic.artist,start:musicStart,end:musicEnd || selectedMusic.duration_seconds || 30,trackId:selectedMusic.id} : null;
       if (musicFile) {
+        publishStage = "envoi du fichier musical";
         const audioPath = user.id + "/" + crypto.randomUUID() + "-" + musicFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
         const { error: audioUploadError } = await supabase.storage.from("post-media").upload(audioPath, musicFile, { contentType: musicFile.type, upsert: false });
         if (audioUploadError) throw new Error("Impossible d’envoyer la musique. Vérifie les autorisations du stockage : " + audioUploadError.message);
         musicUrl = supabase.storage.from("post-media").getPublicUrl(audioPath).data.publicUrl;
         musicMeta = {title: musicTitle.trim() || musicFile.name.replace(/\\.[^.]+$/, ""),artist:"Audio de ton téléphone",start:0,end:30};
       }
+      publishStage = "enregistrement de la publication dans Supabase";
       const postContent = (publishDestination === "reel" ? "[EMI_REEL] " : "") + caption.trim() + (musicMeta ? "\\n\\n[EMI_MUSIC]" + JSON.stringify({...musicMeta,url:musicUrl}) + "[/EMI_MUSIC]" : "");
       const { error } = await supabase.from("posts").insert({ user_id: user.id, content: postContent, media_type: mediaType, media_urls: urls, visibility: "public" });
       if (error) throw error;
       setCaption(""); setPublishDestination("post"); setFile(null); setSelectedFiles([]); setMusicFile(null); setSelectedMusic(null); setMusicTitle(""); setCatalogOpen(false); setCreatorFilter("original"); setCreatorRatio("4:5"); setCreatorBrightness(100); setCreatorContrast(100); setCreatorTextOnPhoto(false); setCreatorOverlayText(""); setCreatorEditOpen(false); setMusicStart(0); setMusicEnd(30); setMusicDuration(0); setComposerOpen(false); setMessage("Publication envoyée."); await loadFeed();
-    } catch (err) { setMessage(err instanceof Error ? err.message : "La publication a échoué."); }
+    } catch (err) {
+      const detail = err instanceof Error ? err.message : String(err || "Erreur inconnue");
+      const networkFailure = /failed to fetch|networkerror|load failed|fetch failed/i.test(detail);
+      setMessage(networkFailure ? `Connexion interrompue pendant ${publishStage}. Vérifie Internet puis réessaie. Si cela persiste, le stockage Supabase doit être contrôlé.` : `${publishStage} : ${detail}`);
+    }
     finally { setBusy(false); }
   }
 
