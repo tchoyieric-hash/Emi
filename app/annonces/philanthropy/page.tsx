@@ -4,13 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Search, Camera, Heart, Home, LayoutGrid, ArrowLeft } from "lucide-react";
 
-const initiatives = [
- { tag:"Éducation", title:"Offrir aux enfants un avenir meilleur", source:"EMi Fondation", meta:"Éducation · Entraide", image:"https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=85" },
- { tag:"Solidarité", title:"Partager un repas, partager l’espoir", source:"EMi Fondation", meta:"Communauté · Entraide", image:"https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=85" },
- { tag:"Autonomie", title:"Faire grandir les initiatives locales", source:"EMi Fondation", meta:"Entrepreneuriat · Avenir", image:"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=85" },
- { tag:"Santé", title:"Prendre soin de notre communauté", source:"EMi Fondation", meta:"Santé · Prévention", image:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=900&q=85" },
- { tag:"Entraide", title:"Ensemble, nous allons plus loin", source:"EMi Fondation", meta:"Solidarité · Communauté", image:"https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=900&q=85" },
-];
+const initiatives: { tag: string; title: string; source: string; meta: string; image: string }[] = [];
 
 export default function PhilanthropyPage() {
  const [search,setSearch]=useState("");
@@ -49,14 +43,13 @@ export default function PhilanthropyPage() {
   <div className="flex justify-center gap-3 py-4" aria-hidden="true">{[0,1,2,3,4,5,6].map((n)=><span key={n} className={`h-2.5 w-2.5 rounded-full ${n===0?"bg-amber-300":"bg-white/20"}`}/>)}</div>
   <section id="idees" className="px-4 pt-1">
    <p className="text-sm font-semibold uppercase tracking-[.18em] text-amber-200">Explorer les initiatives à la une</p>
-   <div className="mb-4 mt-1 flex items-end justify-between gap-2"><h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">Des idées qui pourraient vous inspirer</h2><span className="shrink-0 rounded-full border border-amber-200/25 bg-white/5 px-3 py-2 text-xs text-amber-100">{filtered.length} idées</span></div>
-   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+   <div className="mb-4 mt-1 flex items-end justify-between gap-2"><h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">Des idées qui pourraient vous inspirer</h2><span className="shrink-0 rounded-full border border-amber-200/25 bg-white/5 px-3 py-2 text-xs text-amber-100">{filtered.length} initiative(s) publiée(s)</span></div>
+   {filtered.length > 0 ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
     {filtered.map(item=><article key={item.title} className="foundation-card mb-4 inline-block w-full break-inside-avoid overflow-hidden rounded-2xl p-2">
       <img src={item.image} alt={item.title} loading="lazy" className="foundation-image"/>
-      <div className="px-1 pt-2"><h3 className="text-base font-semibold leading-snug sm:text-lg">{item.title}</h3><p className="mt-1 text-sm">{item.source} <span className="ml-1 inline-block rounded-full bg-emerald-700 px-1 text-xs text-white">✓</span></p><p className="text-sm text-slate-400">{item.meta}</p></div>
+      <div className="px-1 pt-2"><h3 className="text-base font-semibold leading-snug sm:text-lg">{item.title}</h3><p className="mt-1 text-sm">{item.source}</p><p className="text-sm text-slate-400">{item.meta}</p></div>
     </article>)}
-   </div>
-   {filtered.length===0&&<p className="py-8 text-slate-400">Aucune initiative ne correspond à cette recherche.</p>}
+   </div> : <div className="foundation-card rounded-2xl p-6 sm:p-8"><p className="text-lg font-bold text-amber-100">Aucune initiative vérifiée n’est publiée pour le moment.</p><p className="mt-2 text-sm leading-6 text-slate-300">Les projets apparaîtront ici lorsqu’ils seront enregistrés et vérifiés. Les visuels de démonstration et les chiffres fictifs ne sont pas affichés comme des actions réelles.</p></div>}
   </section>
   <section id="soutien" className="mx-4 mt-6 rounded-3xl bg-emerald-950 p-5 text-white sm:p-7">
    <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">EMi Fondation</p><h2 className="mt-2 text-2xl font-extrabold">Un geste qui compte</h2><p className="mt-2 text-sm leading-6 text-white/80">Les initiatives affichées sont des exemples d’inspiration, pas des collectes validées. Les bénéficiaires et les projets doivent être vérifiés avant toute contribution.</p>
