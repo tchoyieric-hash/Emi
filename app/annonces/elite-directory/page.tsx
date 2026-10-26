@@ -18,7 +18,9 @@ export default function EliteDirectoryPage() {
   const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [profiles, setProfiles] = useState<Profile[]>([]);\n  const [searchTerm, setSearchTerm] = useState("");\n  const filteredProfiles = profiles.filter(p => `${p.nom} ${p.specialite} ${p.ville} ${p.bio}`.toLocaleLowerCase("fr").includes(searchTerm.trim().toLocaleLowerCase("fr")));
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredProfiles = profiles.filter(p => `${p.nom} ${p.specialite} ${p.ville} ${p.bio}`.toLocaleLowerCase("fr").includes(searchTerm.trim().toLocaleLowerCase("fr")));
 
   useEffect(() => {
     let alive = true;
