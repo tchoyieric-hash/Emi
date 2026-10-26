@@ -27,7 +27,7 @@ export default function PhilanthropyPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#fbfaf7] pb-24 text-[#17211b]">
+    <main id="top" className="min-h-screen bg-[#fbfaf7] pb-24 text-[#17211b]">
       <header className="sticky top-0 z-20 border-b border-emerald-950/10 bg-[#fbfaf7]/95 px-4 pb-3 pt-3 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center gap-3">
           <Link href="/annonces" aria-label="Retour au Marché EMi" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-emerald-900/15 bg-white text-xl text-emerald-950">←</Link>
