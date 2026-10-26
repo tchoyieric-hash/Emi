@@ -35,7 +35,7 @@ export default function StreetArenaPage() {
 
   return <main className="min-h-screen bg-[#090d16] px-4 pb-12 text-slate-50">
     <header className="mx-auto flex max-w-5xl items-center justify-between py-5">
-      <Link href="/annonces" className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-amber-200"><ArrowLeft size={17}/> Retour au marché</Link>
+      <div className="flex flex-wrap items-center gap-4"><Link href="/annonces" className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-amber-200"><ArrowLeft size={17}/> Retour au marché</Link><Link href="/annonces/battle" className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm font-semibold text-amber-200 hover:bg-amber-300/20"><Swords size={16}/> Battle of Commerçants</Link></div>
       <span className="font-semibold tracking-[.22em] text-amber-200">EMi</span>
     </header>
     <section className="mx-auto max-w-5xl">
