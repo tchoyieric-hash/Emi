@@ -25,7 +25,7 @@ export default function PhilanthropyPage() {
     </label>
    </div>
   </header>
-  <section className="relative h-[390px] overflow-hidden sm:h-[540px]">
+  <section style={{height:"min(390px, 48svh)",minHeight:"300px",position:"relative"}} className="relative overflow-hidden sm:h-[540px]">
    <img src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=1800&q=90" alt="Des personnes réunies pour une initiative solidaire" className="absolute inset-0 h-full w-full object-cover"/>
    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/15"/>
    <div className="absolute bottom-8 left-5 right-5 text-white sm:bottom-12 sm:left-10 sm:max-w-3xl">
