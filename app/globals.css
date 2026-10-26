@@ -765,3 +765,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
 .emi-shop-product-copy .flex{margin-top:8px!important}.emi-shop-product-copy a[href*="wa.me"]{border-radius:8px;padding:8px 4px;font-size:10px}.emi-shop-product-copy a[href^="/annonce/"]:last-child{border-color:#cbd4cd;border-radius:8px;padding:8px 4px}
 @media(min-width:640px){.emi-shop-shell{margin:0 0 25px;padding:22px;border:1px solid #d5bc5b55;border-radius:22px}.emi-shop-profile-copy h1{font-size:26px}.emi-shop-products{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.emi-shop-product-image{height:240px}.emi-shop-product-copy{padding:14px}.emi-shop-product-copy>a{font-size:15px}.emi-shop-price{font-size:19px}}
 @media(max-width:380px){.emi-shop-avatar{flex-basis:50px;height:50px}.emi-shop-profile-copy h1{font-size:17px}.emi-shop-sell{padding:7px}.emi-shop-brand strong{font-size:12px}}
+
+.emi-shop-product-gallery{position:relative;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;background:#e5e7eb;overflow:hidden}
+.emi-shop-product-gallery .emi-shop-product-image{height:clamp(95px,28vw,150px);width:100%;object-fit:cover}
+.emi-shop-product-gallery:has(img:only-of-type){display:block!important}
+.emi-shop-product-gallery:has(img:only-of-type) .emi-shop-product-image{height:clamp(140px,46vw,230px)}
+.emi-shop-photo-count{position:absolute;right:7px;top:7px;padding:4px 7px;border:1px solid #ffffff77;border-radius:999px;background:#071b13d9;color:white;font-size:10px;font-weight:700}
+@media(min-width:640px){.emi-shop-product-gallery .emi-shop-product-image{height:150px}}
