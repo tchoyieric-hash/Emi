@@ -1,26 +1,50 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import { ArrowLeft, Activity, AlertTriangle, RefreshCw } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowLeft, Search, CircleHelp, MessageCircle, ShieldCheck, ShoppingBag, Users, HeartHandshake, ChevronDown, BookOpen, LifeBuoy, Sparkles } from "lucide-react";
 
-const modules = [
-  ["Autonomous-Trade & Neural Core", "Analyse de données limitée aux fonctions intégrées", "Partiel"],
-  ["Flash-Barter & Swap-Hub", "Troc-Chain propose un rapprochement textuel, sans séquestre", "Partiel"],
-  ["Tontine-Flow & Njangi-Trust", "Paiements réels non connectés aux opérateurs", "À vérifier"],
-  ["Neuro-Inventory Pro", "Interface de démonstration, sans prédictions IA actives", "Démo"],
-  ["Black-Diamond & Philanthropy Vault", "Présentation seulement ; accès privé et versements non activés", "Démo"],
-  ["Hope-Bridge", "Fonctionnalités et intégrations à contrôler", "À vérifier"],
-  ["Sovereign Compliance, AML & Trust", "Checklist de préparation, aucune certification garantie", "À vérifier"],
+const faqs = [
+  {category:"Compte",q:"Comment sécuriser mon compte EMi ?",a:"Utilise une adresse ou un numéro auquel tu as accès, garde tes identifiants privés et déconnecte-toi sur les appareils partagés. Les options de sécurité disponibles dépendent des réglages actuellement activés sur ton compte."},
+  {category:"Marché",q:"Comment vendre sur le Marché EMi ?",a:"Ouvre le Marché, choisis l’action de vente et complète les informations du produit avec des photos claires, un prix en FCFA et un moyen de contact fiable. Vérifie les détails avant de publier."},
+  {category:"Djangui Flow",q:"Comment fonctionne un cercle Djangui ?",a:"Crée un cercle, indique son objectif et le nombre de membres. La cotisation affichée est une estimation calculée à partir de ces valeurs. Elle ne déclenche aucun paiement automatique."},
+  {category:"Fondation",q:"Puis-je faire un don depuis EMi Fondation ?",a:"La page Fondation présente des initiatives à découvrir. Les contributions en ligne ne sont pas activées tant qu’un parcours de paiement sécurisé et la vérification des bénéficiaires ne sont pas disponibles."},
+  {category:"Confidentialité",q:"Comment signaler un problème ou un contenu ?",a:"Ne partage pas d’informations sensibles dans un message public. Utilise les options de signalement visibles dans l’espace concerné lorsqu’elles sont disponibles et conserve les informations nécessaires pour décrire le problème."},
+];
+const topics = [
+  {title:"Compte & sécurité",detail:"Connexion, profil et confidentialité",icon:ShieldCheck},
+  {title:"Marché EMi",detail:"Acheter, vendre et gérer une annonce",icon:ShoppingBag},
+  {title:"Djangui Flow",detail:"Cercles, objectifs et cotisations",icon:Users},
+  {title:"EMi Fondation",detail:"Initiatives solidaires et transparence",icon:HeartHandshake},
 ];
 export default function MasterHealthCheckPage() {
-  const [ran, setRan] = useState(false);
-  const [time, setTime] = useState("");
-  return <main className="emi-space-page min-h-screen bg-[#061b14] px-4 py-7 text-slate-50"><div className="mx-auto max-w-5xl space-y-5">
-    <Link href="/annonces" className="inline-flex items-center gap-2 text-sm text-slate-300"><ArrowLeft size={18}/> Retour au marché EMi</Link>
-    <header className="rounded-3xl border border-amber-200/25 bg-gradient-to-br from-[#075039] to-[#061b14] p-6 sm:p-8"><div className="flex items-center gap-3"><span className="rounded-2xl bg-emerald-400/10 p-3 text-amber-200"><Activity size={28}/></span><div><p className="text-xs uppercase tracking-[.24em] text-emerald-300">EMi · Centre de contrôle</p><h1 className="text-2xl font-bold sm:text-3xl">Master Integration & Health-Check</h1></div></div><p className="mt-4 text-sm leading-6 text-slate-300">Vue d’ensemble des modules et de leur niveau d’intégration déclaré. Le bouton réalise une checklist locale, pas un test automatique de Supabase, des services ou du déploiement.</p></header>
-    <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 sm:p-6"><h2 className="mb-4 text-lg font-bold">État indicatif des 7 piliers</h2><div className="space-y-3">{modules.map(([name, detail, status]) => <article key={name} className="rounded-2xl border border-white/10 bg-black/20 p-4"><div className="flex items-start justify-between gap-3"><h3 className="text-sm font-semibold">{name}</h3><span className={"shrink-0 rounded-full px-2.5 py-1 text-xs " + (status === "Partiel" ? "bg-amber-400/10 text-amber-200" : status === "Démo" ? "bg-blue-400/10 text-blue-200" : "bg-rose-400/10 text-rose-200")}>{status}</span></div><p className="mt-2 text-xs leading-5 text-slate-400">{detail}</p></article>)}</div>
-    <button onClick={() => { setRan(true); setTime(new Date().toLocaleString("fr-FR")); }} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-300 to-amber-500 px-4 py-3.5 font-bold text-slate-950"><RefreshCw size={18}/> Lancer le contrôle de checklist</button>
-    {ran && <div role="status" className="mt-4 rounded-2xl border border-amber-300/20 bg-amber-300/5 p-4"><div className="flex items-center gap-2 font-semibold text-amber-200"><AlertTriangle size={18}/> Vérification technique requise</div><p className="mt-2 text-sm leading-5 text-slate-300">Cette action n’a pas testé les services en direct. Vérifie les builds Vercel, les requêtes Supabase, les politiques RLS, le stockage média et les fournisseurs de paiement avant de déclarer EMi prêt.</p><p className="mt-2 text-xs text-slate-500">Checklist locale lancée : {time}</p></div>}
-    </section><aside className="rounded-2xl border border-white/10 bg-white/[.03] p-4 text-sm leading-6 text-slate-400">Transparence : aucun module n’est déclaré opérationnel sans test technique vérifiable. Cette page ne certifie ni conformité institutionnelle, ni synchronisation globale, ni disponibilité en production.</aside>
-  </div></main>;
+  const [query,setQuery]=useState("");
+  const [opened,setOpened]=useState<number|null>(0);
+  const filtered=useMemo(()=>faqs.filter(x=>(x.q+" "+x.a+" "+x.category).toLowerCase().includes(query.toLowerCase())),[query]);
+  return <main className="min-h-screen bg-[#031b14] pb-28 text-white">
+    <header className="sticky top-0 z-30 border-b border-amber-200/15 bg-[#05271d]/95 px-4 py-3 backdrop-blur">
+      <div className="mx-auto flex max-w-5xl items-center gap-3">
+        <Link href="/annonces" aria-label="Retour au marché EMi" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-amber-200/35 text-amber-200"><ArrowLeft size={21}/></Link>
+        <div className="min-w-0 flex-1"><p className="text-xs font-bold uppercase tracking-[.22em] text-amber-200">EMi · Assistance</p><h1 className="text-lg font-bold">Help EMi</h1></div>
+        <span className="grid h-11 w-11 place-items-center rounded-2xl border border-amber-200/25 bg-white/5 text-amber-200"><LifeBuoy size={22}/></span>
+      </div>
+    </header>
+    <div className="mx-auto max-w-5xl px-4">
+      <section className="relative mt-5 overflow-hidden rounded-[28px] border border-amber-200/35 bg-gradient-to-br from-[#0c4a35] via-[#073324] to-[#031b14] p-6 shadow-2xl shadow-black/25 sm:p-9">
+        <div className="pointer-events-none absolute -right-8 -top-12 h-48 w-48 rounded-full border border-amber-200/15"/><div className="pointer-events-none absolute -right-2 -top-6 h-36 w-36 rounded-full border border-amber-200/10"/>
+        <span className="inline-flex items-center gap-2 rounded-full border border-amber-200/35 bg-black/20 px-3 py-1.5 text-xs font-bold uppercase tracking-[.15em] text-amber-200"><Sparkles size={14}/> Toujours à tes côtés</span>
+        <h2 className="mt-4 max-w-xl text-3xl font-extrabold leading-tight sm:text-5xl">Comment pouvons-nous <span className="text-amber-200">t’aider ?</span></h2>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-slate-200 sm:text-base">Trouve rapidement des réponses sur ton compte, le Marché, Djangui Flow et les initiatives EMi.</p>
+        <label className="mt-6 flex h-14 items-center gap-3 rounded-2xl border border-amber-200/40 bg-[#031b14]/80 px-4 shadow-lg"><Search size={21} className="shrink-0 text-amber-200"/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher une question..." aria-label="Rechercher dans l’aide" className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-slate-400"/></label>
+      </section>
+      <section className="mt-7"><div className="mb-4 flex items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">Centre d’assistance</p><h2 className="mt-1 text-2xl font-extrabold">Explorer par rubrique</h2></div><BookOpen className="text-amber-200" size={25}/></div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">{topics.map(t=><article key={t.title} className="flex items-center gap-4 rounded-2xl border border-amber-200/25 bg-gradient-to-br from-[#0a3326] to-[#041b14] p-4"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-amber-200/35 bg-black/15 text-amber-200"><t.icon size={23}/></span><div><h3 className="font-bold">{t.title}</h3><p className="mt-1 text-sm text-slate-300">{t.detail}</p></div></article>)}</div>
+      </section>
+      <section className="mt-8"><div className="mb-4"><p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">Réponses rapides</p><h2 className="mt-1 text-2xl font-extrabold">Questions fréquentes</h2></div>
+        <div className="space-y-3">{filtered.map((item,index)=><article key={item.q} className="overflow-hidden rounded-2xl border border-amber-200/20 bg-white/[.035]"><button onClick={()=>setOpened(opened===index?null:index)} aria-expanded={opened===index} className="flex w-full items-center gap-3 p-4 text-left"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-amber-200/10 text-amber-200"><CircleHelp size={19}/></span><span className="flex-1"><span className="block text-xs font-semibold text-amber-200">{item.category}</span><span className="mt-1 block font-semibold">{item.q}</span></span><ChevronDown size={19} className={opened===index?"rotate-180 text-amber-200 transition-transform":"text-slate-400 transition-transform"}/></button>{opened===index&&<p className="border-t border-white/10 px-4 pb-4 pt-3 text-sm leading-6 text-slate-300">{item.a}</p>}</article>)}{filtered.length===0&&<p className="rounded-2xl border border-white/10 p-5 text-slate-300">Aucun résultat. Essaie un autre mot-clé.</p>}</div>
+      </section>
+      <section className="mt-8 rounded-3xl border border-amber-200/30 bg-gradient-to-r from-[#0b3b2a] to-[#061f17] p-5 sm:p-7"><div className="flex items-start gap-4"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-amber-200 text-[#06251a]"><MessageCircle size={23}/></span><div className="flex-1"><h2 className="text-xl font-extrabold">Tu n’as pas trouvé ta réponse ?</h2><p className="mt-2 text-sm leading-6 text-slate-300">Décris le problème dans l’espace concerné. Les options de contact direct seront affichées ici lorsqu’un canal d’assistance sera configuré.</p><Link href="/annonces" className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-200 to-yellow-400 px-5 py-3 font-bold text-[#06251a]">Retour aux espaces EMi <ArrowLeft size={16} className="rotate-180"/></Link></div></div></section>
+      <p className="mt-5 text-center text-xs leading-5 text-slate-500">EMi Help · Les réponses décrivent les fonctionnalités disponibles et ne garantissent pas l’activation de services externes ou de paiements.</p>
+    </div>
+    <nav aria-label="Navigation Help EMi" className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-200/20 bg-[#041b14]/95 px-3 py-2 backdrop-blur"><div className="mx-auto flex max-w-md items-center justify-around"><Link href="/annonces" className="flex flex-col items-center gap-1 text-xs text-slate-300"><ShoppingBag size={23}/>Marché</Link><a href="#top" className="flex flex-col items-center gap-1 text-xs text-amber-200"><CircleHelp size={23}/>Aide</a><Link href="/annonces/philanthropy" className="flex flex-col items-center gap-1 text-xs text-slate-300"><HeartHandshake size={23}/>Fondation</Link><Link href="/annonces/tontine" className="flex flex-col items-center gap-1 text-xs text-slate-300"><Users size={23}/>Djangui</Link></div></nav>
+  </main>;
 }
