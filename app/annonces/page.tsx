@@ -99,8 +99,17 @@ export default function AnnoncesPage() {
             <span className="emi-flow-feature-cta">Découvrir les cercles <ArrowUpRight size={16}/></span>
           </span>
         </Link>
+        <Link href="/annonces/battle" style={{position:"relative",display:"flex",alignItems:"flex-end",minHeight:210,width:"100%",overflow:"hidden",borderRadius:22,margin:"12px 0 0",border:"1px solid rgba(231,205,101,.8)",color:"#fff",textDecoration:"none",background:"radial-gradient(ellipse at 80% 15%,rgba(247,211,91,.28),transparent 45%),linear-gradient(135deg,#10150f,#032c20 58%,#050505)",boxShadow:"0 10px 32px rgba(0,0,0,.2)"}} aria-label="Découvrir Battle of Commerçants">
+          <span aria-hidden="true" style={{position:"absolute",inset:0,background:"linear-gradient(110deg,rgba(3,23,17,.97),rgba(3,23,17,.74) 62%,rgba(3,23,17,.28))"}}/>
+          <span style={{position:"relative",display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,padding:20,maxWidth:620}}>
+            <span style={{display:"inline-flex",alignItems:"center",gap:7,borderRadius:999,background:"#f1d45e",color:"#173629",padding:"7px 12px",fontSize:10,fontWeight:900,letterSpacing:".1em"}}>♛ NOUVEAU · EMi LIVE</span>
+            <strong style={{fontSize:"clamp(23px,5vw,32px)",lineHeight:1.1}}>Battle of Commerçants</strong>
+            <span style={{fontSize:14,lineHeight:1.55,color:"rgba(255,255,255,.9)"}}>Des duels de boutiques, des votes communautaires et les produits en vedette. Qui sera le champion EMi ?</span>
+            <span style={{display:"inline-flex",alignItems:"center",gap:8,marginTop:5,borderRadius:999,background:"#f1d45e",color:"#143629",padding:"12px 17px",fontSize:13,fontWeight:900}}>Entrer dans l’arène <ArrowUpRight size={17}/></span>
+          </span>
+        </Link>
         <nav aria-label="Catégories du marché" style={{display:"flex",gap:8,overflowX:"auto",padding:"12px 0 4px"}}>
-          {[["Tout","/annonces"],["EMi Market","/annonces"],["EMi Troc","/annonces/troc"],["Djangui Flow","/annonces/tontine"],["Elite Hospitality","/annonces/elite-directory"],["EMi Fondation","/annonces/philanthropy"],["EMi Help","/annonces/master-health-check"]].map(([label,href],i)=><Link key={label} href={href} style={{flexShrink:0,border:"1px solid rgba(231,205,101,.55)",borderRadius:999,padding:"10px 14px",background:i===0?"#f1d45e":"rgba(3,44,32,.8)",color:i===0?"#143629":"#f5f3e9",fontWeight:700,fontSize:12,textDecoration:"none"}}>{label}</Link>)}
+          {[["Tout","/annonces"],["EMi Market","/annonces"],["EMi Troc","/annonces/troc"],["Djangui Flow","/annonces/tontine"],["Battle of Commerçants","/annonces/battle"],["Elite Hospitality","/annonces/elite-directory"],["EMi Fondation","/annonces/philanthropy"],["EMi Help","/annonces/master-health-check"]].map(([label,href],i)=><Link key={label} href={href} style={{flexShrink:0,border:"1px solid rgba(231,205,101,.55)",borderRadius:999,padding:"10px 14px",background:i===0?"#f1d45e":"rgba(3,44,32,.8)",color:i===0?"#143629":"#f5f3e9",fontWeight:700,fontSize:12,textDecoration:"none"}}>{label}</Link>)}
         </nav>
         <Link href="/annonces/elite-directory" style={{position:"relative",display:"flex",alignItems:"flex-end",minHeight:220,margin:"14px 0 0",overflow:"hidden",border:"1px solid #e6ca59",borderRadius:22,color:"#fff",textDecoration:"none",background:"#063b2a"}}>
           <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=85" alt="Restaurant élégant" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
@@ -114,6 +123,7 @@ export default function AnnoncesPage() {
           </div>
           <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
             {[
+              {title:"Battle of Commerçants",desc:"Affrontez d’autres boutiques, mobilisez la communauté et présentez vos produits dans l’arène EMi.",href:"/annonces/battle",kicker:"EMi LIVE · DUELS COMMERCIAUX",cta:"Entrer dans l’arène",image:"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=85",position:"center"},
               {title:"EMi Fondation",desc:"Ensemble, faisons grandir l’espoir. Découvrez les initiatives solidaires et les projets à soutenir.",href:"/annonces/philanthropy",kicker:"SOLIDARITÉ · IMPACT COMMUNAUTAIRE",cta:"Découvrir la Fondation",image:"https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=1200&q=85",position:"center 42%"},
               {title:"EMi Troc",desc:"Donnez une seconde vie aux objets et trouvez des échanges utiles dans la communauté.",href:"/annonces/troc",kicker:"ÉCHANGE · ÉCONOMIE CIRCULAIRE",cta:"Explorer les échanges",image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=85",position:"center"},
               {title:"EMi Help",desc:"Retrouvez les services d’aide disponibles et découvrez comment la communauté peut se soutenir.",href:"/annonces/master-health-check",kicker:"ENTRAIDE · SERVICES COMMUNAUTAIRES",cta:"Découvrir EMi Help",image:"https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1200&q=85",position:"center 40%"},
