@@ -77,7 +77,28 @@ export default function AnnoncesPage() {
         <div className="emi-shop-profile"><div className="emi-shop-avatar">EM<span>✦</span></div><div className="emi-shop-profile-copy"><h1>Le Marché EMi</h1><p>Mode, technologie, maison & découvertes</p><div className="emi-shop-trust">✦ La boutique de la communauté</div></div><button className="emi-shop-sell" onClick={()=>setOpen(!open)}><Plus size={15}/> Vendre</button></div>
         <label htmlFor="annonces-search" className="emi-shop-search"><Search size={18}/><input id="annonces-search" type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un produit…"/><span>⌕</span></label>
         <div className="emi-shop-categories">{["Tout","Mode","Électronique","Sacs","Chaussures","Maison","Immobilier"].map((cat,i)=><button key={cat} className={i===0&&!search?"selected":""} onClick={()=>{setSearch(i===0?"":cat);document.getElementById("annonces-list")?.scrollIntoView({behavior:"smooth",block:"start"});}}>{cat}</button>)}</div>
+        <Link href="/annonces/tontine" className="emi-flow-feature" aria-label="Découvrir EMi Djangui Flow">
+          <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=85" alt="Une communauté réunie" />
+          <span className="emi-flow-feature-shade" />
+          <span className="emi-flow-feature-copy">
+            <span className="emi-flow-feature-kicker">NOUVEAU · SOLIDARITÉ COMMUNAUTAIRE</span>
+            <strong>EMi Djangui Flow</strong>
+            <span>Réunissez-vous, créez un cercle et avancez ensemble vers un objectif commun.</span>
+            <span className="emi-flow-feature-cta">Découvrir les cercles <ArrowUpRight size={16}/></span>
+          </span>
+        </Link>
       </section>
+      <style jsx>{`
+        .emi-flow-feature{position:relative;display:flex;align-items:flex-end;min-height:190px;margin:14px 0 0;overflow:hidden;border:1px solid rgba(231,205,101,.65);border-radius:22px;color:#fff;text-decoration:none;background:#063b2a}
+        .emi-flow-feature>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%}
+        .emi-flow-feature-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,29,21,.94),rgba(2,29,21,.62) 60%,rgba(2,29,21,.12))}
+        .emi-flow-feature-copy{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:7px;max-width:560px;padding:18px}
+        .emi-flow-feature-kicker{font-size:10px;font-weight:800;letter-spacing:.14em;color:#f2d86a}
+        .emi-flow-feature-copy strong{font-size:clamp(21px,5vw,30px);line-height:1.1}
+        .emi-flow-feature-copy>span:nth-child(3){max-width:420px;font-size:13px;line-height:1.5;color:rgba(255,255,255,.9)}
+        .emi-flow-feature-cta{display:inline-flex;align-items:center;gap:6px;margin-top:4px;border-radius:999px;background:#f0d45f;color:#12392c;padding:9px 13px;font-size:12px;font-weight:800}
+        @media(min-width:640px){.emi-flow-feature{min-height:220px;margin-top:18px}.emi-flow-feature-copy{padding:25px}.emi-flow-feature-copy>span:nth-child(3){font-size:14px}}
+      `}</style>
       {spacesOpen&&<section className="emi-shop-spaces"><strong>Explorer les espaces EMi</strong><div className="grid grid-cols-2 gap-2 mt-3">{[["Flow · Djangui","/annonces/tontine"],["Fondation EMi","/annonces/philanthropy"],["Help EMi","/annonces/master-health-check"],["Espace vendeur","/annonces/espace-vendeur"]].map(([label,href])=><Link key={href} href={href} onClick={()=>setSpacesOpen(false)} className="emi-shop-space-link">{label}<ArrowUpRight size={15}/></Link>)}</div></section>}
       {notice&&<div role="status" className="mb-5 rounded-2xl border border-amber-200/20 bg-amber-100/10 p-4 text-sm text-amber-100">{notice}</div>}
       {open&&<form onSubmit={publier} className="mb-8 grid gap-4 rounded-3xl border border-white/10 bg-white/[.04] p-5 sm:grid-cols-2 sm:p-7">
