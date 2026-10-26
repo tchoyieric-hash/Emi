@@ -87,6 +87,62 @@ export default function AnnoncesPage() {
     <section className="mx-auto w-full min-w-0 max-w-6xl px-3 py-4 sm:px-4 sm:py-9">
       <section className="emi-shop-shell">
         <div className="emi-shop-brandbar"><button className="emi-shop-menu" onClick={()=>{setSpacesOpen(!spacesOpen);setRoyalOpen(false);}} aria-label={spacesOpen?"Fermer le centre de commandes":"Ouvrir le centre de commandes"} aria-expanded={spacesOpen}><Menu size={21}/></button><div className="emi-shop-brand"><span className="emi-shop-monogram">M</span><span><strong>EMi MARKET</strong><small>Le marché de la communauté</small></span></div><button className="emi-shop-notice" onClick={()=>{setRoyalOpen(!royalOpen);setSpacesOpen(false);}} aria-label={royalOpen?"Fermer EMi Royal":"Ouvrir EMi Royal"} aria-expanded={royalOpen}>♣</button></div>
+      {royalOpen&&<section style={{margin:"12px 0 20px",padding:"16px",border:"1px solid rgba(231,205,101,.7)",borderRadius:"20px",background:"radial-gradient(ellipse at top right,rgba(241,212,94,.13),transparent 45%),linear-gradient(150deg,#0b3528,#03140e)",color:"#f2e7bd",position:"relative",zIndex:6,boxShadow:"0 16px 35px rgba(0,0,0,.3)"}} aria-label="Centre EMi Royal">
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}}>
+          <div><span style={{fontSize:10,fontWeight:900,letterSpacing:".16em",color:"#f2d86a"}}>EMi ROYAL · ESPACE PREMIUM</span><h2 style={{fontSize:22,fontWeight:850,lineHeight:1.15,margin:"6px 0"}}>Le centre Royal</h2><p style={{fontSize:13,color:"#c5d9ce",lineHeight:1.5}}>Accède aux vitrines professionnelles, à la performance de ta boutique et aux services du marché.</p></div>
+          <button type="button" onClick={()=>setRoyalOpen(false)} aria-label="Fermer EMi Royal" style={{flexShrink:0,border:"1px solid rgba(255,255,255,.18)",borderRadius:999,padding:9,color:"#fff"}}><X size={17}/></button>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,marginTop:16}}>
+          {[
+            {title:"Performance de ma boutique",desc:"Annonces, vues et interactions enregistrées",href:"/annonces/espace-vendeur",icon:"📈"},
+            {title:"Classement des vendeurs",desc:"Découvrir les professionnels et leurs profils",href:"/annonces/elite-directory",icon:"🏆"},
+            {title:"Boutiques à la une",desc:"Parcourir les profils professionnels publiés",href:"/annonces/elite-directory",icon:"💎"},
+            {title:"Vendre sur EMi",desc:"Publier et gérer tes annonces",href:"/annonces/espace-vendeur",icon:"🛍️"},
+            {title:"EMi Troc",desc:"Proposer ou consulter des échanges",href:"/annonces/troc",icon:"🔄"},
+            {title:"Djangui Flow",desc:"Créer ou rejoindre un cercle",href:"/annonces/tontine",icon:"🤝"},
+            {title:"EMi Fondation",desc:"Voir les initiatives solidaires",href:"/annonces/philanthropy",icon:"💚"},
+            {title:"EMi Help",desc:"Accéder à l’espace d’assistance",href:"/annonces/master-health-check",icon:"🛟"}
+          ].map(item=><Link key={item.title} href={item.href} onClick={()=>setRoyalOpen(false)} style={{minWidth:0,display:"flex",alignItems:"flex-start",gap:9,padding:12,border:"1px solid rgba(231,205,101,.3)",borderRadius:14,background:"rgba(255,255,255,.04)",color:"#fff",textDecoration:"none"}}>
+            <span aria-hidden="true" style={{fontSize:22,lineHeight:1.2}}>{item.icon}</span><span style={{minWidth:0,flex:1}}><strong style={{display:"block",fontSize:12,lineHeight:1.35}}>{item.title}</strong><small style={{display:"block",fontSize:10,lineHeight:1.45,color:"#c1d5ca",marginTop:4}}>{item.desc}</small></span><ArrowUpRight size={14} style={{flexShrink:0,color:"#f2d86a"}}/>
+          </Link>)}
+        </div>
+        <div style={{marginTop:12,padding:12,borderRadius:13,border:"1px solid rgba(231,205,101,.22)",background:"rgba(0,0,0,.14)"}}>
+          <strong style={{fontSize:12,color:"#f2d86a"}}>Récompenses, promotions et partenariats</strong>
+          <p style={{fontSize:11,lineHeight:1.55,color:"#b9cfc3",margin:"5px 0 10px"}}>Ces programmes ne sont pas encore reliés à un système de récompenses ou de promotions. Aucun avantage fictif ne sera affiché.</p>
+          <button type="button" onClick={()=>{setRoyalOpen(false);setNotice("EMi Royal : récompenses, promotions et partenariats attendent la mise en place de règles et d’un stockage sécurisé. Les autres raccourcis ouvrent les espaces déjà disponibles.");}} style={{border:"1px solid rgba(231,205,101,.55)",borderRadius:999,padding:"9px 12px",fontSize:11,fontWeight:800,color:"#f2d86a"}}>Voir l’état des services</button>
+        </div>
+      </section>}
+      {spacesOpen&&<section style={{margin:"12px 0 20px",padding:"16px",border:"1px solid rgba(231,205,101,.55)",borderRadius:"20px",background:"linear-gradient(150deg,#0b3528,#071d16)",color:"#f2e7bd",position:"relative",zIndex:5,boxShadow:"0 16px 35px rgba(0,0,0,.24)"}} className="emi-shop-spaces" aria-label="Centre de commandes EMi">
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}}>
+          <div><span style={{fontSize:10,fontWeight:900,letterSpacing:".16em",color:"#f2d86a"}}>ESPACE DE GESTION</span><h2 style={{fontSize:22,fontWeight:850,lineHeight:1.15,margin:"6px 0"}}>Centre de commandes EMi</h2><p style={{fontSize:13,color:"#c5d9ce",lineHeight:1.5}}>Publie, gère ton activité et retrouve rapidement les espaces de la communauté.</p></div>
+          <button type="button" onClick={()=>setSpacesOpen(false)} aria-label="Fermer le menu" style={{flexShrink:0,border:"1px solid rgba(255,255,255,.18)",borderRadius:999,padding:9,color:"#fff"}}><X size={17}/></button>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,marginTop:16}}>
+          <button type="button" onClick={()=>{setOpen(true);setSpacesOpen(false);setTimeout(()=>document.querySelector('form')?.scrollIntoView({behavior:"smooth",block:"start"}),80)}} style={{gridColumn:"1 / -1",display:"flex",alignItems:"center",gap:12,textAlign:"left",padding:14,borderRadius:15,background:"#f1d45e",color:"#143629",fontWeight:800}}>
+            <span style={{display:"grid",placeItems:"center",width:42,height:42,borderRadius:12,background:"rgba(20,54,41,.12)"}}><Plus size={23}/></span><span><strong style={{display:"block",fontSize:14}}>Publier une annonce</strong><small style={{display:"block",fontSize:11,fontWeight:500,marginTop:3}}>Ajouter un produit et ses photos au marché</small></span><ArrowUpRight size={17} style={{marginLeft:"auto"}}/>
+          </button>
+          {[
+            {title:"Mon espace vendeur",desc:"Mes annonces, vues et interactions",href:"/annonces/espace-vendeur",icon:"🏪"},
+            {title:"Mes commandes",desc:"Suivi des commandes non encore activé",action:"orders",icon:"📦"},
+            {title:"Messages acheteurs",desc:"Contacter les vendeurs via WhatsApp",action:"messages",icon:"💬"},
+            {title:"Mes favoris produits",desc:"Retrouver et retirer les produits enregistrés",href:"/annonces/favoris",icon:"❤️"},
+            {title:"Statistiques",desc:"Consulter les métriques disponibles",href:"/annonces/espace-vendeur",icon:"📊"},
+            {title:"Mes promotions",desc:"Créer et gérer les réductions de tes annonces",href:"/annonces/promotions",icon:"🏷️"},
+            {title:"Paramètres du marché",desc:"Gérer tes annonces et ton profil vendeur",href:"/annonces/espace-vendeur",icon:"⚙️"},
+            {title:"Profil professionnel",desc:"Découvrir les profils professionnels",href:"/annonces/elite-directory",icon:"🏨"},
+            {title:"Djangui Flow",desc:"Créer ou retrouver un cercle communautaire",href:"/annonces/tontine",icon:"🤝"},
+            {title:"EMi Troc",desc:"Proposer un échange ou un don",href:"/annonces/troc",icon:"🔄"},
+            {title:"EMi Fondation",desc:"Découvrir les initiatives solidaires",href:"/annonces/philanthropy",icon:"💚"},
+            {title:"EMi Help",desc:"Trouver les services d’aide",href:"/annonces/master-health-check",icon:"✚"}
+          ].map(item=>item.href?<Link key={item.title} href={item.href} onClick={()=>setSpacesOpen(false)} style={{minWidth:0,display:"flex",alignItems:"flex-start",gap:9,padding:11,border:"1px solid rgba(231,205,101,.24)",borderRadius:14,background:"rgba(255,255,255,.035)",color:"#fff",textDecoration:"none"}}>
+            <span aria-hidden="true" style={{fontSize:22,lineHeight:1.2}}>{item.icon}</span><span style={{minWidth:0,flex:1}}><strong style={{display:"block",fontSize:12,lineHeight:1.35}}>{item.title}</strong><small style={{display:"block",fontSize:10,lineHeight:1.45,color:"#c1d5ca",marginTop:4}}>{item.desc}</small></span><ArrowUpRight size={14} style={{flexShrink:0,color:"#f2d86a"}}/>
+          </Link>:<button key={item.title} type="button" onClick={()=>{setSpacesOpen(false);setNotice(item.action==="messages"?"Pour contacter un vendeur, ouvre une annonce puis utilise « Contacter sur WhatsApp ». La messagerie acheteurs n’est pas encore reliée au marché.":item.action==="orders"?"Le suivi des commandes n’est pas encore disponible : EMi Market utilise actuellement WhatsApp et ne traite pas les paiements.":item.action==="favorites"?"Les favoris produits ouvrent désormais leur espace dédié.":"Les promotions s’ouvrent dans leur espace dédié lorsqu’il est disponible.");}} style={{minWidth:0,display:"flex",alignItems:"flex-start",gap:9,padding:11,border:"1px solid rgba(231,205,101,.24)",borderRadius:14,background:"rgba(255,255,255,.035)",color:"#fff",textAlign:"left"}}>
+            <span aria-hidden="true" style={{fontSize:22,lineHeight:1.2}}>{item.icon}</span><span style={{minWidth:0,flex:1}}><strong style={{display:"block",fontSize:12,lineHeight:1.35}}>{item.title}</strong><small style={{display:"block",fontSize:10,lineHeight:1.45,color:"#c1d5ca",marginTop:4}}>{item.desc}</small></span><ArrowUpRight size={14} style={{flexShrink:0,color:"#f2d86a"}}/>
+          </button>)}
+        </div>
+        <p style={{fontSize:10,color:"#9db8aa",lineHeight:1.5,margin:"13px 2px 0"}}>Les raccourcis ouvrent les espaces existants. Les fonctions non encore implémentées affichent leur état réel au lieu de simuler une action.</p>
+      </section>}
+      {notice&&<div role="status" className="mb-5 rounded-2xl border border-amber-200/20 bg-amber-100/10 p-4 text-sm text-amber-100">{notice}</div>}
         <div className="emi-shop-profile"><div className="emi-shop-avatar">EM<span>✦</span></div><div className="emi-shop-profile-copy"><h1>Le Marché EMi</h1><p>Mode, technologie, maison & découvertes</p><div className="emi-shop-trust">✦ La boutique de la communauté</div></div><button className="emi-shop-sell" onClick={()=>setOpen(!open)}><Plus size={15}/> Vendre</button></div>
         <label htmlFor="annonces-search" className="emi-shop-search"><Search size={18}/><input id="annonces-search" type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un produit…"/><span>⌕</span></label>
         <div className="emi-shop-categories">{["Tout","Mode","Électronique","Sacs","Chaussures","Maison","Immobilier"].map((cat,i)=><button key={cat} className={i===0&&!search?"selected":""} onClick={()=>{setSearch(i===0?"":cat);document.getElementById("annonces-list")?.scrollIntoView({behavior:"smooth",block:"start"});}}>{cat}</button>)}</div>
@@ -155,62 +211,6 @@ export default function AnnoncesPage() {
         .emi-flow-feature-cta{display:inline-flex;align-items:center;gap:6px;margin-top:4px;border-radius:999px;background:#f0d45f;color:#12392c;padding:9px 13px;font-size:12px;font-weight:800}
         @media(min-width:640px){.emi-flow-feature{min-height:220px;margin-top:18px}.emi-flow-feature-copy{padding:25px}.emi-flow-feature-copy>span:nth-child(3){font-size:14px}}
       `}</style>
-      {royalOpen&&<section style={{margin:"12px 0 20px",padding:"16px",border:"1px solid rgba(231,205,101,.7)",borderRadius:"20px",background:"radial-gradient(ellipse at top right,rgba(241,212,94,.13),transparent 45%),linear-gradient(150deg,#0b3528,#03140e)",color:"#f2e7bd",position:"relative",zIndex:6,boxShadow:"0 16px 35px rgba(0,0,0,.3)"}} aria-label="Centre EMi Royal">
-        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}}>
-          <div><span style={{fontSize:10,fontWeight:900,letterSpacing:".16em",color:"#f2d86a"}}>EMi ROYAL · ESPACE PREMIUM</span><h2 style={{fontSize:22,fontWeight:850,lineHeight:1.15,margin:"6px 0"}}>Le centre Royal</h2><p style={{fontSize:13,color:"#c5d9ce",lineHeight:1.5}}>Accède aux vitrines professionnelles, à la performance de ta boutique et aux services du marché.</p></div>
-          <button type="button" onClick={()=>setRoyalOpen(false)} aria-label="Fermer EMi Royal" style={{flexShrink:0,border:"1px solid rgba(255,255,255,.18)",borderRadius:999,padding:9,color:"#fff"}}><X size={17}/></button>
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,marginTop:16}}>
-          {[
-            {title:"Performance de ma boutique",desc:"Annonces, vues et interactions enregistrées",href:"/annonces/espace-vendeur",icon:"📈"},
-            {title:"Classement des vendeurs",desc:"Découvrir les professionnels et leurs profils",href:"/annonces/elite-directory",icon:"🏆"},
-            {title:"Boutiques à la une",desc:"Parcourir les profils professionnels publiés",href:"/annonces/elite-directory",icon:"💎"},
-            {title:"Vendre sur EMi",desc:"Publier et gérer tes annonces",href:"/annonces/espace-vendeur",icon:"🛍️"},
-            {title:"EMi Troc",desc:"Proposer ou consulter des échanges",href:"/annonces/troc",icon:"🔄"},
-            {title:"Djangui Flow",desc:"Créer ou rejoindre un cercle",href:"/annonces/tontine",icon:"🤝"},
-            {title:"EMi Fondation",desc:"Voir les initiatives solidaires",href:"/annonces/philanthropy",icon:"💚"},
-            {title:"EMi Help",desc:"Accéder à l’espace d’assistance",href:"/annonces/master-health-check",icon:"🛟"}
-          ].map(item=><Link key={item.title} href={item.href} onClick={()=>setRoyalOpen(false)} style={{minWidth:0,display:"flex",alignItems:"flex-start",gap:9,padding:12,border:"1px solid rgba(231,205,101,.3)",borderRadius:14,background:"rgba(255,255,255,.04)",color:"#fff",textDecoration:"none"}}>
-            <span aria-hidden="true" style={{fontSize:22,lineHeight:1.2}}>{item.icon}</span><span style={{minWidth:0,flex:1}}><strong style={{display:"block",fontSize:12,lineHeight:1.35}}>{item.title}</strong><small style={{display:"block",fontSize:10,lineHeight:1.45,color:"#c1d5ca",marginTop:4}}>{item.desc}</small></span><ArrowUpRight size={14} style={{flexShrink:0,color:"#f2d86a"}}/>
-          </Link>)}
-        </div>
-        <div style={{marginTop:12,padding:12,borderRadius:13,border:"1px solid rgba(231,205,101,.22)",background:"rgba(0,0,0,.14)"}}>
-          <strong style={{fontSize:12,color:"#f2d86a"}}>Récompenses, promotions et partenariats</strong>
-          <p style={{fontSize:11,lineHeight:1.55,color:"#b9cfc3",margin:"5px 0 10px"}}>Ces programmes ne sont pas encore reliés à un système de récompenses ou de promotions. Aucun avantage fictif ne sera affiché.</p>
-          <button type="button" onClick={()=>{setRoyalOpen(false);setNotice("EMi Royal : récompenses, promotions et partenariats attendent la mise en place de règles et d’un stockage sécurisé. Les autres raccourcis ouvrent les espaces déjà disponibles.");}} style={{border:"1px solid rgba(231,205,101,.55)",borderRadius:999,padding:"9px 12px",fontSize:11,fontWeight:800,color:"#f2d86a"}}>Voir l’état des services</button>
-        </div>
-      </section>}
-      {spacesOpen&&<section style={{margin:"12px 0 20px",padding:"16px",border:"1px solid rgba(231,205,101,.55)",borderRadius:"20px",background:"linear-gradient(150deg,#0b3528,#071d16)",color:"#f2e7bd",position:"relative",zIndex:5,boxShadow:"0 16px 35px rgba(0,0,0,.24)"}} className="emi-shop-spaces" aria-label="Centre de commandes EMi">
-        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}}>
-          <div><span style={{fontSize:10,fontWeight:900,letterSpacing:".16em",color:"#f2d86a"}}>ESPACE DE GESTION</span><h2 style={{fontSize:22,fontWeight:850,lineHeight:1.15,margin:"6px 0"}}>Centre de commandes EMi</h2><p style={{fontSize:13,color:"#c5d9ce",lineHeight:1.5}}>Publie, gère ton activité et retrouve rapidement les espaces de la communauté.</p></div>
-          <button type="button" onClick={()=>setSpacesOpen(false)} aria-label="Fermer le menu" style={{flexShrink:0,border:"1px solid rgba(255,255,255,.18)",borderRadius:999,padding:9,color:"#fff"}}><X size={17}/></button>
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,marginTop:16}}>
-          <button type="button" onClick={()=>{setOpen(true);setSpacesOpen(false);setTimeout(()=>document.querySelector('form')?.scrollIntoView({behavior:"smooth",block:"start"}),80)}} style={{gridColumn:"1 / -1",display:"flex",alignItems:"center",gap:12,textAlign:"left",padding:14,borderRadius:15,background:"#f1d45e",color:"#143629",fontWeight:800}}>
-            <span style={{display:"grid",placeItems:"center",width:42,height:42,borderRadius:12,background:"rgba(20,54,41,.12)"}}><Plus size={23}/></span><span><strong style={{display:"block",fontSize:14}}>Publier une annonce</strong><small style={{display:"block",fontSize:11,fontWeight:500,marginTop:3}}>Ajouter un produit et ses photos au marché</small></span><ArrowUpRight size={17} style={{marginLeft:"auto"}}/>
-          </button>
-          {[
-            {title:"Mon espace vendeur",desc:"Mes annonces, vues et interactions",href:"/annonces/espace-vendeur",icon:"🏪"},
-            {title:"Mes commandes",desc:"Suivi des commandes non encore activé",action:"orders",icon:"📦"},
-            {title:"Messages acheteurs",desc:"Contacter les vendeurs via WhatsApp",action:"messages",icon:"💬"},
-            {title:"Mes favoris produits",desc:"Retrouver et retirer les produits enregistrés",href:"/annonces/favoris",icon:"❤️"},
-            {title:"Statistiques",desc:"Consulter les métriques disponibles",href:"/annonces/espace-vendeur",icon:"📊"},
-            {title:"Mes promotions",desc:"Créer et gérer les réductions de tes annonces",href:"/annonces/promotions",icon:"🏷️"},
-            {title:"Paramètres du marché",desc:"Gérer tes annonces et ton profil vendeur",href:"/annonces/espace-vendeur",icon:"⚙️"},
-            {title:"Profil professionnel",desc:"Découvrir les profils professionnels",href:"/annonces/elite-directory",icon:"🏨"},
-            {title:"Djangui Flow",desc:"Créer ou retrouver un cercle communautaire",href:"/annonces/tontine",icon:"🤝"},
-            {title:"EMi Troc",desc:"Proposer un échange ou un don",href:"/annonces/troc",icon:"🔄"},
-            {title:"EMi Fondation",desc:"Découvrir les initiatives solidaires",href:"/annonces/philanthropy",icon:"💚"},
-            {title:"EMi Help",desc:"Trouver les services d’aide",href:"/annonces/master-health-check",icon:"✚"}
-          ].map(item=>item.href?<Link key={item.title} href={item.href} onClick={()=>setSpacesOpen(false)} style={{minWidth:0,display:"flex",alignItems:"flex-start",gap:9,padding:11,border:"1px solid rgba(231,205,101,.24)",borderRadius:14,background:"rgba(255,255,255,.035)",color:"#fff",textDecoration:"none"}}>
-            <span aria-hidden="true" style={{fontSize:22,lineHeight:1.2}}>{item.icon}</span><span style={{minWidth:0,flex:1}}><strong style={{display:"block",fontSize:12,lineHeight:1.35}}>{item.title}</strong><small style={{display:"block",fontSize:10,lineHeight:1.45,color:"#c1d5ca",marginTop:4}}>{item.desc}</small></span><ArrowUpRight size={14} style={{flexShrink:0,color:"#f2d86a"}}/>
-          </Link>:<button key={item.title} type="button" onClick={()=>{setSpacesOpen(false);setNotice(item.action==="messages"?"Pour contacter un vendeur, ouvre une annonce puis utilise « Contacter sur WhatsApp ». La messagerie acheteurs n’est pas encore reliée au marché.":item.action==="orders"?"Le suivi des commandes n’est pas encore disponible : EMi Market utilise actuellement WhatsApp et ne traite pas les paiements.":item.action==="favorites"?"Les favoris produits ouvrent désormais leur espace dédié.":"Les promotions s’ouvrent dans leur espace dédié lorsqu’il est disponible.");}} style={{minWidth:0,display:"flex",alignItems:"flex-start",gap:9,padding:11,border:"1px solid rgba(231,205,101,.24)",borderRadius:14,background:"rgba(255,255,255,.035)",color:"#fff",textAlign:"left"}}>
-            <span aria-hidden="true" style={{fontSize:22,lineHeight:1.2}}>{item.icon}</span><span style={{minWidth:0,flex:1}}><strong style={{display:"block",fontSize:12,lineHeight:1.35}}>{item.title}</strong><small style={{display:"block",fontSize:10,lineHeight:1.45,color:"#c1d5ca",marginTop:4}}>{item.desc}</small></span><ArrowUpRight size={14} style={{flexShrink:0,color:"#f2d86a"}}/>
-          </button>)}
-        </div>
-        <p style={{fontSize:10,color:"#9db8aa",lineHeight:1.5,margin:"13px 2px 0"}}>Les raccourcis ouvrent les espaces existants. Les fonctions non encore implémentées affichent leur état réel au lieu de simuler une action.</p>
-      </section>}
-      {notice&&<div role="status" className="mb-5 rounded-2xl border border-amber-200/20 bg-amber-100/10 p-4 text-sm text-amber-100">{notice}</div>}
       {open&&<form onSubmit={publier} className="mb-8 grid gap-4 rounded-3xl border border-white/10 bg-white/[.04] p-5 sm:grid-cols-2 sm:p-7">
         <h2 className="sm:col-span-2 text-xl font-semibold">Publier une annonce</h2>
         <label className="grid gap-2 text-sm">Nom de l'article<input required minLength={3} maxLength={120} value={titre} onChange={e=>setTitre(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="Ex. Smartphone en bon état"/></label>
