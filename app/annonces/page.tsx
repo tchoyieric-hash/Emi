@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { MessageCircle, Plus, ShoppingBag, LoaderCircle, ImagePlus, Menu, X, ArrowUpRight, Search } from "lucide-react";
+import { MessageCircle, Plus, ShoppingBag, LoaderCircle, ImagePlus, Menu, X, ArrowUpRight, Search, ArrowLeft, Home } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 import { genererLienWhatsApp } from "@/lib/whatsapp";
 
@@ -86,6 +86,7 @@ export default function AnnoncesPage() {
   return <main className="min-h-screen w-full overflow-x-hidden bg-[#09090d] text-white">
     <section className="mx-auto w-full min-w-0 max-w-6xl px-3 py-4 sm:px-4 sm:py-9">
       <section className="emi-shop-shell">
+        <Link href="/" aria-label="Retour à la page principale EMi" style={{display:"inline-flex",alignItems:"center",gap:8,margin:"0 0 14px",padding:"9px 13px",border:"1px solid rgba(231,205,101,.55)",borderRadius:999,color:"#f2d86a",fontSize:12,fontWeight:800,textDecoration:"none",background:"rgba(0,0,0,.12)"}}><ArrowLeft size={16}/><Home size={15}/> Retour à l’accueil EMi</Link>
         <div className="emi-shop-brandbar"><button className="emi-shop-menu" onClick={()=>{setSpacesOpen(!spacesOpen);setRoyalOpen(false);}} aria-label={spacesOpen?"Fermer le centre de commandes":"Ouvrir le centre de commandes"} aria-expanded={spacesOpen}><Menu size={21}/></button><div className="emi-shop-brand"><span className="emi-shop-monogram">M</span><span><strong>EMi MARKET</strong><small>Le marché de la communauté</small></span></div><button className="emi-shop-notice" onClick={()=>{setRoyalOpen(!royalOpen);setSpacesOpen(false);}} aria-label={royalOpen?"Fermer EMi Royal":"Ouvrir EMi Royal"} aria-expanded={royalOpen}>♣</button></div>
       {royalOpen&&<section style={{margin:"12px 0 20px",padding:"16px",border:"1px solid rgba(231,205,101,.7)",borderRadius:"20px",background:"radial-gradient(ellipse at top right,rgba(241,212,94,.13),transparent 45%),linear-gradient(150deg,#0b3528,#03140e)",color:"#f2e7bd",position:"relative",zIndex:6,boxShadow:"0 16px 35px rgba(0,0,0,.3)"}} aria-label="Centre EMi Royal">
         <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}}>
