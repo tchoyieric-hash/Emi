@@ -61,37 +61,37 @@ export default function TrocChainPage() {
     {title:"Maison & mobilier",tag:"MAISON",image:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=85",term:"meuble"},
     {title:"Objets du quotidien",tag:"SECONDE VIE",image:"https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=1000&q=85",term:"objet"},
   ];
-  return <main className="min-h-screen bg-white text-[#171717]">
+  return <main className="min-h-screen bg-[#f8f8f4] pb-6 text-[#102e25]">
     <div className="mx-auto w-full max-w-6xl">
-      <header className="sticky top-0 z-20 flex items-center gap-3 bg-white/95 px-4 py-3 backdrop-blur sm:px-6">
-        <Link href="/annonces" aria-label="Retour au Marché EMi" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-neutral-200 text-neutral-800"><ArrowLeft size={19}/></Link>
-        <form onSubmit={e=>{e.preventDefault();document.getElementById("troc-offres")?.scrollIntoView({behavior:"smooth"});}} className="flex min-w-0 flex-1 items-center gap-3 rounded-full border border-neutral-300 bg-white px-4 py-3 shadow-sm">
+      <header className="sticky top-0 z-20 flex items-center gap-3 bg-gradient-to-r from-[#052d23] to-[#07513b] px-4 py-3 text-white shadow-md backdrop-blur sm:px-6">
+        <Link href="/annonces" aria-label="Retour au Marché EMi" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-[#d9c35d]/60 text-[#f4dc68]"><ArrowLeft size={19}/></Link>
+        <form onSubmit={e=>{e.preventDefault();document.getElementById("troc-offres")?.scrollIntoView({behavior:"smooth"});}} className="flex min-w-0 flex-1 items-center gap-3 rounded-full border-2 border-[#e3cf68] bg-white px-4 py-3 text-[#183b30] shadow-sm">
           <Search size={20} className="shrink-0 text-neutral-700"/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher des échanges" aria-label="Rechercher des échanges" className="w-full min-w-0 bg-transparent text-[15px] outline-none placeholder:text-neutral-500"/><Camera size={21} className="shrink-0 text-neutral-700"/>
         </form>
-        <span className="hidden font-bold tracking-[.2em] text-[#0b4936] sm:block">EMi</span>
+        <span className="hidden font-bold tracking-[.2em] text-[#f4dc68] sm:block">EMi TROC</span>
       </header>
       <section className="relative mx-3 mt-1 flex min-h-[440px] items-end overflow-hidden rounded-[26px] bg-[#123b2d] sm:mx-6 sm:min-h-[500px]">
         <img src="https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=1800&q=88" alt="Objets du quotidien prêts à trouver une nouvelle vie" className="absolute inset-0 h-full w-full object-cover object-center"/>
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/5"/>
         <div className="relative z-10 max-w-2xl p-6 pb-8 text-white sm:p-10 sm:pb-12">
-          <p className="mb-3 text-sm font-semibold tracking-wide">EMi TROC · ÉCONOMIE CIRCULAIRE</p>
+          <p className="mb-3 text-sm font-extrabold tracking-[.22em] text-[#f6df6c]">EMi TROC · ÉCONOMIE CIRCULAIRE</p>
           <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">Échangez autrement</h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-white/95 sm:text-lg">Donnez une seconde vie à vos objets et trouvez ce dont vous avez besoin, grâce aux échanges entre membres de la communauté.</p>
-          <button onClick={()=>document.getElementById("troc-offres")?.scrollIntoView({behavior:"smooth"})} className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-6 py-3 font-bold text-[#153e30] shadow-lg">Découvrir les échanges <ArrowUpRight size={19}/></button>
+          <button onClick={()=>document.getElementById("troc-offres")?.scrollIntoView({behavior:"smooth"})} className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#f5d95f] px-6 py-3 font-extrabold text-[#073b2d] shadow-lg transition hover:bg-[#ffe983]">Découvrir les échanges <ArrowUpRight size={19}/></button>
         </div>
       </section>
-      <div className="flex justify-center gap-3 py-4" aria-hidden="true"><span className="h-2.5 w-2.5 rounded-full bg-black"/><span className="h-2.5 w-2.5 rounded-full bg-neutral-400"/><span className="h-2.5 w-2.5 rounded-full bg-neutral-400"/><span className="h-2.5 w-2.5 rounded-full bg-neutral-400"/><span className="h-2.5 w-2.5 rounded-full bg-neutral-400"/></div>
-      <section className="mt-2 px-4 pb-5 sm:px-6">
-        <p className="text-sm text-neutral-600">Explorer les catégories de troc</p><h2 className="mb-4 text-2xl font-bold tracking-tight sm:text-3xl">Des idées pour échanger</h2>
+      <div className="flex justify-center gap-3 bg-white py-4" aria-hidden="true"><span className="h-2.5 w-2.5 rounded-full bg-black"/><span className="h-2.5 w-2.5 rounded-full bg-neutral-400"/><span className="h-2.5 w-2.5 rounded-full bg-neutral-400"/><span className="h-2.5 w-2.5 rounded-full bg-neutral-400"/><span className="h-2.5 w-2.5 rounded-full bg-neutral-400"/></div>
+      <section className="mt-2 bg-white px-4 pb-7 pt-5 sm:px-6">
+        <p className="text-sm font-medium text-[#567267]">Explorer les catégories de troc</p><h2 className="mb-4 mt-1 text-2xl font-extrabold tracking-tight text-[#092f24] sm:text-3xl">Catégories populaires</h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-          {cartes.map((carte,i)=><button key={carte.tag} onClick={()=>setQuery(carte.term)} className="group overflow-hidden rounded-2xl text-left focus:outline-none focus:ring-2 focus:ring-[#0b4936]">
+          {cartes.map((carte,i)=><button key={carte.tag} onClick={()=>setQuery(carte.term)} className="group overflow-hidden rounded-2xl border border-[#e7e6df] bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#0b4936]">
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-neutral-100"><img src={carte.image} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"/><div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/><span className="absolute bottom-3 left-3 right-3 text-sm font-bold text-white sm:text-base">{carte.title}</span></div>
           </button>)}
         </div>
       </section>
-      <section id="troc-offres" className="scroll-mt-24 px-4 pb-10 sm:px-6">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-[#17664b]">La communauté EMi</p><h2 className="mt-1 text-2xl font-extrabold sm:text-3xl">Offres qui pourraient vous plaire</h2><p className="mt-2 text-sm text-neutral-600">Parcourez les propositions et trouvez une correspondance.</p></div><button onClick={()=>{setLoading(true);void load();}} className="inline-flex items-center gap-2 rounded-full border border-neutral-300 px-4 py-2.5 text-sm font-semibold"><RefreshCw size={15}/> Actualiser</button></div>
-        <form onSubmit={publier} className="mb-6 rounded-2xl border border-neutral-200 bg-neutral-50 p-4 sm:p-6">
+      <section id="troc-offres" className="scroll-mt-24 bg-[#f8f8f4] px-4 pb-10 pt-7 sm:px-6">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-extrabold uppercase tracking-[.18em] text-[#b39b2d]">La communauté EMi</p><h2 className="mt-1 text-2xl font-extrabold text-[#092f24] sm:text-3xl">Offres qui pourraient vous plaire</h2><p className="mt-2 text-sm text-neutral-600">Parcourez les propositions et trouvez une correspondance.</p></div><button onClick={()=>{setLoading(true);void load();}} className="inline-flex items-center gap-2 rounded-full border border-neutral-300 px-4 py-2.5 text-sm font-semibold"><RefreshCw size={15}/> Actualiser</button></div>
+        <form onSubmit={publier} className="mb-6 rounded-2xl border border-[#d8ca7a] bg-white p-4 shadow-sm sm:p-6">
           <h3 className="text-xl font-bold">Proposer un échange</h3><p className="mt-1 text-sm text-neutral-600">Indique ce que tu offres et ce que tu recherches.</p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <label className="grid gap-1.5 text-sm font-semibold">Ce que tu proposes<input required maxLength={160} value={offert} onChange={e=>setOffert(e.target.value)} className="min-h-12 rounded-xl border border-neutral-300 bg-white px-3 font-normal outline-none focus:border-[#17664b]" placeholder="Ex. ordinateur portable"/></label>
@@ -99,11 +99,12 @@ export default function TrocChainPage() {
             <label className="grid gap-1.5 text-sm font-semibold sm:col-span-2">Détails facultatifs<textarea maxLength={1500} rows={3} value={description} onChange={e=>setDescription(e.target.value)} className="rounded-xl border border-neutral-300 bg-white px-3 py-3 font-normal outline-none focus:border-[#17664b]" placeholder="État, lieu de remise, détails…"/></label>
           </div>
           {notice && <p role="status" className="mt-3 rounded-xl bg-[#eaf5ef] p-3 text-sm text-[#14543c]">{notice}</p>}
-          <button disabled={saving} className="mt-4 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#0b4936] px-5 py-3 font-bold text-white disabled:opacity-60">{saving?<LoaderCircle size={18} className="animate-spin"/>:<ArrowLeftRight size={18}/>} {saving?"Publication…":"Publier mon offre"}</button>
+          <button disabled={saving} className="mt-4 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#07513b] px-5 py-3 font-bold text-white shadow-sm disabled:opacity-60">{saving?<LoaderCircle size={18} className="animate-spin"/>:<ArrowLeftRight size={18}/>} {saving?"Publication…":"Publier mon offre"}</button>
         </form>
         {loading ? <p className="py-8 text-neutral-500">Recherche des offres…</p> : visibles.length===0 ? <div className="rounded-2xl border border-neutral-200 p-6 text-sm text-neutral-600">Aucune offre ne correspond pour l’instant. Essaie un autre mot-clé ou publie la première offre.</div> : <div className="grid gap-3 sm:grid-cols-2">{visibles.map(o=><article key={o.id} className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm"><div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-[#eaf5ef] px-3 py-1.5 text-sm font-semibold text-[#14543c]">Propose : {o.bien_offert}</span><span className="text-neutral-400">↔</span><span className="rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-900">Recherche : {o.bien_recherche}</span></div>{o.description&&<p className="mt-3 text-sm leading-6 text-neutral-600">{o.description}</p>}<p className="mt-3 text-xs text-neutral-500">Offre publiée le {new Date(o.created_at).toLocaleDateString("fr-FR")}</p></article>)}</div>}
         <p className="mt-6 text-xs leading-5 text-neutral-500">Les correspondances sont indicatives. Vérifie les biens et l’identité des membres avant toute remise.</p>
       </section>
+      <div className="mx-4 mb-5 flex items-center justify-between gap-3 rounded-2xl border border-[#d6c35e] bg-gradient-to-r from-[#052d23] to-[#07513b] p-4 text-white shadow-md sm:mx-6 sm:p-5"><div><p className="font-extrabold">Vous avez quelque chose à échanger ?</p><p className="mt-1 text-sm text-white/80">Donnez une seconde vie à vos objets.</p></div><button onClick={()=>document.getElementById("troc-offres")?.scrollIntoView({behavior:"smooth"})} className="shrink-0 rounded-full bg-[#f5d95f] px-4 py-3 text-sm font-extrabold text-[#073b2d]">+ Publier</button></div>
     </div>
   </main>;
 }
