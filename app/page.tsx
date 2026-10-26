@@ -1358,7 +1358,7 @@ export default function HomePage() {
              <a href="/annonces/master-health-check" className="emi-service-card emi-service-help"><span className="emi-service-icon"><CircleHelp size={21}/></span><strong>Help EMi</strong><small>Aide & assistance</small><ChevronRight size={15}/></a>
            </div>
          </section>}
-         <div className="feed-tabs" style={{display:["Reels","Découvrir","Messages"].includes(active) ? "none" : undefined}}><button className={active === "Accueil" ? "tab-active" : ""} onClick={() => {setActive("Accueil"); void loadFeed();}}>Publications</button><button className={active === "Abonnements" ? "tab-active" : ""} onClick={() => void loadFollowingFeed()}>Abonnements</button><button className={active === "Vidéos" ? "tab-active" : ""} onClick={() => setActive("Vidéos")}>Vidéos <Video size={14}/></button></div>
+         <div className="feed-tabs" style={{display:["Reels","Découvrir","Messages"].includes(active) ? "none" : undefined}}><button className={active === "Accueil" ? "tab-active" : ""} onClick={() => {setActive("Accueil"); void loadFeed();}}>Publications</button><button className={active === "Abonnements" ? "tab-active" : ""} onClick={() => void loadFollowingFeed()}>Abonnements</button></div>
         </>}
 
         {active === "Paramètres" && !viewingProfile && <section className="emi-settings-page">
