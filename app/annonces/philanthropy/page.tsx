@@ -25,12 +25,12 @@ export default function PhilanthropyPage() {
     </label>
    </div>
   </header>
-  <section style={{height:"min(390px, 48svh)",minHeight:"300px",position:"relative"}} className="relative overflow-hidden sm:h-[540px]">
-   <img src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=1800&q=90" alt="Des personnes réunies pour une initiative solidaire" className="absolute inset-0 h-full w-full object-cover"/>
+  <section style={{height:"min(430px, 48svh)",minHeight:"280px",maxHeight:"460px",position:"relative",width:"100%",overflow:"hidden"}} className="relative overflow-hidden sm:h-[540px]">
+   <img src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=1200&q=85" alt="Des personnes réunies pour une initiative solidaire" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}} className="absolute inset-0"/>
    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/15"/>
    <div className="absolute bottom-8 left-5 right-5 text-white sm:bottom-12 sm:left-10 sm:max-w-3xl">
     <p className="text-base font-semibold sm:text-xl">EMi Fondation · Solidarité</p>
-    <h1 className="mt-2 text-4xl font-extrabold leading-tight sm:text-6xl">Ensemble, faisons grandir l’espoir</h1>
+    <h1 className="mt-2 text-3xl font-extrabold leading-tight sm:text-6xl">Ensemble, faisons grandir l’espoir</h1>
     <p className="mt-3 max-w-xl text-sm text-white/90 sm:text-lg">Des initiatives pour aider, partager et construire un avenir meilleur.</p>
     <a href="#idees" className="mt-4 inline-flex rounded-full bg-[#e8c94f] px-5 py-3 font-bold text-emerald-950">Découvrir les initiatives</a>
    </div>
