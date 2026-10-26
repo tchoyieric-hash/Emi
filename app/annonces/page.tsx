@@ -98,6 +98,14 @@ export default function AnnoncesPage() {
             <span className="emi-flow-feature-cta">Découvrir les cercles <ArrowUpRight size={16}/></span>
           </span>
         </Link>
+        <nav aria-label="Catégories du marché" style={{display:"flex",gap:8,overflowX:"auto",padding:"12px 0 4px"}}>
+          {[["Tout","/annonces"],["EMi Market","/annonces"],["EMi Troc","/annonces/troc"],["Djangui Flow","/annonces/tontine"],["Elite Hospitality","/annonces/elite-directory"],["EMi Fondation","/annonces/philanthropy"],["EMi Help","/annonces/master-health-check"]].map(([label,href],i)=><Link key={label} href={href} style={{flexShrink:0,border:"1px solid rgba(231,205,101,.55)",borderRadius:999,padding:"10px 14px",background:i===0?"#f1d45e":"rgba(3,44,32,.8)",color:i===0?"#143629":"#f5f3e9",fontWeight:700,fontSize:12,textDecoration:"none"}}>{label}</Link>)}
+        </nav>
+        <Link href="/annonces/elite-directory" style={{position:"relative",display:"flex",alignItems:"flex-end",minHeight:220,margin:"14px 0 0",overflow:"hidden",border:"1px solid #e6ca59",borderRadius:22,color:"#fff",textDecoration:"none",background:"#063b2a"}}>
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=85" alt="Restaurant élégant" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+          <span style={{position:"absolute",inset:0,background:"linear-gradient(90deg,rgba(2,25,18,.95),rgba(2,25,18,.65) 62%,rgba(2,25,18,.1))"}}/>
+          <span style={{position:"relative",padding:20,maxWidth:620}}><span style={{display:"inline-block",borderRadius:999,background:"#f1d45e",color:"#173629",padding:"7px 12px",fontSize:10,fontWeight:900}}>🏨 ELITE HOSPITALITY</span><strong style={{display:"block",fontSize:"clamp(22px,5vw,32px)",lineHeight:1.12,marginTop:12}}>Séjournez, savourez, vivez l’exception</strong><span style={{display:"block",fontSize:13,lineHeight:1.5,marginTop:8}}>Hôtels, restaurants et services premium près de chez vous.</span><span style={{display:"inline-flex",marginTop:12,borderRadius:999,background:"#f1d45e",color:"#143629",padding:"11px 15px",fontSize:12,fontWeight:800}}>Découvrir les professionnels ↗</span></span>
+        </Link>
         <section aria-label="Découvrir tous les espaces EMi" style={{marginTop:"20px",paddingBottom:"18px"}}>
           <div style={{display:"flex",alignItems:"end",justifyContent:"space-between",gap:"12px",marginBottom:"12px"}}>
             <div><p style={{fontSize:"10px",fontWeight:800,letterSpacing:"0.18em",color:"#d9bd53",margin:0}}>LA COMMUNAUTÉ EMi</p><h2 style={{fontSize:"clamp(20px,5vw,26px)",fontWeight:800,lineHeight:1.2,color:"#fff",margin:"5px 0 0"}}>Découvrir tous les espaces</h2></div>
