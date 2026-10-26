@@ -17,10 +17,10 @@ export default function PhilanthropyPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#030712] px-4 py-8 text-slate-50">
-      <div className="mx-auto max-w-xl">
+    <main className="emi-space-page min-h-screen bg-[#061b14] px-4 py-6 text-slate-50">
+      <div className="mx-auto max-w-5xl">
         <Link href="/annonces" className="mb-5 inline-flex rounded-full border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">← Retour au marché EMi</Link>
-        <section className="rounded-2xl border border-amber-400 bg-gradient-to-br from-slate-900 to-indigo-950 p-5 shadow-2xl shadow-amber-500/10 sm:p-7">
+        <section className="rounded-3xl border border-amber-200/30 bg-gradient-to-br from-[#075039] to-[#061b14] p-5 shadow-2xl shadow-amber-500/10 sm:p-7">
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <span className="text-2xl">👑</span>
             <h1 className="text-xl font-bold text-amber-300">EMi Philanthropy &amp; Elite Impact</h1>
