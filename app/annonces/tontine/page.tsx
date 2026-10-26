@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, FormEvent } from "react";
+import { useCallback, useEffect, useState, FormEvent, type CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowLeft, Users, HandCoins, PlusCircle, RefreshCw, ShieldCheck, Search, Camera, Home, Heart, LayoutGrid, Compass, Target, Sprout } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
@@ -78,8 +78,8 @@ export default function TontineFlowPage() {
 
   const fmt = (n: number) => Number(n).toLocaleString("fr-FR") + " FCFA";
   const filtered = cercles.filter(c => (c.nom_article + " " + c.statut).toLowerCase().includes(searchQuery.toLowerCase()));
-  const field: React.CSSProperties = { width:"100%",minWidth:0,minHeight:50,border:"1px solid rgba(225,199,105,.35)",borderRadius:14,background:"#071f19",color:"#fff9e7",padding:"13px 15px",outline:"none" };
-  const goldButton: React.CSSProperties = { display:"inline-flex",alignItems:"center",justifyContent:"center",gap:9,minHeight:48,padding:"12px 18px",border:0,borderRadius:999,background:"linear-gradient(135deg,#f9e58a,#d8b64f)",color:"#09251b",fontWeight:800,cursor:"pointer",boxShadow:"0 8px 24px rgba(216,182,79,.16)" };
+  const field: CSSProperties = { width:"100%",minWidth:0,minHeight:50,border:"1px solid rgba(225,199,105,.35)",borderRadius:14,background:"#071f19",color:"#fff9e7",padding:"13px 15px",outline:"none" };
+  const goldButton: CSSProperties = { display:"inline-flex",alignItems:"center",justifyContent:"center",gap:9,minHeight:48,padding:"12px 18px",border:0,borderRadius:999,background:"linear-gradient(135deg,#f9e58a,#d8b64f)",color:"#09251b",fontWeight:800,cursor:"pointer",boxShadow:"0 8px 24px rgba(216,182,79,.16)" };
   return <main style={{minHeight:"100vh",width:"100%",overflowX:"hidden",paddingBottom:100,background:"radial-gradient(ellipse at 50% -8%,rgba(27,102,74,.38),transparent 42%),#041711",color:"#f7f5ec",fontFamily:"Arial, sans-serif"}}>
     <header style={{position:"sticky",top:0,zIndex:30,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,padding:"13px 16px",background:"rgba(4,31,23,.94)",backdropFilter:"blur(18px)",borderBottom:"1px solid rgba(222,198,105,.2)"}}>
       <Link href="/annonces" aria-label="Retour au marché EMi" style={{display:"inline-flex",alignItems:"center",gap:7,color:"#f3d76c",fontSize:13,fontWeight:700}}><ArrowLeft size={19}/> Marché EMi</Link>
@@ -113,7 +113,7 @@ export default function TontineFlowPage() {
         <label style={{display:"grid",gap:8,fontSize:12,color:"#dce5dd"}}>Objectif total (FCFA)<input value={prix} onChange={e=>setPrix(e.target.value)} type="number" min="1" step="1" required style={field}/></label>
         <label style={{display:"grid",gap:8,fontSize:12,color:"#dce5dd"}}>Nombre de membres<input value={max} onChange={e=>setMax(e.target.value)} type="number" min="2" max="50" step="1" required style={field}/></label>
         <div style={{gridColumn:"1/-1",padding:16,borderRadius:15,border:"1px solid rgba(225,200,102,.3)",background:"rgba(229,201,100,.07)"}}><div style={{fontSize:11,color:"#b8c8bd"}}>Cotisation indicative par membre</div><div style={{fontSize:25,fontWeight:850,color:"#f3d66a",marginTop:6}}>{fmt(Math.ceil((Number(prix)||0)/Math.max(2,Number(max)||5)))} </div><div style={{fontSize:11,color:"#b8c8bd",marginTop:5}}>Calcul estimatif · aucun débit automatique</div></div>
-        <button disabled={saving} style={{...goldButton,gridColumn:"1/-1",width:"100%",opacity:saving?.65:1}}><PlusCircle size={18}/>{saving?"Création en cours…":"Créer mon cercle"}</button>
+        <button disabled={saving} style={{...goldButton,gridColumn:"1/-1",width:"100%",opacity:saving ? 0.65 : 1}}><PlusCircle size={18}/>{saving?"Création en cours…":"Créer mon cercle"}</button>
       </form>
       {notice&&<div role="status" style={{marginTop:15,padding:14,borderRadius:14,border:"1px solid rgba(225,200,102,.45)",background:"#0b3325",color:"#f7e9a9",fontSize:13,lineHeight:1.6}}>{notice}</div>}
       <section id="cercles" style={{scrollMarginTop:85,marginTop:32}}>
@@ -127,7 +127,7 @@ export default function TontineFlowPage() {
               <div style={{fontSize:23,fontWeight:850,color:"#f3d66a",marginTop:12}}>{fmt(Number(c.prix_cible))}</div>
               <div style={{display:"flex",justifyContent:"space-between",gap:8,marginTop:13,fontSize:11,color:"#bdc9c0"}}><span><Users size={13} style={{display:"inline",verticalAlign:"-2px",marginRight:4}}/>{parts.length}/{c.membres_max} membres</span><span>{progress}% des engagements</span></div>
               <div style={{height:6,marginTop:8,borderRadius:99,background:"rgba(255,255,255,.1)",overflow:"hidden"}}><div style={{height:"100%",width:progress+"%",background:"linear-gradient(90deg,#d7b34d,#f5e28b)",transition:"width .3s"}}/></div>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginTop:15,flexWrap:"wrap"}}><span style={{fontSize:11,color:"#c5d0c7"}}>{fmt(Math.ceil(Number(c.prix_cible)/c.membres_max))} / personne</span><button onClick={()=>void rejoindre(c)} disabled={full||c.statut!=="ouvert"||joined} style={{...goldButton,minHeight:40,padding:"9px 14px",fontSize:12,opacity:full||c.statut!=="ouvert"||joined?.55:1,cursor:full||c.statut!=="ouvert"||joined?"not-allowed":"pointer"}}>{joined?"Déjà inscrit":full?"Cercle complet":c.statut!=="ouvert"?"Fermé":"Rejoindre"}</button></div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginTop:15,flexWrap:"wrap"}}><span style={{fontSize:11,color:"#c5d0c7"}}>{fmt(Math.ceil(Number(c.prix_cible)/c.membres_max))} / personne</span><button onClick={()=>void rejoindre(c)} disabled={full||c.statut!=="ouvert"||joined} style={{...goldButton,minHeight:40,padding:"9px 14px",fontSize:12,opacity:full||c.statut!=="ouvert"||joined ? 0.55 : 1,cursor:full||c.statut!=="ouvert"||joined?"not-allowed":"pointer"}}>{joined?"Déjà inscrit":full?"Cercle complet":c.statut!=="ouvert"?"Fermé":"Rejoindre"}</button></div>
               <p style={{fontSize:10,lineHeight:1.5,color:"#8fa99a",margin:"13px 0 0"}}>Engagements déclarés, pas des paiements vérifiés.</p>
             </div>
           </article>;
