@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { MessageCircle, Plus, ShoppingBag, LoaderCircle, ImagePlus, Menu, X, ArrowUpRight } from "lucide-react";
+import { MessageCircle, Plus, ShoppingBag, LoaderCircle, ImagePlus, Menu, X, ArrowUpRight, Search, UserRound } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 import { genererLienWhatsApp } from "@/lib/whatsapp";
 
@@ -17,6 +17,7 @@ export default function AnnoncesPage() {
   const [loading,setLoading] = useState(true);
   const [saving,setSaving] = useState(false);
   const [notice,setNotice] = useState("");
+  const [search,setSearch] = useState("");
   const [titre,setTitre] = useState("");
   const [description,setDescription] = useState("");
   const [prix,setPrix] = useState("");
@@ -66,9 +67,10 @@ export default function AnnoncesPage() {
     finally { setSaving(false); }
   }
 
-  return <main className="min-h-screen bg-[#09090d] text-white">
+  const annoncesFiltrees = annonces.filter(a => `${a.titre} ${a.description}`.toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr")));
+\n  return <main className="min-h-screen w-full overflow-x-hidden bg-[#09090d] text-white">
     <header className="sticky top-0 z-30 border-b border-white/10 bg-[#09090d]/95 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:py-4">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-4 sm:py-4">
         <Link href="/" aria-label="EMi accueil" className="shrink-0 text-xl font-bold tracking-[.2em] text-amber-200">EMi<span className="ml-1 text-[10px] font-medium tracking-[.12em] text-white/45">MARKET</span></Link>
         <div className="hidden items-center gap-5 md:flex">
           <Link href="/annonces" className="text-sm font-medium text-white">Marché</Link>
@@ -88,17 +90,17 @@ export default function AnnoncesPage() {
         </div>
       </div>}
     </header>
-    <section className="mx-auto w-full max-w-6xl px-3 py-4 sm:px-4 sm:py-9">
-      <div className="relative mb-6 min-h-[205px] overflow-hidden rounded-2xl border border-amber-100/15 bg-[#07101f] p-4 sm:mb-7 sm:min-h-[300px] sm:rounded-3xl sm:p-9">
+    <section className="mx-auto w-full min-w-0 max-w-6xl px-3 py-4 sm:px-4 sm:py-9">
+      <div className="relative mb-5 min-h-[190px] overflow-hidden rounded-2xl border border-amber-100/15 bg-[#07101f] p-4 sm:mb-7 sm:min-h-[300px] sm:rounded-3xl sm:p-9">
         <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1800&q=90" alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover object-center opacity-45"/><div className="absolute inset-0 bg-gradient-to-r from-[#030712] via-[#030712]/85 to-[#030712]/10"/><div className="relative z-10"><p className="mb-2 text-xs font-semibold uppercase tracking-[.3em] text-amber-200">Acheter · Vendre · Échanger</p>
         <h1 className="text-[1.75rem] font-semibold leading-tight tracking-tight sm:text-5xl">Le marché <span className="text-amber-200">EMi</span></h1>
-        <p className="mt-2 max-w-xl text-sm leading-5 text-white/75 sm:mt-3 sm:leading-6 sm:text-base">Achète, vends et échange en toute simplicité. Découvre les offres et contacte directement les vendeurs sur WhatsApp.</p><div className="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-[11px] font-medium text-white/85 sm:mt-6 sm:gap-6 sm:text-xs"><span>♢ Sécurisé</span><span>ϟ Rapide</span><span>✧ Fiable</span><span>☆ Premium</span></div></div>
+        <p className="mt-2 max-w-xl text-sm leading-5 text-white/75 sm:mt-3 sm:leading-6 sm:text-base">Des trouvailles, des vendeurs et de nouvelles opportunités près de toi.</p><button onClick={()=>document.getElementById("annonces-search")?.focus()} className="mt-4 inline-flex items-center gap-2 rounded-full bg-amber-200 px-4 py-2.5 text-sm font-semibold text-black shadow-lg shadow-black/20"><Search size={16}/> Découvrir le marché</button></div>
       </div>
       <section aria-labelledby="modules-emi" className="mb-6 sm:mb-8">
         <div className="mb-4">
           <p className="text-xs font-semibold uppercase tracking-[.25em] text-emerald-300">Nouveautés EMi</p>
-          <h2 id="modules-emi" className="mt-1 text-2xl font-semibold">Découvrir les nouveaux espaces</h2>
-          <p className="mt-2 text-sm text-white/55">Accède directement aux modules récemment ajoutés.</p>
+          <h2 id="modules-emi" className="mt-1 text-xl font-semibold sm:text-2xl">Les espaces EMi</h2>
+          <p className="mt-2 text-sm text-white/55">Explore les services de ton écosystème.</p>
         </div>
         <div className="grid grid-cols-2 gap-2 sm:gap-4">
           <Link href="/annonces/master-health-check" className="group min-w-0 rounded-2xl border border-emerald-300/25 bg-emerald-300/[.06] p-3 transition hover:border-emerald-300/60 hover:bg-emerald-300/10 sm:p-5">
@@ -113,7 +115,7 @@ export default function AnnoncesPage() {
           </Link>
         </div>
       </section>
-      <section className="mb-9">
+      <section className="mb-7 sm:mb-9">
         <div className="mb-4 flex items-end justify-between gap-3">
           <div><p className="text-xs font-semibold uppercase tracking-[.22em] text-amber-200/75">Explorer</p><h2 className="mt-1 text-xl font-semibold sm:text-2xl">Catégories populaires</h2></div>
           <span className="text-xs text-white/45">Sélection EMi</span>
@@ -141,9 +143,10 @@ export default function AnnoncesPage() {
         <label className="grid cursor-pointer gap-2 text-sm">Photo de l'article <span className="flex items-center gap-2 rounded-xl border border-dashed border-white/20 px-4 py-3 text-white/65"><ImagePlus size={18}/>{photo?photo.name:"Ajouter une photo (12 Mo max)"}</span><input type="file" accept="image/*" className="hidden" onChange={e=>setPhoto(e.target.files?.[0]||null)}/></label>
         <div className="flex gap-3 sm:col-span-2"><button disabled={saving} className="flex items-center gap-2 rounded-full bg-amber-200 px-5 py-3 font-semibold text-black disabled:opacity-60">{saving&&<LoaderCircle className="animate-spin" size={17}/>} {saving?"Publication…":"Publier l'annonce"}</button><button type="button" onClick={()=>setOpen(false)} className="rounded-full border border-white/15 px-5 py-3 text-white/70">Annuler</button></div>
       </form>}
-      <div id="annonces-list" className="mb-5 flex items-end justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-amber-200/75">À découvrir</p><h2 className="mt-1 text-xl font-semibold sm:text-2xl">Annonces récentes</h2></div><span className="shrink-0 rounded-full border border-white/10 bg-white/[.04] px-3 py-1.5 text-xs text-white/55">{annonces.length} offre{annonces.length===1?"":"s"}</span></div>
-      {loading?<div className="flex items-center gap-3 py-12 text-white/60"><LoaderCircle className="animate-spin"/> Chargement des annonces…</div>:annonces.length===0?<div className="rounded-3xl border border-dashed border-white/15 bg-white/[.02] px-5 py-10 text-center sm:px-10"><div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/[.07]"><ShoppingBag className="text-amber-200" size={27}/></div><h3 className="text-lg font-semibold">Les premières offres arrivent bientôt</h3><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-white/55">Aucune annonce n’est encore publiée. Tu peux lancer le marché en partageant la première offre.</p><button onClick={()=>setOpen(true)} className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-200 px-5 py-3 text-sm font-semibold text-black transition hover:bg-amber-100"><Plus size={16}/> Publier la première annonce</button></div>:<div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">{annonces.map(a=><article key={a.id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/[.035]">
-        {a.image_urls?.[0]?<Link href={"/annonce/"+a.id}><img src={a.image_urls[0]} alt={a.titre} className="h-36 w-full object-cover sm:h-56" loading="lazy"/></Link>:<div className="flex h-40 items-center justify-center bg-white/[.04]"><ShoppingBag size={36} className="text-white/20"/></div>}
+      <div className="mb-6 rounded-2xl border border-white/10 bg-white/[.04] p-3 sm:p-4"><label htmlFor="annonces-search" className="mb-2 block text-xs font-semibold uppercase tracking-[.16em] text-white/55">Trouver un article</label><div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3"><Search size={18} className="shrink-0 text-amber-200"/><input id="annonces-search" type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Téléphone, vêtements, maison…" className="min-w-0 w-full bg-transparent py-3 text-sm text-white outline-none placeholder:text-white/35"/></div></div>
+      <div id="annonces-list" className="mb-5 flex items-end justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-amber-200/75">À découvrir</p><h2 className="mt-1 text-xl font-semibold sm:text-2xl">Annonces récentes</h2></div><span className="shrink-0 rounded-full border border-white/10 bg-white/[.04] px-3 py-1.5 text-xs text-white/55">{annoncesFiltrees.length} offre{annoncesFiltrees.length===1?"":"s"}</span></div>
+      {loading?<div className="flex items-center gap-3 py-12 text-white/60"><LoaderCircle className="animate-spin"/> Chargement des annonces…</div>:annoncesFiltrees.length===0?<div className="rounded-3xl border border-dashed border-white/15 bg-white/[.02] px-5 py-10 text-center sm:px-10"><div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/[.07]"><ShoppingBag className="text-amber-200" size={27}/></div><h3 className="text-lg font-semibold">{search ? "Aucun résultat pour cette recherche" : "Les premières offres arrivent bientôt"}</h3><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-white/55">{search ? "Essaie un autre mot-clé." : "Aucune annonce n’est encore publiée. Tu peux lancer le marché en partageant la première offre."}</p><button onClick={()=>setOpen(true)} className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-200 px-5 py-3 text-sm font-semibold text-black transition hover:bg-amber-100"><Plus size={16}/> Publier la première annonce</button></div>:<div className="grid grid-cols-2 gap-2.5 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">{annoncesFiltrees.map(a=><article key={a.id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/[.035]">
+        {a.image_urls?.[0]?<Link href={"/annonce/"+a.id}><img src={a.image_urls[0]} alt={a.titre} className="h-32 w-full object-cover sm:h-56" loading="lazy"/></Link>:<div className="flex h-40 items-center justify-center bg-white/[.04]"><ShoppingBag size={36} className="text-white/20"/></div>}
         <div className="p-3 sm:p-5"><Link href={"/annonce/"+a.id} className="line-clamp-2 text-sm font-semibold leading-snug hover:text-amber-200 sm:text-lg">{a.titre}</Link><p className="mt-2 text-lg font-semibold text-amber-200 sm:text-2xl">{new Intl.NumberFormat("fr-FR").format(Number(a.prix))} FCFA</p><p className="mt-2 line-clamp-2 whitespace-pre-wrap text-xs text-white/60 sm:mt-3 sm:line-clamp-3 sm:text-sm">{a.description||"Contacte le vendeur pour plus d'informations."}</p>
           <div className="mt-3 flex flex-col gap-2 sm:mt-5 sm:flex-row"><a href={genererLienWhatsApp(a.titre,Number(a.prix),a.id,a.numero_whatsapp)} onClick={()=>{ if(supabase) void supabase.from("annonce_events").insert({annonce_id:a.id,event_type:"whatsapp_click"}); }} target="_blank" rel="noopener noreferrer" className="flex w-full items-center justify-center gap-1.5 rounded-full bg-[#25D366] px-2 py-2.5 text-xs font-semibold text-black sm:flex-1 sm:gap-2 sm:px-3 sm:py-3 sm:text-sm"><MessageCircle size={17}/> Contacter sur WhatsApp</a><Link href={"/annonce/"+a.id} className="rounded-full border border-white/15 px-3 py-2.5 text-center text-xs sm:px-4 sm:py-3 sm:text-sm">Voir</Link></div>
         </div></article>)}</div>}
