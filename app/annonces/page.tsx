@@ -22,7 +22,7 @@ export default function AnnoncesPage() {
   const [description,setDescription] = useState("");
   const [prix,setPrix] = useState("");
   const [telephone,setTelephone] = useState("");
-  const [photo,setPhoto] = useState<File|null>(null);
+  const [photos,setPhotos] = useState<File[]>([]);
 
   async function load() {
     if (!supabase) { setNotice("La connexion Supabase n'est pas configurée."); setLoading(false); return; }
@@ -48,19 +48,20 @@ export default function AnnoncesPage() {
     setSaving(true);
     try {
       let image_urls:string[]=[];
-      if(photo) {
-        if(!photo.type.startsWith("image/")) throw new Error("Choisis un fichier image.");
-        if(photo.size>12*1024*1024) throw new Error("L'image doit faire moins de 12 Mo.");
+      if(photos.length>10) throw new Error("Tu peux ajouter jusqu'à 10 photos par annonce.");
+      for(const photo of photos) {
+        if(!photo.type.startsWith("image/")) throw new Error("Chaque fichier doit être une image.");
+        if(photo.size>12*1024*1024) throw new Error("Chaque image doit faire moins de 12 Mo.");
         const ext=photo.name.split(".").pop()?.replace(/[^a-zA-Z0-9]/g,"")||"jpg";
         const path=current.id+"/annonces/"+crypto.randomUUID()+"."+ext;
         const {error:upErr}=await supabase.storage.from("post-media").upload(path,photo,{contentType:photo.type,upsert:false});
-        if(upErr) throw new Error("Envoi de la photo impossible : "+upErr.message);
+        if(upErr) throw new Error("Envoi d'une photo impossible : "+upErr.message);
         const {data:urlData}=supabase.storage.from("post-media").getPublicUrl(path);
-        image_urls=[urlData.publicUrl];
+        image_urls.push(urlData.publicUrl);
       }
       const {error}=await supabase.from("annonces").insert({seller_id:current.id,titre:titre.trim(),description:description.trim(),prix:Number(prix),devise:"XAF",image_urls,numero_whatsapp:digits,statut:"active"});
       if(error) throw error;
-      setTitre("");setDescription("");setPrix("");setTelephone("");setPhoto(null);setOpen(false);
+      setTitre("");setDescription("");setPrix("");setTelephone("");setPhotos([]);setOpen(false);
       setNotice("Annonce publiée avec succès.");
       await load();
     } catch(err) { setNotice(err instanceof Error?err.message:"Publication impossible."); }
@@ -86,12 +87,13 @@ der>
         <label className="grid gap-2 text-sm">Prix (FCFA)<input required type="number" min="0" step="1" value={prix} onChange={e=>setPrix(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="Ex. 75000"/></label>
         <label className="grid gap-2 text-sm sm:col-span-2">Description<textarea maxLength={5000} rows={3} value={description} onChange={e=>setDescription(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="État, détails, lieu…"/></label>
         <label className="grid gap-2 text-sm">WhatsApp du vendeur (indicatif pays inclus)<input required inputMode="tel" value={telephone} onChange={e=>setTelephone(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="2376XXXXXXXX"/><span className="text-xs text-white/45">Ce numéro sera visible sur l'annonce via le bouton WhatsApp.</span></label>
-        <label className="grid cursor-pointer gap-2 text-sm">Photo de l'article <span className="flex items-center gap-2 rounded-xl border border-dashed border-white/20 px-4 py-3 text-white/65"><ImagePlus size={18}/>{photo?photo.name:"Ajouter une photo (12 Mo max)"}</span><input type="file" accept="image/*" className="hidden" onChange={e=>setPhoto(e.target.files?.[0]||null)}/></label>
+        <label className="grid cursor-pointer gap-2 text-sm sm:col-span-2">Photos de l'article <span className="flex items-center gap-2 rounded-xl border border-dashed border-amber-200/35 bg-emerald-950/30 px-4 py-4 text-white/75"><ImagePlus size={20}/><span><strong className="block text-sm text-amber-100">Sélectionner plusieurs photos</strong><small className="mt-1 block text-xs text-white/50">Jusqu'à 10 images · sélectionne plusieurs photos dans ta galerie</small></span></span><input type="file" accept="image/*" multiple className="hidden" onChange={e=>setPhotos(Array.from(e.target.files||[]).slice(0,10))}/></label>
+        {photos.length>0&&<div className="grid grid-cols-3 gap-2 sm:col-span-2 sm:grid-cols-5">{photos.map((file,i)=><div key={file.name+i} className="relative overflow-hidden rounded-xl border border-amber-200/25 bg-black/20"><img src={URL.createObjectURL(file)} alt={"Photo "+(i+1)} className="h-24 w-full object-cover"/><span className="absolute left-1 top-1 rounded-full bg-black/70 px-2 py-0.5 text-[10px] text-white">{i+1}</span><button type="button" onClick={()=>setPhotos(old=>old.filter((_,j)=>j!==i))} className="absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full bg-black/75 text-white" aria-label={"Retirer la photo "+(i+1)}><X size={13}/></button></div>)}</div>}
         <div className="flex gap-3 sm:col-span-2"><button disabled={saving} className="flex items-center gap-2 rounded-full bg-amber-200 px-5 py-3 font-semibold text-black disabled:opacity-60">{saving&&<LoaderCircle className="animate-spin" size={17}/>} {saving?"Publication…":"Publier l'annonce"}</button><button type="button" onClick={()=>setOpen(false)} className="rounded-full border border-white/15 px-5 py-3 text-white/70">Annuler</button></div>
       </form>}
       <div id="annonces-list" className="emi-shop-list-heading"><div><p>À DÉCOUVRIR</p><h2>Produits pour toi</h2></div><span>{annoncesFiltrees.length} offre{annoncesFiltrees.length===1?"":"s"}</span></div>
       {loading?<div className="flex items-center gap-3 py-12 text-white/60"><LoaderCircle className="animate-spin"/> Chargement des annonces…</div>:annoncesFiltrees.length===0?<div className="rounded-3xl border border-dashed border-white/15 bg-white/[.02] px-5 py-10 text-center sm:px-10"><div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-amber-200/20 bg-amber-200/[.07]"><ShoppingBag className="text-amber-200" size={27}/></div><h3 className="text-lg font-semibold">{search ? "Aucun résultat pour cette recherche" : "Les premières offres arrivent bientôt"}</h3><p className="mx-auto mt-2 max-w-md text-sm leading-6 text-white/55">{search ? "Essaie un autre mot-clé." : "Aucune annonce n’est encore publiée. Tu peux lancer le marché en partageant la première offre."}</p><button onClick={()=>setOpen(true)} className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-200 px-5 py-3 text-sm font-semibold text-black transition hover:bg-amber-100"><Plus size={16}/> Publier la première annonce</button></div>:<div className="emi-shop-products">{annoncesFiltrees.map(a=><article key={a.id} className="emi-shop-product">
-        {a.image_urls?.[0]?<Link href={"/annonce/"+a.id}><img src={a.image_urls[0]} alt={a.titre} className="emi-shop-product-image" loading="lazy"/></Link>:<div className="flex h-40 items-center justify-center bg-white/[.04]"><ShoppingBag size={36} className="text-white/20"/></div>}
+        {a.image_urls?.length>0?<Link href={"/annonce/"+a.id} className="emi-shop-product-gallery">{a.image_urls.slice(0,4).map((url,i)=><img key={url+i} src={url} alt={a.titre+" — photo "+(i+1)} className="emi-shop-product-image" loading="lazy"/>)}{a.image_urls.length>1&&<span className="emi-shop-photo-count">▧ {a.image_urls.length}</span>}</Link>:<div className="flex h-40 items-center justify-center bg-white/[.04]"><ShoppingBag size={36} className="text-white/20"/></div>}
         <div className="emi-shop-product-copy"><Link href={"/annonce/"+a.id} className="line-clamp-2 text-sm font-semibold leading-snug hover:text-amber-200 sm:text-base">{a.titre}</Link><p className="emi-shop-price">{new Intl.NumberFormat("fr-FR").format(Number(a.prix))} FCFA</p><p className="mt-2 line-clamp-2 whitespace-pre-wrap text-xs text-white/60 sm:mt-3 sm:line-clamp-3 sm:text-sm">{a.description||"Contacte le vendeur pour plus d'informations."}</p>
           <div className="mt-3 flex flex-col gap-2 sm:mt-5 sm:flex-row"><a href={genererLienWhatsApp(a.titre,Number(a.prix),a.id,a.numero_whatsapp)} onClick={()=>{ if(supabase) void supabase.from("annonce_events").insert({annonce_id:a.id,event_type:"whatsapp_click"}); }} target="_blank" rel="noopener noreferrer" className="flex w-full items-center justify-center gap-1.5 rounded-full bg-[#25D366] px-2 py-2.5 text-xs font-semibold text-black sm:flex-1 sm:gap-2 sm:px-3 sm:py-3 sm:text-sm"><MessageCircle size={17}/> Contacter sur WhatsApp</a><Link href={"/annonce/"+a.id} className="rounded-full border border-white/15 px-3 py-2.5 text-center text-xs sm:px-4 sm:py-3 sm:text-sm">Voir</Link></div>
         </div></article>)}</div>}
