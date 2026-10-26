@@ -53,13 +53,13 @@ export default function TrocChainPage() {
   const mesCorrespondances = offres.filter(o => o.user_id !== userId && correspond(o.bien_offert, recherche) && correspond(o.bien_recherche, offert));
   const autres = offres.filter(o => o.user_id !== userId && !mesCorrespondances.some(m => m.id === o.id));
 
-  return <main className="min-h-screen bg-[#090d16] px-4 py-6 text-slate-50 sm:py-10">
+  return <main className="emi-space-page min-h-screen bg-[#061b14] px-4 py-6 text-slate-50 sm:py-10">
     <div className="mx-auto max-w-5xl">
       <header className="mb-6 flex items-center justify-between gap-3">
         <Link href="/annonces" className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-amber-200"><ArrowLeft size={17}/> Marché EMi</Link>
         <Link href="/" className="font-semibold tracking-[.22em] text-amber-200">EMi</Link>
       </header>
-      <section className="mx-auto max-w-2xl rounded-3xl border border-amber-400/20 bg-gradient-to-br from-slate-800 to-slate-950 p-5 shadow-2xl shadow-amber-950/20 sm:p-8">
+      <section className="mx-auto max-w-2xl rounded-3xl border border-amber-200/25 bg-gradient-to-br from-[#075039] to-[#061b14] p-5 shadow-2xl shadow-amber-950/20 sm:p-8">
         <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[.25em] text-amber-300"><Sparkles size={15}/> Échange circulaire P2P</p>
         <h1 className="text-2xl font-semibold sm:text-3xl">🔄 Troc-Chain</h1>
         <p className="mt-3 text-sm leading-6 text-slate-300">Propose un bien et indique ce que tu recherches. EMi repère les offres publiées qui semblent correspondre, sans exiger de paiement en espèces.</p>
@@ -75,7 +75,7 @@ export default function TrocChainPage() {
         <div className="mb-4 flex items-center justify-between"><h2 className="text-xl font-semibold">Offres et correspondances</h2><button onClick={()=>{setLoading(true);void load();}} className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm text-slate-300"><RefreshCw size={15}/> Actualiser</button></div>
         {loading ? <p className="flex items-center gap-2 py-8 text-slate-400"><LoaderCircle className="animate-spin"/> Recherche des offres…</p> : offres.length === 0 ? <div className="rounded-2xl border border-white/10 p-6 text-sm text-slate-400">Aucune offre active pour l'instant. Publie la première offre de troc.</div> : <>
           {mesCorrespondances.length > 0 && <div className="mb-5 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4"><h3 className="font-semibold text-emerald-300">🎯 Correspondance possible</h3><p className="mt-1 text-sm text-slate-300">Une autre offre semble rechercher ce que tu proposes et proposer ce que tu recherches. Vérifie les détails avec l'autre membre avant de conclure.</p></div>}
-          <div className="grid gap-3">{(mesCorrespondances.length ? mesCorrespondances : autres).map(o=><article key={o.id} className="rounded-2xl border border-white/10 bg-white/[.03] p-4"><div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs text-emerald-300">Propose : {o.bien_offert}</span><span className="text-slate-500">↔</span><span className="rounded-full bg-amber-300/10 px-3 py-1 text-xs text-amber-200">Recherche : {o.bien_recherche}</span></div>{o.description && <p className="mt-3 text-sm text-slate-400">{o.description}</p>}<p className="mt-3 text-xs text-slate-500">Offre publiée le {new Date(o.created_at).toLocaleDateString("fr-FR")}</p></article>)}</div>
+          <div className="grid gap-3">{(mesCorrespondances.length ? mesCorrespondances : autres).map(o=><article key={o.id} className="rounded-2xl border border-white/10 bg-white/[.03] p-4"><div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-amber-300/15 px-3 py-1 text-xs text-amber-100">Propose : {o.bien_offert}</span><span className="text-slate-500">↔</span><span className="rounded-full bg-amber-300/10 px-3 py-1 text-xs text-amber-200">Recherche : {o.bien_recherche}</span></div>{o.description && <p className="mt-3 text-sm text-slate-400">{o.description}</p>}<p className="mt-3 text-xs text-slate-500">Offre publiée le {new Date(o.created_at).toLocaleDateString("fr-FR")}</p></article>)}</div>
         </>}
       </section>
       <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-5 text-slate-500">Important : le matching est indicatif et compare les textes des offres actives. Aucun contrat intelligent ni échange automatique n'est exécuté. Vérifie les biens et l'identité des membres avant toute remise.</p>
