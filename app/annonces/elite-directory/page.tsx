@@ -5,7 +5,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { ArrowLeft, BriefcaseBusiness, Phone, MapPin, UserRound, Save, LoaderCircle } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
-type Profile = { id?: string; user_id?: string; nom: string; specialite: string; telephone: string; ville: string; bio: string; created_at?: string };
+type Profile = { id?: string; user_id?: string; nom: string; specialite: string; telephone: string; ville: string; bio: string; image_url?: string | null; created_at?: string };
 const supabase = createSupabaseBrowserClient();
 
 export default function EliteDirectoryPage() {
@@ -15,6 +15,8 @@ export default function EliteDirectoryPage() {
   const [telephone, setTelephone] = useState("");
   const [ville, setVille] = useState("Yaoundé");
   const [bio, setBio] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -32,9 +34,9 @@ export default function EliteDirectoryPage() {
         const uid = auth.user?.id || "";
         setUserId(uid);
         if (uid) {
-          const { data, error } = await supabase.from("elite_directory_profiles").select("id,user_id,nom,specialite,telephone,ville,bio,created_at").eq("user_id", uid).maybeSingle();
+          const { data, error } = await supabase.from("elite_directory_profiles").select("id,user_id,nom,specialite,telephone,ville,bio,image_url,created_at").eq("user_id", uid).maybeSingle();
           if (error && error.code !== "42P01") setNotice("Lecture du profil impossible : " + error.message);
-          if (data) { setNom(data.nom || ""); setSpecialite(data.specialite || ""); setTelephone(data.telephone || ""); setVille(data.ville || "Yaoundé"); setBio(data.bio || ""); }
+          if (data) { setNom(data.nom || ""); setSpecialite(data.specialite || ""); setTelephone(data.telephone || ""); setVille(data.ville || "Yaoundé"); setBio(data.bio || ""); setImageUrl(data.image_url || ""); }
         }
         const { data: list, error: listError } = await supabase.from("elite_directory_profiles").select("id,user_id,nom,specialite,telephone,ville,bio,created_at").eq("published", true).order("created_at", { ascending: false }).limit(40);
         if (!listError && alive) setProfiles((list || []) as Profile[]);
@@ -54,7 +56,20 @@ export default function EliteDirectoryPage() {
     if (digits.replace(/\D/g, "").length < 8 || digits.replace(/\D/g, "").length > 15) { setNotice("Vérifie le numéro de téléphone / WhatsApp avec indicatif pays."); return; }
     setSaving(true);
     try {
-      const payload = { user_id: userId, nom: nom.trim(), specialite: specialite.trim(), telephone: digits, ville: ville.trim(), bio: bio.trim(), published: true };
+      let finalImageUrl = imageUrl;
+      if (imageFile) {
+        if (!["image/jpeg", "image/png", "image/webp"].includes(imageFile.type)) throw new Error("Choisis une image JPG, PNG ou WebP.");
+        if (imageFile.size > 5 * 1024 * 1024) throw new Error("La photo doit faire 5 Mo maximum.");
+        const extension = imageFile.type === "image/png" ? "png" : imageFile.type === "image/webp" ? "webp" : "jpg";
+        const path = userId + "/" + Date.now() + "." + extension;
+        const { error: uploadError } = await supabase.storage.from("elite-hospitality-photos").upload(path, imageFile, { upsert: true, contentType: imageFile.type });
+        if (uploadError) throw new Error("Envoi de la photo impossible : " + uploadError.message);
+        const { data: publicUrl } = supabase.storage.from("elite-hospitality-photos").getPublicUrl(path);
+        finalImageUrl = publicUrl.publicUrl;
+        setImageUrl(finalImageUrl);
+        setImageFile(null);
+      }
+      const payload = { user_id: userId, nom: nom.trim(), specialite: specialite.trim(), telephone: digits, ville: ville.trim(), bio: bio.trim(), image_url: finalImageUrl || null, published: true };
       const { data: existing, error: findError } = await supabase.from("elite_directory_profiles").select("id").eq("user_id", userId).maybeSingle();
       if (findError) throw new Error("La table de l’annuaire n’est peut-être pas configurée : " + findError.message);
       const result = existing?.id
@@ -96,13 +111,15 @@ export default function EliteDirectoryPage() {
         <label>Métier / spécialité<input required minLength={2} maxLength={120} value={specialite} onChange={e=>setSpecialite(e.target.value)} placeholder="Hôtel, restaurateur, chef…"/></label>
         <label>Téléphone / WhatsApp<input required inputMode="tel" maxLength={24} value={telephone} onChange={e=>setTelephone(e.target.value)} placeholder="+237 6XX XXX XXX"/></label>
         <label>Ville / quartier<input maxLength={100} value={ville} onChange={e=>setVille(e.target.value)} placeholder="Douala, Yaoundé, Bastos…"/></label>
+        <label className="eh-full">Photo de profil professionnelle<input type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>setImageFile(e.target.files?.[0] || null)} /></label>
+        {(imageFile || imageUrl) && <div className="eh-full" style={{display:"flex",alignItems:"center",gap:12}}><img src={imageFile ? URL.createObjectURL(imageFile) : imageUrl} alt="Aperçu de la photo professionnelle" style={{width:88,height:88,objectFit:"cover",borderRadius:16,border:"2px solid #e9ce62"}}/><span style={{fontSize:12,color:"#c5d7cd"}}>{imageFile ? imageFile.name : "Photo actuelle"}</span></div>}
         <label className="eh-full">Présentation / offre<textarea rows={3} maxLength={1500} value={bio} onChange={e=>setBio(e.target.value)} placeholder="Services, menu, chambres, tarifs, disponibilités…"/></label>
         <button disabled={saving||loading} className="eh-save eh-full">{saving?"Enregistrement…":"Enregistrer mon profil"}</button>
       </form>
       {notice&&<p role="status" className="eh-notice">{notice}</p>}
     </section>
     <section className="eh-section" id="eh-list"><div className="eh-section-head"><h3>Publications des professionnels</h3><span style={{fontSize:12,color:"#c5d7cd"}}>{filteredProfiles.length} offre(s)</span></div>
-      {loading?<p className="eh-empty">Chargement des professionnels…</p>:filteredProfiles.length===0?<p className="eh-empty">Aucune offre professionnelle publiée pour le moment. Les annonces apparaîtront ici après publication par leurs propriétaires.</p>:filteredProfiles.map((p,i)=><article key={p.id||p.user_id||i} className="eh-listing"><img src={"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=500&q=80"} alt="Photo professionnelle"/><div><span className="eh-badge">{p.specialite}</span><h4>{p.nom}</h4><p>{p.specialite} · {p.ville||"Cameroun"}</p><p>{p.bio}</p><span className="eh-badge">Publié depuis EMi Market</span><br/><a className="eh-contact" href={"https://wa.me/"+(p.telephone||"").replace(/\D/g,"")} target="_blank" rel="noopener noreferrer">Contacter sur WhatsApp</a></div></article>)}
+      {loading?<p className="eh-empty">Chargement des professionnels…</p>:filteredProfiles.length===0?<p className="eh-empty">Aucune offre professionnelle publiée pour le moment. Les annonces apparaîtront ici après publication par leurs propriétaires.</p>:filteredProfiles.map((p,i)=><article key={p.id||p.user_id||i} className="eh-listing"><img src={p.image_url || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=500&q=80"} alt={"Photo de "+p.nom}/><div><span className="eh-badge">{p.specialite}</span><h4>{p.nom}</h4><p>{p.specialite} · {p.ville||"Cameroun"}</p><p>{p.bio}</p><span className="eh-badge">Publié depuis EMi Market</span><br/><a className="eh-contact" href={"https://wa.me/"+(p.telephone||"").replace(/\D/g,"")} target="_blank" rel="noopener noreferrer">Contacter sur WhatsApp</a></div></article>)}
     </section>
     <p style={{marginTop:20,fontSize:11,color:"#9bb8a8",lineHeight:1.5}}>Les coordonnées professionnelles sont visibles uniquement lorsque le profil est publié. Publie seulement des informations que tu acceptes de partager.</p>
   </div></main>;
