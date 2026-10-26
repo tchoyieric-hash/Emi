@@ -70,27 +70,7 @@ export default function AnnoncesPage() {
   const annoncesFiltrees = annonces.filter(a => `${a.titre} ${a.description}`.toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr")));
 
   return <main className="min-h-screen w-full overflow-x-hidden bg-[#09090d] text-white">
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#09090d]/95 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-4 sm:py-4">
-        <Link href="/" aria-label="EMi accueil" className="shrink-0 text-xl font-bold tracking-[.2em] text-amber-200">EMi<span className="ml-1 text-[10px] font-medium tracking-[.12em] text-white/45">MARKET</span></Link>
-        <div className="hidden items-center gap-5 md:flex">
-          <Link href="/annonces" className="text-sm font-medium text-white">Marché</Link>
-          <Link href="/annonces/espace-vendeur" className="text-sm text-white/65 transition hover:text-amber-200">Espace vendeur</Link>
-          <button onClick={()=>setSpacesOpen(!spacesOpen)} className="flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:border-amber-200/50"><Menu size={16}/> Explorer les espaces</button>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={()=>setOpen(!open)} className="flex items-center gap-2 rounded-full bg-amber-200 px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-amber-100"><Plus size={17}/> Vendre</button>
-          <button aria-label={spacesOpen?"Fermer le menu des espaces":"Ouvrir le menu des espaces"} aria-expanded={spacesOpen} onClick={()=>setSpacesOpen(!spacesOpen)} className="rounded-full border border-white/15 p-2.5 text-white md:hidden">{spacesOpen?<X size={19}/>:<Menu size={19}/>}</button>
-        </div>
-      </div>
-      {spacesOpen&&<div className="border-t border-white/10 bg-[#0d0d13]">
-        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-2 px-4 py-4 sm:grid-cols-3 md:grid-cols-4">
-          {[
-            ["P2P direct","/annonces/mesh"],["Tontine-Flow","/annonces/tontine"],["Troc-Chain","/annonces/troc"],["Confiance","/annonces/confiance"],["Voice-Market","/annonces/voice-market"],["Neural-Trade","/annonces/neural-trade"],["Neural-Voice P2P","/annonces/neural-voice"],["Biometric-Trust","/annonces/biometric-trust"],["Quantum-Mesh","/annonces/quantum-mesh"],["Live Show & Jeux","/annonces/live-show"],["Street-Arena","/annonces/street-arena"],["Neural-Bazaar","/annonces/neural-bazaar"],["Neuro-Inventory","/annonces/neuro-inventory"],["Philanthropy","/annonces/philanthropy"],["Black-Diamond","/annonces/black-diamond"],["Hope-Bridge","/annonces/hope-bridge"],["Immortel-Trace","/annonces/immortel-trace"],["Sovereign Compliance","/annonces/sovereign-compliance"],["Risk-Guard AML","/annonces/risk-guard"],["Sovereign Governance","/annonces/sovereign-governance"],["Master Health-Check","/annonces/master-health-check"],["Elite Hospitality Directory","/annonces/elite-directory"]
-          ].map(([label,href])=><Link key={href} href={href} onClick={()=>setSpacesOpen(false)} className="flex items-center justify-between gap-2 rounded-xl border border-white/[.07] bg-white/[.025] px-3 py-3 text-sm text-white/75 transition hover:border-amber-200/30 hover:bg-amber-200/[.06] hover:text-amber-100">{label}<ArrowUpRight size={14} className="shrink-0 text-white/35"/></Link>)}
-        </div>
-      </div>}
-    </header>
+der>
     <section className="mx-auto w-full min-w-0 max-w-6xl px-3 py-4 sm:px-4 sm:py-9">
       <section className="emi-shop-shell">
         <div className="emi-shop-brandbar"><button className="emi-shop-menu" onClick={()=>setSpacesOpen(!spacesOpen)} aria-label="Explorer les espaces"><Menu size={21}/></button><div className="emi-shop-brand"><span className="emi-shop-monogram">M</span><span><strong>EMi MARKET</strong><small>Le marché de la communauté</small></span></div><button className="emi-shop-notice" onClick={()=>setNotice("Tu es à jour.")} aria-label="Notifications">♧</button></div>
