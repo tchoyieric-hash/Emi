@@ -31,7 +31,7 @@ export default function AnnoncesPage() {
     const [{data:auth},{data,error},{data:hotelData},{data:trocData},{data:flowData}] = await Promise.all([
       supabase.auth.getUser(),
       supabase.from("annonces").select("id,seller_id,titre,description,prix,devise,image_urls,numero_whatsapp,created_at").eq("statut","active").order("created_at",{ascending:false}).limit(60),
-      supabase.from("elite_directory_profiles").select("id,user_id,nom,specialite,telephone,ville,bio,created_at").eq("published",true).order("created_at",{ascending:false}).limit(30),
+      supabase.from("elite_directory_profiles").select("id,user_id,nom,specialite,telephone,ville,bio,image_url,created_at").eq("published",true).order("created_at",{ascending:false}).limit(30),
       supabase.from("troc_offres").select("id,user_id,bien_offert,bien_recherche,description,statut,created_at").eq("statut","active").order("created_at",{ascending:false}).limit(30),
       supabase.from("tontine_cercles").select("id,createur_id,nom_article,prix_cible,devise,membres_max,statut,created_at").order("created_at",{ascending:false}).limit(30)
     ]);
@@ -39,7 +39,7 @@ export default function AnnoncesPage() {
     if(error) setNotice("Chargement des produits impossible : "+error.message);
     else setAnnonces((data||[]) as Annonce[]);
     const items:MarketItem[] = [
-      ...((hotelData||[]) as any[]).map(p=>({id:p.id,title:p.nom,description:p.bio||p.specialite,badge:"ELITE HOSPITALITY",badgeColor:"#f3ce45",image:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=85",meta:[p.specialite,p.ville].filter(Boolean).join(" · "),href:"/annonces/elite-directory",created_at:p.created_at,phone:p.telephone,origin:"hospitality" as const})),
+      ...((hotelData||[]) as any[]).map(p=>({id:p.id,title:p.nom,description:p.bio||p.specialite,badge:"ELITE HOSPITALITY",badgeColor:"#f3ce45",image:p.image_url||"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=85",meta:[p.specialite,p.ville].filter(Boolean).join(" · "),href:"/annonces/elite-directory",created_at:p.created_at,phone:p.telephone,origin:"hospitality" as const})),
       ...((trocData||[]) as any[]).map(p=>({id:p.id,title:p.bien_offert,description:"Recherche en échange : "+p.bien_recherche+(p.description?" — "+p.description:""),badge:"EMi TROC",badgeColor:"#2767ff",image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85",meta:"Échange communautaire",href:"/annonces/troc",created_at:p.created_at,origin:"troc" as const})),
       ...((flowData||[]) as any[]).map(p=>({id:p.id,title:p.nom_article,description:"Rejoignez ce cercle d’achat groupé pour avancer ensemble vers un objectif commun.",badge:"DJANGUI FLOW",badgeColor:"#7c3aed",image:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=85",meta:[p.prix_cible?new Intl.NumberFormat("fr-FR").format(Number(p.prix_cible))+" FCFA":"",p.membres_max?p.membres_max+" membres max":""].filter(Boolean).join(" · "),href:"/annonces/tontine",created_at:p.created_at,origin:"djangui" as const}))
     ];
