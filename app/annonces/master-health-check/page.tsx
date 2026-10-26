@@ -20,7 +20,17 @@ export default function MasterHealthCheckPage() {
   const [query,setQuery]=useState("");
   const [opened,setOpened]=useState<number|null>(0);
   const filtered=useMemo(()=>faqs.filter(x=>(x.q+" "+x.a+" "+x.category).toLowerCase().includes(query.toLowerCase())),[query]);
-  return <main className="emi-help min-h-screen bg-[#031b14] pb-28 text-white">\n    <style jsx global>{`\n      .emi-help{background:radial-gradient(ellipse at 78% 0%,rgba(17,103,70,.32),transparent 42%),#031b14!important;color:#f7f5ec;font-family:Inter,ui-sans-serif,system-ui,sans-serif}\n      .emi-help input{background:transparent!important;color:#fff!important;border:0!important;outline:none!important;box-shadow:none!important;font-size:16px!important;width:100%;min-width:0}\n      .emi-help input::placeholder{color:#a7b9af!important}\n      .emi-help .help-topic{min-height:112px;border:1px solid rgba(233,202,91,.62);background:linear-gradient(145deg,rgba(9,54,39,.98),rgba(2,22,16,.98));box-shadow:0 10px 28px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.04);transition:transform .18s ease,border-color .18s ease}\n      .emi-help .help-topic:active{transform:scale(.98)}\n      .emi-help .help-hero{background:linear-gradient(105deg,rgba(2,24,17,.95),rgba(4,62,43,.8)),radial-gradient(circle at 85% 20%,rgba(235,202,84,.18),transparent 38%)}\n      .emi-help button{transition:filter .18s ease,transform .18s ease}\n      .emi-help button:active{transform:scale(.99)}\n    `}</style>
+  return <main className="emi-help min-h-screen bg-[#031b14] pb-28 text-white">
+    <style jsx global>{`
+      .emi-help{background:radial-gradient(ellipse at 78% 0%,rgba(17,103,70,.32),transparent 42%),#031b14!important;color:#f7f5ec;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+      .emi-help input{background:transparent!important;color:#fff!important;border:0!important;outline:none!important;box-shadow:none!important;font-size:16px!important;width:100%;min-width:0}
+      .emi-help input::placeholder{color:#a7b9af!important}
+      .emi-help .help-topic{min-height:112px;border:1px solid rgba(233,202,91,.62);background:linear-gradient(145deg,rgba(9,54,39,.98),rgba(2,22,16,.98));box-shadow:0 10px 28px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.04);transition:transform .18s ease,border-color .18s ease}
+      .emi-help .help-topic:active{transform:scale(.98)}
+      .emi-help .help-hero{background:linear-gradient(105deg,rgba(2,24,17,.95),rgba(4,62,43,.8)),radial-gradient(circle at 85% 20%,rgba(235,202,84,.18),transparent 38%)}
+      .emi-help button{transition:filter .18s ease,transform .18s ease}
+      .emi-help button:active{transform:scale(.99)}
+    `}</style>
     <header className="sticky top-0 z-30 border-b border-amber-200/15 bg-[#05271d]/95 px-4 py-3 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center gap-3">
         <Link href="/annonces" aria-label="Retour au marché EMi" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-amber-200/35 text-amber-200"><ArrowLeft size={21}/></Link>
