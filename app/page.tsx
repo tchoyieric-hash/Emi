@@ -717,10 +717,10 @@ export default function HomePage() {
         const { error: audioUploadError } = await supabase.storage.from("post-media").upload(audioPath, musicFile, { contentType: musicFile.type, upsert: false });
         if (audioUploadError) throw new Error("Impossible d’envoyer la musique. Vérifie les autorisations du stockage : " + audioUploadError.message);
         musicUrl = supabase.storage.from("post-media").getPublicUrl(audioPath).data.publicUrl;
-        musicMeta = {title: musicTitle.trim() || musicFile.name.replace(/\\.[^.]+$/, ""),artist:"Audio de ton téléphone",start:0,end:30};
+        musicMeta = {title: musicTitle.trim() || musicFile.name.replace(/\.[^.]+$/, ""),artist:"Audio de ton téléphone",start:0,end:30};
       }
       publishStage = "enregistrement de la publication dans Supabase";
-      const postContent = (publishDestination === "reel" ? "[EMI_REEL] " : "") + caption.trim() + (musicMeta ? "\\n\\n[EMI_MUSIC]" + JSON.stringify({...musicMeta,url:musicUrl}) + "[/EMI_MUSIC]" : "");
+      const postContent = (publishDestination === "reel" ? "[EMI_REEL] " : "") + caption.trim() + (musicMeta ? "\n\n[EMI_MUSIC]" + JSON.stringify({...musicMeta,url:musicUrl}) + "[/EMI_MUSIC]" : "");
       const { error } = await supabase.from("posts").insert({ user_id: user.id, content: postContent, media_type: mediaType, media_urls: urls, visibility: "public", music_track_id: selectedMusic?.id ?? null, music_start_seconds: musicMeta ? Math.max(0, Math.floor(musicMeta.start)) : null, music_end_seconds: musicMeta ? Math.max(1, Math.floor(musicMeta.end)) : null });
       if (error) throw error;
       setCaption(""); setPublishDestination("post"); setFile(null); setSelectedFiles([]); setMusicFile(null); setSelectedMusic(null); setMusicTitle(""); setCatalogOpen(false); setCreatorFilter("original"); setCreatorRatio("4:5"); setCreatorBrightness(100); setCreatorContrast(100); setCreatorTextOnPhoto(false); setCreatorOverlayText(""); setCreatorEditOpen(false); setMusicStart(0); setMusicEnd(30); setMusicDuration(0); setComposerOpen(false); setMessage("Publication envoyée."); await loadFeed();
