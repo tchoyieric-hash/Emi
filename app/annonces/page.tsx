@@ -7,10 +7,11 @@ import { createSupabaseBrowserClient } from "@/lib/supabase";
 import { genererLienWhatsApp } from "@/lib/whatsapp";
 
 type Annonce = { id:string; seller_id:string; titre:string; description:string; prix:number; devise:string; image_urls:string[]; numero_whatsapp:string; created_at:string };
+type MarketItem = { id:string; title:string; description:string; badge:string; badgeColor:string; image:string; meta:string; href:string; created_at:string; price?:number; phone?:string; origin:"market"|"hospitality"|"troc"|"djangui"|"foundation"|"help" };
 const supabase = createSupabaseBrowserClient();
 
 export default function AnnoncesPage() {
-  const [annonces,setAnnonces] = useState<Annonce[]>([]);
+  const [annonces,setAnnonces] = useState<Annonce[]>([]);\n  const [communityItems,setCommunityItems] = useState<MarketItem[]>([]);
   const [user,setUser] = useState<any>(null);
   const [open,setOpen] = useState(false);
   const [spacesOpen,setSpacesOpen] = useState(false);
@@ -26,13 +27,22 @@ export default function AnnoncesPage() {
 
   async function load() {
     if (!supabase) { setNotice("La connexion Supabase n'est pas configurée."); setLoading(false); return; }
-    const [{data:auth},{data,error}] = await Promise.all([
+    const [{data:auth},{data,error},{data:hotelData},{data:trocData},{data:flowData}] = await Promise.all([
       supabase.auth.getUser(),
-      supabase.from("annonces").select("id,seller_id,titre,description,prix,devise,image_urls,numero_whatsapp,created_at").eq("statut","active").order("created_at",{ascending:false}).limit(60)
+      supabase.from("annonces").select("id,seller_id,titre,description,prix,devise,image_urls,numero_whatsapp,created_at").eq("statut","active").order("created_at",{ascending:false}).limit(60),
+      supabase.from("elite_directory_profiles").select("id,user_id,nom,specialite,telephone,ville,bio,created_at").eq("published",true).order("created_at",{ascending:false}).limit(30),
+      supabase.from("troc_offres").select("id,user_id,bien_offert,bien_recherche,description,statut,created_at").eq("statut","active").order("created_at",{ascending:false}).limit(30),
+      supabase.from("tontine_cercles").select("id,createur_id,nom_article,prix_cible,devise,membres_max,statut,created_at").order("created_at",{ascending:false}).limit(30)
     ]);
     setUser(auth.user ?? null);
-    if(error) setNotice("Chargement impossible : "+error.message);
+    if(error) setNotice("Chargement des produits impossible : "+error.message);
     else setAnnonces((data||[]) as Annonce[]);
+    const items:MarketItem[] = [
+      ...((hotelData||[]) as any[]).map(p=>({id:p.id,title:p.nom,description:p.bio||p.specialite,badge:"ELITE HOSPITALITY",badgeColor:"#f3ce45",image:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=85",meta:[p.specialite,p.ville].filter(Boolean).join(" · "),href:"/annonces/elite-directory",created_at:p.created_at,phone:p.telephone,origin:"hospitality" as const})),
+      ...((trocData||[]) as any[]).map(p=>({id:p.id,title:p.bien_offert,description:"Recherche en échange : "+p.bien_recherche+(p.description?" — "+p.description:""),badge:"EMi TROC",badgeColor:"#2767ff",image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85",meta:"Échange communautaire",href:"/annonces/troc",created_at:p.created_at,origin:"troc" as const})),
+      ...((flowData||[]) as any[]).map(p=>({id:p.id,title:p.nom_article,description:"Rejoignez ce cercle d’achat groupé pour avancer ensemble vers un objectif commun.",badge:"DJANGUI FLOW",badgeColor:"#7c3aed",image:"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=85",meta:[p.prix_cible?new Intl.NumberFormat("fr-FR").format(Number(p.prix_cible))+" FCFA":"",p.membres_max?p.membres_max+" membres max":""].filter(Boolean).join(" · "),href:"/annonces/tontine",created_at:p.created_at,origin:"djangui" as const}))
+    ];
+    setCommunityItems(items);
     setLoading(false);
   }
   useEffect(()=>{ void load(); },[]);
@@ -69,6 +79,7 @@ export default function AnnoncesPage() {
   }
 
   const annoncesFiltrees = annonces.filter(a => `${a.titre} ${a.description}`.toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr")));
+  const communityFiltered = communityItems.filter(a => `${a.title} ${a.description} ${a.badge} ${a.meta}`.toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr")));
 
   return <main className="min-h-screen w-full overflow-x-hidden bg-[#09090d] text-white">
     <section className="mx-auto w-full min-w-0 max-w-6xl px-3 py-4 sm:px-4 sm:py-9">
