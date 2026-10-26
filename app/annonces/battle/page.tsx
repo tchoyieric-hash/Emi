@@ -70,6 +70,16 @@ export default function CommerceBattlePage() {
 
   useEffect(() => { setClientReady(true); void loadBattles(); return () => { localStreamRef.current?.getTracks().forEach(track => track.stop()); }; }, [loadBattles]);
 
+  useEffect(() => { if (localVideoRef.current && localStreamRef.current) localVideoRef.current.srcObject = localStreamRef.current; }, [cameraEnabled, selected]);
+
+  function toggleMic() {
+    const track = localStreamRef.current?.getAudioTracks()[0];
+    if (!track) { setMediaError("Active d’abord la caméra pour contrôler le micro."); return; }
+    track.enabled = !track.enabled;
+    setMicEnabled(track.enabled);
+    setMediaError("");
+  }
+
   async function toggleCamera() {
     setMediaError("");
     if (localStreamRef.current) { localStreamRef.current.getTracks().forEach(track => track.stop()); localStreamRef.current = null; setCameraEnabled(false); setMicEnabled(false); if (localVideoRef.current) localVideoRef.current.srcObject = null; return; }
@@ -194,7 +204,7 @@ export default function CommerceBattlePage() {
             <div className="relative flex min-h-[190px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,.08),transparent_60%),#101010] p-3 text-center sm:min-h-[280px]"><span className="text-4xl">⚡</span><strong className="mt-3 text-sm sm:text-base">Commerçant B</strong><span className="mt-1 text-xs text-zinc-400">{selected.opponent_user_id ? "Adversaire associé" : "En attente d’un adversaire"}</span><span className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-bold text-amber-200">{voteCount(selected.opponent_user_id || "")} votes</span></div>
           </div>
           <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-300/20 bg-black/40 p-3"><span className="text-xs text-zinc-300"><Timer size={14} className="mr-1 inline text-amber-300"/> Duel communautaire · votes en direct</span><span className="text-xs text-amber-200"><Users size={14} className="mr-1 inline"/>{votes.length} votes enregistrés</span></div>
-          <div className="grid grid-cols-2 gap-2"><button onClick={()=>void toggleCamera()} className="rounded-xl border border-amber-300/30 px-3 py-3 text-sm font-bold text-amber-100">{cameraEnabled?<CameraOff size={16} className="mr-2 inline"/>:<Camera size={16} className="mr-2 inline"/>}{cameraEnabled?"Couper caméra":"Tester caméra + micro"}</button><button onClick={()=>{if(!localStreamRef.current)return setMediaError("Active d’abord la caméra pour contrôler le micro.");const track=localStreamRef.current.getAudioTracks()[0];if(track){track.enabled=!track.enabled;setMicEnabled(track.enabled);}}} className="rounded-xl border border-white/15 px-3 py-3 text-sm font-bold">{micEnabled?<Mic size={16} className="mr-2 inline"/>:<MicOff size={16} className="mr-2 inline"}/>{micEnabled?"Micro activé":"Micro coupé"}</button></div>
+          <div className="grid grid-cols-2 gap-2"><button onClick={()=>void toggleCamera()} className="rounded-xl border border-amber-300/30 px-3 py-3 text-sm font-bold text-amber-100">{cameraEnabled?<CameraOff size={16} className="mr-2 inline"/>:<Camera size={16} className="mr-2 inline"/>}{cameraEnabled?"Couper caméra":"Tester caméra + micro"}</button><button type="button" onClick={toggleMic} className="rounded-xl border border-white/15 px-3 py-3 text-sm font-bold">{micEnabled?<Mic size={16} className="mr-2 inline"/>:<MicOff size={16} className="mr-2 inline" />}{micEnabled?"Micro activé":"Micro coupé"}</button></div>
           {mediaError && <p role="status" className="rounded-lg bg-red-950/50 p-3 text-xs text-red-200">{mediaError}</p>}
           {selected.host_user_id===userId && !selected.opponent_user_id && <form onSubmit={inviteOpponent} className="flex gap-2"><input value={opponentId} onChange={e=>setOpponentId(e.target.value)} placeholder="ID du commerçant à inviter" className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black px-3 py-3 text-xs"/><button disabled={busy} className="rounded-xl bg-amber-300 px-3 text-xs font-black text-black disabled:opacity-50">Inviter</button></form>}
           <div className="grid grid-cols-2 gap-2">{[{id:selected.host_user_id,label:"Voter pour A"},{id:selected.opponent_user_id,label:"Voter pour B"}].map(side=><button key={side.label} disabled={!side.id||busy||side.id===userId} onClick={()=>side.id&&void vote(side.id)} className="rounded-xl bg-gradient-to-r from-amber-300 to-yellow-600 px-3 py-3 text-xs font-black text-black disabled:opacity-40">{side.label} · {side.id?voteCount(side.id):"—"}</button>)}</div>
