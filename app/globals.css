@@ -737,3 +737,31 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
  .emi-services-grid{gap:9px}
  .emi-service-card{min-height:118px;border-radius:16px}
 }
+
+/* EMi Market: compact emerald storefront inspired by the user's reference */
+.emi-shop-shell{margin:-4px -12px 22px;padding:16px 13px 14px;background:linear-gradient(180deg,#063a2a,#075039 58%,#073b2b);border-bottom:1px solid #d8bd5c66}
+.emi-shop-brandbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.emi-shop-menu,.emi-shop-notice{display:grid;place-items:center;width:37px;height:37px;border:1px solid #d8bd5c66;border-radius:11px;background:#ffffff08;color:#f0d56f}
+.emi-shop-brand{display:flex;align-items:center;gap:8px;flex:1;justify-content:center}
+.emi-shop-monogram{display:grid;place-items:center;width:33px;height:33px;border:1px solid #e0c55d;border-radius:9px;color:#f2d56f;font:22px Georgia,serif}
+.emi-shop-brand>span:last-child{display:grid;gap:2px}.emi-shop-brand strong{font:700 14px Georgia,serif;letter-spacing:.11em;color:#f2d56f}.emi-shop-brand small{font-size:9px;color:#d0dfd5}
+.emi-shop-notice{font-size:22px}
+.emi-shop-profile{display:flex;align-items:center;gap:11px;margin:22px 0 16px}
+.emi-shop-avatar{position:relative;display:grid;place-items:center;flex:0 0 60px;height:60px;border:2px solid #e4c75e;border-radius:50%;background:linear-gradient(145deg,#1d5941,#09291d);color:#f0d76c;font:700 19px Georgia,serif}
+.emi-shop-avatar span{position:absolute;right:-2px;top:0;font-size:14px}
+.emi-shop-profile-copy{flex:1;min-width:0}.emi-shop-profile-copy h1{margin:0;font-size:20px;line-height:1.2;font-weight:750;color:#fff}.emi-shop-profile-copy p{margin:5px 0;font-size:10px;line-height:1.4;color:#d0e0d7}.emi-shop-trust{font-size:9px;color:#e4cb76}
+.emi-shop-sell{display:flex;align-items:center;gap:3px;border:1px solid #dfc35c;border-radius:999px;padding:8px;background:#e5c858;color:#10251b;font-size:11px;font-weight:800;white-space:nowrap}
+.emi-shop-search{display:flex;align-items:center;gap:9px;height:45px;padding:0 11px;border:2px solid #d9c66c;border-radius:13px;background:#fff;color:#53665c}
+.emi-shop-search input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:#12251d;font-size:13px}.emi-shop-search input::placeholder{color:#8a968f}
+.emi-shop-search>span{display:grid;place-items:center;width:27px;height:27px;border-radius:8px;background:#0b4832;color:#f2d86b;font-size:19px}
+.emi-shop-categories{display:flex;gap:7px;margin-top:12px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.emi-shop-categories::-webkit-scrollbar{display:none}
+.emi-shop-categories button{flex:none;border:1px solid #b9c8bd66;border-radius:999px;padding:7px 12px;background:#ffffff08;color:#e7eee8;font-size:11px}
+.emi-shop-categories button.selected,.emi-shop-categories button:focus{background:#e4c653;border-color:#e4c653;color:#183326;font-weight:800}
+.emi-shop-spaces{margin:-5px 0 20px;padding:14px;border:1px solid #c7a84b55;border-radius:16px;background:#0b241a;color:#f2e7bd}.emi-shop-space-link{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:11px;border:1px solid #e3c55a28;border-radius:10px;color:#f2e7bd;font-size:12px}
+.emi-shop-list-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:20px 0 12px}.emi-shop-list-heading p{margin:0 0 4px;font-size:9px;letter-spacing:.2em;color:#b89a45;font-weight:800}.emi-shop-list-heading h2{margin:0;font-size:21px;font-weight:800;color:#f7f5ed}.emi-shop-list-heading>span{font-size:10px;color:#a9b7ac;border:1px solid #294538;border-radius:999px;padding:6px 9px}
+.emi-shop-products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.emi-shop-product{min-width:0;overflow:hidden;border:1px solid #d4d9d4;border-radius:12px;background:#fdfdfb;color:#17251d;box-shadow:0 5px 16px #0002}.emi-shop-product>a{display:block}
+.emi-shop-product-image{display:block;width:100%;height:clamp(140px,46vw,230px);object-fit:cover;background:#e6e9e5}
+.emi-shop-product-copy{padding:8px 9px 10px}.emi-shop-product-copy>a{color:#1d2922;font-size:12px;font-weight:650;line-height:1.35}.emi-shop-price{margin:5px 0 0;color:#075237;font-size:15px;font-weight:850}.emi-shop-product-copy>p:not(.emi-shop-price){color:#65746a;font-size:10px;line-height:1.4}
+.emi-shop-product-copy .flex{margin-top:8px!important}.emi-shop-product-copy a[href*="wa.me"]{border-radius:8px;padding:8px 4px;font-size:10px}.emi-shop-product-copy a[href^="/annonce/"]:last-child{border-color:#cbd4cd;border-radius:8px;padding:8px 4px}
+@media(min-width:640px){.emi-shop-shell{margin:0 0 25px;padding:22px;border:1px solid #d5bc5b55;border-radius:22px}.emi-shop-profile-copy h1{font-size:26px}.emi-shop-products{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.emi-shop-product-image{height:240px}.emi-shop-product-copy{padding:14px}.emi-shop-product-copy>a{font-size:15px}.emi-shop-price{font-size:19px}}
+@media(max-width:380px){.emi-shop-avatar{flex-basis:50px;height:50px}.emi-shop-profile-copy h1{font-size:17px}.emi-shop-sell{padding:7px}.emi-shop-brand strong{font-size:12px}}
