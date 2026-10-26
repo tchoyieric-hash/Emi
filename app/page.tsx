@@ -13,6 +13,48 @@ type Profile = { id: string; email?: string; username?: string | null; display_n
 type Story = { id:string; user_id:string; media_url:string; media_type:"image"|"video"; caption:string; music_url?:string|null; music_title?:string|null; visibility:string; created_at:string; expires_at:string; profiles?:{username?:string|null;display_name?:string|null;avatar_url?:string|null}|null };
 const supabase = createSupabaseBrowserClient();
 
+type OfflinePostDraft = {
+  id: string; userId: string; caption: string; destination: "post" | "reel";
+  mediaFiles: File[]; musicFile: File | null; musicTitle: string;
+  selectedMusic: {id:string;title:string;artist:string;audio_url:string;cover_url:string|null;duration_seconds:number|null;genre:string|null}|null;
+  musicStart: number; musicEnd: number; createdAt: string;
+};
+
+const OFFLINE_DRAFT_DB = "emi-offline-drafts";
+const OFFLINE_DRAFT_STORE = "pending-posts";
+function openOfflineDraftDb(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(OFFLINE_DRAFT_DB, 1);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(OFFLINE_DRAFT_STORE)) db.createObjectStore(OFFLINE_DRAFT_STORE, { keyPath: "id" });
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("Stockage local indisponible."));
+  });
+}
+async function saveOfflinePostDraft(draft: OfflinePostDraft): Promise<void> {
+  const db = await openOfflineDraftDb();
+  await new Promise<void>((resolve, reject) => {
+    const tx = db.transaction(OFFLINE_DRAFT_STORE, "readwrite");
+    tx.objectStore(OFFLINE_DRAFT_STORE).put(draft);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error || new Error("Impossible de conserver le brouillon sur le téléphone."));
+  });
+  db.close();
+}
+function describeUnknownError(err: unknown): string {
+  if (err instanceof Error && err.message) return err.message;
+  if (err && typeof err === "object") {
+    const item = err as {message?:unknown;details?:unknown;hint?:unknown;code?:unknown;error_description?:unknown};
+    const parts = [item.message, item.code ? "Code " + String(item.code) : "", item.details, item.hint, item.error_description]
+      .filter(value => typeof value === "string" && value.trim()).map(String);
+    if (parts.length) return parts.join(" — ");
+    try { return JSON.stringify(err); } catch { return "Erreur inconnue"; }
+  }
+  return typeof err === "string" ? err : "Erreur inconnue";
+}
+
 export default function HomePage() {
   const [active, setActive] = useState("Accueil");
   const [settingsSection, setSettingsSection] = useState<string | null>(null);
@@ -725,9 +767,23 @@ export default function HomePage() {
       if (error) throw error;
       setCaption(""); setPublishDestination("post"); setFile(null); setSelectedFiles([]); setMusicFile(null); setSelectedMusic(null); setMusicTitle(""); setCatalogOpen(false); setCreatorFilter("original"); setCreatorRatio("4:5"); setCreatorBrightness(100); setCreatorContrast(100); setCreatorTextOnPhoto(false); setCreatorOverlayText(""); setCreatorEditOpen(false); setMusicStart(0); setMusicEnd(30); setMusicDuration(0); setComposerOpen(false); setMessage("Publication envoyée."); await loadFeed();
     } catch (err) {
-      const detail = err instanceof Error ? err.message : String(err || "Erreur inconnue");
-      const networkFailure = /failed to fetch|networkerror|load failed|fetch failed/i.test(detail);
-      setMessage(networkFailure ? `Connexion interrompue pendant ${publishStage}. Vérifie Internet puis réessaie. Si cela persiste, le stockage Supabase doit être contrôlé.` : `${publishStage} : ${detail}`);
+      const detail = describeUnknownError(err);
+      const networkFailure = !navigator.onLine || /failed to fetch|networkerror|load failed|fetch failed|network request failed|timeout/i.test(detail);
+      if (networkFailure && user) {
+        try {
+          const draftFiles = selectedFiles.length ? selectedFiles : file ? [file] : [];
+          await saveOfflinePostDraft({
+            id: crypto.randomUUID(), userId: user.id, caption: caption.trim(), destination: publishDestination,
+            mediaFiles: draftFiles, musicFile, musicTitle: musicTitle.trim(),
+            selectedMusic, musicStart, musicEnd, createdAt: new Date().toISOString()
+          });
+          setMessage("Connexion interrompue pendant " + publishStage + ". Ton brouillon et ses médias sont conservés sur ce téléphone. Reconnecte-toi puis ouvre tes brouillons pour publier.");
+        } catch (storageError) {
+          setMessage("Connexion interrompue pendant " + publishStage + " : " + detail + ". Et le brouillon n’a pas pu être sauvegardé localement : " + describeUnknownError(storageError) + ". Ne ferme pas cet écran et réessaie.");
+        }
+      } else {
+        setMessage(publishStage + " : " + detail);
+      }
     }
     finally { setBusy(false); }
   }
