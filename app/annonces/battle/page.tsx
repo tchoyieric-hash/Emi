@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { createBrowserClient } from "@supabase/ssr";
-import { ArrowLeft, Trophy, Swords, Radio, MessageCircle, Gift, ShoppingBag, Crown, RefreshCw } from "lucide-react";
+import { ArrowLeft, Trophy, Swords, Radio, MessageCircle, Gift, ShoppingBag, Crown, RefreshCw, Camera, CameraOff, Mic, MicOff, Users, Sparkles, Timer } from "lucide-react";
 
 type Battle = { id: string; title: string; status: "scheduled" | "live" | "finished" | "cancelled"; host_user_id: string; opponent_user_id: string | null; winner_user_id: string | null; category: string | null; created_at: string; };
 type Vote = { id: string; battle_id: string; voter_user_id: string; voted_for_user_id: string; };
@@ -29,6 +29,12 @@ export default function CommerceBattlePage() {
   const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [opponentId, setOpponentId] = useState("");
+  const [cameraEnabled, setCameraEnabled] = useState(false);
+  const [micEnabled, setMicEnabled] = useState(true);
+  const [mediaError, setMediaError] = useState("");
+  const localVideoRef = useRef<HTMLVideoElement | null>(null);
+  const localStreamRef = useRef<MediaStream | null>(null);
 
   const supabase = useCallback(() => {
     if (!supabaseUrl || !supabaseKey) return null;
@@ -62,7 +68,23 @@ export default function CommerceBattlePage() {
     setProducts((p.data ?? []) as Product[]);
   }, [supabase]);
 
-  useEffect(() => { setClientReady(true); void loadBattles(); }, [loadBattles]);
+  useEffect(() => { setClientReady(true); void loadBattles(); return () => { localStreamRef.current?.getTracks().forEach(track => track.stop()); }; }, [loadBattles]);
+
+  async function toggleCamera() {
+    setMediaError("");
+    if (localStreamRef.current) { localStreamRef.current.getTracks().forEach(track => track.stop()); localStreamRef.current = null; setCameraEnabled(false); setMicEnabled(false); if (localVideoRef.current) localVideoRef.current.srcObject = null; return; }
+    try { const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true }); localStreamRef.current = stream; if (localVideoRef.current) localVideoRef.current.srcObject = stream; setCameraEnabled(true); setMicEnabled(true); }
+    catch { setMediaError("Caméra ou micro indisponible. Autorise leur accès dans les paramètres du navigateur."); }
+  }
+
+  async function inviteOpponent(event: FormEvent) {
+    event.preventDefault(); const db = supabase(); if (!db || !selected) return;
+    if (selected.host_user_id !== userId) return setNotice("Seul l’organisateur peut inviter un commerçant.");
+    const target = opponentId.trim(); if (!target) return setNotice("Saisis l’identifiant du compte EMi à inviter.");
+    if (target === selected.host_user_id) return setNotice("Tu ne peux pas t’inviter toi-même.");
+    setBusy(true); const { error } = await db.from("commerce_battles").update({ opponent_user_id: target }).eq("id", selected.id); setBusy(false);
+    if (error) setNotice("Invitation non enregistrée : " + error.message); else { setNotice("Adversaire associé à la battle. L’acceptation d’invitation reste à connecter."); setOpponentId(""); await loadBattles(); }
+  }
   useEffect(() => {
     if (!selected) { setVotes([]); setComments([]); setProducts([]); return; }
     void loadBattleDetails(selected);
@@ -154,7 +176,7 @@ export default function CommerceBattlePage() {
           <label className="block text-sm text-zinc-300">Nom du duel<input value={title} onChange={e=>setTitle(e.target.value)} maxLength={100} className="mt-2 w-full rounded-xl border border-white/10 bg-black px-3 py-3 text-white outline-none focus:border-amber-300"/></label>
           <label className="block text-sm text-zinc-300">Catégorie<select value={category} onChange={e=>setCategory(e.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-black px-3 py-3 text-white"><option>Mode & accessoires</option><option>Restauration</option><option>Électronique</option><option>Immobilier</option><option>Véhicules</option><option>Services</option><option>Autre</option></select></label>
           <button disabled={busy || !clientReady} className="w-full rounded-xl bg-gradient-to-r from-amber-300 to-yellow-600 px-4 py-3 font-bold text-black disabled:opacity-50">{busy ? "Patiente…" : "Créer ma battle"}</button>
-          <p className="text-xs leading-5 text-zinc-500">Réservé aux comptes connectés. Le démarrage change le statut de la battle ; la diffusion caméra nécessite la configuration du serveur de streaming.</p>
+          <p className="text-xs leading-5 text-zinc-500">Réservé aux comptes connectés. Crée le duel, associe un adversaire puis teste caméra et micro avant le direct.</p>
         </form>
 
         <section className="rounded-3xl border border-white/10 bg-white/[.035] p-5">
@@ -165,13 +187,19 @@ export default function CommerceBattlePage() {
       </section>
 
       {selected && <section className="grid gap-5 lg:grid-cols-[1.15fr_.85fr]">
-        <div className="space-y-5 rounded-3xl border border-amber-300/20 bg-gradient-to-br from-[#17130a] to-black p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-3"><div><p className="text-xs uppercase tracking-[.2em] text-amber-200">Battle sélectionnée</p><h2 className="mt-1 text-2xl font-black">{selected.title}</h2></div>{selected.status==="live" && <span className="animate-pulse rounded-full bg-red-500 px-3 py-1 text-xs font-bold">● LIVE</span>}</div>
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-            {[{id:selected.host_user_id,label:"Commerçant A"},{id:selected.opponent_user_id,label:"Commerçant B"}].map((side,i)=><div key={side.label} className="rounded-2xl border border-amber-300/20 bg-black/50 p-4 text-center"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-amber-300/40 bg-amber-300/10 text-2xl">{i===0?"♛":"⚡"}</div><p className="mt-2 text-sm font-bold">{side.label}</p><p className="mt-1 text-2xl font-black text-amber-300">{side.id ? voteCount(side.id) : "—"}</p><p className="text-[10px] text-zinc-500">votes</p>{side.id && side.id!==userId && <button disabled={busy} onClick={()=>void vote(side.id as string)} className="mt-3 w-full rounded-xl bg-amber-300 px-3 py-2 text-xs font-bold text-black disabled:opacity-40">Voter</button>}{side.id && side.id!==userId && <div className="mt-2 flex gap-1">{(["applause","spark","trophy"] as const).map(g=><button key={g} onClick={()=>void sendDemoGift(side.id as string,g)} title={g} className="flex-1 rounded-lg border border-amber-300/20 py-2 text-xs hover:bg-amber-300/10">{g==="applause"?"👏":g==="spark"?"✨":"🏆"}</button>)}</div>}</div>).flatMap((el,i)=>i===0?[el,<span key="vs" className="font-black text-amber-300">VS</span>]:[el])}
+        <div className="space-y-5 rounded-3xl border border-amber-300/20 bg-gradient-to-br from-[#17130a] to-black p-4 sm:p-6">
+          <div className="flex items-center justify-between gap-3"><div><p className="text-xs uppercase tracking-[.2em] text-amber-200">EMi LIVE ARENA · {selected.category || "Commerce"}</p><h2 className="mt-1 text-2xl font-black">{selected.title}</h2></div>{selected.status==="live" && <span className="animate-pulse rounded-full bg-red-500 px-3 py-1 text-xs font-bold">● LIVE</span>}</div>
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            <div className="relative min-h-[190px] overflow-hidden rounded-2xl border border-amber-300/40 bg-[radial-gradient(ellipse_at_top,rgba(244,205,84,.2),transparent_60%),#071a14] sm:min-h-[280px]">{cameraEnabled && selected.host_user_id===userId ? <video ref={localVideoRef} autoPlay playsInline muted className="absolute inset-0 h-full w-full object-cover"/> : <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center"><span className="text-4xl">♛</span><strong className="mt-3 text-sm sm:text-base">Commerçant A</strong><span className="mt-1 text-xs text-zinc-400">{cameraEnabled ? "Aperçu caméra local" : "Prêt à rejoindre l’arène"}</span></div>}<span className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-bold text-amber-200">HÔTE · {voteCount(selected.host_user_id)} votes</span></div>
+            <div className="relative flex min-h-[190px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,.08),transparent_60%),#101010] p-3 text-center sm:min-h-[280px]"><span className="text-4xl">⚡</span><strong className="mt-3 text-sm sm:text-base">Commerçant B</strong><span className="mt-1 text-xs text-zinc-400">{selected.opponent_user_id ? "Adversaire associé" : "En attente d’un adversaire"}</span><span className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-1 text-[10px] font-bold text-amber-200">{voteCount(selected.opponent_user_id || "")} votes</span></div>
           </div>
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-300/20 bg-black/40 p-3"><span className="text-xs text-zinc-300"><Timer size={14} className="mr-1 inline text-amber-300"/> Duel communautaire · votes en direct</span><span className="text-xs text-amber-200"><Users size={14} className="mr-1 inline"/>{votes.length} votes enregistrés</span></div>
+          <div className="grid grid-cols-2 gap-2"><button onClick={()=>void toggleCamera()} className="rounded-xl border border-amber-300/30 px-3 py-3 text-sm font-bold text-amber-100">{cameraEnabled?<CameraOff size={16} className="mr-2 inline"/>:<Camera size={16} className="mr-2 inline"/>}{cameraEnabled?"Couper caméra":"Tester caméra + micro"}</button><button onClick={()=>{if(!localStreamRef.current)return setMediaError("Active d’abord la caméra pour contrôler le micro.");const track=localStreamRef.current.getAudioTracks()[0];if(track){track.enabled=!track.enabled;setMicEnabled(track.enabled);}}} className="rounded-xl border border-white/15 px-3 py-3 text-sm font-bold">{micEnabled?<Mic size={16} className="mr-2 inline"/>:<MicOff size={16} className="mr-2 inline"}/>{micEnabled?"Micro activé":"Micro coupé"}</button></div>
+          {mediaError && <p role="status" className="rounded-lg bg-red-950/50 p-3 text-xs text-red-200">{mediaError}</p>}
+          {selected.host_user_id===userId && !selected.opponent_user_id && <form onSubmit={inviteOpponent} className="flex gap-2"><input value={opponentId} onChange={e=>setOpponentId(e.target.value)} placeholder="ID du commerçant à inviter" className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black px-3 py-3 text-xs"/><button disabled={busy} className="rounded-xl bg-amber-300 px-3 text-xs font-black text-black disabled:opacity-50">Inviter</button></form>}
+          <div className="grid grid-cols-2 gap-2">{[{id:selected.host_user_id,label:"Voter pour A"},{id:selected.opponent_user_id,label:"Voter pour B"}].map(side=><button key={side.label} disabled={!side.id||busy||side.id===userId} onClick={()=>side.id&&void vote(side.id)} className="rounded-xl bg-gradient-to-r from-amber-300 to-yellow-600 px-3 py-3 text-xs font-black text-black disabled:opacity-40">{side.label} · {side.id?voteCount(side.id):"—"}</button>)}</div>
           {selected.host_user_id===userId && selected.status==="scheduled" && <button disabled={busy} onClick={()=>void startBattle()} className="w-full rounded-xl bg-gradient-to-r from-amber-300 to-yellow-600 px-4 py-3 font-bold text-black disabled:opacity-50"><Radio className="mr-2 inline" size={17}/> Démarrer la battle</button>}
-          <div className="rounded-2xl border border-dashed border-amber-300/20 bg-black/40 p-4"><p className="font-semibold text-amber-100">🎥 Diffusion vidéo</p><p className="mt-1 text-sm leading-5 text-zinc-400">Le système de battle, les votes et les commentaires sont connectés à Supabase. Pour diffuser caméra + micro comme TikTok LIVE, il faut encore configurer les clés serveur LiveKit ; aucune vidéo fictive n’est affichée comme un vrai direct.</p></div>
+          <div className="rounded-2xl border border-dashed border-amber-300/20 bg-black/40 p-4"><p className="font-semibold text-amber-100"><Sparkles size={16} className="mr-2 inline"/> Prochaine étape : vrai duplex vidéo</p><p className="mt-1 text-sm leading-5 text-zinc-400">L’aperçu caméra et le contrôle micro sont disponibles sur cet appareil. Pour transmettre les deux caméras aux spectateurs, il faut encore configurer un service WebRTC/LiveKit ; cet écran ne prétend pas diffuser un flux réseau réel.</p></div>
         </div>
         <div className="space-y-5">
           <section className="rounded-3xl border border-white/10 bg-white/[.035] p-5"><h3 className="mb-3 flex items-center gap-2 font-bold"><MessageCircle className="text-amber-300" size={18}/> Chat en direct</h3><div className="max-h-64 space-y-2 overflow-y-auto">{comments.map(c=><p key={c.id} className="rounded-xl bg-black/40 p-3 text-sm"><span className="mr-2 text-xs text-amber-200">{c.user_id.slice(0,8)}</span>{c.body}</p>)}{comments.length===0&&<p className="text-sm text-zinc-500">Les commentaires apparaîtront ici.</p>}</div><form onSubmit={sendComment} className="mt-3 flex gap-2"><input value={commentText} onChange={e=>setCommentText(e.target.value)} maxLength={500} placeholder="Écrire un commentaire…" className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black px-3 py-3 text-sm outline-none focus:border-amber-300"/><button className="rounded-xl bg-amber-300 px-4 font-bold text-black">Envoyer</button></form></section>
