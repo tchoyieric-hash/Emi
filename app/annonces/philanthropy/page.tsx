@@ -16,12 +16,12 @@ export default function PhilanthropyPage() {
  const [search,setSearch]=useState("");
  const [notice,setNotice]=useState("");
  const filtered=useMemo(()=>initiatives.filter(x=>(x.tag+" "+x.title+" "+x.meta).toLowerCase().includes(search.toLowerCase())),[search]);
- return <main id="top" className="min-h-screen bg-white pb-24 text-[#171717]">
-  <header className="sticky top-0 z-30 bg-white/95 px-4 pb-3 pt-3 backdrop-blur">
+ return <main id="top" className="emi-foundation min-h-screen bg-[#031b14] pb-24 text-white">
+  <header className="sticky top-0 z-30 border-b border-amber-200/15 bg-[#05271d]/95 px-4 pb-3 pt-3 text-white backdrop-blur">
    <div className="mx-auto flex max-w-5xl items-center gap-3">
-    <Link href="/annonces" aria-label="Retour aux espaces EMi" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-stone-300 text-stone-800"><ArrowLeft size={21}/></Link>
-    <label className="flex h-14 min-w-0 flex-1 items-center gap-3 rounded-full border border-stone-300 bg-white px-4 shadow-sm">
-     <Search size={25}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher" aria-label="Rechercher une initiative" className="min-w-0 flex-1 bg-transparent text-lg outline-none placeholder:text-stone-500"/><Camera size={24}/>
+    <Link href="/annonces" aria-label="Retour aux espaces EMi" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-amber-200/35 text-amber-200"><ArrowLeft size={21}/></Link>
+    <label className="flex h-14 min-w-0 flex-1 items-center gap-3 rounded-2xl border border-amber-200/40 bg-[#071f18] px-4 text-amber-100 shadow-lg">
+     <Search size={25}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher" aria-label="Rechercher une initiative" className="min-w-0 flex-1 bg-transparent text-lg text-white outline-none placeholder:text-slate-400"/><Camera size={24}/>
     </label>
    </div>
   </header>
@@ -35,25 +35,25 @@ export default function PhilanthropyPage() {
     <a href="#idees" className="mt-4 inline-flex rounded-full bg-[#e8c94f] px-5 py-3 font-bold text-emerald-950">Découvrir les initiatives</a>
    </div>
   </section>
-  <div className="flex justify-center gap-3 py-4" aria-hidden="true">{[0,1,2,3,4,5,6].map((n)=><span key={n} className={`h-3.5 w-3.5 rounded-full ${n===0?"bg-black":"bg-stone-400"}`}/>)}</div>
+  <div className="flex justify-center gap-3 py-4" aria-hidden="true">{[0,1,2,3,4,5,6].map((n)=><span key={n} className={`h-2.5 w-2.5 rounded-full ${n===0?"bg-amber-300":"bg-white/20"}`}/>)}</div>
   <section id="idees" className="px-4 pt-1">
-   <p className="text-sm sm:text-base">Explorer les initiatives à la une</p>
-   <div className="mb-4 mt-1 flex items-end justify-between gap-2"><h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">Des idées qui pourraient vous inspirer</h2><span className="shrink-0 rounded-full bg-stone-100 px-3 py-2 text-xs">{filtered.length} idées</span></div>
+   <p className="text-sm font-semibold uppercase tracking-[.18em] text-amber-200">Explorer les initiatives à la une</p>
+   <div className="mb-4 mt-1 flex items-end justify-between gap-2"><h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">Des idées qui pourraient vous inspirer</h2><span className="shrink-0 rounded-full border border-amber-200/25 bg-white/5 px-3 py-2 text-xs text-amber-100">{filtered.length} idées</span></div>
    <div className="columns-2 gap-3 sm:columns-3 lg:columns-4">
-    {filtered.map(item=><article key={item.title} className="mb-4 inline-block w-full break-inside-avoid overflow-hidden rounded-2xl">
-      <img src={item.image} alt={item.title} loading="lazy" className="w-full rounded-2xl bg-stone-100 object-cover"/>
-      <div className="px-1 pt-2"><h3 className="text-base font-semibold leading-snug sm:text-lg">{item.title}</h3><p className="mt-1 text-sm">{item.source} <span className="ml-1 inline-block rounded-full bg-emerald-700 px-1 text-xs text-white">✓</span></p><p className="text-sm text-stone-500">{item.meta}</p></div>
+    {filtered.map(item=><article key={item.title} className="mb-4 inline-block w-full break-inside-avoid overflow-hidden rounded-2xl border border-amber-200/25 bg-gradient-to-b from-[#0b3427] to-[#041a13] p-2 shadow-xl shadow-black/20">
+      <img src={item.image} alt={item.title} loading="lazy" className="w-full rounded-xl border border-white/10 object-cover"/>
+      <div className="px-1 pt-2"><h3 className="text-base font-semibold leading-snug sm:text-lg">{item.title}</h3><p className="mt-1 text-sm">{item.source} <span className="ml-1 inline-block rounded-full bg-emerald-700 px-1 text-xs text-white">✓</span></p><p className="text-sm text-slate-400">{item.meta}</p></div>
     </article>)}
    </div>
-   {filtered.length===0&&<p className="py-8 text-stone-500">Aucune initiative ne correspond à cette recherche.</p>}
+   {filtered.length===0&&<p className="py-8 text-slate-400">Aucune initiative ne correspond à cette recherche.</p>}
   </section>
   <section id="soutien" className="mx-4 mt-6 rounded-3xl bg-emerald-950 p-5 text-white sm:p-7">
    <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">EMi Fondation</p><h2 className="mt-2 text-2xl font-extrabold">Un geste qui compte</h2><p className="mt-2 text-sm leading-6 text-white/80">Les initiatives affichées sont des exemples d’inspiration, pas des collectes validées. Les bénéficiaires et les projets doivent être vérifiés avant toute contribution.</p>
    <button onClick={()=>setNotice("Les soutiens en ligne ne sont pas encore activés. Aucun paiement n’a été effectué.")} className="mt-4 rounded-full bg-[#e8c94f] px-5 py-3 font-bold text-emerald-950">Soutenir la communauté</button>
    {notice&&<p role="status" className="mt-3 text-sm text-amber-100">{notice}</p>}
   </section>
-  <nav aria-label="Navigation Fondation" className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white/95 px-3 py-2 backdrop-blur"><div className="mx-auto flex max-w-md items-center justify-around">
-   <a href="#top" className="flex flex-col items-center gap-1 text-xs"><Home size={25}/>Accueil</a><a href="#idees" className="flex flex-col items-center gap-1 text-xs"><Search size={25}/>Explorer</a><a href="#soutien" onClick={e=>{e.preventDefault();setNotice("Les soutiens en ligne ne sont pas encore activés. Aucun paiement n’a été effectué."); document.getElementById("soutien")?.scrollIntoView({behavior:"smooth"});}} className="flex flex-col items-center gap-1 text-xs"><Heart size={25}/>Soutenir</a><Link href="/annonces" className="flex flex-col items-center gap-1 text-xs"><LayoutGrid size={25}/>Espaces</Link>
+  <nav aria-label="Navigation Fondation" className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-200/20 bg-[#041b14]/95 px-3 py-2 text-amber-100 backdrop-blur"><div className="mx-auto flex max-w-md items-center justify-around">
+   <a href="#top" className="flex flex-col items-center gap-1 text-xs text-slate-300"><Home size={25}/>Accueil</a><a href="#idees" className="flex flex-col items-center gap-1 text-xs text-slate-300"><Search size={25}/>Explorer</a><a href="#soutien" onClick={e=>{e.preventDefault();setNotice("Les soutiens en ligne ne sont pas encore activés. Aucun paiement n’a été effectué."); document.getElementById("soutien")?.scrollIntoView({behavior:"smooth"});}} className="flex flex-col items-center gap-1 text-xs"><Heart size={25}/>Soutenir</a><Link href="/annonces" className="flex flex-col items-center gap-1 text-xs"><LayoutGrid size={25}/>Espaces</Link>
   </div></nav>
  </main>;
 }
