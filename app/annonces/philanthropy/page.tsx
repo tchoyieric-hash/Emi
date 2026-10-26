@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Camera, Heart, Home, Compass, HandHeart, LayoutGrid, ArrowLeft } from "lucide-react";
+import { Search, Camera, Heart, Home, LayoutGrid, ArrowLeft } from "lucide-react";
 
 const initiatives = [
  { tag:"Éducation", title:"Offrir aux enfants un avenir meilleur", source:"EMi Fondation", meta:"Éducation · Entraide", image:"https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=85" },
@@ -47,13 +47,13 @@ export default function PhilanthropyPage() {
    </div>
    {filtered.length===0&&<p className="py-8 text-stone-500">Aucune initiative ne correspond à cette recherche.</p>}
   </section>
-  <section className="mx-4 mt-6 rounded-3xl bg-emerald-950 p-5 text-white sm:p-7">
+  <section id="soutien" className="mx-4 mt-6 rounded-3xl bg-emerald-950 p-5 text-white sm:p-7">
    <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">EMi Fondation</p><h2 className="mt-2 text-2xl font-extrabold">Un geste qui compte</h2><p className="mt-2 text-sm leading-6 text-white/80">Les initiatives affichées sont des exemples d’inspiration, pas des collectes validées. Les bénéficiaires et les projets doivent être vérifiés avant toute contribution.</p>
    <button onClick={()=>setNotice("Les soutiens en ligne ne sont pas encore activés. Aucun paiement n’a été effectué.")} className="mt-4 rounded-full bg-[#e8c94f] px-5 py-3 font-bold text-emerald-950">Soutenir la communauté</button>
    {notice&&<p role="status" className="mt-3 text-sm text-amber-100">{notice}</p>}
   </section>
   <nav aria-label="Navigation Fondation" className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white/95 px-3 py-2 backdrop-blur"><div className="mx-auto flex max-w-md items-center justify-around">
-   <a href="#top" className="flex flex-col items-center gap-1 text-xs"><Home size={25}/>Accueil</a><a href="#idees" className="flex flex-col items-center gap-1 text-xs"><Search size={25}/>Explorer</a><a href="#soutenir" onClick={e=>{e.preventDefault();setNotice("Les soutiens en ligne ne sont pas encore activés. Aucun paiement n’a été effectué.");}} className="flex flex-col items-center gap-1 text-xs"><Heart size={25}/>Soutenir</a><Link href="/annonces" className="flex flex-col items-center gap-1 text-xs"><LayoutGrid size={25}/>Espaces</Link>
+   <a href="#top" className="flex flex-col items-center gap-1 text-xs"><Home size={25}/>Accueil</a><a href="#idees" className="flex flex-col items-center gap-1 text-xs"><Search size={25}/>Explorer</a><a href="#soutien" onClick={e=>{e.preventDefault();setNotice("Les soutiens en ligne ne sont pas encore activés. Aucun paiement n’a été effectué."); document.getElementById("soutien")?.scrollIntoView({behavior:"smooth"});}} className="flex flex-col items-center gap-1 text-xs"><Heart size={25}/>Soutenir</a><Link href="/annonces" className="flex flex-col items-center gap-1 text-xs"><LayoutGrid size={25}/>Espaces</Link>
   </div></nav>
  </main>;
 }
