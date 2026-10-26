@@ -71,7 +71,6 @@ export default function AnnoncesPage() {
   const annoncesFiltrees = annonces.filter(a => `${a.titre} ${a.description}`.toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr")));
 
   return <main className="min-h-screen w-full overflow-x-hidden bg-[#09090d] text-white">
-der>
     <section className="mx-auto w-full min-w-0 max-w-6xl px-3 py-4 sm:px-4 sm:py-9">
       <section className="emi-shop-shell">
         <div className="emi-shop-brandbar"><button className="emi-shop-menu" onClick={()=>setSpacesOpen(!spacesOpen)} aria-label="Explorer les espaces"><Menu size={21}/></button><div className="emi-shop-brand"><span className="emi-shop-monogram">M</span><span><strong>EMi MARKET</strong><small>Le marché de la communauté</small></span></div><button className="emi-shop-notice" onClick={()=>setNotice("Tu es à jour.")} aria-label="Notifications">♧</button></div>
