@@ -56,7 +56,7 @@ export default function TrocChainPage() {
 
   const visibles = offres.filter(o => !query.trim() || [o.bien_offert,o.bien_recherche,o.description].some(v => v.toLocaleLowerCase("fr").includes(query.toLocaleLowerCase("fr"))));
   const cartes = [
-    {title:"Téléphones & technologie",tag:"TECHNOLOGIE",image:"https://images.unsplash.com/photo-151170 like?auto=format&fit=crop&w=1000&q=85",term:"téléphone"},
+    {title:"Téléphones & technologie",tag:"TECHNOLOGIE",image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1000&q=85",term:"téléphone"},
     {title:"Mode & accessoires",tag:"STYLE",image:"https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1000&q=85",term:"vêtement"},
     {title:"Maison & mobilier",tag:"MAISON",image:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=85",term:"meuble"},
     {title:"Objets du quotidien",tag:"SECONDE VIE",image:"https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=1000&q=85",term:"objet"},
