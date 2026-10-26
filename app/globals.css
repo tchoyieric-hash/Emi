@@ -772,3 +772,17 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
 .emi-shop-product-gallery:has(img:only-of-type) .emi-shop-product-image{height:clamp(140px,46vw,230px)}
 .emi-shop-photo-count{position:absolute;right:7px;top:7px;padding:4px 7px;border:1px solid #ffffff77;border-radius:999px;background:#071b13d9;color:white;font-size:10px;font-weight:700}
 @media(min-width:640px){.emi-shop-product-gallery .emi-shop-product-image{height:150px}}
+
+/* Shared premium storefront visual language for EMi service spaces */
+.emi-space-page{background:linear-gradient(180deg,#06291e 0,#061b14 360px,#06110d 100%)!important;min-height:100vh}
+.emi-space-page a[href="/annonces"]{display:inline-flex;align-items:center;gap:8px;border:1px solid #d7bf5b55;border-radius:999px;padding:9px 14px;background:#ffffff08;color:#e8d57e}
+.emi-space-page header{border-color:#d7bf5b35!important}
+.emi-space-page section{scroll-margin-top:20px}
+.emi-space-page h1{letter-spacing:-.025em}
+.emi-space-page article{border-color:#d7bf5b26!important;background:linear-gradient(145deg,#ffffff0b,#ffffff03)!important}
+.emi-space-page input,.emi-space-page textarea,.emi-space-page select{border-color:#d7bf5b45!important;background:#03170f!important;color:#f8f7ed!important}
+.emi-space-page input:focus,.emi-space-page textarea:focus,.emi-space-page select:focus{outline:2px solid #d9c45e55;outline-offset:1px}
+.emi-space-page button{transition:transform .16s ease,filter .16s ease}
+.emi-space-page button:active{transform:scale(.98)}
+.emi-space-page button:not(:disabled){cursor:pointer}
+@media(max-width:480px){.emi-space-page{padding-left:12px!important;padding-right:12px!important}.emi-space-page h1{font-size:clamp(1.45rem,6vw,2rem);line-height:1.15}.emi-space-page section{border-radius:20px}.emi-space-page article{border-radius:16px}}
