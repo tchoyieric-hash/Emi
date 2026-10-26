@@ -158,7 +158,7 @@ export default function AnnoncesPage() {
       </form>}
       <div id="annonces-list" className="emi-shop-list-heading"><div><p>À DÉCOUVRIR</p><h2>Annonces de la communauté</h2><span style={{display:"block",fontSize:12,color:"#b8cfc3",marginTop:5}}>Chaque carte affiche l’espace d’origine de l’offre.</span></div><span>{annoncesFiltrees.length+communityFiltered.length} offre(s)</span></div>
       {communityFiltered.length>0&&<div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,250px),1fr))",gap:12,margin:"12px 0 18px"}}>
-        {communityFiltered.map(item=><article key={item.origin+item.id} style={{minWidth:0,overflow:"hidden",border:"1px solid rgba(231,205,101,.65)",borderRadius:16,background:"linear-gradient(160deg,#073b2b,#021e17)",color:"#fff"}}>
+        {[...communityFiltered].sort((a,b)=>new Date(b.created_at||0).getTime()-new Date(a.created_at||0).getTime()).map(item=><article key={item.origin+item.id} style={{minWidth:0,overflow:"hidden",border:"1px solid rgba(231,205,101,.65)",borderRadius:16,background:"linear-gradient(160deg,#073b2b,#021e17)",color:"#fff"}}>
           <Link href={item.href} style={{position:"relative",display:"block",height:150,overflow:"hidden",color:"white",textDecoration:"none"}}>
             <img src={item.image} alt="" loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
             <span style={{position:"absolute",top:10,left:10,background:item.badgeColor,color:item.badge==="ELITE HOSPITALITY"?"#173629":"white",padding:"7px 10px",borderRadius:999,fontSize:10,fontWeight:900,boxShadow:"0 2px 10px #0005"}}>{item.badge}</span>
@@ -167,7 +167,10 @@ export default function AnnoncesPage() {
             <Link href={item.href} style={{fontSize:15,fontWeight:800,lineHeight:1.3,color:"#fff",textDecoration:"none"}}>{item.title}</Link>
             <p style={{fontSize:12,lineHeight:1.5,color:"#d0e2d8",margin:"7px 0"}}>{item.description}</p>
             <p style={{fontSize:11,color:"#b6cfc2",margin:"6px 0 10px"}}>{item.meta}</p>
-            <Link href={item.href} style={{display:"inline-flex",border:"1px solid rgba(231,205,101,.7)",borderRadius:999,padding:"8px 12px",fontSize:11,fontWeight:800,color:"#f3d86a",textDecoration:"none"}}>Ouvrir {item.badge} ↗</Link>
+            <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+              <Link href={item.href} style={{display:"inline-flex",alignItems:"center",border:"1px solid rgba(231,205,101,.7)",borderRadius:999,padding:"9px 12px",fontSize:11,fontWeight:800,color:"#f3d86a",textDecoration:"none"}}>Voir le profil / l’espace ↗</Link>
+              {item.origin==="hospitality"&&item.phone&&<a href={genererLienWhatsApp(item.title,0,item.id,item.phone)} target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:5,borderRadius:999,padding:"9px 12px",fontSize:11,fontWeight:800,color:"#052e1e",background:"#25D366",textDecoration:"none"}}><MessageCircle size={14}/> WhatsApp</a>}
+            </div>
           </div>
         </article>)}
       </div>}
