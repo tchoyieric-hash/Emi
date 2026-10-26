@@ -87,6 +87,24 @@ export default function AnnoncesPage() {
             <span className="emi-flow-feature-cta">Découvrir les cercles <ArrowUpRight size={16}/></span>
           </span>
         </Link>
+        <section aria-label="Découvrir tous les espaces EMi" style={{marginTop:"20px",paddingBottom:"18px"}}>
+          <div style={{display:"flex",alignItems:"end",justifyContent:"space-between",gap:"12px",marginBottom:"12px"}}>
+            <div><p style={{fontSize:"10px",fontWeight:800,letterSpacing:"0.18em",color:"#d9bd53",margin:0}}>LA COMMUNAUTÉ EMi</p><h2 style={{fontSize:"clamp(20px,5vw,26px)",fontWeight:800,lineHeight:1.2,color:"#fff",margin:"5px 0 0"}}>Découvrir tous les espaces</h2></div>
+            <span style={{fontSize:"11px",color:"#c6d6ce",whiteSpace:"nowrap"}}>Nos services</span>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:"10px"}}>
+            {[
+              {title:"EMi Fondation",desc:"Solidarité et projets à soutenir",href:"/annonces/philanthropy",icon:"♥",tone:"#d8c36b"},
+              {title:"EMi Troc",desc:"Échanger et donner une seconde vie",href:"/annonces/troc",icon:"⇄",tone:"#9dd7b3"},
+              {title:"EMi Help",desc:"Découvrir les services d’aide",href:"/annonces/master-health-check",icon:"✚",tone:"#e8c66d"},
+              {title:"Espace vendeur",desc:"Publier et gérer vos annonces",href:"/annonces/espace-vendeur",icon:"▣",tone:"#9dd7b3"},
+            ].map((space)=><Link key={space.href} href={space.href} style={{display:"flex",minHeight:"126px",flexDirection:"column",justifyContent:"space-between",padding:"14px",borderRadius:"16px",border:"1px solid rgba(222,199,105,.38)",background:"linear-gradient(145deg,#104d3a,#082d22)",color:"#fff",textDecoration:"none",minWidth:0}}>
+              <span style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px"}}><span style={{display:"grid",placeItems:"center",width:"36px",height:"36px",borderRadius:"12px",background:"rgba(235,210,105,.14)",color:space.tone,fontSize:"23px"}}>{space.icon}</span><ArrowUpRight size={17} color={space.tone}/></span>
+              <span><strong style={{display:"block",fontSize:"14px",lineHeight:1.25}}>{space.title}</strong><small style={{display:"block",marginTop:"5px",fontSize:"11px",lineHeight:1.4,color:"rgba(255,255,255,.72)"}}>{space.desc}</small></span>
+            </Link>)}
+          </div>
+          <Link href="/annonces" style={{display:"flex",alignItems:"center",justifyContent:"center",marginTop:"10px",padding:"12px",borderRadius:"14px",border:"1px solid rgba(222,199,105,.32)",color:"#e8d47c",fontWeight:700,fontSize:"13px",textDecoration:"none"}}>Voir toutes les annonces du Marché <ArrowUpRight size={15}/></Link>
+        </section>
       </section>
       <style jsx>{`
         .emi-flow-feature{position:relative;display:flex;align-items:flex-end;min-height:190px;margin:14px 0 0;overflow:hidden;border:1px solid rgba(231,205,101,.65);border-radius:22px;color:#fff;text-decoration:none;background:#063b2a}
