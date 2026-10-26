@@ -786,3 +786,91 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
 .emi-space-page button:active{transform:scale(.98)}
 .emi-space-page button:not(:disabled){cursor:pointer}
 @media(max-width:480px){.emi-space-page{padding-left:12px!important;padding-right:12px!important}.emi-space-page h1{font-size:clamp(1.45rem,6vw,2rem);line-height:1.15}.emi-space-page section{border-radius:20px}.emi-space-page article{border-radius:16px}}
+
+
+/* EMi Pulse — Royal Futuriste mobile-first visual system */
+.emi-vibes-page{
+  --pulse-gold:#e7cb70;--pulse-gold-soft:#c5a84e;--pulse-ink:#04150f;--pulse-panel:#08251a;--pulse-line:#bda65b55;
+  width:100%;max-width:1120px;margin:0 auto 28px;padding:0 0 28px;color:#f5f3e9;
+  background:radial-gradient(ellipse at 50% 0%,#0b3828 0%,#061b13 42%,#03110c 100%);
+  border-radius:24px;overflow:hidden;
+}
+.emi-vibes-page *{box-sizing:border-box}
+.emi-vibes-page .emi-vibes-hero{
+  position:relative;isolation:isolate;overflow:hidden;margin:0 0 18px;padding:26px 22px 22px;
+  border:1px solid var(--pulse-line);border-radius:0 0 24px 24px;
+  background:radial-gradient(ellipse at 85% 12%,#d6b84d20,transparent 34%),linear-gradient(120deg,#061b13f5,#0a3323e8 60%,#04150ff5);
+  box-shadow:inset 0 -1px #f1d77720,0 16px 36px #0003;
+}
+.emi-vibes-page .emi-vibes-hero:after{content:"";position:absolute;z-index:-1;width:230px;height:230px;right:-85px;top:-105px;border:1px solid #e5c86628;border-radius:50%;box-shadow:0 0 0 24px #e5c86608,0 0 0 52px #e5c86605}
+.emi-vibes-page .emi-vibes-orb{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;margin-bottom:14px;border:1px solid #efd67d99;border-radius:17px;color:#f6d978;background:linear-gradient(145deg,#e7ca6a2b,#d7ae3910);box-shadow:0 0 26px #d8b74b12}
+.emi-vibes-page .eyebrow{color:#e3c967;font-size:10px;font-weight:850;letter-spacing:.22em}
+.emi-vibes-page .emi-vibes-hero h2{max-width:660px;margin:9px 0 10px;color:#fff8df;font-size:clamp(25px,5vw,40px);font-weight:850;letter-spacing:-.045em;line-height:1.08}
+.emi-vibes-page .emi-vibes-hero p{max-width:610px;margin:0;color:#c5d2c8;font-size:14px;line-height:1.65}
+.emi-vibes-page .emi-vibes-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}
+.emi-vibes-page .emi-vibes-badges span{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid #d7bf5b38;border-radius:999px;background:#ffffff06;color:#e8d9a0;font-size:11px}
+.emi-vibes-page .emi-vibes-search{display:flex;align-items:center;gap:10px;margin:0 16px 14px;padding:12px 14px;border:1px solid #d8c36350;border-radius:15px;background:#04170ff0;color:#e6cb70;box-shadow:inset 0 1px #ffffff08}
+.emi-vibes-page .emi-vibes-search input{width:100%;min-width:0;border:0!important;outline:0!important;background:transparent!important;color:#f8f6eb!important;font-size:13px}
+.emi-vibes-page .emi-vibes-search input::placeholder{color:#93a69a}
+.emi-vibes-page .emi-vibes-tabs{display:flex;gap:8px;overflow-x:auto;padding:0 16px 5px;margin-bottom:23px;scrollbar-width:none}
+.emi-vibes-page .emi-vibes-tabs::-webkit-scrollbar{display:none}
+.emi-vibes-page .emi-vibes-tabs button{flex:0 0 auto;min-height:42px;padding:10px 15px;border:1px solid #6f95804d!important;border-radius:999px!important;background:linear-gradient(145deg,#0c2c20,#061a12)!important;color:#bdcfc3!important;font-size:12px;font-weight:650;white-space:nowrap;box-shadow:inset 0 1px #ffffff08}
+.emi-vibes-page .emi-vibes-tabs button.selected{border-color:#e5c966!important;background:linear-gradient(135deg,#e5c96622,#d8b54b08)!important;color:#ffe9a1!important;box-shadow:0 0 0 1px #e5c96620,0 0 18px #e5c9660d}
+.emi-vibes-page .emi-vibes-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 16px 14px}
+.emi-vibes-page .emi-vibes-section-head h3{margin:5px 0 0;color:#f7e7a8;font-size:clamp(21px,4.5vw,28px);font-weight:850;letter-spacing:-.035em}
+.emi-vibes-page .emi-vibes-live{display:inline-flex;align-items:center;gap:7px;color:#aebfb3;font-size:11px;white-space:nowrap}
+.emi-vibes-page .emi-vibes-live>span{width:7px;height:7px;border-radius:50%;background:#dfc15d;box-shadow:0 0 12px #dfc15d77}
+.emi-vibes-page .emi-pulse-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 16px 26px}
+.emi-vibes-page .emi-pulse-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0;min-height:152px;padding:15px 13px!important;border:1px solid #d7bf5b80!important;border-radius:19px!important;background:radial-gradient(ellipse at 100% 0%,#d4b84b12,transparent 55%),linear-gradient(145deg,#0b2d20,#04170f)!important;color:#f8f4e5!important;text-align:left;box-shadow:inset 0 1px #ffffff0c,0 9px 22px #0002;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.emi-vibes-page .emi-pulse-card:active{transform:scale(.985)}
+.emi-vibes-page .emi-pulse-card-icon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid #d9bf5c88;border-radius:14px;color:#f0d16c;background:linear-gradient(145deg,#e4c45d20,#e4c45d05)}
+.emi-vibes-page .emi-pulse-card strong{font-size:14px;line-height:1.25;font-weight:800}
+.emi-vibes-page .emi-pulse-card p{margin:0;color:#b9c9bd;font-size:11px;line-height:1.5}
+.emi-vibes-page .emi-pulse-card-link{display:inline-flex;align-items:center;gap:4px;margin-top:auto;color:#e7cb70;font-size:11px;font-weight:750}
+.emi-vibes-page .emi-pulse-posts{margin:0 16px 24px}
+.emi-vibes-page .emi-pulse-posts .emi-vibes-section-head{margin:0 0 14px}
+.emi-vibes-page .emi-pulse-posts .emi-vibes-section-head>button{display:inline-flex;align-items:center;gap:5px;padding:8px 10px!important;border:1px solid #d7bf5b60!important;border-radius:999px!important;background:#09251a!important;color:#f0d982!important;font-size:11px;white-space:nowrap}
+.emi-vibes-page .emi-pulse-posts{display:grid;grid-template-columns:1fr}
+.emi-vibes-page .emi-pulse-posts>.emi-vibes-section-head{grid-column:1/-1}
+.emi-vibes-page .emi-pulse-post{display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-width:0;margin-bottom:10px;padding:16px!important;border:1px solid #bda65b58!important;border-radius:18px!important;background:linear-gradient(145deg,#0b2a1e,#04170f)!important;color:#f5f2e7!important;box-shadow:inset 0 1px #ffffff09,0 8px 22px #0002}
+.emi-vibes-page .emi-pulse-post>div{width:100%;min-width:0}
+.emi-vibes-page .emi-pulse-post strong{display:block;color:#f5dfa0;font-size:14px;font-weight:800}
+.emi-vibes-page .emi-pulse-post p{margin:7px 0 0;color:#d3ddd5;font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+.emi-vibes-page .emi-pulse-post>button{display:inline-flex;align-items:center;gap:5px;padding:8px 12px!important;border:1px solid #d7bf5b66!important;border-radius:999px!important;background:#e3c55b12!important;color:#f2d777!important;font-size:12px;font-weight:750}
+.emi-vibes-page .emi-vibes-empty{margin:0 16px 18px;padding:22px!important;border:1px solid #c4aa554a!important;border-radius:20px!important;background:linear-gradient(145deg,#0a291d,#04160f)!important;color:#f3f0e5!important}
+.emi-vibes-page .emi-vibes-empty h3{color:#f1d87e;font-size:18px}
+.emi-vibes-page .emi-vibes-empty p{color:#bdcbbf;font-size:13px;line-height:1.65}
+.emi-vibes-page .emi-vibes-empty button{display:inline-flex;align-items:center;gap:6px;padding:10px 14px!important;border:1px solid #d7bf5b77!important;border-radius:999px!important;background:#e0c25812!important;color:#f1d77b!important;font-size:12px}
+.emi-vibes-page .emi-vibes-note{display:flex;align-items:flex-start;gap:9px;margin:12px 16px 0;padding:12px 14px;border:1px solid #8da7962e;border-radius:14px;background:#ffffff04;color:#9fb2a4;font-size:11px;line-height:1.55}
+.emi-vibes-page .discovery-list{display:grid;gap:9px;margin:0 16px 20px}
+.emi-vibes-page .discovery-person{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;padding:13px;border:1px solid #bda65b50!important;border-radius:17px;background:linear-gradient(145deg,#0b2b1f,#04170f)!important}
+.emi-vibes-page .discovery-person-main{display:flex;align-items:center;gap:10px;min-width:0;padding:0!important;border:0!important;background:transparent!important;color:#f8f4e9!important;text-align:left}
+.emi-vibes-page .discovery-person-main .avatar{flex:0 0 44px;width:44px;height:44px;border:1px solid #d9bf5c;border-radius:50%;overflow:hidden}
+.emi-vibes-page .discovery-person-main .avatar img{width:100%;height:100%;object-fit:cover}
+.emi-vibes-page .discovery-person-main strong{display:block;font-size:13px}
+.emi-vibes-page .discovery-person-main small{display:block;margin-top:3px;color:#a9bcb0;font-size:11px}
+.emi-vibes-page .profile-back-button{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto;padding:8px 10px!important;border:1px solid #d7bf5b66!important;border-radius:999px!important;background:#e0c25810!important;color:#efd477!important;font-size:11px}
+@media(min-width:620px){
+ .emi-vibes-page{padding:0 0 30px}
+ .emi-vibes-page .emi-vibes-hero{padding:34px 32px 28px}
+ .emi-vibes-page .emi-vibes-search{margin-left:24px;margin-right:24px}
+ .emi-vibes-page .emi-vibes-tabs{padding-left:24px;padding-right:24px}
+ .emi-vibes-page .emi-vibes-section-head{margin-left:24px;margin-right:24px}
+ .emi-vibes-page .emi-pulse-grid{gap:14px;margin-left:24px;margin-right:24px}
+ .emi-vibes-page .emi-pulse-card{min-height:164px;padding:19px!important}
+ .emi-vibes-page .emi-pulse-card strong{font-size:16px}
+ .emi-vibes-page .emi-pulse-card p{font-size:12px}
+ .emi-vibes-page .emi-pulse-posts{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-left:24px;margin-right:24px}
+ .emi-vibes-page .emi-pulse-post{margin:0;min-height:160px}
+ .emi-vibes-page .emi-vibes-empty,.emi-vibes-page .discovery-list{margin-left:24px;margin-right:24px}
+ .emi-vibes-page .emi-vibes-note{margin-left:24px;margin-right:24px}
+}
+@media(max-width:360px){
+ .emi-vibes-page .emi-pulse-grid{gap:8px;margin-left:11px;margin-right:11px}
+ .emi-vibes-page .emi-pulse-card{min-height:145px;padding:11px!important;border-radius:15px!important}
+ .emi-vibes-page .emi-pulse-card strong{font-size:12px}
+ .emi-vibes-page .emi-pulse-card p{font-size:10px}
+ .emi-vibes-page .emi-vibes-section-head{margin-left:11px;margin-right:11px}
+ .emi-vibes-page .emi-vibes-tabs{padding-left:11px;padding-right:11px}
+ .emi-vibes-page .emi-vibes-search{margin-left:11px;margin-right:11px}
+}
