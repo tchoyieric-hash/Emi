@@ -11,7 +11,8 @@ type MarketItem = { id:string; title:string; description:string; badge:string; b
 const supabase = createSupabaseBrowserClient();
 
 export default function AnnoncesPage() {
-  const [annonces,setAnnonces] = useState<Annonce[]>([]);\n  const [communityItems,setCommunityItems] = useState<MarketItem[]>([]);
+  const [annonces,setAnnonces] = useState<Annonce[]>([]);
+  const [communityItems,setCommunityItems] = useState<MarketItem[]>([]);
   const [user,setUser] = useState<any>(null);
   const [open,setOpen] = useState(false);
   const [spacesOpen,setSpacesOpen] = useState(false);
