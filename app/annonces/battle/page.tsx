@@ -5,7 +5,7 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { createBrowserClient } from "@supabase/ssr";
 import { ArrowLeft, Trophy, Swords, Radio, MessageCircle, Gift, ShoppingBag, Crown, RefreshCw } from "lucide-react";
 
-type Battle = { id: string; title: string; status: "scheduled" | "live" | "finished" | "cancelled"; host_user_id: string; opponent_user_id: string | null; category: string | null; created_at: string; };
+type Battle = { id: string; title: string; status: "scheduled" | "live" | "finished" | "cancelled"; host_user_id: string; opponent_user_id: string | null; winner_user_id: string | null; category: string | null; created_at: string; };
 type Vote = { id: string; battle_id: string; voter_user_id: string; voted_for_user_id: string; };
 type CommentRow = { id: string; user_id: string; body: string; created_at: string; };
 type Product = { id: string; title: string; description: string; price_xaf: number | null; image_url: string | null; };
