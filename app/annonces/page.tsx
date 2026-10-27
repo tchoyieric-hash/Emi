@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { MessageCircle, Plus, ShoppingBag, LoaderCircle, ImagePlus, Menu, X, ArrowUpRight, Search, ArrowLeft, Home } from "lucide-react";
+import { MessageCircle, Plus, ShoppingBag, LoaderCircle, ImagePlus, Menu, X, ArrowUpRight, Search, ArrowLeft, Home, Sparkles, ArrowRight } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 import { genererLienWhatsApp } from "@/lib/whatsapp";
 
@@ -144,7 +144,7 @@ export default function AnnoncesPage() {
         <p style={{fontSize:10,color:"#9db8aa",lineHeight:1.5,margin:"13px 2px 0"}}>Les raccourcis ouvrent les espaces existants. Les fonctions non encore implémentées affichent leur état réel au lieu de simuler une action.</p>
       </section>}
       {notice&&<div role="status" className="mb-5 rounded-2xl border border-amber-200/20 bg-amber-100/10 p-4 text-sm text-amber-100">{notice}</div>}
-        <section className="emi-market-pulse" aria-label="EMi Pulse intégré au Marché"><div className="emi-market-pulse-mark"><Sparkles size={24}/></div><div className="emi-market-pulse-copy"><span>EMi PULSE · DÉCOUVERTES</span><h2>Les tendances de la communauté</h2><p>Découvre les talents, les initiatives solidaires et les opportunités EMi au même endroit que tes bonnes affaires.</p><Link href="/?pulse=1" className="emi-market-pulse-link">Découvrir EMi Pulse <ArrowRight size={16}/></Link></div><div className="emi-market-pulse-wave" aria-hidden="true">〰</div></section>
+        <section className="emi-market-pulse" aria-label="EMi Pulse intégré au Marché"><div className="emi-market-pulse-mark"><Sparkles size={24}/></div><div className="emi-market-pulse-copy"><span>EMi PULSE · DÉCOUVERTES</span><h2>Les tendances de la communauté</h2><p>Découvre les talents, les initiatives solidaires et les opportunités EMi au même endroit que tes bonnes affaires.</p><Link href="/" className="emi-market-pulse-link">Découvrir EMi Pulse <ArrowRight size={16}/></Link></div><div className="emi-market-pulse-wave" aria-hidden="true">〰</div></section>
         <div className="emi-shop-profile"><div className="emi-shop-avatar">EM<span>✦</span></div><div className="emi-shop-profile-copy"><h1>Le Marché EMi</h1><p>Mode, technologie, maison & découvertes</p><div className="emi-shop-trust">✦ La boutique de la communauté</div></div><button type="button" className="emi-shop-sell" aria-label="Ouvrir le formulaire pour vendre un produit" aria-expanded={open} onClick={()=>{setOpen(true);setSpacesOpen(false);setRoyalOpen(false);setNotice("");window.setTimeout(()=>document.getElementById("emi-sell-form")?.scrollIntoView({behavior:"smooth",block:"start"}),100);}}><Plus size={15}/> Vendre</button></div>
         <label htmlFor="annonces-search" className="emi-shop-search"><Search size={18}/><input id="annonces-search" type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un produit…"/><span>⌕</span></label>
         <div className="emi-shop-categories">{["Tout","Mode","Électronique","Sacs","Chaussures","Maison","Immobilier"].map((cat,i)=><button key={cat} className={i===0&&!search?"selected":""} onClick={()=>{setSearch(i===0?"":cat);document.getElementById("annonces-list")?.scrollIntoView({behavior:"smooth",block:"start"});}}>{cat}</button>)}</div>
