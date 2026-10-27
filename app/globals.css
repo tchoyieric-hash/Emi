@@ -1031,3 +1031,30 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
 .emi-settings-page .emi-theme-preview small{color:#d6c58d!important}
 .emi-settings-page .emi-theme-current{color:#f3d36e!important;background:#d6ad491a!important;border-color:#d6ad4955!important}
 @media(max-width:480px){.mobile-nav{gap:0!important}.mobile-nav button{min-width:0!important}.mobile-nav button span{font-size:9px!important}.mobile-nav button svg{width:19px;height:19px}}
+
+/* EMi signature palette: deep forest green + champagne gold */
+:root{--emi-forest:#063b2c;--emi-forest-deep:#031b14;--emi-champagne:#e8ca68;--emi-champagne-light:#f7e8a2}
+.mobile-nav{grid-template-columns:repeat(7,minmax(0,1fr))!important;background:linear-gradient(180deg,#06140f 0%,#020806 100%)!important;border-top:1px solid #d8ba5a40!important}
+.mobile-nav button{color:#aabbb2!important}
+.mobile-nav button svg{color:currentColor}
+.mobile-nav button.mobile-active{color:#f0d574!important;background:linear-gradient(180deg,#d6b14a12,transparent)!important}
+.mobile-nav button.mobile-active svg{color:#f0d574!important}
+.mobile-nav .mobile-create{background:linear-gradient(145deg,#f6e49a,#d2a83e 70%,#9e7726)!important;color:#10241b!important;box-shadow:0 0 20px #d6b14a38!important;border:1px solid #ffe9a0!important}
+.mobile-nav .mobile-create svg{color:#10241b!important}
+.welcome-hero,.emi-vibes-page,.emi-settings-page,.post-card,.feed-header{--accent:#e8ca68}
+.welcome-hero{border-color:#d5b45366!important}
+.welcome-hero .eyebrow,.feed-header .eyebrow{color:#e8ca68!important}
+.welcome-hero button,.modal-primary{background:linear-gradient(120deg,#f7e8a2,#d7ae48)!important;color:#10241b!important;border-color:#f2d477!important}
+.profile-page-avatar{background:linear-gradient(140deg,#f7e8a2,#d6ad49 58%,#8a6522)!important;border-color:#e8ca68!important;box-shadow:0 0 0 3px #05261c,0 0 20px #d6ad4938!important}
+.profile-tabs button.selected:after{background:linear-gradient(90deg,#f7e8a2,#bd8d29)!important}
+.emi-settings-crest,.emi-settings-row-icon{color:#e8ca68!important;border-color:#d6b65a45!important;background:linear-gradient(145deg,#f1d77c1c,#9b71240c)!important}
+.emi-settings-profile-card{border-color:#d5b4528c!important;background:radial-gradient(ellipse at 100% 0%,rgba(220,177,63,.12),transparent 48%),linear-gradient(145deg,#092c20,#03130d 75%)!important}
+.emi-market-pulse{position:relative;display:flex;align-items:center;gap:15px;overflow:hidden;margin:0 0 22px;padding:20px 18px;border:1px solid #d7b956b0;border-radius:23px;background:radial-gradient(ellipse at 100% 0%,#d6b14a1f,transparent 50%),linear-gradient(130deg,#0b3a2b,#03150f 75%);box-shadow:0 14px 32px #0003;color:#f6f1dd}
+.emi-market-pulse-mark{z-index:1;display:grid;place-items:center;flex:none;width:54px;height:54px;border:1px solid #f0d477;border-radius:17px;background:linear-gradient(145deg,#f7e8a2,#c79a33);color:#0b2b20;box-shadow:0 0 22px #d6b14a26}
+.emi-market-pulse-copy{z-index:1;min-width:0;flex:1}
+.emi-market-pulse-copy>span{font-size:9px;letter-spacing:.2em;font-weight:900;color:#e8ca68}
+.emi-market-pulse-copy h2{font-size:17px;line-height:1.25;font-weight:850;margin:5px 0;color:#fff8e4}
+.emi-market-pulse-copy p{font-size:12px;line-height:1.6;color:#c4d2c9;margin:0 0 12px;max-width:540px}
+.emi-market-pulse-link{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:9px 13px;background:linear-gradient(120deg,#f7e8a2,#d7ae48);color:#0a281d;font-size:11px;font-weight:900;text-decoration:none}
+.emi-market-pulse-wave{position:absolute;right:13px;top:-19px;color:#d6b14a13;font-size:105px;font-weight:900;pointer-events:none}
+@media(max-width:480px){.emi-market-pulse{gap:11px;padding:15px 13px;border-radius:19px}.emi-market-pulse-mark{width:45px;height:45px;border-radius:14px}.emi-market-pulse-copy h2{font-size:15px}.emi-market-pulse-copy p{font-size:11px}}
