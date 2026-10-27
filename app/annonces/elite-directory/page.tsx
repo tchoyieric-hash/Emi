@@ -19,7 +19,8 @@ export default function EliteDirectoryPage() {
   const [imageUrl, setImageUrl] = useState("");
   const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);\n  const [deleting, setDeleting] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const filteredProfiles = profiles.filter(p => `${p.nom} ${p.specialite} ${p.ville} ${p.bio}`.toLocaleLowerCase("fr").includes(searchTerm.trim().toLocaleLowerCase("fr")));
