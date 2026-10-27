@@ -1168,3 +1168,68 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
   .modal-card p{color:#5c6b63}
   .modal-close{color:#42534a;background:#f1f4f2;border-color:#e0e5e2}
 }
+
+
+/* EMi Signature 2050 — royal emerald, champagne gold, high-contrast premium surfaces */
+:root{--bg:#020b08;--panel:#061a14;--panel2:#0a251b;--line:rgba(212,178,91,.28);--text:#fff9e9;--muted:#b6c8bb;--purple:#e5c36d;--pink:#f4dda0;--green:#16e6b0}
+html,body{background:#020b08;color:var(--text)}
+body{background:radial-gradient(ellipse at 50% -12%,rgba(17,105,72,.28),transparent 48%),linear-gradient(180deg,#020b08,#03130e 65%,#020b08)}
+.app-shell{max-width:1600px;gap:28px}
+.sidebar{border-right-color:rgba(218,184,95,.22)}
+.brand{color:#f4dfa0;letter-spacing:-1.2px}
+.brand-mark{background:linear-gradient(145deg,#fff0b1,#c69a36 58%,#785719);color:#06160f;box-shadow:0 0 26px rgba(220,177,67,.22)}
+.nav-item{color:#bdcfc4;border-radius:14px}
+.nav-item:hover,.nav-item.selected{background:linear-gradient(100deg,rgba(19,210,150,.13),rgba(212,174,76,.08));color:#f8dfa0;box-shadow:inset 2px 0 #d8b65c}
+.create-button,.welcome-actions button,.modal-primary{background:linear-gradient(115deg,#fff0b3,#d9b04c 54%,#f8e5a0)!important;color:#092017!important;border:1px solid #f5d97c!important;box-shadow:0 8px 28px rgba(210,167,55,.18)}
+.sidebar-note{border-color:rgba(219,183,91,.32);background:linear-gradient(145deg,#0d3426,#061811);color:#f0d17b}
+.stories-card,.post-card,.suggest-card{border-color:rgba(211,177,88,.24);background:linear-gradient(145deg,rgba(9,35,25,.98),rgba(3,17,12,.98));box-shadow:0 12px 34px rgba(0,0,0,.24)}
+.stories-card{border-radius:22px}
+.story-ring{background:linear-gradient(145deg,#fff0b0,#c99b39 55%,#10dca2);box-shadow:0 0 0 1px rgba(255,220,130,.16),0 0 19px rgba(13,201,145,.12)}
+.story-avatar{background:linear-gradient(145deg,#174c37,#071a12);border-color:#06180f}
+.feed-tabs button.tab-active{border-color:#e2c064;color:#ffe5a0}
+.eyebrow,.section-label button{color:#e4c36d}
+.round-action,.icon-button{border-color:rgba(215,180,89,.3);background:linear-gradient(145deg,#0d2b20,#06160f);color:#f4d988}
+.post-card{border-radius:22px}
+.post-media,.post-visual{border:1px solid rgba(229,194,105,.18)}
+.mobile-nav{background:rgba(2,15,10,.96)!important;border-color:rgba(222,186,94,.28)!important;backdrop-filter:blur(20px) saturate(150%)}
+.mobile-nav button,.mobile-nav a{color:#b5c8bc}
+.mobile-nav .mobile-active{color:#ffe6a0!important}
+.mobile-create{background:linear-gradient(145deg,#fff0b2,#d0a43e)!important;color:#062017!important;box-shadow:0 0 24px rgba(214,174,63,.28)}
+.welcome-hero{border:1px solid rgba(229,194,105,.48);background:#04160f;box-shadow:0 20px 60px rgba(0,0,0,.45),0 0 35px rgba(13,174,120,.08)}
+.welcome-shade{background:linear-gradient(90deg,rgba(2,14,9,.92),rgba(2,14,9,.63) 48%,rgba(2,14,9,.12)),linear-gradient(0deg,rgba(2,12,8,.55),transparent 70%)}
+.welcome-cover{filter:saturate(1.12) contrast(1.06)}
+.welcome-content h2,.welcome-brand{color:#f5d986}
+.welcome-kicker{color:#e6c66d}
+.welcome-actions .welcome-secondary{background:rgba(3,24,16,.82)!important;color:#f5dfa0!important;border:1px solid rgba(226,194,107,.65)!important}
+.emi-welcome-screen{isolation:isolate;background:#020b08!important;background-image:radial-gradient(ellipse at 50% 5%,rgba(15,105,70,.24),transparent 48%),linear-gradient(150deg,#020906,#04180f 60%,#020906)!important}
+.emi-welcome-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;z-index:-3;filter:saturate(1.08) contrast(1.08)}
+.emi-welcome-photo-shade{position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(1,10,7,.86) 0%,rgba(1,10,7,.62) 43%,rgba(1,10,7,.1) 100%),linear-gradient(0deg,rgba(1,10,7,.72),transparent 75%);pointer-events:none}
+.emi-welcome-screen:before{opacity:.1;background-image:linear-gradient(rgba(224,194,108,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(224,194,108,.15) 1px,transparent 1px)}
+.emi-welcome-panel{width:min(520px,100%);justify-self:start;margin-left:clamp(0px,5vw,88px);padding:clamp(26px,4vw,48px);border:1px solid rgba(232,199,111,.38)!important;border-radius:28px!important;background:linear-gradient(145deg,rgba(3,25,17,.91),rgba(2,14,10,.82))!important;box-shadow:0 30px 100px rgba(0,0,0,.55),inset 0 1px rgba(255,235,170,.08)!important;backdrop-filter:blur(16px) saturate(120%)}
+.emi-welcome-logo{color:#f3d785!important}
+.emi-logo-glyph,.emi-emblem-ring{background:linear-gradient(145deg,#fff0b4,#d0a43f 58%,#80601d)!important;color:#092017!important;box-shadow:0 0 28px rgba(218,177,72,.2)!important}
+.emi-logo-dot{color:#17dfaa!important}
+.emi-welcome-emblem{display:none!important}
+.emi-welcome-overline{color:#e6c66e!important}
+.emi-welcome-panel h1{color:#fff9e8!important}
+.emi-welcome-panel h1 span{color:#f0d17b!important}
+.emi-welcome-panel p{color:#d0ded4!important}
+.emi-cta-primary{background:linear-gradient(115deg,#fff0b5,#d2a640 55%,#f8e4a0)!important;color:#082017!important;box-shadow:0 8px 30px rgba(210,167,55,.22)!important}
+.emi-cta-secondary{background:rgba(4,28,19,.8)!important;border:1px solid rgba(224,190,99,.58)!important;color:#f3dda0!important}
+.emi-discover-link{color:#d5e6da!important}
+.emi-welcome-footer{border-top-color:rgba(223,190,100,.24)!important;color:#c6d7cb!important}
+.emi-welcome-caption{color:#f1d37d!important}
+@media(max-width:700px){
+ .app-shell{padding:0 12px}
+ .mobile-header{border-bottom-color:rgba(219,184,93,.2)}
+ .welcome-hero{min-height:370px;border-radius:22px}
+ .welcome-cover{object-position:58% 20%;filter:saturate(1.12) contrast(1.07)}
+ .welcome-shade{background:linear-gradient(90deg,rgba(2,14,9,.88),rgba(2,14,9,.48)),linear-gradient(0deg,rgba(2,12,8,.7),transparent 82%)}
+ .emi-welcome-screen{padding:18px 14px 54px;place-items:center}
+ .emi-welcome-cover{object-position:62% 25%}
+ .emi-welcome-photo-shade{background:linear-gradient(0deg,rgba(1,10,7,.88) 0%,rgba(1,10,7,.66) 46%,rgba(1,10,7,.18) 100%)}
+ .emi-welcome-panel{width:100%;max-width:500px;justify-self:center;margin:0;padding:27px 23px 23px;border-radius:25px!important;background:linear-gradient(155deg,rgba(2,22,14,.9),rgba(2,13,9,.86))!important}
+ .emi-welcome-panel h1{font-size:clamp(32px,9vw,45px);line-height:1.05}
+ .emi-welcome-caption{bottom:18px;font-size:9px}
+ .emi-welcome-footer{gap:10px;font-size:8px}
+}
