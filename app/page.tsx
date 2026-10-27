@@ -10,7 +10,7 @@ type Post = {
   profiles?: { username?: string | null; display_name?: string | null; avatar_url?: string | null } | null;
 };
 type Profile = { id: string; email?: string; username?: string | null; display_name?: string | null; avatar_url?: string | null; bio?: string | null };
-type MarketHighlight = { id:string; title:string; description:string; badge:string; image:string|null; href:string; created_at:string; price?:number|null; meta?:string; viewType:"market"|"elite"|"troc"|"flow" };
+type MarketHighlight = { id:string; title:string; description:string; badge:string; image:string|null; href:string; created_at:string; price?:number|null; meta?:string; viewType:"market" as MarketHighlight["viewType"]|"elite"|"troc"|"flow" };
 type Story = { id:string; user_id:string; media_url:string; media_type:"image"|"video"; caption:string; music_url?:string|null; music_title?:string|null; visibility:string; created_at:string; expires_at:string; profiles?:{username?:string|null;display_name?:string|null;avatar_url?:string|null}|null };
 const supabase = createSupabaseBrowserClient();
 
@@ -500,10 +500,10 @@ export default function HomePage() {
       supabase.from("tontine_cercles").select("id,nom_article,prix_cible,membres_max,created_at").order("created_at",{ascending:false}).limit(4)
     ]);
     const marketCards:MarketHighlight[] = [
-      ...((marketRows||[]) as any[]).map(a=>({id:a.id,title:a.titre,description:a.description||"Découvre cette offre de la communauté.",badge:"🛍️ EMi MARKET",viewType:"market" as const,image:Array.isArray(a.image_urls)?a.image_urls[0]||null:null,href:"/annonce/"+a.id,created_at:a.created_at,price:Number(a.prix)||0})),
-      ...((eliteRows||[]) as any[]).map(a=>({id:a.id,title:a.nom,description:a.bio||a.specialite||"Professionnel de la communauté EMi.",badge:"ELITE HOSPITALITY",viewType:"elite" as const,image:a.image_url||null,href:"/annonces/elite-directory",created_at:a.created_at,meta:[a.specialite,a.ville].filter(Boolean).join(" · ")})),
-      ...((trocRows||[]) as any[]).map(a=>({id:a.id,title:a.bien_offert,description:"Recherche en échange : "+a.bien_recherche+(a.description?" — "+a.description:""),badge:"EMi TROC",viewType:"troc" as const,image:null,href:"/annonces/troc",created_at:a.created_at})),
-      ...((flowRows||[]) as any[]).map(a=>({id:a.id,title:a.nom_article,description:"Rejoins ce cercle d’achat groupé de la communauté.",badge:"DJANGUI FLOW",viewType:"flow" as const,image:null,href:"/annonces/tontine",created_at:a.created_at,meta:a.prix_cible?new Intl.NumberFormat("fr-FR").format(Number(a.prix_cible))+" FCFA":""}))
+      ...((marketRows||[]) as any[]).map(a=>({id:a.id,title:a.titre,description:a.description||"Découvre cette offre de la communauté.",badge:"🛍️ EMi MARKET",viewType:"market" as MarketHighlight["viewType"] as MarketHighlight["viewType"],image:Array.isArray(a.image_urls)?a.image_urls[0]||null:null,href:"/annonce/"+a.id,created_at:a.created_at,price:Number(a.prix)||0})),
+      ...((eliteRows||[]) as any[]).map(a=>({id:a.id,title:a.nom,description:a.bio||a.specialite||"Professionnel de la communauté EMi.",badge:"ELITE HOSPITALITY",viewType:"elite" as MarketHighlight["viewType"] as MarketHighlight["viewType"],image:a.image_url||null,href:"/annonces/elite-directory",created_at:a.created_at,meta:[a.specialite,a.ville].filter(Boolean).join(" · ")})),
+      ...((trocRows||[]) as any[]).map(a=>({id:a.id,title:a.bien_offert,description:"Recherche en échange : "+a.bien_recherche+(a.description?" — "+a.description:""),badge:"EMi TROC",viewType:"troc" as MarketHighlight["viewType"] as MarketHighlight["viewType"],image:null,href:"/annonces/troc",created_at:a.created_at})),
+      ...((flowRows||[]) as any[]).map(a=>({id:a.id,title:a.nom_article,description:"Rejoins ce cercle d’achat groupé de la communauté.",badge:"DJANGUI FLOW",viewType:"flow" as MarketHighlight["viewType"] as MarketHighlight["viewType"],image:null,href:"/annonces/tontine",created_at:a.created_at,meta:a.prix_cible?new Intl.NumberFormat("fr-FR").format(Number(a.prix_cible))+" FCFA":""}))
     ].sort((a,b)=>new Date(b.created_at||0).getTime()-new Date(a.created_at||0).getTime()).slice(0,8);
     setMarketHighlights(marketCards);
     const marketKeys = marketCards.map(item=>({item_type:item.viewType,item_id:String(item.id)}));
