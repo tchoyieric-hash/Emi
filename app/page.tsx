@@ -525,16 +525,15 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!supabase || !marketHighlights.length) return;
-    let sessionKey=sessionStorage.getItem("emi_view_session");
-    if(!sessionKey){sessionKey=crypto.randomUUID();sessionStorage.setItem("emi_view_session",sessionKey);}
+    const sessionKey = user?.id || (() => { let key=localStorage.getItem("emi_viewer_id"); if(!key){key=crypto.randomUUID();localStorage.setItem("emi_viewer_id",key);} return key; })();
     const nodes=Array.from(document.querySelectorAll<HTMLElement>(".emi-home-market-card[data-view-key]"));
     const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{
       if(!entry.isIntersecting||entry.intersectionRatio<0.6)return;
       const node=entry.target as HTMLElement; const type=node.dataset.viewType; const id=node.dataset.viewId; const key=node.dataset.viewKey;
       if(!type||!id||!key)return;
       const seen="emi_market_seen_"+key+"_"+sessionKey;
-      if(sessionStorage.getItem(seen)){observer.unobserve(node);return;}
-      sessionStorage.setItem(seen,"1"); observer.unobserve(node);
+      if(localStorage.getItem(seen)){observer.unobserve(node);return;}
+      localStorage.setItem(seen,"1"); observer.unobserve(node);
       void supabase.from("market_highlight_views").upsert({item_type:type,item_id:id,session_key:sessionKey},{onConflict:"item_type,item_id,session_key",ignoreDuplicates:true}).then(async()=> {
         const {count}=await supabase.from("market_highlight_views").select("id",{count:"exact",head:true}).eq("item_type",type).eq("item_id",id);
         if(typeof count==="number")setMarketViewCounts(old=>({...old,[key]:count}));
@@ -1532,7 +1531,7 @@ export default function HomePage() {
   }, [user?.id]);
   useEffect(() => {
     if (!supabase || !posts.length) return;
-    const sessionKey = (() => { let key=sessionStorage.getItem("emi_view_session"); if(!key){key=crypto.randomUUID();sessionStorage.setItem("emi_view_session",key);} return key; })();
+    const sessionKey = user?.id || (() => { let key=localStorage.getItem("emi_viewer_id"); if(!key){key=crypto.randomUUID();localStorage.setItem("emi_viewer_id",key);} return key; })();
     const nodes = Array.from(document.querySelectorAll<HTMLElement>(".emi-feed-post[data-post-id]"));
     if (!nodes.length) return;
     const observer = new IntersectionObserver(entries => {
@@ -1540,8 +1539,8 @@ export default function HomePage() {
         if (!entry.isIntersecting || entry.intersectionRatio < 0.55) return;
         const id=(entry.target as HTMLElement).dataset.postId; if(!id) return;
         const seenKey="emi_seen_"+id+"_"+sessionKey;
-        if(sessionStorage.getItem(seenKey)) { observer.unobserve(entry.target); return; }
-        sessionStorage.setItem(seenKey,"1"); observer.unobserve(entry.target);
+        if(localStorage.getItem(seenKey)) { observer.unobserve(entry.target); return; }
+        localStorage.setItem(seenKey,"1"); observer.unobserve(entry.target);
         void supabase.from("post_views").upsert({post_id:id,session_key:sessionKey},{onConflict:"post_id,session_key",ignoreDuplicates:true}).then(async () => {
           const {count}=await supabase.from("post_views").select("id",{count:"exact",head:true}).eq("post_id",id);
           if(typeof count==="number") setPostViewCounts(old=>({...old,[id]:count}));
