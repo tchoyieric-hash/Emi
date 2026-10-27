@@ -1366,3 +1366,12 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
  .emi-creator-caption>textarea{min-height:100px!important;max-height:180px!important;font-size:16px!important}
  .emi-creator-next{position:sticky!important;bottom:0!important;margin-top:12px!important;margin-bottom:4px!important;min-height:56px!important;border-radius:16px!important}
 }
+
+
+/* Final mobile publishing controls: keep destination and submit reachable above app navigation */
+.emi-creator-form>div[role="group][aria-label="Type de publication"]{position:sticky;top:0;z-index:15;padding:8px 0;background:#080e0b}
+@media(max-width:600px){
+ .emi-creator-next{position:sticky!important;bottom:calc(76px + env(safe-area-inset-bottom))!important;z-index:30!important;min-height:58px!important;margin-bottom:12px!important;box-shadow:0 -8px 20px #080e0b,0 5px 20px #d9b04c45!important}
+ .emi-creator-form{scroll-padding-bottom:calc(150px + env(safe-area-inset-bottom))}
+ .emi-creator-caption>textarea{min-height:120px!important}
+}
