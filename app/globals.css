@@ -1016,3 +1016,18 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
 .emi-settings-logout{border-color:#e44d4d!important;color:#ff6666!important;background:linear-gradient(120deg,#2a1010,#100a0a)!important}
 .emi-settings-logout>svg{color:#ff6666!important}
 @media(max-width:600px){.emi-settings-profile-card{padding:13px;border-radius:19px}.emi-settings-profile-avatar{width:66px;height:66px}.emi-settings-profile-identity h3{font-size:16px}.emi-settings-profile-identity p{font-size:10px}.emi-settings-edit-profile{padding:8px;font-size:9px}.emi-settings-own-posts{gap:5px}.emi-settings-own-post{border-radius:8px}}
+
+/* EMi Profile-first navigation — Royal champagne gold */
+.mobile-nav{grid-template-columns:repeat(7,minmax(0,1fr))!important}
+.mobile-nav button:last-child{display:flex!important}
+.mobile-nav button:last-child svg{color:#f1d16c!important}
+.mobile-nav button.mobile-active:last-child{color:#f5d978!important;background:linear-gradient(180deg,#d6b14a20,#d6b14a05)!important;box-shadow:inset 0 0 0 1px #d6b14a55,0 0 18px #d6b14a16!important}
+.profile-page-avatar-wrap{filter:drop-shadow(0 0 10px #d8b24b22)}
+.profile-page-avatar{background:linear-gradient(140deg,#fff0ad,#d6ad49 58%,#76551d)!important;border-color:#f0d16c!important;box-shadow:0 0 0 3px #071b14,0 0 20px #d6ad4938!important}
+.profile-page-actions .profile-back-button{border-color:#c9a34a65!important}
+.profile-tabs button.selected:after{background:linear-gradient(90deg,#f8df85,#c5962d)!important}
+.emi-settings-page .emi-theme-preview{border-color:#c9a34a70!important;background:linear-gradient(120deg,#17150e,#090d0a)!important}
+.emi-settings-page .emi-theme-preview>span:first-child{background:linear-gradient(135deg,#f8e39b,#bd8d29)!important;box-shadow:0 0 18px #d6ad4933}
+.emi-settings-page .emi-theme-preview small{color:#d6c58d!important}
+.emi-settings-page .emi-theme-current{color:#f3d36e!important;background:#d6ad491a!important;border-color:#d6ad4955!important}
+@media(max-width:480px){.mobile-nav{gap:0!important}.mobile-nav button{min-width:0!important}.mobile-nav button span{font-size:9px!important}.mobile-nav button svg{width:19px;height:19px}}
