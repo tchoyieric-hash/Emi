@@ -794,7 +794,7 @@ export default function HomePage() {
       }
       publishStage = "enregistrement de la publication dans Supabase";
       const postContent = (publishDestination === "reel" ? "[EMI_REEL] " : "") + caption.trim() + (musicMeta ? "\n\n[EMI_MUSIC]" + JSON.stringify({...musicMeta,url:musicUrl}) + "[/EMI_MUSIC]" : "");
-      const { error } = await supabase.from("posts").insert({ user_id: user.id, content: postContent, media_type: mediaType, media_urls: urls, visibility: "public", music_track_id: selectedMusic?.id ?? null, music_start_seconds: musicMeta ? Math.max(0, Math.floor(musicMeta.start)) : null, music_end_seconds: musicMeta ? Math.max(1, Math.floor(musicMeta.end)) : null });
+      const { error } = await supabase.from("posts").insert({ user_id: user.id, content: postContent, media_type: mediaType, media_urls: urls, visibility: "public", music_track_id: selectedMusic?.id ?? null, music_start_seconds: selectedMusic && musicMeta ? Math.max(0, Math.floor(musicMeta.start)) : null, music_end_seconds: selectedMusic && musicMeta ? Math.min(60, Math.max(1, Math.floor(musicMeta.end))) : null });
       if (error) throw error;
       setCaption(""); setPublishDestination("post"); setFile(null); setSelectedFiles([]); setMusicFile(null); setSelectedMusic(null); setMusicTitle(""); setCatalogOpen(false); setCreatorFilter("original"); setCreatorRatio("4:5"); setCreatorBrightness(100); setCreatorContrast(100); setCreatorTextOnPhoto(false); setCreatorOverlayText(""); setCreatorEditOpen(false); setMusicStart(0); setMusicEnd(30); setMusicDuration(0); setComposerOpen(false); setMessage("Publication envoyée."); await loadFeed();
     } catch (err) {
