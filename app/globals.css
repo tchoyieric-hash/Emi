@@ -1334,3 +1334,10 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
  .right-column{display:none!important}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+
+/* Story labels and live presence */
+.story-ring{position:relative}
+.story-online-dot{position:absolute;right:0;bottom:1px;width:13px;height:13px;border-radius:50%;background:#21e68b;border:2.5px solid #061a12;box-shadow:0 0 0 2px #21e68b25,0 0 12px #21e68b80;z-index:4}
+.story-add .story-online-dot{right:-1px;bottom:0}
+.story-name{max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
