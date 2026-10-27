@@ -1375,3 +1375,22 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
  .emi-creator-form{scroll-padding-bottom:calc(150px + env(safe-area-inset-bottom))}
  .emi-creator-caption>textarea{min-height:120px!important}
 }
+
+
+/* Permanent publishing layout fix: fixed CTA stays in the same reachable place for every post type */
+.emi-creator-form{padding-bottom:120px!important;scroll-padding-bottom:140px!important}
+.emi-creator-next{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;bottom:calc(88px + env(safe-area-inset-bottom))!important;width:min(560px,calc(100vw - 32px))!important;min-height:58px!important;margin:0!important;z-index:10000!important;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+.emi-creator-next:disabled{opacity:.72!important}
+.emi-creator-form>div[role="group"][aria-label="Type de publication"]{position:sticky!important;top:0!important;z-index:15!important;padding:8px 0!important;background:#080e0b!important}
+@media(max-width:600px){
+ .modal-backdrop:has(.emi-creator){padding:0!important;place-items:stretch!important}
+ .modal-card:has(.emi-creator){width:100%!important;max-width:none!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;padding:0!important;border-radius:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+ .emi-creator{width:100%!important;height:100%!important;max-height:100%!important;flex:1 1 auto!important;min-height:0!important;overflow:hidden!important;padding-bottom:0!important}
+ .emi-creator-header{flex:0 0 58px!important}
+ .emi-creator-form{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;padding-bottom:calc(170px + env(safe-area-inset-bottom))!important}
+ .emi-creator-next{bottom:calc(78px + env(safe-area-inset-bottom))!important;width:calc(100vw - 32px)!important;max-width:none!important}
+}
+@media(min-width:601px){
+ .emi-creator-next{bottom:24px!important}
+ .emi-creator-form{padding-bottom:110px!important}
+}
