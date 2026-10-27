@@ -1587,7 +1587,7 @@ export default function HomePage() {
     return ()=>observer.disconnect();
   }, [posts, active, viewingProfile?.id, user?.id]);
 
-  const isReelPost = (post: Post) => post.media_type === "video" && (post.media_urls || []).length > 0;
+  const isReelPost = (post: Post) => post.media_type === "video" && (post.media_urls || []).length > 0 && /^\s*\[EMI_REEL\]/.test(post.content || "");
   const cleanPostContent = (content: string) => content.replace(/^\s*\[EMI_REEL\]\s*/, "");
   const filteredPosts = viewingProfile ? (profileTab === "shared" ? sharedPosts.filter(p => !query || cleanPostContent(p.content).toLowerCase().includes(query.toLowerCase())) : profileTab === "reels" ? visiblePosts.filter(isReelPost) : visiblePosts.filter(p => !isReelPost(p))) : active === "Reels" ? visiblePosts.filter(post => post.media_type === "video" && isReelPost(post)) : active === "Vidéos" ? visiblePosts.filter(post => post.media_type === "video" && !isReelPost(post)) : visiblePosts.filter(post => !isReelPost(post));
 
