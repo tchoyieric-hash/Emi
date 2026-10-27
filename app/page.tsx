@@ -532,11 +532,11 @@ export default function HomePage() {
       if(!entry.isIntersecting||entry.intersectionRatio<0.6)return;
       const node=entry.target as HTMLElement; const type=node.dataset.viewType; const id=node.dataset.viewId; const key=node.dataset.viewKey;
       if(!type||!id||!key)return;
-      const seen="emi_market_seen_"+key+"_"+sessionKey;
-      if(localStorage.getItem(seen)){observer.unobserve(node);return;}
-      localStorage.setItem(seen,"1"); observer.unobserve(node);
-      void supabase.from("market_highlight_views").upsert({item_type:type,item_id:id,session_key:sessionKey},{onConflict:"item_type,item_id,session_key",ignoreDuplicates:true}).then(async()=> {
-        const {count}=await supabase.from("market_highlight_views").select("id",{count:"exact",head:true}).eq("item_type",type).eq("item_id",id);
+      observer.unobserve(node);
+      void supabase.from("market_highlight_views").upsert({item_type:type,item_id:id,session_key:sessionKey},{onConflict:"item_type,item_id,session_key",ignoreDuplicates:true}).then(async({error})=> {
+        if(error) { console.error("Impossible d’enregistrer la vue de l’annonce", error.message); return; }
+        const {count,error:countError}=await supabase.from("market_highlight_views").select("id",{count:"exact",head:true}).eq("item_type",type).eq("item_id",id);
+        if(countError) { console.error("Impossible de lire le compteur du marché", countError.message); return; }
         if(typeof count==="number")setMarketViewCounts(old=>({...old,[key]:count}));
       });
     });},{threshold:[0.6]});
@@ -1557,11 +1557,11 @@ export default function HomePage() {
       entries.forEach(entry => {
         if (!entry.isIntersecting || entry.intersectionRatio < 0.55) return;
         const id=(entry.target as HTMLElement).dataset.postId; if(!id) return;
-        const seenKey="emi_seen_"+id+"_"+sessionKey;
-        if(localStorage.getItem(seenKey)) { observer.unobserve(entry.target); return; }
-        localStorage.setItem(seenKey,"1"); observer.unobserve(entry.target);
-        void supabase.from("post_views").upsert({post_id:id,session_key:sessionKey},{onConflict:"post_id,session_key",ignoreDuplicates:true}).then(async () => {
-          const {count}=await supabase.from("post_views").select("id",{count:"exact",head:true}).eq("post_id",id);
+        observer.unobserve(entry.target);
+        void supabase.from("post_views").upsert({post_id:id,session_key:sessionKey},{onConflict:"post_id,session_key",ignoreDuplicates:true}).then(async ({error}) => {
+          if (error) { console.error("Impossible d’enregistrer la vue de publication", error.message); return; }
+          const {count,error:countError}=await supabase.from("post_views").select("id",{count:"exact",head:true}).eq("post_id",id);
+          if(countError) { console.error("Impossible de lire le compteur de vues", countError.message); return; }
           if(typeof count==="number") setPostViewCounts(old=>({...old,[id]:count}));
         });
       });
