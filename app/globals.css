@@ -1338,3 +1338,8 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .story-online-dot{position:absolute;right:0;bottom:1px;width:13px;height:13px;border-radius:50%;background:#21e68b;border:2.5px solid #061a12;box-shadow:0 0 0 2px #21e68b25,0 0 12px #21e68b80;z-index:4}
 .story-add .story-online-dot{right:-1px;bottom:0}
 .story-name{max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* EMi hotfix: keep Publish visible above the fixed bottom navigation on mobile */
+.emi-creator-form{padding-bottom:calc(132px + env(safe-area-inset-bottom))!important;scroll-padding-bottom:140px}
+.emi-creator-next{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;bottom:calc(108px + env(safe-area-inset-bottom))!important;width:min(532px,calc(100vw - 28px))!important;min-height:54px!important;margin:0!important;z-index:10060!important;display:block!important;visibility:visible!important;opacity:1!important;box-shadow:0 8px 28px rgba(0,0,0,.45)!important}
+@media(max-width:600px){.emi-creator-form{padding-bottom:calc(140px + env(safe-area-inset-bottom))!important}.emi-creator-next{width:calc(100vw - 28px)!important;bottom:calc(108px + env(safe-area-inset-bottom))!important}}
