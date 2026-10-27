@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Camera, Heart, Home, LayoutGrid, ArrowLeft } from "lucide-react";
+import { Search, Camera, Heart, Home, LayoutGrid, ArrowLeft, ShieldCheck } from "lucide-react";
 
 const initiatives: { tag: string; title: string; source: string; meta: string; image: string }[] = [];
 
@@ -40,20 +40,22 @@ export default function PhilanthropyPage() {
     <a href="#idees" className="foundation-action mt-4 inline-flex rounded-full px-5 py-3 font-bold">Découvrir les initiatives</a>
    </div>
   </section>
-  <div className="flex justify-center gap-3 py-4" aria-hidden="true">{[0,1,2,3,4,5,6].map((n)=><span key={n} className={`h-2.5 w-2.5 rounded-full ${n===0?"bg-amber-300":"bg-white/20"}`}/>)}</div>
+  <section aria-label="État des initiatives" className="mx-auto grid max-w-5xl grid-cols-3 gap-2 px-4 py-4 sm:gap-4">
+   {[{value:"0",label:"Initiatives vérifiées",icon:<Heart size={20}/>},{value:"0",label:"Projets en cours",icon:<Camera size={20}/>},{value:"0",label:"Actions réalisées",icon:<ShieldCheck size={20}/>}].map(item=><article key={item.label} className="foundation-card rounded-2xl px-2 py-4 text-center sm:px-4"><span className="mx-auto mb-2 grid h-9 w-9 place-items-center rounded-full bg-amber-200/10 text-amber-200">{item.icon}</span><strong className="block text-2xl font-extrabold text-white sm:text-3xl">{item.value}</strong><span className="mt-1 block text-xs leading-4 text-emerald-50/80 sm:text-sm">{item.label}</span></article>)}
+  </section>
   <section id="idees" className="px-4 pt-1">
-   <p className="text-sm font-semibold uppercase tracking-[.18em] text-amber-200">Explorer les initiatives à la une</p>
-   <div className="mb-4 mt-1 flex items-end justify-between gap-2"><h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">Des idées qui pourraient vous inspirer</h2><span className="shrink-0 rounded-full border border-amber-200/25 bg-white/5 px-3 py-2 text-xs text-amber-100">{filtered.length} initiative(s) publiée(s)</span></div>
+   <p className="text-xs font-bold uppercase tracking-[.18em] text-amber-200">ENSEMBLE, ON AGIT</p>
+   <div className="mb-4 mt-1 flex items-end justify-between gap-2"><h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">Des projets réels, un impact transparent</h2><span className="shrink-0 rounded-full border border-amber-200/25 bg-white/5 px-3 py-2 text-xs text-amber-100">{filtered.length} initiative(s)</span></div>
    {filtered.length > 0 ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
     {filtered.map(item=><article key={item.title} className="foundation-card mb-4 inline-block w-full break-inside-avoid overflow-hidden rounded-2xl p-2">
       <img src={item.image} alt={item.title} loading="lazy" className="foundation-image"/>
       <div className="px-1 pt-2"><h3 className="text-base font-semibold leading-snug sm:text-lg">{item.title}</h3><p className="mt-1 text-sm">{item.source}</p><p className="text-sm text-slate-400">{item.meta}</p></div>
     </article>)}
-   </div> : <div className="foundation-card rounded-2xl p-6 sm:p-8"><p className="text-lg font-bold text-amber-100">Aucune initiative vérifiée n’est publiée pour le moment.</p><p className="mt-2 text-sm leading-6 text-slate-300">Les projets apparaîtront ici lorsqu’ils seront enregistrés et vérifiés. Les visuels de démonstration et les chiffres fictifs ne sont pas affichés comme des actions réelles.</p></div>}
+   </div> : <div className="foundation-card rounded-2xl p-6 sm:p-8"><span className="mb-3 grid h-12 w-12 place-items-center rounded-2xl border border-amber-200/30 bg-amber-200/10 text-amber-200"><Heart size={24}/></span><p className="text-lg font-bold text-amber-100">Les prochaines initiatives commencent ici.</p><p className="mt-2 text-sm leading-6 text-slate-300">Aucun projet n’a encore passé la vérification. Pour protéger la communauté, EMi n’affiche ni faux projets, ni fausses collectes, ni chiffres inventés.</p></div>}
   </section>
   <section id="soutien" className="mx-4 mt-6 rounded-3xl bg-emerald-950 p-5 text-white sm:p-7">
    <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">EMi Fondation</p><h2 className="mt-2 text-2xl font-extrabold">Un geste qui compte</h2><p className="mt-2 text-sm leading-6 text-white/80">Les initiatives affichées sont des exemples d’inspiration, pas des collectes validées. Les bénéficiaires et les projets doivent être vérifiés avant toute contribution.</p>
-   <button onClick={()=>setNotice("Les soutiens en ligne ne sont pas encore activés. Aucun paiement n’a été effectué.")} className="foundation-action mt-4 rounded-full px-5 py-3 font-bold">Soutenir la communauté</button>
+   <div className="mt-4 flex flex-col gap-3 sm:flex-row"><button onClick={()=>setNotice("La soumission en ligne des initiatives sera activée dès que le formulaire de vérification sera prêt. Aucun projet n’a été envoyé.")} className="rounded-full border border-amber-200/60 px-5 py-3 font-bold text-amber-100">Proposer une initiative <span aria-hidden="true">↗</span></button><button onClick={()=>setNotice("Les soutiens en ligne ne sont pas encore activés. Aucun paiement n’a été effectué.")} className="foundation-action rounded-full px-5 py-3 font-bold">Soutenir un projet <span aria-hidden="true">♡</span></button></div>
    {notice&&<p role="status" className="mt-3 text-sm text-amber-100">{notice}</p>}
   </section>
   <nav aria-label="Navigation Fondation" className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-200/20 bg-[#041b14]/95 px-3 py-2 text-amber-100 backdrop-blur"><div className="mx-auto flex max-w-md items-center justify-around">
