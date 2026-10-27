@@ -1341,3 +1341,28 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .story-online-dot{position:absolute;right:0;bottom:1px;width:13px;height:13px;border-radius:50%;background:#21e68b;border:2.5px solid #061a12;box-shadow:0 0 0 2px #21e68b25,0 0 12px #21e68b80;z-index:4}
 .story-add .story-online-dot{right:-1px;bottom:0}
 .story-name{max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+
+/* EMi creator studio: usable caption and always-visible publish action */
+.emi-creator{display:flex;flex-direction:column;min-height:0}
+.emi-creator-form{min-height:0;overflow-y:auto;overflow-x:hidden;padding-bottom:0}
+.emi-creator-tools{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding:12px 12px 10px}
+.emi-creator-tools::-webkit-scrollbar{display:none}
+.emi-creator-tools button{flex:0 0 76px;min-width:76px;min-height:72px;padding:8px 5px;border:1px solid rgba(232,201,111,.2);background:linear-gradient(155deg,#18251f,#101713);border-radius:15px;color:#f8f2df}
+.emi-creator-tools button span:last-child{display:block;max-width:100%;font-size:11px;line-height:1.25;white-space:normal;overflow-wrap:anywhere;text-align:center}
+.emi-creator-caption{gap:12px;padding:8px 16px 18px;background:#080e0b}
+.emi-creator-caption>textarea{display:block;box-sizing:border-box;width:100%;min-height:100px;max-height:180px;resize:vertical;padding:14px;border:1px solid rgba(232,201,111,.28);border-radius:14px;outline:none;background:#101b15;color:#fff9e9;font:16px/1.55 inherit;overflow-y:auto;white-space:pre-wrap}
+.emi-creator-caption>textarea:focus{border-color:#e8c96f;box-shadow:0 0 0 3px #e8c96f1c}
+.emi-creator-caption>textarea::placeholder{color:#9eafa4}
+.emi-creator-next{position:sticky;bottom:0;z-index:12;display:block;width:100%;min-height:54px;margin-top:12px;padding:14px 18px;border:1px solid #f5e3a4;border-radius:16px;background:linear-gradient(115deg,#fff0b3,#d9b04c 54%,#f8e5a0);color:#092017;font-size:16px;font-weight:800;box-shadow:0 -8px 24px #0004,0 6px 22px #d9b04c26}
+@media(max-width:600px){
+ .modal-backdrop:has(.emi-creator){overflow:hidden!important}
+ .emi-creator{height:100dvh!important;max-height:100dvh!important;overflow:hidden!important;background:#070d0a!important;color:#fff9e9!important}
+ .emi-creator-form{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;padding-bottom:calc(14px + env(safe-area-inset-bottom))!important}
+ .emi-creator-preview{flex:0 0 auto!important;min-height:190px!important;height:34dvh!important;max-height:34dvh!important;aspect-ratio:auto!important}
+ .emi-creator-tools{flex:0 0 auto!important;gap:8px!important;padding:10px 12px!important}
+ .emi-creator-tools button{flex:0 0 78px!important;min-width:78px!important;min-height:72px!important}
+ .emi-creator-caption{padding:8px 14px 16px!important;gap:12px!important}
+ .emi-creator-caption>textarea{min-height:100px!important;max-height:180px!important;font-size:16px!important}
+ .emi-creator-next{position:sticky!important;bottom:0!important;margin-top:12px!important;margin-bottom:4px!important;min-height:56px!important;border-radius:16px!important}
+}
