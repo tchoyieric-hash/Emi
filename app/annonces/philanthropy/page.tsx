@@ -9,7 +9,7 @@ type Initiative = { id:string; owner_id:string; title:string; category:string; d
 const categories = [{value:"education",label:"Éducation"},{value:"health",label:"Santé"},{value:"solidarity",label:"Solidarité"},{value:"environment",label:"Environnement"},{value:"community",label:"Communauté"},{value:"other",label:"Autre"}];
 
 export default function PhilanthropyPage() {
- const supabase = useMemo(() => createSupabaseBrowserClient(), []);
+ const supabase = useMemo(() => { try { return createSupabaseBrowserClient(); } catch { return null; } }, []);
  const [search,setSearch]=useState("");
  const [initiatives,setInitiatives]=useState<Initiative[]>([]);
  const [userId,setUserId]=useState<string|null>(null);
@@ -20,13 +20,19 @@ export default function PhilanthropyPage() {
  const [error,setError]=useState("");
  const [form,setForm]=useState({title:"",category:"solidarity",description:"",cover_image_url:"",target_amount:""});
  const load=async()=>{
-  if(!supabase){setError("La connexion Supabase n’est pas configurée sur cette version.");setLoading(false);return;}
   setLoading(true);setError("");
-  const {data:{user}}=await supabase.auth.getUser();setUserId(user?.id??null);
-  const {data,error:dbError}=await supabase.from("foundation_initiatives").select("id,owner_id,title,category,description,cover_image_url,target_amount,currency,status,created_at").order("created_at",{ascending:false}).limit(100);
-  if(dbError){setError("Impossible de charger les initiatives. Vérifie la connexion et les autorisations Supabase.");}
-  else setInitiatives((data??[]) as Initiative[]);
-  setLoading(false);
+  if(!supabase){setError("La connexion Supabase n’est pas configurée. Tu peux réessayer dans un instant.");setLoading(false);return;}
+  try {
+   const authResult=await supabase.auth.getUser();
+   setUserId(authResult.data?.user?.id??null);
+   const result=await supabase.from("foundation_initiatives").select("id,owner_id,title,category,description,cover_image_url,target_amount,currency,status,created_at").order("created_at",{ascending:false}).limit(100);
+   if(result.error){setError("Les initiatives ne sont pas disponibles pour le moment. Réessaie dans quelques instants.");}
+   else setInitiatives((result.data??[]) as Initiative[]);
+  } catch {
+   setError("La page Fondation n’a pas pu joindre le service. Vérifie ta connexion puis réessaie.");
+  } finally {
+   setLoading(false);
+  }
  };
  useEffect(()=>{void load();},[supabase]);
  const visible=useMemo(()=>initiatives.filter(x=>["verified","completed"].includes(x.status)&&(x.title+" "+x.description+" "+x.category).toLowerCase().includes(search.toLowerCase())),[initiatives,search]);
