@@ -87,7 +87,9 @@ export default function HomePage() {
   const [hideLikeCounts, setHideLikeCounts] = useState(false);
   const [settingsNotice, setSettingsNotice] = useState("");
   const [user, setUser] = useState<Profile | null>(null);
-  const [posts, setPosts] = useState<Post[]>([]);\n  const [postViewCounts, setPostViewCounts] = useState<Record<string, number>>({});\n  const [onlineNow, setOnlineNow] = useState(false);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [postViewCounts, setPostViewCounts] = useState<Record<string, number>>({});
+  const [onlineNow, setOnlineNow] = useState(false);
   const [marketHighlights, setMarketHighlights] = useState<MarketHighlight[]>([]);
   const [sharedPosts, setSharedPosts] = useState<Post[]>([]);
   const [likes, setLikes] = useState<Record<string, number>>({});
@@ -486,7 +488,9 @@ export default function HomePage() {
     if (profilesError) { setMessage("Impossible de charger les profils des auteurs : " + profilesError.message); return; }
     const profilesById = new Map((authorProfiles || []).map(profile => [profile.id, profile]));
     const realPosts = rawPosts.map(post => ({ ...post, profiles: profilesById.get(post.user_id) || null }));
-    setPosts(realPosts);\n    const { data: viewRows } = await supabase.from("post_views").select("post_id").in("post_id", realPosts.map(post => post.id));\n    const viewCounts: Record<string, number> = {}; (viewRows || []).forEach((row: {post_id:string}) => { viewCounts[row.post_id] = (viewCounts[row.post_id] || 0) + 1; }); setPostViewCounts(old => ({...old, ...viewCounts}));
+    setPosts(realPosts);
+    const { data: viewRows } = await supabase.from("post_views").select("post_id").in("post_id", realPosts.map(post => post.id));
+    const viewCounts: Record<string, number> = {}; (viewRows || []).forEach((row: {post_id:string}) => { viewCounts[row.post_id] = (viewCounts[row.post_id] || 0) + 1; }); setPostViewCounts(old => ({...old, ...viewCounts}));
     // Synchroniser les offres du Marché avec l'accueil, avec leur badge d'origine.
     const [{data:marketRows},{data:eliteRows},{data:trocRows},{data:flowRows}] = await Promise.all([
       supabase.from("annonces").select("id,titre,description,prix,image_urls,created_at").eq("statut","active").order("created_at",{ascending:false}).limit(8),
@@ -854,7 +858,9 @@ export default function HomePage() {
         musicMeta = {title: musicTitle.trim() || musicFile.name.replace(/\.[^.]+$/, ""),artist:"Audio de ton téléphone",start:0,end:30};
       }
       publishStage = "enregistrement de la publication dans Supabase";
-      const postContent = (publishDestination === "reel" ? "[EMI_REEL] " : "") + caption.trim() + (musicMeta ? "\n\n[EMI_MUSIC]" + JSON.stringify({...musicMeta,url:musicUrl}) + "[/EMI_MUSIC]" : "");
+      const postContent = (publishDestination === "reel" ? "[EMI_REEL] " : "") + caption.trim() + (musicMeta ? "
+
+[EMI_MUSIC]" + JSON.stringify({...musicMeta,url:musicUrl}) + "[/EMI_MUSIC]" : "");
       const catalogTrackId = musicFile ? null : (selectedMusic?.id ?? null); const catalogClipStart = catalogTrackId && musicMeta ? Math.max(0, Math.floor(musicMeta.start)) : null; const catalogClipEnd = catalogTrackId && musicMeta ? catalogClipStart! + Math.min(60, Math.max(1, Math.floor(musicMeta.end) - Math.floor(musicMeta.start))) : null; const { error } = await supabase.from("posts").insert({ user_id: user.id, content: postContent, media_type: mediaType, media_urls: urls, visibility: "public", music_track_id: catalogTrackId, music_start_seconds: catalogTrackId ? catalogClipStart : null, music_end_seconds: catalogTrackId ? catalogClipEnd : null });
       if (error) throw error;
       setCaption(""); setPublishDestination("post"); setFile(null); setSelectedFiles([]); setMusicFile(null); setSelectedMusic(null); setMusicTitle(""); setCatalogOpen(false); setCreatorFilter("original"); setCreatorRatio("4:5"); setCreatorBrightness(100); setCreatorContrast(100); setCreatorTextOnPhoto(false); setCreatorOverlayText(""); setCreatorEditOpen(false); setMusicStart(0); setMusicEnd(30); setMusicDuration(0); setComposerOpen(false); setMessage("Publication envoyée."); await loadFeed();
