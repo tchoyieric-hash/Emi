@@ -452,12 +452,9 @@
 
 /* Definitive mobile fix: Share is a persistent action, not part of the long audio form. */
 .emi-creator{position:relative}
-.emi-creator-form{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
-.emi-creator-next{position:fixed!important;left:50%!important;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom))!important;width:min(532px,calc(100vw - 28px))!important;min-height:52px!important;margin:0!important;z-index:10050!important;border-radius:28px!important;box-shadow:0 8px 28px rgba(0,0,0,.45)!important}
-@media(max-width:600px){
- .emi-creator-form{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
- .emi-creator-next{width:calc(100vw - 28px)!important;bottom:calc(14px + env(safe-area-inset-bottom))!important}
-}
+.emi-creator-form{padding-bottom:16px}
+.emi-creator-next{position:sticky;bottom:auto;left:auto;transform:none;width:100%;margin-top:12px;z-index:2}
+@media(max-width:600px){.emi-creator-form{padding-bottom:calc(16px + env(safe-area-inset-bottom))}}
 
 /* EMi polish pass: crisp media, profile grid, immersive reels and cleaner messaging. */
 .feed-list{gap:22px}
