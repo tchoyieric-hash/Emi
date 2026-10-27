@@ -10,6 +10,7 @@ type Post = {
   profiles?: { username?: string | null; display_name?: string | null; avatar_url?: string | null } | null;
 };
 type Profile = { id: string; email?: string; username?: string | null; display_name?: string | null; avatar_url?: string | null; bio?: string | null };
+type MarketHighlight = { id:string; title:string; description:string; badge:string; image:string|null; href:string; created_at:string; price?:number|null; meta?:string };
 type Story = { id:string; user_id:string; media_url:string; media_type:"image"|"video"; caption:string; music_url?:string|null; music_title?:string|null; visibility:string; created_at:string; expires_at:string; profiles?:{username?:string|null;display_name?:string|null;avatar_url?:string|null}|null };
 const supabase = createSupabaseBrowserClient();
 
@@ -87,6 +88,7 @@ export default function HomePage() {
   const [settingsNotice, setSettingsNotice] = useState("");
   const [user, setUser] = useState<Profile | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [marketHighlights, setMarketHighlights] = useState<MarketHighlight[]>([]);
   const [sharedPosts, setSharedPosts] = useState<Post[]>([]);
   const [likes, setLikes] = useState<Record<string, number>>({});
   const [liked, setLiked] = useState<string[]>([]);
@@ -485,6 +487,20 @@ export default function HomePage() {
     const profilesById = new Map((authorProfiles || []).map(profile => [profile.id, profile]));
     const realPosts = rawPosts.map(post => ({ ...post, profiles: profilesById.get(post.user_id) || null }));
     setPosts(realPosts);
+    // Synchroniser les offres du Marché avec l'accueil, avec leur badge d'origine.
+    const [{data:marketRows},{data:eliteRows},{data:trocRows},{data:flowRows}] = await Promise.all([
+      supabase.from("annonces").select("id,titre,description,prix,image_urls,created_at").eq("statut","active").order("created_at",{ascending:false}).limit(8),
+      supabase.from("elite_directory_profiles").select("id,nom,specialite,ville,bio,image_url,created_at").eq("published",true).order("created_at",{ascending:false}).limit(5),
+      supabase.from("troc_offres").select("id,bien_offert,bien_recherche,description,created_at").eq("statut","active").order("created_at",{ascending:false}).limit(4),
+      supabase.from("tontine_cercles").select("id,nom_article,prix_cible,membres_max,created_at").order("created_at",{ascending:false}).limit(4)
+    ]);
+    const marketCards:MarketHighlight[] = [
+      ...((marketRows||[]) as any[]).map(a=>({id:a.id,title:a.titre,description:a.description||"Découvre cette offre de la communauté.",badge:"🛍️ EMi MARKET",image:Array.isArray(a.image_urls)?a.image_urls[0]||null:null,href:"/annonce/"+a.id,created_at:a.created_at,price:Number(a.prix)||0})),
+      ...((eliteRows||[]) as any[]).map(a=>({id:a.id,title:a.nom,description:a.bio||a.specialite||"Professionnel de la communauté EMi.",badge:"ELITE HOSPITALITY",image:a.image_url||null,href:"/annonces/elite-directory",created_at:a.created_at,meta:[a.specialite,a.ville].filter(Boolean).join(" · ")})),
+      ...((trocRows||[]) as any[]).map(a=>({id:a.id,title:a.bien_offert,description:"Recherche en échange : "+a.bien_recherche+(a.description?" — "+a.description:""),badge:"EMi TROC",image:null,href:"/annonces/troc",created_at:a.created_at})),
+      ...((flowRows||[]) as any[]).map(a=>({id:a.id,title:a.nom_article,description:"Rejoins ce cercle d’achat groupé de la communauté.",badge:"DJANGUI FLOW",image:null,href:"/annonces/tontine",created_at:a.created_at,meta:a.prix_cible?new Intl.NumberFormat("fr-FR").format(Number(a.prix_cible))+" FCFA":""}))
+    ].sort((a,b)=>new Date(b.created_at||0).getTime()-new Date(a.created_at||0).getTime()).slice(0,8);
+    setMarketHighlights(marketCards);
     if (realPosts.length) {
       const ids = realPosts.map(p => p.id);
       const { data: likeRows } = await supabase.from("post_likes").select("post_id,user_id").in("post_id", ids);
@@ -1508,7 +1524,17 @@ export default function HomePage() {
              <a href="/annonces/philanthropy" className="emi-service-card emi-service-foundation"><span className="emi-service-icon"><Heart size={21}/></span><strong>Fondation</strong><small>Solidarité & initiatives</small><ChevronRight size={15}/></a>
              <a href="/annonces/master-health-check" className="emi-service-card emi-service-help"><span className="emi-service-icon"><CircleHelp size={21}/></span><strong>Help EMi</strong><small>Aide & assistance</small><ChevronRight size={15}/></a>
            </div>
-           <section className="emi-home-reels" aria-label="Reels de la communauté">
+           <section className="emi-home-market" aria-label="À la une du Marché EMi">
+              <div className="emi-home-market-heading"><div><span className="eyebrow">OFFRES DE LA COMMUNAUTÉ</span><h2>À la une du Marché</h2><p>Les dernières annonces, avec leur espace d’origine.</p></div><a href="/annonces">Voir tout <ChevronRight size={15}/></a></div>
+              <div className="emi-home-market-row">
+                {marketHighlights.map(item=><a href={item.href} className="emi-home-market-card" key={item.badge+item.id}>
+                  <div className="emi-home-market-image">{item.image?<img src={item.image} alt={item.title} loading="lazy"/>:<span><ShoppingBag size={28}/></span>}<span className={"emi-home-market-badge "+(item.badge.includes("ELITE")?"is-hospitality":item.badge.includes("TROC")?"is-troc":item.badge.includes("DJANGUI")?"is-flow":"is-market")}>{item.badge}</span></div>
+                  <div className="emi-home-market-copy"><strong>{item.title}</strong>{item.price!==undefined&&<b>{new Intl.NumberFormat("fr-FR").format(Number(item.price))} FCFA</b>}<p>{item.description}</p>{item.meta&&<small>{item.meta}</small>}</div>
+                </a>)}
+                {marketHighlights.length===0&&<a href="/annonces" className="emi-home-market-empty"><ShoppingBag size={22}/><strong>Découvrir le Marché EMi</strong><span>Les annonces publiées apparaîtront ici automatiquement.</span></a>}
+              </div>
+            </section>
+            <section className="emi-home-reels" aria-label="Reels de la communauté">
              <div className="emi-home-reels-heading"><div><span className="eyebrow">À REGARDER</span><h2>Reels</h2><p>Les vidéos récentes de la communauté.</p></div><button type="button" onClick={() => {setActive("Reels");void loadFeed();window.scrollTo({top:0,behavior:"smooth"});}}>Voir tout <ChevronRight size={15}/></button></div>
              <div className="emi-home-reels-row">
                {posts.filter(post=>post.media_type==="video"&&(post.media_urls||[]).length>0).slice(0,10).map(post=><button type="button" className="emi-home-reel-card" key={post.id} onClick={()=>{setSelectedReelId(post.id);setActive("Reels");void loadFeed();window.scrollTo({top:0,behavior:"instant"});}} aria-label={"Ouvrir le Reel : "+((post.content||"Reel EMi").replace(/^\\s*\\[EMI_REEL\\]\\s*/,"").split("[EMI_MUSIC]")[0].trim()||"Reel EMi")}><video src={post.media_urls[0]} muted playsInline preload="metadata"/><span className="emi-home-reel-play"><Play size={19} fill="currentColor"/></span><span className="emi-home-reel-caption">{(post.content||"Reel EMi").replace(/^\\s*\\[EMI_REEL\\]\\s*/,"").split("[EMI_MUSIC]")[0].trim()||"Reel EMi"}</span></button>)}
