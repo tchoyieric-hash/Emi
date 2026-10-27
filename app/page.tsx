@@ -500,10 +500,10 @@ export default function HomePage() {
       supabase.from("tontine_cercles").select("id,nom_article,prix_cible,membres_max,created_at").order("created_at",{ascending:false}).limit(4)
     ]);
     const marketCards:MarketHighlight[] = [
-      ...((marketRows||[]) as any[]).map(a=>({id:a.id,title:a.titre,description:a.description||"Découvre cette offre de la communauté.",badge:"🛍️ EMi MARKET",viewType:"market",image:Array.isArray(a.image_urls)?a.image_urls[0]||null:null,href:"/annonce/"+a.id,created_at:a.created_at,price:Number(a.prix)||0})),
-      ...((eliteRows||[]) as any[]).map(a=>({id:a.id,title:a.nom,description:a.bio||a.specialite||"Professionnel de la communauté EMi.",badge:"ELITE HOSPITALITY",viewType:"elite",image:a.image_url||null,href:"/annonces/elite-directory",created_at:a.created_at,meta:[a.specialite,a.ville].filter(Boolean).join(" · ")})),
-      ...((trocRows||[]) as any[]).map(a=>({id:a.id,title:a.bien_offert,description:"Recherche en échange : "+a.bien_recherche+(a.description?" — "+a.description:""),badge:"EMi TROC",viewType:"troc",image:null,href:"/annonces/troc",created_at:a.created_at})),
-      ...((flowRows||[]) as any[]).map(a=>({id:a.id,title:a.nom_article,description:"Rejoins ce cercle d’achat groupé de la communauté.",badge:"DJANGUI FLOW",viewType:"flow",image:null,href:"/annonces/tontine",created_at:a.created_at,meta:a.prix_cible?new Intl.NumberFormat("fr-FR").format(Number(a.prix_cible))+" FCFA":""}))
+      ...((marketRows||[]) as any[]).map(a=>({id:a.id,title:a.titre,description:a.description||"Découvre cette offre de la communauté.",badge:"🛍️ EMi MARKET",viewType:"market" as const,image:Array.isArray(a.image_urls)?a.image_urls[0]||null:null,href:"/annonce/"+a.id,created_at:a.created_at,price:Number(a.prix)||0})),
+      ...((eliteRows||[]) as any[]).map(a=>({id:a.id,title:a.nom,description:a.bio||a.specialite||"Professionnel de la communauté EMi.",badge:"ELITE HOSPITALITY",viewType:"elite" as const,image:a.image_url||null,href:"/annonces/elite-directory",created_at:a.created_at,meta:[a.specialite,a.ville].filter(Boolean).join(" · ")})),
+      ...((trocRows||[]) as any[]).map(a=>({id:a.id,title:a.bien_offert,description:"Recherche en échange : "+a.bien_recherche+(a.description?" — "+a.description:""),badge:"EMi TROC",viewType:"troc" as const,image:null,href:"/annonces/troc",created_at:a.created_at})),
+      ...((flowRows||[]) as any[]).map(a=>({id:a.id,title:a.nom_article,description:"Rejoins ce cercle d’achat groupé de la communauté.",badge:"DJANGUI FLOW",viewType:"flow" as const,image:null,href:"/annonces/tontine",created_at:a.created_at,meta:a.prix_cible?new Intl.NumberFormat("fr-FR").format(Number(a.prix_cible))+" FCFA":""}))
     ].sort((a,b)=>new Date(b.created_at||0).getTime()-new Date(a.created_at||0).getTime()).slice(0,8);
     setMarketHighlights(marketCards);
     const marketKeys = marketCards.map(item=>({item_type:item.viewType,item_id:String(item.id)}));
