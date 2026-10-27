@@ -858,9 +858,7 @@ export default function HomePage() {
         musicMeta = {title: musicTitle.trim() || musicFile.name.replace(/\.[^.]+$/, ""),artist:"Audio de ton téléphone",start:0,end:30};
       }
       publishStage = "enregistrement de la publication dans Supabase";
-      const postContent = (publishDestination === "reel" ? "[EMI_REEL] " : "") + caption.trim() + (musicMeta ? "
-
-[EMI_MUSIC]" + JSON.stringify({...musicMeta,url:musicUrl}) + "[/EMI_MUSIC]" : "");
+      const postContent = (publishDestination === "reel" ? "[EMI_REEL] " : "") + caption.trim() + (musicMeta ? "\n\n[EMI_MUSIC]" + JSON.stringify({...musicMeta,url:musicUrl}) + "[/EMI_MUSIC]" : "");
       const catalogTrackId = musicFile ? null : (selectedMusic?.id ?? null); const catalogClipStart = catalogTrackId && musicMeta ? Math.max(0, Math.floor(musicMeta.start)) : null; const catalogClipEnd = catalogTrackId && musicMeta ? catalogClipStart! + Math.min(60, Math.max(1, Math.floor(musicMeta.end) - Math.floor(musicMeta.start))) : null; const { error } = await supabase.from("posts").insert({ user_id: user.id, content: postContent, media_type: mediaType, media_urls: urls, visibility: "public", music_track_id: catalogTrackId, music_start_seconds: catalogTrackId ? catalogClipStart : null, music_end_seconds: catalogTrackId ? catalogClipEnd : null });
       if (error) throw error;
       setCaption(""); setPublishDestination("post"); setFile(null); setSelectedFiles([]); setMusicFile(null); setSelectedMusic(null); setMusicTitle(""); setCatalogOpen(false); setCreatorFilter("original"); setCreatorRatio("4:5"); setCreatorBrightness(100); setCreatorContrast(100); setCreatorTextOnPhoto(false); setCreatorOverlayText(""); setCreatorEditOpen(false); setMusicStart(0); setMusicEnd(30); setMusicDuration(0); setComposerOpen(false); setMessage("Publication envoyée."); await loadFeed();
