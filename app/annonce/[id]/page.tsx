@@ -7,7 +7,8 @@ import { ChevronLeft,LoaderCircle,MessageCircle,ShoppingBag,MapPin,UserRound,Pho
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 import { genererLienWhatsApp } from "@/lib/whatsapp";
 
-type Annonce={id:string;seller_id:string;titre:string;description:string;prix:number;devise:string;image_urls:string[];numero_whatsapp:string;created_at:string};\ntype Seller={id:string;username?:string|null;display_name?:string|null;avatar_url?:string|null;bio?:string|null};
+type Annonce={id:string;seller_id:string;titre:string;description:string;prix:number;devise:string;image_urls:string[];numero_whatsapp:string;created_at:string};
+type Seller={id:string;username?:string|null;display_name?:string|null;avatar_url?:string|null;bio?:string|null};
 const supabase=createSupabaseBrowserClient();
 export default function AnnonceDetailPage(){
  const params=useParams<{id:string}>(); const id=String(params.id||"");
