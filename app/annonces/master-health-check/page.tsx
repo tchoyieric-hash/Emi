@@ -18,7 +18,8 @@ const topics = [
 ];
 export default function MasterHealthCheckPage() {
   const [query,setQuery]=useState("");
-  const [opened,setOpened]=useState<number|null>(0);\n  const [contactNotice,setContactNotice]=useState("");
+  const [opened,setOpened]=useState<number|null>(0);
+  const [contactNotice,setContactNotice]=useState("");
   const filtered=useMemo(()=>faqs.filter(x=>(x.q+" "+x.a+" "+x.category).toLowerCase().includes(query.toLowerCase())),[query]);
   return <main className="emi-help min-h-screen bg-[#031b14] pb-28 text-white">
     <style jsx global>{`
