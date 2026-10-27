@@ -542,7 +542,7 @@ export default function HomePage() {
     });},{threshold:[0.6]});
     nodes.forEach(node=>observer.observe(node));
     return()=>observer.disconnect();
-  },[marketHighlights]);
+  },[marketHighlights, user?.id]);
   useEffect(() => {
     if (!supabase) { setMessage("La connexion Supabase n’est pas configurée."); return; }
     let alive = true;
@@ -1568,7 +1568,7 @@ export default function HomePage() {
     },{threshold:[0.55]});
     nodes.forEach(node=>observer.observe(node));
     return ()=>observer.disconnect();
-  }, [posts, active, viewingProfile?.id]);
+  }, [posts, active, viewingProfile?.id, user?.id]);
 
   const isReelPost = (post: Post) => post.media_type === "video" && (post.media_urls || []).length > 0;
   const cleanPostContent = (content: string) => content.replace(/^\s*\[EMI_REEL\]\s*/, "");
