@@ -1103,3 +1103,9 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
 .emi-reel-view-count strong{font-size:12px;color:#fff7d7}
 .emi-reel-view-count span{color:#e6e4d8}
 .emi-home-reel-caption{bottom:45px!important}
+
+/* EMi Market highlight card views — emerald and champagne gold */
+.emi-home-market-image{position:relative;overflow:hidden}
+.emi-market-view-count{position:absolute;right:10px;bottom:10px;z-index:3;display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border:1px solid rgba(239,211,105,.82);border-radius:999px;background:rgba(2,24,17,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#f4d875;font-size:11px;line-height:1;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.emi-market-view-count strong{font-size:12px;color:#fff5d0}
+.emi-market-view-count span{color:#e2e1d5}
