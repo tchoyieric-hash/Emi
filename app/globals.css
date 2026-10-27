@@ -1393,3 +1393,10 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
  .emi-creator-next{bottom:24px!important}
  .emi-creator-form{padding-bottom:110px!important}
 }
+
+
+/* Publish button visibility safety fix */
+/* Keep the action inside the creator viewport and above mobile browser/app safe areas. */
+.emi-creator{position:relative!important;isolation:isolate}
+.emi-creator-next{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;cursor:pointer!important}
+.emi-creator-next:not(:disabled){pointer-events:auto!important}
