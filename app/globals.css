@@ -1235,3 +1235,102 @@ body{background:radial-gradient(ellipse at 50% -12%,rgba(17,105,72,.28),transpar
 }
 
 .story-viewer-views{display:inline-flex;align-items:center;gap:5px;margin-left:auto;margin-right:10px;color:#e8ca68;font-size:12px;white-space:nowrap}.story-viewer header{gap:10px}
+
+
+/* EMi 2050 — final cohesive mobile and desktop polish */
+:root{color-scheme:dark;--emi-gold:#e8c96f;--emi-gold-soft:#f8e8ad;--emi-emerald:#0d6b4a;--emi-ink:#020b08;--emi-surface:#061a13}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transparent 44%),linear-gradient(180deg,#020b08 0%,#04140e 55%,#020b08 100%);-webkit-font-smoothing:antialiased}
+.app-shell{gap:clamp(18px,2vw,32px);padding-left:clamp(14px,2.3vw,36px);padding-right:clamp(14px,2.3vw,36px)}
+.sidebar{border-right:1px solid rgba(232,201,111,.18)}
+.brand{font-size:29px;color:#f8e8ad}
+.brand-mark{border-radius:13px;position:relative;overflow:hidden}
+.nav-item{min-height:46px;transition:background .2s ease,color .2s ease,transform .2s ease}
+.nav-item:hover{transform:translateX(2px)}
+.create-button{border-radius:15px;min-height:48px}
+.main-column{min-width:0}
+.feed-header h1{font-size:clamp(25px,2.4vw,34px);letter-spacing:-1.2px}
+.stories-card,.post-card,.suggest-card,.emi-ecosystem-home,.emi-home-market,.emi-home-reels{border-color:rgba(232,201,111,.2)}
+.stories-card{background:linear-gradient(145deg,rgba(8,38,26,.98),rgba(3,17,11,.98));box-shadow:0 14px 36px #0003}
+.post-card{background:linear-gradient(155deg,rgba(7,29,20,.98),rgba(2,13,9,.99));box-shadow:0 12px 35px rgba(0,0,0,.22)}
+.post-card:hover{border-color:rgba(232,201,111,.38)}
+.post-top .avatar{box-shadow:0 0 0 2px rgba(232,201,111,.35)}
+.post-caption{font-size:14px;line-height:1.7}
+.post-actions button{transition:color .18s ease,transform .18s ease}
+.post-actions button:active,.mobile-nav button:active{transform:scale(.94)}
+.post-media,.post-media-wrap,.post-image-wrap{overflow:hidden}
+.post-card img,.post-card video{display:block;max-width:100%;height:auto}
+.round-action,.icon-button{transition:transform .2s ease,border-color .2s ease,background .2s ease}
+.round-action:hover,.icon-button:hover{transform:translateY(-1px);border-color:rgba(232,201,111,.62)}
+.emi-service-card,.emi-home-market-card{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.emi-service-card:hover,.emi-home-market-card:hover{transform:translateY(-3px);border-color:rgba(232,201,111,.65);box-shadow:0 12px 28px #0004}
+.modal-card{background:linear-gradient(150deg,#09251a,#03120c);border-color:rgba(232,201,111,.36)}
+.modal-card h2{color:#fff3c7}
+.modal-close{border-color:rgba(232,201,111,.24)}
+/* Mobile experience: one coherent premium emerald surface, not mixed light/dark themes */
+@media(max-width:700px){
+ html,body{background:#020b08!important;color:#fff9e9!important}
+ body{background:radial-gradient(ellipse at 50% 0%,rgba(12,105,70,.22),transparent 35%),#020b08!important}
+ .app-shell{padding:0 0 calc(82px + env(safe-area-inset-bottom))!important;background:transparent!important}
+ .main-column{padding:0 0 calc(88px + env(safe-area-inset-bottom))!important}
+ .mobile-header{height:60px!important;padding:0 15px!important;margin:0 0 10px!important;background:rgba(2,14,9,.94)!important;border-bottom:1px solid rgba(232,201,111,.23)!important;box-shadow:0 8px 24px #0003!important;backdrop-filter:blur(18px) saturate(140%)}
+ .mobile-header .brand{font-size:27px!important;color:#f8e8ad!important}
+ .mobile-header .brand-mark{width:33px!important;height:33px!important;border-radius:11px!important;background:linear-gradient(145deg,#fff0b4,#c99c3d 58%,#79581a)!important;color:#062017!important;box-shadow:0 0 18px #d9b34a25!important}
+ .mobile-header .brand-dot{color:#19d9a1!important}
+ .mobile-header .icon-button{width:39px!important;height:39px!important;border:1px solid rgba(232,201,111,.22)!important;background:#082219!important;color:#f4d982!important}
+ .stories-card{margin:0 10px 10px!important;padding:13px 12px 11px!important;border:1px solid rgba(232,201,111,.2)!important;border-radius:19px!important;background:linear-gradient(145deg,#08251a,#03130c)!important;box-shadow:0 9px 24px #0003!important}
+ .stories-card .section-label{color:#fff4d2!important;font-weight:750}
+ .stories-card .section-label button{color:#e8c96f!important}
+ .stories-row{gap:13px!important;padding-top:13px!important}
+ .story{color:#c5d5ca!important}
+ .story-ring{width:59px!important;height:59px!important;padding:2.5px!important;background:linear-gradient(140deg,#fff0b4,#d2a441 45%,#13dba0)!important;box-shadow:0 0 0 1px #e8c96f22,0 0 17px #0bd59614!important}
+ .story-avatar{border-color:#061a12!important;background:linear-gradient(145deg,#174a35,#061a12)!important;color:#f6e5a5!important}
+ .story-add{background:#0b2a1d!important;border:1px dashed #d8bb5c!important}
+ .story-plus{background:#e8c96f!important;color:#082016!important;border-color:#061a12!important}
+ .story-name{color:#c7d7cc!important}
+ .feed-tabs{margin:0 10px 10px!important;padding:0 7px!important;gap:0!important;border:1px solid rgba(232,201,111,.18)!important;border-radius:14px!important;background:#061a12!important;overflow-x:auto!important}
+ .feed-tabs button{flex:1;min-height:44px;padding:12px 9px!important;color:#9fb5a7!important;font-size:11px!important}
+ .feed-tabs button.tab-active{color:#ffe7a0!important;border-color:#e8c96f!important;background:linear-gradient(0deg,#e8c96f0c,transparent)!important}
+ .emi-ecosystem-home,.emi-home-market,.emi-home-reels{margin:10px!important;padding:15px 13px!important;border:1px solid rgba(232,201,111,.25)!important;border-radius:20px!important;background:radial-gradient(ellipse at 100% 0%,#d6b14a12,transparent 50%),linear-gradient(145deg,#08271b,#03130c 82%)!important}
+ .emi-services-heading h2,.emi-home-market-heading h2,.emi-home-reels-heading h2{color:#fff2c7!important}
+ .emi-services-heading p,.emi-home-market-heading p{color:#b3c9bc!important}
+ .emi-services-all,.emi-home-market-heading>a{color:#e8c96f!important}
+ .emi-service-card{border-color:#d8bb5c44!important;background:linear-gradient(145deg,#0b3022,#04170f)!important}
+ .emi-service-card strong,.emi-service-card h3{color:#fff0c1!important}
+ .emi-service-card p,.emi-service-card small{color:#b6cbbd!important}
+ .emi-home-market-card{border-color:#d8bb5c50!important;background:linear-gradient(155deg,#0b3023,#04160e)!important}
+ .feed-list{gap:10px!important}
+ .post-card{margin:0 10px!important;padding:13px 0 8px!important;border:1px solid rgba(232,201,111,.22)!important;border-radius:19px!important;background:linear-gradient(155deg,#082319,#03130c)!important;color:#fff9e9!important;box-shadow:0 10px 28px #0003!important;overflow:hidden}
+ .post-top{padding:0 13px!important}
+ .post-author strong{color:#fff1c7!important;font-size:13px!important}
+ .post-author span,.post-author small{color:#a8c0b1!important}
+ .post-caption{padding:0 13px!important;color:#e0ebe3!important;font-size:13px!important;line-height:1.65!important}
+ .more-button{color:#dfc36e!important}
+ .post-card .post-media,.post-card .post-media-wrap,.post-card .post-image-wrap{border-radius:0!important}
+ .post-card>img,.post-card>video{width:100%!important;max-width:100%!important;object-fit:cover}
+ .post-actions{margin:7px 12px 0!important;padding:10px 0 3px!important;border-top:1px solid rgba(232,201,111,.14)!important}
+ .post-actions button{color:#b7cbbf!important;font-size:11px!important}
+ .post-actions button.liked{color:#ff8fa2!important}
+ .post-actions svg{color:inherit}
+ .emi-post-views{border-color:#d8bb5c45!important;color:#e8c96f!important}
+ .mobile-nav{left:0!important;right:0!important;bottom:0!important;z-index:30!important;gap:0!important;justify-content:space-around!important;padding:7px 3px calc(7px + env(safe-area-inset-bottom))!important;background:rgba(2,13,9,.97)!important;border-top:1px solid rgba(232,201,111,.27)!important;box-shadow:0 -8px 28px #0005!important;backdrop-filter:blur(22px) saturate(160%)!important}
+ .mobile-nav button{color:#91aa9b!important;font-size:9px!important;gap:4px!important}
+ .mobile-nav button.mobile-active{color:#ffe7a0!important}
+ .mobile-nav button.mobile-active svg{filter:drop-shadow(0 0 5px #e8c96f25)}
+ .mobile-nav .mobile-create{flex:0 0 41px!important;width:41px!important;height:41px!important;min-width:41px!important;border:1px solid #f5dc88!important;border-radius:14px!important;background:linear-gradient(145deg,#fff0b4,#d0a43e)!important;color:#062017!important;box-shadow:0 0 20px #d6ae3f25!important}
+ .profile-page,.discovery-person,.chat-shell,.emi-settings-hero,.emi-settings-profile-card{background:linear-gradient(145deg,#08251a,#03130c)!important;border-color:rgba(232,201,111,.24)!important;color:#fff9e9!important}
+ .profile-page-identity h2,.profile-stats strong{color:#fff1c7!important}
+ .profile-page-identity span,.profile-stats span,.profile-bio{color:#b8cbbf!important}
+ .profile-back-button{background:#082219!important;border-color:#d8bb5c55!important;color:#f4d982!important}
+ .profile-field-label{color:#d7e3da!important}
+ .profile-field-label input,.profile-field-label textarea{background:#03130c!important;border-color:#d8bb5c55!important;color:#fff9e9!important}
+ .modal-backdrop{background:#000c!important;backdrop-filter:blur(12px)!important}
+ .modal-card{background:linear-gradient(150deg,#09251a,#03120c)!important;color:#fff9e9!important;border-color:#d8bb5c66!important}
+ .modal-card h2{color:#fff1c7!important}
+ .modal-card p{color:#b8cbbf!important}
+ .modal-close{background:#082219!important;border-color:#d8bb5c55!important;color:#f4d982!important}
+ .modal-primary{background:linear-gradient(115deg,#fff0b3,#d9b04c 54%,#f8e5a0)!important;color:#092017!important}
+ .demo-note{background:#082219!important;border-color:#d8bb5c44!important;color:#e8c96f!important}
+ .right-column{display:none!important}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
