@@ -655,45 +655,38 @@ export default function HomePage() {
 
   useEffect(() => {
     const selector = active === "Reels" ? ".reel-video" : active === "Accueil" && !viewingProfile ? ".emi-feed-video" : null;
-    const allVideos = Array.from(document.querySelectorAll<HTMLVideoElement>(".emi-feed-video, .reel-video"));
+    const allFeedVideos = Array.from(document.querySelectorAll<HTMLVideoElement>(".emi-feed-video, .reel-video"));
     if (!selector) {
-      allVideos.forEach(video => video.pause());
+      allFeedVideos.forEach(video => video.pause());
       return;
     }
     const videos = Array.from(document.querySelectorAll<HTMLVideoElement>(selector));
     if (!videos.length) return;
-    // Une seule vidéo publiée joue à la fois : celle qui est la plus visible pendant le défilement.
-    const visibility = new Map<HTMLVideoElement, number>();
-    let currentVideo: HTMLVideoElement | null = null;
+    // Lecture automatique pilotée par la visibilité : une seule vidéo à la fois.
+    let activeVideo: HTMLVideoElement | null = null;
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => visibility.set(entry.target as HTMLVideoElement, entry.isIntersecting ? entry.intersectionRatio : 0));
-      let winner: HTMLVideoElement | null = null;
-      let bestRatio = 0.6;
-      videos.forEach(video => {
-        const ratio = visibility.get(video) || 0;
-        if (ratio > bestRatio) { bestRatio = ratio; winner = video; }
+      entries.forEach(entry => {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+          allFeedVideos.forEach(other => { if (other !== video) other.pause(); });
+          activeVideo = video;
+          video.playsInline = true;
+          video.loop = true;
+          video.muted = true;
+          void video.play().catch(() => undefined);
+        } else {
+          video.pause();
+          if (activeVideo === video) activeVideo = null;
+        }
       });
-      if (winner) {
-        currentVideo = winner;
-        videos.forEach(video => {
-          if (video !== winner) video.pause();
-        });
-        if (active !== "Reels") winner.muted = true;
-        if (winner.paused) winner.play().catch(() => undefined);
-      } else {
-        videos.forEach(video => video.pause());
-        currentVideo = null;
-      }
-    }, { threshold: [0, 0.2, 0.4, 0.6, 0.75, 0.9, 1] });
+    }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
     videos.forEach(video => {
       video.preload = "metadata";
-      visibility.set(video, 0);
       observer.observe(video);
     });
     return () => {
       observer.disconnect();
       videos.forEach(video => video.pause());
-      currentVideo = null;
     };
   }, [active, viewingProfile?.id, posts.length]);
 
