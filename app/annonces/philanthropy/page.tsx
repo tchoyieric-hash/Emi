@@ -1,65 +1,81 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Camera, Heart, Home, LayoutGrid, ArrowLeft, ShieldCheck } from "lucide-react";
+import { createSupabaseBrowserClient } from "@/lib/supabase";
+import { Search, Camera, Heart, Home, LayoutGrid, ArrowLeft, ShieldCheck, Plus, X, Loader2, RefreshCw } from "lucide-react";
 
-const initiatives: { tag: string; title: string; source: string; meta: string; image: string }[] = [];
+type Initiative = { id:string; owner_id:string; title:string; category:string; description:string; cover_image_url:string|null; target_amount:number|null; currency:string; status:string; created_at:string };
+const categories = [{value:"education",label:"Éducation"},{value:"health",label:"Santé"},{value:"solidarity",label:"Solidarité"},{value:"environment",label:"Environnement"},{value:"community",label:"Communauté"},{value:"other",label:"Autre"}];
 
 export default function PhilanthropyPage() {
+ const supabase = useMemo(() => createSupabaseBrowserClient(), []);
  const [search,setSearch]=useState("");
+ const [initiatives,setInitiatives]=useState<Initiative[]>([]);
+ const [userId,setUserId]=useState<string|null>(null);
+ const [loading,setLoading]=useState(true);
+ const [submitting,setSubmitting]=useState(false);
+ const [showForm,setShowForm]=useState(false);
  const [notice,setNotice]=useState("");
- const filtered=useMemo(()=>initiatives.filter(x=>(x.tag+" "+x.title+" "+x.meta).toLowerCase().includes(search.toLowerCase())),[search]);
+ const [error,setError]=useState("");
+ const [form,setForm]=useState({title:"",category:"solidarity",description:"",cover_image_url:"",target_amount:""});
+ const load=async()=>{
+  if(!supabase){setError("La connexion Supabase n’est pas configurée sur cette version.");setLoading(false);return;}
+  setLoading(true);setError("");
+  const {data:{user}}=await supabase.auth.getUser();setUserId(user?.id??null);
+  const {data,error:dbError}=await supabase.from("foundation_initiatives").select("id,owner_id,title,category,description,cover_image_url,target_amount,currency,status,created_at").order("created_at",{ascending:false}).limit(100);
+  if(dbError){setError("Impossible de charger les initiatives. Vérifie la connexion et les autorisations Supabase.");}
+  else setInitiatives((data??[]) as Initiative[]);
+  setLoading(false);
+ };
+ useEffect(()=>{void load();},[supabase]);
+ const visible=useMemo(()=>initiatives.filter(x=>["verified","completed"].includes(x.status)&&(x.title+" "+x.description+" "+x.category).toLowerCase().includes(search.toLowerCase())),[initiatives,search]);
+ const mine=initiatives.filter(x=>x.owner_id===userId&&x.status==="pending");
+ const submit=async(e:React.FormEvent)=>{
+  e.preventDefault();if(!supabase)return;
+  setError("");setNotice("");
+  const {data:{user}}=await supabase.auth.getUser();
+  if(!user){setError("Connecte-toi à ton compte EMi pour proposer une initiative.");return;}
+  setSubmitting(true);
+  const target=form.target_amount.trim()?Number(form.target_amount):null;
+  if(target!==null&&(!Number.isFinite(target)||target<=0)){setError("Indique un objectif valide ou laisse le champ vide.");setSubmitting(false);return;}
+  const {error:insertError}=await supabase.from("foundation_initiatives").insert({owner_id:user.id,title:form.title.trim(),category:form.category,description:form.description.trim(),cover_image_url:form.cover_image_url.trim()||null,target_amount:target,currency:"XAF",status:"pending"});
+  setSubmitting(false);
+  if(insertError){setError("L’envoi a échoué. Vérifie les champs puis réessaie.");return;}
+  setNotice("Initiative envoyée. Elle restera en attente jusqu’à sa vérification par l’équipe EMi.");
+  setForm({title:"",category:"solidarity",description:"",cover_image_url:"",target_amount:""});setShowForm(false);await load();
+ };
  return <main id="top" className="emi-foundation min-h-screen bg-[#031b14] pb-24 text-white">
   <style jsx global>{`
     .emi-foundation{background:radial-gradient(ellipse at 75% 0%,rgba(17,103,70,.32),transparent 42%),#031b14!important;color:#f7f5ec;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
-    .emi-foundation input{background:transparent!important;color:#fff!important;border:0!important;outline:none!important;box-shadow:none!important;font-size:16px!important;width:100%;min-width:0}
-    .emi-foundation input::placeholder{color:#a7b9af!important}
+    .emi-foundation input,.emi-foundation textarea,.emi-foundation select{background:#061f18!important;color:#fff!important;border:1px solid rgba(233,202,91,.25)!important;outline:none!important;box-shadow:none!important;font-size:16px!important;width:100%;min-width:0;border-radius:12px;padding:12px}
+    .emi-foundation input::placeholder,.emi-foundation textarea::placeholder{color:#a7b9af!important}
     .emi-foundation a,.emi-foundation button{transition:transform .18s ease,border-color .18s ease,filter .18s ease}
     .emi-foundation a:active,.emi-foundation button:active{transform:scale(.98)}
-    .emi-foundation .foundation-card{border:1px solid rgba(233,202,91,.62);background:linear-gradient(145deg,rgba(9,54,39,.98),rgba(2,22,16,.98));box-shadow:0 10px 28px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.04)}
-    .emi-foundation .foundation-image{display:block;width:100%;height:180px;object-fit:cover;border-radius:13px}
+    .emi-foundation .foundation-card{border:1px solid rgba(233,202,91,.4);background:linear-gradient(145deg,rgba(9,54,39,.98),rgba(2,22,16,.98));box-shadow:0 10px 28px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.04)}
+    .emi-foundation .foundation-image{display:block;width:100%;height:170px;object-fit:cover;border-radius:13px}
     .emi-foundation .foundation-action{background:linear-gradient(100deg,#f5dc72,#d7b848);color:#10291c;border:1px solid rgba(255,236,154,.8);box-shadow:0 5px 18px rgba(226,192,66,.14)}
     @media(min-width:640px){.emi-foundation .foundation-image{height:220px}}
   `}</style>
-  <header className="sticky top-0 z-30 border-b border-amber-200/15 bg-[#05271d]/95 px-4 pb-3 pt-3 text-white backdrop-blur">
-   <div className="mx-auto flex max-w-5xl items-center gap-3">
-    <Link href="/annonces" aria-label="Retour aux espaces EMi" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-amber-200/35 text-amber-200"><ArrowLeft size={21}/></Link>
-    <label className="flex h-14 min-w-0 flex-1 items-center gap-3 rounded-2xl border border-amber-200/40 bg-[#071f18] px-4 text-amber-100 shadow-lg">
-     <Search size={25}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher" aria-label="Rechercher une initiative" className="min-w-0 flex-1 bg-transparent text-lg text-white outline-none placeholder:text-slate-400"/><Camera size={24}/>
-    </label>
-   </div>
-  </header>
-  <section style={{height:"min(430px, 48svh)",minHeight:"280px",maxHeight:"460px",position:"relative",width:"100%",overflow:"hidden"}} className="relative overflow-hidden sm:h-[540px]">
-   <img src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=1200&q=85" alt="Des personnes réunies pour une initiative solidaire" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}} className="absolute inset-0"/>
-   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/15"/>
-   <div className="absolute bottom-8 left-5 right-5 text-white sm:bottom-12 sm:left-10 sm:max-w-3xl">
-    <p className="text-base font-semibold sm:text-xl">EMi Fondation · Solidarité</p>
-    <h1 className="mt-2 text-3xl font-extrabold leading-tight sm:text-6xl">Ensemble, faisons grandir l’espoir</h1>
-    <p className="mt-3 max-w-xl text-sm text-white/90 sm:text-lg">Des initiatives pour aider, partager et construire un avenir meilleur.</p>
-    <a href="#idees" className="foundation-action mt-4 inline-flex rounded-full px-5 py-3 font-bold">Découvrir les initiatives</a>
-   </div>
+  <header className="sticky top-0 z-30 border-b border-amber-200/15 bg-[#05271d]/95 px-4 pb-3 pt-3 text-white backdrop-blur"><div className="mx-auto flex max-w-5xl items-center gap-3">
+   <Link href="/annonces" aria-label="Retour aux espaces EMi" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-amber-200/35 text-amber-200"><ArrowLeft size={21}/></Link>
+   <label className="flex h-12 min-w-0 flex-1 items-center gap-3 rounded-2xl border border-amber-200/40 bg-[#071f18] px-4 text-amber-100"><Search size={22}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher une initiative" aria-label="Rechercher une initiative" className="border-0 bg-transparent"/></label>
+   <button type="button" onClick={()=>{setShowForm(true);setError("");setNotice("");}} aria-label="Proposer une initiative" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-amber-200 text-[#10291c]"><Plus size={23}/></button>
+  </div></header>
+  <section style={{height:"min(430px, 48svh)",minHeight:"300px",maxHeight:"460px",position:"relative",width:"100%",overflow:"hidden"}} className="relative overflow-hidden">
+   <img src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=1400&q=85" alt="Des personnes réunies pour une initiative solidaire" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}}/>
+   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10"/>
+   <div className="absolute bottom-7 left-5 right-5 text-white sm:bottom-12 sm:left-10 sm:max-w-3xl"><p className="text-sm font-bold uppercase tracking-[.18em] text-amber-200 sm:text-base">EMi Fondation · Solidarité</p><h1 className="mt-2 text-3xl font-extrabold leading-tight sm:text-6xl">Ensemble, faisons grandir l’espoir</h1><p className="mt-3 max-w-xl text-sm text-white/90 sm:text-lg">Des initiatives vérifiées pour aider, partager et construire un avenir meilleur.</p><button onClick={()=>document.getElementById("initiatives")?.scrollIntoView({behavior:"smooth"})} className="foundation-action mt-4 rounded-full px-5 py-3 font-bold">Découvrir les initiatives</button></div>
   </section>
-  <section aria-label="État des initiatives" className="mx-auto grid max-w-5xl grid-cols-3 gap-2 px-4 py-4 sm:gap-4">
-   {[{value:"0",label:"Initiatives vérifiées",icon:<Heart size={20}/>},{value:"0",label:"Projets en cours",icon:<Camera size={20}/>},{value:"0",label:"Actions réalisées",icon:<ShieldCheck size={20}/>}].map(item=><article key={item.label} className="foundation-card rounded-2xl px-2 py-4 text-center sm:px-4"><span className="mx-auto mb-2 grid h-9 w-9 place-items-center rounded-full bg-amber-200/10 text-amber-200">{item.icon}</span><strong className="block text-2xl font-extrabold text-white sm:text-3xl">{item.value}</strong><span className="mt-1 block text-xs leading-4 text-emerald-50/80 sm:text-sm">{item.label}</span></article>)}
+  <section aria-label="Transparence des initiatives" className="mx-auto grid max-w-5xl grid-cols-3 gap-2 px-4 py-4 sm:gap-4">{[{value:String(visible.length),label:"Initiatives vérifiées",icon:<Heart size={20}/>},{value:String(initiatives.filter(x=>x.status==="pending").length),label:"En attente de vérification",icon:<Camera size={20}/>},{value:String(initiatives.filter(x=>x.status==="completed").length),label:"Actions réalisées",icon:<ShieldCheck size={20}/>}].map(item=><article key={item.label} className="foundation-card rounded-2xl px-2 py-4 text-center sm:px-4"><span className="mx-auto mb-2 grid h-9 w-9 place-items-center rounded-full bg-amber-200/10 text-amber-200">{item.icon}</span><strong className="block text-2xl font-extrabold sm:text-3xl">{item.value}</strong><span className="mt-1 block text-xs leading-4 text-emerald-50/80 sm:text-sm">{item.label}</span></article>)}</section>
+  <section id="initiatives" className="mx-auto max-w-5xl px-4 pt-2"><p className="text-xs font-bold uppercase tracking-[.18em] text-amber-200">ENSEMBLE, ON AGIT</p><div className="mb-4 mt-1 flex items-end justify-between gap-2"><h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">Des projets réels, un impact transparent</h2><span className="shrink-0 rounded-full border border-amber-200/25 bg-white/5 px-3 py-2 text-xs text-amber-100">{visible.length} projet(s)</span></div>
+   {loading?<div className="foundation-card flex items-center justify-center gap-3 rounded-2xl p-8 text-emerald-50"><Loader2 className="animate-spin" size={22}/>Chargement des initiatives…</div>:error&&!initiatives.length?<div className="foundation-card rounded-2xl p-5"><p className="font-bold text-amber-100">{error}</p><button onClick={()=>void load()} className="foundation-action mt-3 inline-flex items-center gap-2 rounded-full px-4 py-2 font-bold"><RefreshCw size={16}/>Réessayer</button></div>:visible.length?<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">{visible.map(item=><article key={item.id} className="foundation-card overflow-hidden rounded-2xl p-3">{item.cover_image_url?<img src={item.cover_image_url} alt={item.title} loading="lazy" className="foundation-image"/>:<div className="foundation-image grid place-items-center bg-emerald-950 text-amber-200"><Heart size={34}/></div>}<div className="px-1 pt-3"><span className="text-xs font-bold uppercase tracking-wide text-amber-200">{categories.find(c=>c.value===item.category)?.label??"Initiative"}</span><h3 className="mt-1 text-lg font-bold">{item.title}</h3><p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-300">{item.description}</p>{item.target_amount&&<p className="mt-3 border-t border-white/10 pt-3 text-sm text-amber-100">Objectif déclaré : {Number(item.target_amount).toLocaleString("fr-FR")} {item.currency}</p>}<p className="mt-3 flex items-center gap-2 text-xs text-emerald-200"><ShieldCheck size={15}/>Initiative vérifiée par EMi</p></div></article>)}</div>:<div className="foundation-card rounded-2xl p-5 sm:p-7"><span className="mb-3 grid h-12 w-12 place-items-center rounded-2xl border border-amber-200/30 bg-amber-200/10 text-amber-200"><Heart size={24}/></span><p className="text-lg font-bold text-amber-100">Les prochaines initiatives commencent ici.</p><p className="mt-2 text-sm leading-6 text-slate-300">Aucun projet n’a encore passé la vérification. Pour protéger la communauté, EMi n’affiche ni faux projets, ni fausses collectes, ni chiffres inventés.</p><button onClick={()=>setShowForm(true)} className="foundation-action mt-4 rounded-full px-5 py-3 font-bold">Proposer la première initiative</button></div>}
+   {error&&initiatives.length>0&&<p role="status" className="mt-3 text-sm text-rose-200">{error}</p>}
   </section>
-  <section id="idees" className="px-4 pt-1">
-   <p className="text-xs font-bold uppercase tracking-[.18em] text-amber-200">ENSEMBLE, ON AGIT</p>
-   <div className="mb-4 mt-1 flex items-end justify-between gap-2"><h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">Des projets réels, un impact transparent</h2><span className="shrink-0 rounded-full border border-amber-200/25 bg-white/5 px-3 py-2 text-xs text-amber-100">{filtered.length} initiative(s)</span></div>
-   {filtered.length > 0 ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-    {filtered.map(item=><article key={item.title} className="foundation-card mb-4 inline-block w-full break-inside-avoid overflow-hidden rounded-2xl p-2">
-      <img src={item.image} alt={item.title} loading="lazy" className="foundation-image"/>
-      <div className="px-1 pt-2"><h3 className="text-base font-semibold leading-snug sm:text-lg">{item.title}</h3><p className="mt-1 text-sm">{item.source}</p><p className="text-sm text-slate-400">{item.meta}</p></div>
-    </article>)}
-   </div> : <div className="foundation-card rounded-2xl p-6 sm:p-8"><span className="mb-3 grid h-12 w-12 place-items-center rounded-2xl border border-amber-200/30 bg-amber-200/10 text-amber-200"><Heart size={24}/></span><p className="text-lg font-bold text-amber-100">Les prochaines initiatives commencent ici.</p><p className="mt-2 text-sm leading-6 text-slate-300">Aucun projet n’a encore passé la vérification. Pour protéger la communauté, EMi n’affiche ni faux projets, ni fausses collectes, ni chiffres inventés.</p></div>}
-  </section>
-  <section id="soutien" className="mx-4 mt-6 rounded-3xl bg-emerald-950 p-5 text-white sm:p-7">
-   <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">EMi Fondation</p><h2 className="mt-2 text-2xl font-extrabold">Un geste qui compte</h2><p className="mt-2 text-sm leading-6 text-white/80">Les initiatives affichées sont des exemples d’inspiration, pas des collectes validées. Les bénéficiaires et les projets doivent être vérifiés avant toute contribution.</p>
-   <div className="mt-4 flex flex-col gap-3 sm:flex-row"><button onClick={()=>setNotice("La soumission en ligne des initiatives sera activée dès que le formulaire de vérification sera prêt. Aucun projet n’a été envoyé.")} className="rounded-full border border-amber-200/60 px-5 py-3 font-bold text-amber-100">Proposer une initiative <span aria-hidden="true">↗</span></button><button onClick={()=>setNotice("Les soutiens en ligne ne sont pas encore activés. Aucun paiement n’a été effectué.")} className="foundation-action rounded-full px-5 py-3 font-bold">Soutenir un projet <span aria-hidden="true">♡</span></button></div>
-   {notice&&<p role="status" className="mt-3 text-sm text-amber-100">{notice}</p>}
-  </section>
-  <nav aria-label="Navigation Fondation" className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-200/20 bg-[#041b14]/95 px-3 py-2 text-amber-100 backdrop-blur"><div className="mx-auto flex max-w-md items-center justify-around">
-   <a href="#top" className="flex flex-col items-center gap-1 text-xs text-slate-300"><Home size={25}/>Accueil</a><a href="#idees" className="flex flex-col items-center gap-1 text-xs text-slate-300"><Search size={25}/>Explorer</a><a href="#soutien" onClick={e=>{e.preventDefault();setNotice("Les soutiens en ligne ne sont pas encore activés. Aucun paiement n’a été effectué."); document.getElementById("soutien")?.scrollIntoView({behavior:"smooth"});}} className="flex flex-col items-center gap-1 text-xs"><Heart size={25}/>Soutenir</a><Link href="/annonces" className="flex flex-col items-center gap-1 text-xs"><LayoutGrid size={25}/>Espaces</Link>
-  </div></nav>
+  {mine.length>0&&<section className="mx-auto mt-6 max-w-5xl px-4"><h2 className="mb-3 text-lg font-bold">Mes propositions en attente</h2><div className="space-y-2">{mine.map(x=><div key={x.id} className="foundation-card flex items-center justify-between gap-3 rounded-xl p-4"><span className="font-semibold">{x.title}</span><span className="shrink-0 rounded-full bg-amber-200/10 px-3 py-1 text-xs text-amber-100">En vérification</span></div>)}</div></section>}
+  <section id="soutien" className="mx-auto mt-6 max-w-5xl px-4"><div className="rounded-3xl border border-amber-200/30 bg-emerald-950 p-5 sm:p-7"><p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">EMi FONDATION</p><h2 className="mt-2 text-2xl font-extrabold">Chaque geste doit compter</h2><p className="mt-2 text-sm leading-6 text-white/80">Les projets sont publiés après vérification des responsables et des objectifs. Les paiements et les dons en ligne ne sont pas encore activés : aucun paiement ne sera demandé ici.</p><button onClick={()=>setShowForm(true)} className="foundation-action mt-4 rounded-full px-5 py-3 font-bold">Proposer une initiative</button></div></section>
+  {notice&&<p role="status" className="mx-auto mt-4 max-w-5xl px-4 text-sm text-amber-100">{notice}</p>}
+  {showForm&&<div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-4"><section role="dialog" aria-modal="true" aria-labelledby="initiative-form-title" className="max-h-[92svh] w-full max-w-xl overflow-y-auto rounded-t-3xl border border-amber-200/30 bg-[#041b14] p-5 sm:rounded-3xl sm:p-7"><div className="mb-4 flex items-center justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-amber-200">EMi Fondation</p><h2 id="initiative-form-title" className="mt-1 text-xl font-extrabold">Proposer une initiative</h2></div><button onClick={()=>setShowForm(false)} aria-label="Fermer" className="grid h-10 w-10 place-items-center rounded-full border border-white/20"><X/></button></div><p className="mb-4 text-sm leading-5 text-slate-300">Ta proposition sera enregistrée comme « en attente » et ne sera pas visible publiquement avant vérification.</p><form onSubmit={submit} className="space-y-3"><label className="block text-sm font-semibold">Nom du projet<input required minLength={5} maxLength={160} value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="Ex. Fournitures scolaires pour un village" className="mt-1"/></label><label className="block text-sm font-semibold">Rubrique<select value={form.category} onChange={e=>setForm({...form,category:e.target.value})} className="mt-1">{categories.map(x=><option key={x.value} value={x.value}>{x.label}</option>)}</select></label><label className="block text-sm font-semibold">Description<textarea required minLength={20} maxLength={5000} rows={4} value={form.description} onChange={e=>setForm({...form,description:e.target.value})} placeholder="Décris le besoin, les bénéficiaires et l’objectif…" className="mt-1"/></label><label className="block text-sm font-semibold">Lien d’image (facultatif)<input type="url" value={form.cover_image_url} onChange={e=>setForm({...form,cover_image_url:e.target.value})} placeholder="https://…" className="mt-1"/></label><label className="block text-sm font-semibold">Objectif en FCFA (facultatif)<input type="number" min="1" step="1" value={form.target_amount} onChange={e=>setForm({...form,target_amount:e.target.value})} placeholder="Ex. 250000" className="mt-1"/></label>{error&&<p role="alert" className="rounded-xl bg-rose-950/60 p-3 text-sm text-rose-100">{error}</p>}<button disabled={submitting} className="foundation-action flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-bold disabled:opacity-60">{submitting&&<Loader2 size={18} className="animate-spin"/>}{submitting?"Envoi en cours…":"Envoyer pour vérification"}</button></form></section></div>}
+  <nav aria-label="Navigation Fondation" className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-200/20 bg-[#041b14]/95 px-3 py-2 text-amber-100 backdrop-blur"><div className="mx-auto flex max-w-md items-center justify-around"><a href="#top" className="flex flex-col items-center gap-1 text-xs text-slate-300"><Home size={24}/>Accueil</a><a href="#initiatives" className="flex flex-col items-center gap-1 text-xs text-slate-300"><Search size={24}/>Explorer</a><a href="#soutien" onClick={()=>setShowForm(true)} className="flex flex-col items-center gap-1 text-xs"><Heart size={24}/>Soutenir</a><Link href="/annonces" className="flex flex-col items-center gap-1 text-xs"><LayoutGrid size={24}/>Espaces</Link></div></nav>
  </main>;
 }
