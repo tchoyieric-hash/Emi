@@ -10,7 +10,7 @@ type Post = {
   profiles?: { username?: string | null; display_name?: string | null; avatar_url?: string | null } | null;
 };
 type Profile = { id: string; email?: string; username?: string | null; display_name?: string | null; avatar_url?: string | null; bio?: string | null };
-type MarketHighlight = { id:string; title:string; description:string; badge:string; image:string|null; href:string; created_at:string; price?:number|null; meta?:string; viewType:"market" as MarketHighlight["viewType"]|"elite"|"troc"|"flow" };
+type MarketHighlight = { id:string; title:string; description:string; badge:string; image:string|null; href:string; created_at:string; price?:number|null; meta?:string; viewType: "market" | "elite" | "troc" | "flow" };
 type Story = { id:string; user_id:string; media_url:string; media_type:"image"|"video"; caption:string; music_url?:string|null; music_title?:string|null; visibility:string; created_at:string; expires_at:string; profiles?:{username?:string|null;display_name?:string|null;avatar_url?:string|null}|null };
 const supabase = createSupabaseBrowserClient();
 
