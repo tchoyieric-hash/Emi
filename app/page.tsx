@@ -10,7 +10,7 @@ type Post = {
   profiles?: { username?: string | null; display_name?: string | null; avatar_url?: string | null } | null;
 };
 type Profile = { id: string; email?: string; username?: string | null; display_name?: string | null; avatar_url?: string | null; bio?: string | null };
-type MarketHighlight = { id:string; title:string; description:string; badge:string; image:string|null; href:string; created_at:string; price?:number|null; meta?:string };
+type MarketHighlight = { id:string; title:string; description:string; badge:string; image:string|null; href:string; created_at:string; price?:number|null; meta?:string; viewType:"market"|"elite"|"troc"|"flow" };
 type Story = { id:string; user_id:string; media_url:string; media_type:"image"|"video"; caption:string; music_url?:string|null; music_title?:string|null; visibility:string; created_at:string; expires_at:string; profiles?:{username?:string|null;display_name?:string|null;avatar_url?:string|null}|null };
 const supabase = createSupabaseBrowserClient();
 
@@ -91,6 +91,7 @@ export default function HomePage() {
   const [postViewCounts, setPostViewCounts] = useState<Record<string, number>>({});
   const [onlineNow, setOnlineNow] = useState(false);
   const [marketHighlights, setMarketHighlights] = useState<MarketHighlight[]>([]);
+  const [marketViewCounts, setMarketViewCounts] = useState<Record<string, number>>({});
   const [sharedPosts, setSharedPosts] = useState<Post[]>([]);
   const [likes, setLikes] = useState<Record<string, number>>({});
   const [liked, setLiked] = useState<string[]>([]);
@@ -499,12 +500,19 @@ export default function HomePage() {
       supabase.from("tontine_cercles").select("id,nom_article,prix_cible,membres_max,created_at").order("created_at",{ascending:false}).limit(4)
     ]);
     const marketCards:MarketHighlight[] = [
-      ...((marketRows||[]) as any[]).map(a=>({id:a.id,title:a.titre,description:a.description||"Découvre cette offre de la communauté.",badge:"🛍️ EMi MARKET",image:Array.isArray(a.image_urls)?a.image_urls[0]||null:null,href:"/annonce/"+a.id,created_at:a.created_at,price:Number(a.prix)||0})),
-      ...((eliteRows||[]) as any[]).map(a=>({id:a.id,title:a.nom,description:a.bio||a.specialite||"Professionnel de la communauté EMi.",badge:"ELITE HOSPITALITY",image:a.image_url||null,href:"/annonces/elite-directory",created_at:a.created_at,meta:[a.specialite,a.ville].filter(Boolean).join(" · ")})),
-      ...((trocRows||[]) as any[]).map(a=>({id:a.id,title:a.bien_offert,description:"Recherche en échange : "+a.bien_recherche+(a.description?" — "+a.description:""),badge:"EMi TROC",image:null,href:"/annonces/troc",created_at:a.created_at})),
-      ...((flowRows||[]) as any[]).map(a=>({id:a.id,title:a.nom_article,description:"Rejoins ce cercle d’achat groupé de la communauté.",badge:"DJANGUI FLOW",image:null,href:"/annonces/tontine",created_at:a.created_at,meta:a.prix_cible?new Intl.NumberFormat("fr-FR").format(Number(a.prix_cible))+" FCFA":""}))
+      ...((marketRows||[]) as any[]).map(a=>({id:a.id,title:a.titre,description:a.description||"Découvre cette offre de la communauté.",badge:"🛍️ EMi MARKET",viewType:"market",image:Array.isArray(a.image_urls)?a.image_urls[0]||null:null,href:"/annonce/"+a.id,created_at:a.created_at,price:Number(a.prix)||0})),
+      ...((eliteRows||[]) as any[]).map(a=>({id:a.id,title:a.nom,description:a.bio||a.specialite||"Professionnel de la communauté EMi.",badge:"ELITE HOSPITALITY",viewType:"elite",image:a.image_url||null,href:"/annonces/elite-directory",created_at:a.created_at,meta:[a.specialite,a.ville].filter(Boolean).join(" · ")})),
+      ...((trocRows||[]) as any[]).map(a=>({id:a.id,title:a.bien_offert,description:"Recherche en échange : "+a.bien_recherche+(a.description?" — "+a.description:""),badge:"EMi TROC",viewType:"troc",image:null,href:"/annonces/troc",created_at:a.created_at})),
+      ...((flowRows||[]) as any[]).map(a=>({id:a.id,title:a.nom_article,description:"Rejoins ce cercle d’achat groupé de la communauté.",badge:"DJANGUI FLOW",viewType:"flow",image:null,href:"/annonces/tontine",created_at:a.created_at,meta:a.prix_cible?new Intl.NumberFormat("fr-FR").format(Number(a.prix_cible))+" FCFA":""}))
     ].sort((a,b)=>new Date(b.created_at||0).getTime()-new Date(a.created_at||0).getTime()).slice(0,8);
     setMarketHighlights(marketCards);
+    const marketKeys = marketCards.map(item=>({item_type:item.viewType,item_id:String(item.id)}));
+    if (marketKeys.length) {
+      const {data:mv}=await supabase.from("market_highlight_views").select("item_type,item_id").in("item_type",["market","elite","troc","flow"]);
+      const counts:Record<string,number>={}; (mv||[]).forEach((row:{item_type:string;item_id:string})=>{const k=row.item_type+":"+row.item_id;counts[k]=(counts[k]||0)+1;});
+      setMarketViewCounts(old=>({...old,...counts}));
+    }
+
     if (realPosts.length) {
       const ids = realPosts.map(p => p.id);
       const { data: likeRows } = await supabase.from("post_likes").select("post_id,user_id").in("post_id", ids);
@@ -515,6 +523,26 @@ export default function HomePage() {
     } else { setLikes({}); setLiked([]); }
   }, [user?.id]);
 
+  useEffect(() => {
+    if (!supabase || !marketHighlights.length) return;
+    let sessionKey=sessionStorage.getItem("emi_view_session");
+    if(!sessionKey){sessionKey=crypto.randomUUID();sessionStorage.setItem("emi_view_session",sessionKey);}
+    const nodes=Array.from(document.querySelectorAll<HTMLElement>(".emi-home-market-card[data-view-key]"));
+    const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{
+      if(!entry.isIntersecting||entry.intersectionRatio<0.6)return;
+      const node=entry.target as HTMLElement; const type=node.dataset.viewType; const id=node.dataset.viewId; const key=node.dataset.viewKey;
+      if(!type||!id||!key)return;
+      const seen="emi_market_seen_"+key+"_"+sessionKey;
+      if(sessionStorage.getItem(seen)){observer.unobserve(node);return;}
+      sessionStorage.setItem(seen,"1"); observer.unobserve(node);
+      void supabase.from("market_highlight_views").upsert({item_type:type,item_id:id,session_key:sessionKey},{onConflict:"item_type,item_id,session_key",ignoreDuplicates:true}).then(async()=> {
+        const {count}=await supabase.from("market_highlight_views").select("id",{count:"exact",head:true}).eq("item_type",type).eq("item_id",id);
+        if(typeof count==="number")setMarketViewCounts(old=>({...old,[key]:count}));
+      });
+    });},{threshold:[0.6]});
+    nodes.forEach(node=>observer.observe(node));
+    return()=>observer.disconnect();
+  },[marketHighlights]);
   useEffect(() => {
     if (!supabase) { setMessage("La connexion Supabase n’est pas configurée."); return; }
     let alive = true;
@@ -1568,8 +1596,8 @@ export default function HomePage() {
            <section className="emi-home-market" aria-label="Publications de tous les espaces EMi">
               <div className="emi-home-market-heading"><div><span className="eyebrow">UN SEUL FIL · TOUTE LA COMMUNAUTÉ</span><h2>À la une sur EMi</h2><p>Les offres et profils publiés dans les différents espaces, avec leur badge d’origine.</p></div><a href="/annonces">Voir tout <ChevronRight size={15}/></a></div>
               <div className="emi-home-market-row">
-                {marketHighlights.map(item=><a href={item.href} className="emi-home-market-card" key={item.badge+item.id}>
-                  <div className="emi-home-market-image">{item.image?<img src={item.image} alt={item.title} loading="lazy"/>:<span><ShoppingBag size={28}/></span>}<span className={"emi-home-market-badge "+(item.badge.includes("ELITE")?"is-hospitality":item.badge.includes("TROC")?"is-troc":item.badge.includes("DJANGUI")?"is-flow":"is-market")}>{item.badge}</span></div>
+                {marketHighlights.map(item=><a href={item.href} className="emi-home-market-card" key={item.badge+item.id} data-view-type={item.viewType} data-view-id={item.id} data-view-key={item.viewType+":"+item.id}>
+                  <div className="emi-home-market-image">{item.image?<img src={item.image} alt={item.title} loading="lazy"/>:<span><ShoppingBag size={28}/></span>}<span className={"emi-home-market-badge "+(item.badge.includes("ELITE")?"is-hospitality":item.badge.includes("TROC")?"is-troc":item.badge.includes("DJANGUI")?"is-flow":"is-market")}>{item.badge}</span><span className="emi-market-view-count"><Eye size={14}/><strong>{marketViewCounts[item.viewType+":"+item.id]||0}</strong><span>vues</span></span></div>
                   <div className="emi-home-market-copy"><strong>{item.title}</strong>{item.price!==undefined&&<b>{new Intl.NumberFormat("fr-FR").format(Number(item.price))} FCFA</b>}<p>{item.description}</p>{item.meta&&<small>{item.meta}</small>}</div>
                 </a>)}
                 {marketHighlights.length===0&&<a href="/annonces" className="emi-home-market-empty"><ShoppingBag size={22}/><strong>Découvrir le Marché EMi</strong><span>Les annonces publiées apparaîtront ici automatiquement.</span></a>}
