@@ -1415,3 +1415,108 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
  .emi-ecosystem-home:before,.emi-ecosystem-home:after,.emi-service-card,.emi-service-card:before{animation:none!important;will-change:auto}
  .emi-service-card{translate:none!important}
 }
+
+
+/* CINEMATIC ECOSYSTEM — visible motion inspired by vertical short-video cards */
+.emi-ecosystem-home{
+  perspective:1100px!important;
+  background:
+    radial-gradient(ellipse at 50% 45%,rgba(232,201,111,.19),transparent 38%),
+    radial-gradient(ellipse at 5% 5%,rgba(24,170,111,.22),transparent 40%),
+    radial-gradient(ellipse at 100% 100%,rgba(232,201,111,.16),transparent 42%),
+    linear-gradient(145deg,#06291d 0%,#020d09 55%,#0b2419 100%)!important;
+}
+.emi-ecosystem-home:before{
+  inset:-60%!important;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(232,201,111,.18) 30deg,transparent 68deg,rgba(24,190,126,.14) 118deg,transparent 170deg,rgba(232,201,111,.2) 230deg,transparent 285deg,rgba(24,190,126,.1) 330deg,transparent 360deg)!important;
+  filter:blur(14px)!important;
+  animation:emi-cinematic-orbit 12s linear infinite!important;
+}
+.emi-ecosystem-home:after{
+  width:clamp(170px,55vw,300px)!important;
+  border:2px solid rgba(255,224,130,.22)!important;
+  box-shadow:0 0 18px rgba(232,201,111,.16),0 0 0 12px rgba(232,201,111,.045),0 0 0 28px rgba(232,201,111,.025),inset 0 0 48px rgba(232,201,111,.12)!important;
+  animation:emi-cinematic-core 5s ease-in-out infinite!important;
+}
+.emi-services-grid{
+  perspective:900px!important;
+  gap:12px!important;
+}
+.emi-service-card{
+  min-height:158px!important;
+  padding:16px 13px!important;
+  border:1px solid rgba(255,222,125,.62)!important;
+  border-radius:21px!important;
+  background:
+    radial-gradient(ellipse at 15% 0%,rgba(255,226,143,.16),transparent 45%),
+    linear-gradient(145deg,rgba(11,70,46,.97),rgba(2,18,12,.98) 75%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,244,199,.22),inset 0 -18px 30px rgba(0,0,0,.2),0 12px 28px rgba(0,0,0,.35),0 0 18px rgba(232,201,111,.08)!important;
+  transform-style:preserve-3d;
+  animation:emi-cinematic-card 5.8s ease-in-out infinite!important;
+  transition:border-color .25s ease,box-shadow .25s ease,filter .25s ease!important;
+  will-change:transform,filter;
+}
+.emi-service-card:nth-child(1){animation-delay:-.2s!important}
+.emi-service-card:nth-child(2){animation-delay:-1.65s!important}
+.emi-service-card:nth-child(3){animation-delay:-3.1s!important}
+.emi-service-card:nth-child(4){animation-delay:-4.55s!important}
+.emi-service-card:before{
+  inset:-30% -80%!important;
+  background:linear-gradient(110deg,transparent 35%,rgba(255,244,190,.0) 43%,rgba(255,236,155,.35) 50%,rgba(255,244,190,.04) 57%,transparent 65%)!important;
+  transform:translateX(-120%) rotate(8deg)!important;
+  animation:emi-cinematic-scan 4.2s ease-in-out infinite!important;
+}
+.emi-service-card:after{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+  background:linear-gradient(130deg,rgba(255,236,158,.75),transparent 28%,rgba(34,197,126,.3) 54%,transparent 75%,rgba(255,236,158,.6));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:.55;animation:emi-cinematic-border 3.5s ease-in-out infinite;
+}
+.emi-service-card .emi-service-icon{
+  width:48px!important;height:48px!important;border-radius:16px!important;
+  color:#ffe28a!important;border-color:rgba(255,224,130,.55)!important;
+  background:linear-gradient(145deg,rgba(232,201,111,.2),rgba(232,201,111,.035))!important;
+  box-shadow:0 0 20px rgba(232,201,111,.18),inset 0 1px 0 rgba(255,244,199,.2)!important;
+  transform:translateZ(24px);
+  animation:emi-cinematic-icon 3.8s ease-in-out infinite;
+}
+.emi-service-card strong,.emi-service-card small,.emi-service-card>svg:last-child{transform:translateZ(16px)}
+.emi-service-card strong{font-size:15px!important;text-shadow:0 0 18px rgba(255,224,130,.14)}
+.emi-service-card small{font-size:11px!important;color:#d0e1d5!important}
+.emi-service-card>svg:last-child{filter:drop-shadow(0 0 5px rgba(232,201,111,.6))}
+.emi-service-card:hover,.emi-service-card:focus-visible{
+  animation-play-state:paused!important;transform:translateY(-7px) rotateX(0deg) scale(1.035)!important;
+  filter:brightness(1.18);border-color:#ffe28a!important;
+  box-shadow:0 18px 38px rgba(0,0,0,.4),0 0 32px rgba(232,201,111,.22)!important;
+}
+.emi-service-card:active{transform:scale(.97)!important}
+.emi-service-flow .emi-service-icon{color:#d9c6ff!important}
+.emi-service-foundation .emi-service-icon{color:#ffd0b6!important}
+.emi-service-help .emi-service-icon{color:#b3f0d2!important}
+@keyframes emi-cinematic-orbit{to{transform:rotate(360deg)}}
+@keyframes emi-cinematic-core{
+  0%,100%{opacity:.35;transform:translate(-50%,-50%) rotate(45deg) scale(.88)}
+  50%{opacity:.95;transform:translate(-50%,-50%) rotate(45deg) scale(1.12)}
+}
+@keyframes emi-cinematic-card{
+  0%,100%{transform:translate3d(0,0,0) rotateX(0deg) rotateZ(0deg) scale(1)}
+  25%{transform:translate3d(0,-7px,8px) rotateX(2deg) rotateZ(-.7deg) scale(1.012)}
+  50%{transform:translate3d(0,-2px,0) rotateX(-1.5deg) rotateZ(.6deg) scale(1.006)}
+  75%{transform:translate3d(0,-9px,5px) rotateX(1deg) rotateZ(-.35deg) scale(1.015)}
+}
+@keyframes emi-cinematic-scan{
+  0%,12%{transform:translateX(-120%) rotate(8deg)}
+  65%,100%{transform:translateX(120%) rotate(8deg)}
+}
+@keyframes emi-cinematic-border{0%,100%{opacity:.22}50%{opacity:.95}}
+@keyframes emi-cinematic-icon{0%,100%{transform:translateZ(24px) scale(1)}50%{transform:translateZ(34px) scale(1.07)}}
+@media(min-width:700px){
+ .emi-service-card{min-height:185px!important;padding:20px!important}
+ .emi-service-card strong{font-size:16px!important}
+ .emi-ecosystem-home:after{top:50%}
+}
+@media(prefers-reduced-motion:reduce){
+ .emi-ecosystem-home:before,.emi-ecosystem-home:after,.emi-service-card,.emi-service-card:before,.emi-service-card:after,.emi-service-card .emi-service-icon{animation:none!important;will-change:auto}
+ .emi-service-card{transform:none!important}
+}
