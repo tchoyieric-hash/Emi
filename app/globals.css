@@ -981,3 +981,38 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
  .emi-battle-page .battle-player{min-height:165px!important}
  .emi-battle-page .battle-player>span.absolute{font-size:7px!important}
 }
+
+
+/* EMi Royal Gold — profil intégré aux réglages */
+.profile-page-avatar{background:linear-gradient(145deg,#fff0ad,#d9ad4b 55%,#8b6421)!important;border:2px solid #f2d477!important;box-shadow:0 0 0 3px #0b2019,0 0 22px #d9ad4b35!important}
+.profile-page-avatar img{border:2px solid #1a1710!important}
+.profile-page-actions .modal-primary{background:linear-gradient(120deg,#fff0a8,#d6a63a)!important;color:#15130c!important;border:1px solid #ffe9a0!important;box-shadow:0 5px 18px #d9ad4b20}
+.profile-tabs button.selected:after{background:linear-gradient(90deg,#fff0a8,#c99a32)!important}
+.emi-settings-page .emi-settings-hero{background:radial-gradient(ellipse at 100% 0%,rgba(224,183,76,.16),transparent 52%),linear-gradient(145deg,#071d17,#030b09 78%)!important;border-color:#c9a34a70!important}
+.emi-settings-crest,.emi-settings-row-icon{border-color:#d6b65a45!important;background:linear-gradient(145deg,#f1d77c1c,#9b71240c)!important;color:#f0cf69!important}
+.emi-settings-row:active{background:#d6ad3a12!important}
+.emi-settings-profile-card{margin:0 0 22px;padding:16px;border:1px solid #d5b4528c;border-radius:23px;background:radial-gradient(ellipse at 100% 0%,rgba(220,177,63,.12),transparent 48%),linear-gradient(145deg,#091b16,#050b09 75%);box-shadow:0 18px 38px #0004;overflow:hidden}
+.emi-settings-profile-main{display:flex;align-items:center;gap:12px;min-width:0}
+.emi-settings-profile-avatar{width:78px;height:78px;flex:none;border-radius:50%;padding:3px;display:grid;place-items:center;overflow:hidden;border:2px solid #f0ce65;background:linear-gradient(145deg,#fff0ad,#d3a33a 58%,#76551d);box-shadow:0 0 22px #d6b14a38;color:#17130a;font-weight:900;font-size:21px}
+.emi-settings-profile-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;border:2px solid #14130e}
+.emi-settings-profile-identity{flex:1;min-width:0}
+.emi-settings-profile-identity h3{font-size:19px;line-height:1.2;font-weight:850;margin:0 0 3px;color:#fff7dc}
+.emi-settings-profile-identity>span{font-size:12px;color:#c4c7c0}
+.emi-settings-profile-identity p{font-size:11px;color:#d9d0b3;margin:8px 0 0;overflow-wrap:anywhere}
+.emi-settings-edit-profile{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex:none;border:1px solid #ffe49a;border-radius:999px;padding:9px 10px;background:linear-gradient(120deg,#ffedaa,#d9ab43);color:#17130a;font-size:10px;font-weight:850}
+.emi-settings-profile-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:17px 0 0;padding:14px 0;border-top:1px solid #d6b65a36;border-bottom:1px solid #d6b65a36}
+.emi-settings-profile-stats>div{display:grid;justify-items:center;gap:4px;min-width:0}
+.emi-settings-profile-stats>div+div{border-left:1px solid #d6b65a40}
+.emi-settings-profile-stats strong{font-size:19px;font-weight:900;color:#f6d775}
+.emi-settings-profile-stats span{font-size:10px;color:#c6cbc5;text-align:center}
+.emi-settings-own-posts-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 10px}
+.emi-settings-own-posts-heading>strong{font-size:13px;color:#fff8e5}
+.emi-settings-own-posts-heading button{display:inline-flex;align-items:center;gap:3px;border:0;background:transparent;color:#f1d16c;font-size:11px;font-weight:800}
+.emi-settings-own-posts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.emi-settings-own-post{position:relative;aspect-ratio:1/1;min-width:0;overflow:hidden;border:1px solid #c9a34a70;border-radius:10px;background:#0b1511;padding:0}
+.emi-settings-own-post img,.emi-settings-own-post video{display:block;width:100%;height:100%;object-fit:cover}
+.emi-settings-own-post>span{display:grid;place-items:center;width:100%;height:100%;color:#f0d170}
+.emi-settings-posts-empty{grid-column:1/-1;margin:0;padding:16px 4px;color:#aab7af;font-size:11px;line-height:1.5}
+.emi-settings-logout{border-color:#e44d4d!important;color:#ff6666!important;background:linear-gradient(120deg,#2a1010,#100a0a)!important}
+.emi-settings-logout>svg{color:#ff6666!important}
+@media(max-width:600px){.emi-settings-profile-card{padding:13px;border-radius:19px}.emi-settings-profile-avatar{width:66px;height:66px}.emi-settings-profile-identity h3{font-size:16px}.emi-settings-profile-identity p{font-size:10px}.emi-settings-edit-profile{padding:8px;font-size:9px}.emi-settings-own-posts{gap:5px}.emi-settings-own-post{border-radius:8px}}
