@@ -1524,8 +1524,8 @@ export default function HomePage() {
              <a href="/annonces/philanthropy" className="emi-service-card emi-service-foundation"><span className="emi-service-icon"><Heart size={21}/></span><strong>Fondation</strong><small>Solidarité & initiatives</small><ChevronRight size={15}/></a>
              <a href="/annonces/master-health-check" className="emi-service-card emi-service-help"><span className="emi-service-icon"><CircleHelp size={21}/></span><strong>Help EMi</strong><small>Aide & assistance</small><ChevronRight size={15}/></a>
            </div>
-           <section className="emi-home-market" aria-label="À la une du Marché EMi">
-              <div className="emi-home-market-heading"><div><span className="eyebrow">OFFRES DE LA COMMUNAUTÉ</span><h2>À la une du Marché</h2><p>Les dernières annonces, avec leur espace d’origine.</p></div><a href="/annonces">Voir tout <ChevronRight size={15}/></a></div>
+           <section className="emi-home-market" aria-label="Publications de tous les espaces EMi">
+              <div className="emi-home-market-heading"><div><span className="eyebrow">UN SEUL FIL · TOUTE LA COMMUNAUTÉ</span><h2>À la une sur EMi</h2><p>Les offres et profils publiés dans les différents espaces, avec leur badge d’origine.</p></div><a href="/annonces">Voir tout <ChevronRight size={15}/></a></div>
               <div className="emi-home-market-row">
                 {marketHighlights.map(item=><a href={item.href} className="emi-home-market-card" key={item.badge+item.id}>
                   <div className="emi-home-market-image">{item.image?<img src={item.image} alt={item.title} loading="lazy"/>:<span><ShoppingBag size={28}/></span>}<span className={"emi-home-market-badge "+(item.badge.includes("ELITE")?"is-hospitality":item.badge.includes("TROC")?"is-troc":item.badge.includes("DJANGUI")?"is-flow":"is-market")}>{item.badge}</span></div>
