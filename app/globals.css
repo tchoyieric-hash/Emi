@@ -1058,3 +1058,28 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
 .emi-market-pulse-link{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:9px 13px;background:linear-gradient(120deg,#f7e8a2,#d7ae48);color:#0a281d;font-size:11px;font-weight:900;text-decoration:none}
 .emi-market-pulse-wave{position:absolute;right:13px;top:-19px;color:#d6b14a13;font-size:105px;font-weight:900;pointer-events:none}
 @media(max-width:480px){.emi-market-pulse{gap:11px;padding:15px 13px;border-radius:19px}.emi-market-pulse-mark{width:45px;height:45px;border-radius:14px}.emi-market-pulse-copy h2{font-size:15px}.emi-market-pulse-copy p{font-size:11px}}
+
+/* Live marketplace highlights on EMi home — forest green & champagne */
+.emi-home-market{margin:18px 0 22px;padding:17px 14px;border:1px solid #d8bb5c55;border-radius:22px;background:radial-gradient(ellipse at 100% 0%,#d6b14a12,transparent 48%),linear-gradient(145deg,#09291f,#04130e 80%);overflow:hidden}
+.emi-home-market-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}
+.emi-home-market-heading h2{font-size:19px;line-height:1.2;font-weight:900;margin:5px 0;color:#fff7dd}
+.emi-home-market-heading p{font-size:11px;line-height:1.5;color:#b6c8bd;margin:0}
+.emi-home-market-heading>a{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;color:#f0d574;font-size:11px;font-weight:850}
+.emi-home-market-row{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:1px 1px 5px}
+.emi-home-market-row::-webkit-scrollbar{display:none}
+.emi-home-market-card{display:flex;flex-direction:column;flex:0 0 min(72%,240px);min-width:0;overflow:hidden;border:1px solid #d8bb5c70;border-radius:16px;background:linear-gradient(155deg,#0b3023,#06180f);scroll-snap-align:start}
+.emi-home-market-image{position:relative;height:148px;overflow:hidden;background:#07170f}
+.emi-home-market-image>img{width:100%;height:100%;object-fit:cover;display:block}
+.emi-home-market-image>span:first-child:not(.emi-home-market-badge){display:grid;place-items:center;width:100%;height:100%;color:#e8ca68;background:radial-gradient(circle at 50% 40%,#d6b14a1c,transparent 60%)}
+.emi-home-market-badge{position:absolute;top:9px;left:9px;max-width:calc(100% - 18px);padding:6px 9px;border-radius:999px;font-size:9px;font-weight:950;letter-spacing:.02em;box-shadow:0 3px 10px #0006}
+.emi-home-market-badge.is-market{background:#f1d45e;color:#143629}
+.emi-home-market-badge.is-hospitality{background:#f1d45e;color:#173629}
+.emi-home-market-badge.is-troc{background:#d9e7ff;color:#153b76}
+.emi-home-market-badge.is-flow{background:#e6d5ff;color:#35205f}
+.emi-home-market-copy{display:grid;gap:7px;padding:12px}
+.emi-home-market-copy>strong{font-size:13px;line-height:1.3;color:#fff8e7}
+.emi-home-market-copy>b{font-size:15px;color:#f0d574}
+.emi-home-market-copy>p{margin:0;color:#b9c9bf;font-size:11px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.emi-home-market-copy>small{font-size:10px;color:#d9c887}
+.emi-home-market-empty{display:grid;gap:8px;justify-items:start;padding:15px;border:1px dashed #d8bb5c66;border-radius:14px;color:#f0d574;font-size:12px}
+.emi-home-market-empty span{color:#b9c9bf;font-size:11px}
