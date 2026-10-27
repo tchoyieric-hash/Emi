@@ -1090,3 +1090,16 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
 .emi-post-views{display:inline-flex;align-items:center;gap:5px;margin-left:auto;padding:6px 9px;border:1px solid #d8bb5c40;border-radius:999px;color:#d8c16a;font-size:12px;white-space:nowrap}
 .emi-post-views strong{font-size:12px;color:#fff4c6}
 .emi-post-views span{color:#b6c8bd}
+
+
+/* Premium Reel creator identity and view count */
+.emi-home-reel-card{position:relative;text-align:left}
+.emi-home-reel-author{position:absolute;z-index:2;left:10px;right:8px;top:11px;display:flex;align-items:center;gap:7px;min-width:0;padding:6px 8px;border-radius:999px;background:linear-gradient(90deg,rgba(2,24,17,.88),rgba(2,24,17,.42));color:#fff9df;font-size:11px;line-height:1.2;text-shadow:0 1px 5px #000}
+.emi-home-reel-author img,.emi-home-reel-author-fallback{width:27px;height:27px;flex:0 0 27px;object-fit:cover;border-radius:50%;border:1.5px solid #e9ce67}
+.emi-home-reel-author-fallback{display:grid;place-items:center;background:#0a3829;color:#f4d76c;font-weight:900}
+.emi-home-reel-author strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.emi-home-reel-author .emi-online-dot{position:static;width:9px;height:9px;flex:0 0 9px;border:1.5px solid #05251a;box-shadow:0 0 8px #2ee87880}
+.emi-reel-view-count{position:absolute;z-index:2;left:10px;bottom:10px;display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border:1px solid rgba(241,214,111,.75);border-radius:999px;background:rgba(2,24,17,.88);color:#f6dc79;font-size:11px;line-height:1.2;box-shadow:0 4px 12px #0004}
+.emi-reel-view-count strong{font-size:12px;color:#fff7d7}
+.emi-reel-view-count span{color:#e6e4d8}
+.emi-home-reel-caption{bottom:45px!important}
