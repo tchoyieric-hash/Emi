@@ -1826,3 +1826,8 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
  .reel-post .emi-reel-comment-bar{z-index:35!important}
  .reel-post .post-actions{z-index:20!important}
 }
+
+
+/* Légendes Reel propres : aucun marqueur interne ne doit être rendu */
+.emi-home-reel-caption,.reel-post .post-caption,.profile-grid-post .post-caption{overflow-wrap:anywhere}
+.reel-post .post-caption{white-space:normal!important}
