@@ -1814,7 +1814,7 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 
 
 /* Nettoyage définitif du libellé technique sur les Reels et commande sonore accessible */
-.reel-post .emi-reel-sound-toggle{pointer-events:auto!important;touch-action:manipulation!important;z-index:30!important}
+.reel-post .emi-reel-sound-toggle{pointer-events:auto!important;touch-action:manipulation!important;z-index:100!important;isolation:isolate!important;position:absolute!important;right:12px!important;left:auto!important;touch-action:manipulation!important;cursor:pointer!important}
 .reel-post .emi-reel-sound-toggle svg,.reel-post .emi-reel-sound-toggle span{pointer-events:none!important}
 .emi-home-reel-caption{overflow-wrap:anywhere}
 
@@ -1927,3 +1927,11 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .emi-feed-media-wrap .emi-photo-music-toggle{right:12px;bottom:12px}
 .emi-gallery-sound-toggle.emi-photo-music-toggle{right:12px;bottom:12px}
 @media(max-width:700px){.emi-photo-music-toggle{min-width:112px!important;height:42px!important;padding:0 12px!important}.emi-photo-music-toggle span{font-size:11px!important}}
+
+
+/* Force la visibilité et la priorité tactile du contrôle audio sur les photos musicales */
+.emi-feed-media-wrap{position:relative!important;isolation:isolate}
+.emi-photo-music-toggle{position:absolute!important;right:12px!important;bottom:12px!important;z-index:100!important;display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+.emi-post-gallery{position:relative;z-index:1}
+.emi-gallery-sound-toggle.emi-photo-music-toggle{right:12px!important;bottom:12px!important;z-index:100!important}
+.reel-post .emi-reel-sound-toggle{z-index:100!important;pointer-events:auto!important}
