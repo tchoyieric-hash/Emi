@@ -481,8 +481,40 @@ export default function HomePage() {
       }
       let files = selected;
       if (storyMode === "text") {
-        const safeText = storyCaption.trim().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-        files = [new File(['<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#064331"/><stop offset="1" stop-color="#06100d"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><text x="540" y="680" text-anchor="middle" font-family="Arial,sans-serif" font-size="34" letter-spacing="10" fill="#e8cf7d">EMi · MOMENT</text><foreignObject x="100" y="760" width="880" height="800"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Arial,sans-serif;font-size:68px;font-weight:700;color:#fff4d0;text-align:center;overflow-wrap:anywhere;white-space:pre-wrap">'+safeText+'</div></foreignObject></svg>'], "story-texte.svg", {type:"image/svg+xml"})];
+        // Create a real PNG in-browser: Supabase Storage does not accept SVG in this bucket.
+        const canvas = document.createElement("canvas");
+        canvas.width = 1080;
+        canvas.height = 1920;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) throw new Error("Impossible de préparer l’image de ta story sur cet appareil.");
+        const gradient = ctx.createLinearGradient(0, 0, 1080, 1920);
+        gradient.addColorStop(0, "#064331");
+        gradient.addColorStop(1, "#06100d");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const theme = storyTextStyle === "gold" ? "#e8cf7d" : "#e8cf7d";
+        ctx.textAlign = "center";
+        ctx.fillStyle = theme;
+        ctx.font = "700 34px Arial, sans-serif";
+        ctx.fillText("EMi · MOMENT", 540, 610);
+        const words = storyCaption.trim().split(/\s+/);
+        const lines: string[] = [];
+        let line = "";
+        ctx.font = "700 68px Arial, sans-serif";
+        for (const word of words) {
+          const test = line ? line + " " + word : word;
+          if (ctx.measureText(test).width > 860 && line) { lines.push(line); line = word; }
+          else line = test;
+        }
+        if (line) lines.push(line);
+        const fontSize = lines.length > 8 ? 52 : lines.length > 5 ? 60 : 68;
+        ctx.font = "700 " + fontSize + "px Arial, sans-serif";
+        ctx.fillStyle = "#fff4d0";
+        const lineHeight = fontSize * 1.35;
+        const firstY = (1920 - (lines.length - 1) * lineHeight) / 2;
+        lines.forEach((text, index) => ctx.fillText(text, 540, firstY + index * lineHeight, 900));
+        const pngBlob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("La création de l’image de story a échoué.")), "image/png"));
+        files = [new File([pngBlob], "story-texte.png", { type: "image/png" })];
       }
       const now = new Date();
       const expires = new Date(now.getTime() + 24 * 60 * 60 * 1000);
