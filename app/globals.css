@@ -1886,3 +1886,27 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
  .chat-compose .modal-primary svg{width:18px;height:18px}
 }
 @media(max-width:380px){.emi-messages-heading h2{font-size:22px}.emi-messages-head-actions button{width:39px;height:39px}.chat-compose{gap:5px!important;padding:8px!important}}
+
+
+/* EMi Reels — lecteur premium, commandes accessibles et retour sans perte de position */
+@media(max-width:700px){
+  .feed-list:has(.reel-post){gap:14px!important;padding:0 0 20px!important;scroll-behavior:smooth}
+  .reel-post{position:relative!important;overflow:hidden!important;border:1px solid rgba(224,190,94,.25)!important;border-radius:20px!important;background:#03140d!important;box-shadow:0 14px 38px rgba(0,0,0,.28)!important;scroll-margin-top:12px}
+  .reel-post .post-top{position:absolute!important;top:10px!important;left:10px!important;right:10px!important;z-index:8!important;max-width:calc(100% - 20px);padding:8px 10px!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:15px!important;background:linear-gradient(180deg,rgba(0,0,0,.64),rgba(0,0,0,.12))!important;backdrop-filter:blur(10px)}
+  .reel-post .post-author strong,.reel-post .post-author span{color:#fff9e8!important;text-shadow:0 1px 5px #0008}
+  .reel-post .reel-video{display:block!important;width:100%!important;height:min(76dvh,760px)!important;min-height:430px!important;max-height:760px!important;object-fit:contain!important;background:#010805!important;border-radius:0!important}
+  .reel-post .post-caption-wrap{position:absolute!important;left:12px!important;right:74px!important;bottom:94px!important;z-index:6!important;padding:12px 13px!important;border:1px solid rgba(235,207,126,.18)!important;border-radius:15px!important;background:linear-gradient(100deg,rgba(0,0,0,.72),rgba(0,0,0,.24))!important;backdrop-filter:blur(8px)}
+  .reel-post .post-caption{color:#fff9e8!important;text-shadow:0 1px 5px #0009!important}
+  .reel-post .emi-post-music{position:absolute!important;left:12px!important;right:76px!important;bottom:53px!important;z-index:7!important;max-width:calc(100% - 90px)}
+  .reel-post .emi-post-music-title strong,.reel-post .emi-post-music-title small{color:#fff5d8!important}
+  .reel-post .post-actions{position:absolute!important;right:9px!important;bottom:72px!important;z-index:9!important;display:flex!important;flex-direction:column!important;align-items:center!important;gap:14px!important;padding:10px 7px!important;border:1px solid rgba(233,203,116,.22)!important;border-radius:20px!important;background:rgba(0,0,0,.4)!important;backdrop-filter:blur(12px)}
+  .reel-post .post-actions button{display:grid!important;place-items:center!important;gap:3px!important;min-width:42px!important;min-height:42px!important;padding:4px!important;color:#fff6dc!important;background:transparent!important;font-size:10px!important}
+  .reel-post .emi-reel-sound-toggle{position:absolute!important;top:74px!important;right:12px!important;z-index:12!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;width:58px!important;height:62px!important;min-width:58px!important;border:1px solid rgba(233,203,116,.48)!important;border-radius:17px!important;background:rgba(2,25,15,.88)!important;color:#f3d57a!important;backdrop-filter:blur(12px)!important;touch-action:manipulation!important}
+  .reel-post .emi-reel-sound-toggle span{font-size:9px!important;line-height:1.1!important;text-align:center!important}
+  .reel-post .emi-post-audio{display:none!important}
+  .reel-post .post-actions + *{position:relative}
+}
+@media(min-width:701px){
+  .reel-post{scroll-margin-top:18px}
+  .reel-post .reel-video{max-height:78dvh!important;object-fit:contain!important;background:#010805!important}
+}
