@@ -1950,3 +1950,19 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
  .reel-post .post-actions{z-index:25!important}
  .reel-post .emi-reel-sound-toggle{z-index:100!important}
 }
+
+
+/* EMi Statuts vidéo : lecteur immersif inspiré des Reels, sans déplacer le statut dans la rubrique Reels */
+.story-viewer-video{background:#000!important;border-color:rgba(224,190,94,.28)!important}
+.story-viewer-video .story-viewer-media{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;background:#000!important}
+.story-viewer-video header{z-index:5!important;padding:8px 9px!important;border-radius:16px;background:linear-gradient(180deg,rgba(0,0,0,.65),transparent)!important}
+.story-viewer-video .story-progress{z-index:6!important}
+.story-viewer-video .story-viewer-caption{z-index:4!important;bottom:72px!important;left:14px!important;right:14px!important;text-align:left!important;background:linear-gradient(90deg,rgba(0,0,0,.68),rgba(0,0,0,.2))!important}
+.story-viewer-video video.story-viewer-media{padding-bottom:0!important}
+.story-viewer-video .story-viewer-nav{z-index:6!important;bottom:12px!important}
+.story-viewer-video .emi-story-music{position:absolute!important;z-index:5!important;left:14px!important;right:14px!important;bottom:62px!important;max-width:calc(100% - 28px)!important;border:1px solid rgba(224,190,94,.35)!important;border-radius:14px!important;background:rgba(3,24,15,.84)!important;color:#ffe6a0!important;backdrop-filter:blur(10px)!important}
+@media(max-width:480px){
+ .story-viewer-video{width:100%!important;height:100dvh!important;max-height:none!important;min-height:0!important;border:0!important;border-radius:0!important}
+ .story-viewer-video .story-viewer-media{width:100%!important;height:100%!important;object-fit:contain!important}
+ .story-viewer-video header{top:23px!important;left:12px!important;right:12px!important}
+}
