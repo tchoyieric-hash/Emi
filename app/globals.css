@@ -2273,3 +2273,18 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .story-viewer-nav button{min-height:42px!important}
 @media(max-width:520px){.stories-card{border-radius:0!important;margin:10px -12px 18px!important;padding:16px 13px 13px!important;border-left:0!important;border-right:0!important}.emi-story-format{min-height:118px!important}.emi-story-studio{border-radius:25px 25px 0 0!important}.story-viewer{border-radius:0!important}}
 @media(min-width:700px){.stories-card{max-width:780px!important;margin-left:auto!important;margin-right:auto!important}.emi-story-studio{width:min(94vw,620px)!important}.emi-story-format{min-height:138px!important}}
+
+
+/* Hotfix mobile Stories: prevent the pause control from stretching into a giant black overlay */
+.story-viewer .story-touch-zones{position:absolute!important;inset:74px 0 118px!important;display:block!important;pointer-events:none!important;z-index:6!important}
+.story-viewer .story-touch-zones>button:not(.story-touch-pause){position:absolute!important;top:0!important;bottom:0!important;width:34%!important;height:100%!important;pointer-events:auto!important}
+.story-viewer .story-touch-zones>button:first-child{left:0!important}
+.story-viewer .story-touch-zones>button:last-child{right:0!important}
+.story-viewer .story-touch-zones .story-touch-pause{position:absolute!important;left:50%!important;top:50%!important;bottom:auto!important;right:auto!important;transform:translate(-50%,-50%)!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:auto!important;min-width:0!important;max-width:calc(100% - 40px)!important;height:auto!important;min-height:42px!important;max-height:48px!important;white-space:nowrap!important;align-self:auto!important;margin:0!important;padding:10px 18px!important;border:1px solid rgba(229,196,108,.85)!important;border-radius:999px!important;background:rgba(10,9,6,.86)!important;color:#ffe6a0!important;box-shadow:0 4px 16px #0009,inset 0 1px #fff2!important;backdrop-filter:blur(8px)!important;font-size:14px!important;line-height:1.2!important;pointer-events:auto!important;z-index:8!important}
+.story-viewer .story-touch-zones .story-touch-pause span{display:inline!important;white-space:nowrap!important}
+.story-viewer .story-viewer-media{object-fit:cover!important;background:#000!important}
+.story-viewer .story-viewer-caption{bottom:168px!important;z-index:7!important}
+.story-viewer .emi-story-music{bottom:68px!important;left:12px!important;right:12px!important;padding:10px 12px!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;max-height:116px!important;overflow:auto!important;z-index:8!important}
+.story-viewer .emi-story-music audio{width:100%!important;max-width:100%!important;height:38px!important;flex:1 1 100%!important}
+.story-viewer .story-viewer-nav{bottom:max(12px,env(safe-area-inset-bottom))!important;z-index:9!important}
+@media(max-width:520px){.story-viewer .story-touch-zones{inset:80px 0 170px!important}.story-viewer .story-touch-zones .story-touch-pause{min-height:40px!important;padding:9px 15px!important;font-size:13px!important}.story-viewer .story-viewer-caption{bottom:190px!important}.story-viewer .emi-story-music{bottom:72px!important;max-height:108px!important}.story-viewer .story-viewer-nav{bottom:max(10px,env(safe-area-inset-bottom))!important}}
