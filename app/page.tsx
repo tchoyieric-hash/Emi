@@ -81,6 +81,8 @@ export default function HomePage() {
   const [active, setActive] = useState("Accueil");
   const [selectedReelId, setSelectedReelId] = useState<string | null>(null);
   const [reelSoundOn, setReelSoundOn] = useState(false);
+  const homeScrollYRef = useRef(0);
+  const previousActiveRef = useRef("Accueil");
   const [settingsSection, setSettingsSection] = useState<string | null>(null);
   const [vibesTab, setVibesTab] = useState("Pour toi");
   const [vibesSearch, setVibesSearch] = useState("");
@@ -1676,6 +1678,38 @@ export default function HomePage() {
     };
   }, [posts, active, viewingProfile?.id, profileTab]);
 
+  useEffect(() => {
+    const wasReels = previousActiveRef.current === "Reels";
+    if (wasReels && active === "Accueil") {
+      requestAnimationFrame(() => window.scrollTo({top: homeScrollYRef.current, behavior: "instant"}));
+    }
+    previousActiveRef.current = active;
+  }, [active]);
+
+  useEffect(() => {
+    if (active !== "Reels" || !selectedReelId) return;
+    const timer = window.setTimeout(() => {
+      const card = document.getElementById("emi-post-" + selectedReelId);
+      const video = card?.querySelector<HTMLVideoElement>("video.reel-video");
+      if (!card || !video) return;
+      card.scrollIntoView({behavior:"smooth", block:"start"});
+      video.setAttribute("playsinline", "");
+      video.volume = 1;
+      video.muted = !reelSoundOn;
+      void video.play().catch(() => {
+        // Les règles du navigateur peuvent exiger un toucher sur la commande sonore.
+      });
+      const audio = document.getElementById("emi-track-" + selectedReelId) as HTMLAudioElement | null;
+      if (audio && reelSoundOn) {
+        audio.volume = 1;
+        audio.muted = false;
+        try { audio.currentTime = Math.max(Number(audio.dataset.trackStart || 0), video.currentTime); } catch {}
+        void audio.play().catch(() => undefined);
+      }
+    }, 160);
+    return () => window.clearTimeout(timer);
+  }, [active, selectedReelId, filteredPosts, reelSoundOn]);
+
   // Reels : une seule vidéo visible à la fois, lecture au défilement.
   useEffect(() => {
     const videos = Array.from(document.querySelectorAll<HTMLVideoElement>(".reel-post .reel-video"));
@@ -1715,7 +1749,7 @@ export default function HomePage() {
 
   const isReelPost = (post: Post) => post.media_type === "video" && (post.media_urls || []).length > 0 && /^\s*\[EMI_REEL\]/.test(post.content || "");
   const cleanPostContent = (content: string) => content.replace(/^\s*\[EMI_REEL\]\s*/i, "").replace(/\[EMI_MUSIC\][\s\S]*?(?:\[\/EMI_MUSIC\]|$)/gi, "").trim();
-  const filteredPosts = viewingProfile ? (profileTab === "shared" ? sharedPosts.filter(p => !query || cleanPostContent(p.content).toLowerCase().includes(query.toLowerCase())) : profileTab === "reels" ? visiblePosts.filter(isReelPost) : visiblePosts.filter(p => !isReelPost(p))) : active === "Reels" ? visiblePosts.filter(post => post.media_type === "video" && isReelPost(post)) : active === "Vidéos" ? visiblePosts.filter(post => post.media_type === "video" && !isReelPost(post)) : visiblePosts.filter(post => !isReelPost(post));
+  const filteredPosts = viewingProfile ? (profileTab === "shared" ? sharedPosts.filter(p => !query || cleanPostContent(p.content).toLowerCase().includes(query.toLowerCase())) : profileTab === "reels" ? visiblePosts.filter(isReelPost) : visiblePosts.filter(p => !isReelPost(p))) : active === "Reels" ? visiblePosts.filter(post => post.media_type === "video" && isReelPost(post)).sort((a,b)=>a.id===selectedReelId?-1:b.id===selectedReelId?1:0) : active === "Vidéos" ? visiblePosts.filter(post => post.media_type === "video" && !isReelPost(post)) : visiblePosts.filter(post => !isReelPost(post));
 
   return (
     <main className="app-shell">
@@ -1775,9 +1809,9 @@ export default function HomePage() {
               </div>
             </section>
             <section className="emi-home-reels" aria-label="Reels de la communauté">
-             <div className="emi-home-reels-heading"><div><span className="eyebrow">À REGARDER</span><h2>Reels</h2><p>Les vidéos récentes de la communauté.</p></div><button type="button" onClick={() => {setActive("Reels");void loadFeed();window.scrollTo({top:0,behavior:"smooth"});}}>Voir tout <ChevronRight size={15}/></button></div>
+             <div className="emi-home-reels-heading"><div><span className="eyebrow">À REGARDER</span><h2>Reels</h2><p>Les vidéos récentes de la communauté.</p></div><button type="button" onClick={() => {homeScrollYRef.current=window.scrollY;setSelectedReelId(null);setReelSoundOn(false);setActive("Reels");void loadFeed();window.scrollTo({top:0,behavior:"smooth"});}}>Voir tout <ChevronRight size={15}/></button></div>
              <div className="emi-home-reels-row">
-                {posts.filter(post=>isReelPost(post)).slice(0,10).map(post=>{const author=post.profiles?.display_name||post.profiles?.username||"Membre EMi";return <button type="button" className="emi-home-reel-card" key={post.id} onClick={()=>{setSelectedReelId(post.id);setReelSoundOn(true);setActive("Reels");void loadFeed();window.scrollTo({top:0,behavior:"instant"});}} aria-label={"Ouvrir le Reel de "+author}><video src={post.media_urls[0]} muted playsInline preload="metadata"/><span className="emi-home-reel-play"><Play size={19} fill="currentColor"/></span><span className="emi-home-reel-author">{post.profiles?.avatar_url?<img src={post.profiles.avatar_url} alt=""/>:<span className="emi-home-reel-author-fallback">{author.slice(0,1).toUpperCase()}</span>}<strong>{author}</strong>{user?.id===post.user_id&&onlineNow&&<i className="emi-online-dot" aria-label="En ligne"/>}</span><span className="emi-home-reel-caption">{cleanPostContent(post.content||"Découvre cette vidéo")||"Vidéo"}</span><span className="emi-reel-view-count"><Eye size={15}/><strong>{postViewCounts[post.id]||0}</strong><span>vues</span></span></button>;})}
+                {posts.filter(post=>isReelPost(post)).slice(0,10).map(post=>{const author=post.profiles?.display_name||post.profiles?.username||"Membre EMi";return <button type="button" className="emi-home-reel-card" key={post.id} onClick={()=>{homeScrollYRef.current=window.scrollY;setSelectedReelId(post.id);setReelSoundOn(true);setActive("Reels");void loadFeed();window.scrollTo({top:0,behavior:"instant"});}} aria-label={"Ouvrir le Reel de "+author}><video src={post.media_urls[0]} muted playsInline preload="metadata"/><span className="emi-home-reel-play"><Play size={19} fill="currentColor"/></span><span className="emi-home-reel-author">{post.profiles?.avatar_url?<img src={post.profiles.avatar_url} alt=""/>:<span className="emi-home-reel-author-fallback">{author.slice(0,1).toUpperCase()}</span>}<strong>{author}</strong>{user?.id===post.user_id&&onlineNow&&<i className="emi-online-dot" aria-label="En ligne"/>}</span><span className="emi-home-reel-caption">{cleanPostContent(post.content||"Découvre cette vidéo")||"Vidéo"}</span><span className="emi-reel-view-count"><Eye size={15}/><strong>{postViewCounts[post.id]||0}</strong><span>vues</span></span></button>;})}
                {posts.filter(post=>post.media_type==="video"&&(post.media_urls||[]).length>0).length===0&&<div className="emi-home-reels-empty"><Clapperboard size={22}/><strong>Les Reels apparaîtront ici</strong><span>Publie une vidéo pour commencer.</span></div>}
              </div>
            </section>
