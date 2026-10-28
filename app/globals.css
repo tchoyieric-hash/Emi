@@ -1831,3 +1831,58 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 /* Légendes Reel propres : aucun marqueur interne ne doit être rendu */
 .emi-home-reel-caption,.reel-post .post-caption,.profile-grid-post .post-caption{overflow-wrap:anywhere}
 .reel-post .post-caption{white-space:normal!important}
+
+
+/* EMi Messages — interface premium vert émeraude et or, adaptée au mobile */
+.chat-shell{display:grid!important;grid-template-columns:minmax(270px,.78fr) minmax(0,1.35fr)!important;gap:0!important;overflow:hidden!important;border:1px solid rgba(219,185,89,.32)!important;border-radius:22px!important;background:linear-gradient(145deg,#08271b,#03130c)!important;color:#f8f4e5!important;box-shadow:0 18px 55px rgba(0,0,0,.24)!important}
+.emi-messages-heading{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:21px 22px 18px;border-bottom:1px solid rgba(219,185,89,.23);background:radial-gradient(ellipse at top left,rgba(20,102,66,.35),transparent 62%)}
+.emi-messages-kicker{font-size:10px;font-weight:800;letter-spacing:.16em;color:#d7b95f}
+.emi-messages-heading h2{margin:5px 0 3px;font-size:27px;letter-spacing:-.04em;color:#fff1c7}
+.emi-messages-heading h2 span{color:#e3c36b}
+.emi-messages-heading p{margin:0;color:#b7c9bd;font-size:12px}
+.emi-messages-head-actions{display:flex;gap:9px}
+.emi-messages-head-actions button{display:grid;place-items:center;width:43px;height:43px;border-radius:14px;border:1px solid rgba(226,194,105,.38);background:rgba(5,35,23,.8);color:#f1d47a;cursor:pointer}
+.chat-sidebar{min-width:0;max-height:none!important;padding:14px!important;border-right:1px solid rgba(219,185,89,.2);background:rgba(2,17,11,.28)}
+.emi-chat-search{min-height:43px;border:1px solid rgba(217,188,102,.24)!important;border-radius:14px!important;background:#031b11!important;color:#c9d7ce!important}
+.emi-chat-search input{color:#f8f4e5!important}
+.emi-chat-filters{display:flex;gap:7px;margin:12px 0 10px;overflow-x:auto}
+.emi-chat-filters button{flex:0 0 auto;padding:7px 12px;border:1px solid rgba(221,192,107,.24);border-radius:999px;background:#08271b;color:#c4d4c8;font-size:11px;font-weight:700;cursor:pointer}
+.emi-chat-filters button.is-active{background:linear-gradient(135deg,#f1d77d,#cda94b);border-color:#f3d980;color:#10271a}
+.chat-list{gap:5px!important}
+.chat-list-item{display:flex!important;align-items:center;gap:10px!important;width:100%;padding:11px 9px!important;border:1px solid transparent!important;border-radius:14px!important;background:transparent!important;color:#f7f1df!important;text-align:left!important}
+.chat-list-item:hover,.chat-selected{background:linear-gradient(100deg,rgba(17,91,57,.58),rgba(8,38,25,.3))!important;border-color:rgba(218,186,93,.3)!important}
+.chat-avatar{width:45px!important;height:45px!important;flex-basis:45px!important;border:1px solid rgba(224,193,101,.48)!important;background:#0c4930!important;color:#ffe6a0!important}
+.chat-list-copy strong{font-size:13px!important;color:#fff3d0!important}
+.chat-list-copy small{font-size:11px!important;line-height:1.4;color:#b9cabe!important}
+.chat-window{min-width:0;min-height:550px!important;background:linear-gradient(180deg,rgba(4,25,16,.45),rgba(1,13,8,.75))!important}
+.chat-welcome{color:#c6d8cb!important}
+.chat-welcome>svg{width:62px;height:62px;padding:15px;border:1px solid #dfbd5e66;border-radius:22px;background:#0c3b27;color:#f2d477}
+.chat-welcome h2{color:#fff1c7!important}
+.chat-topbar{position:sticky;top:0;z-index:3;padding:13px 15px!important;border-bottom:1px solid rgba(219,185,89,.22)!important;background:rgba(4,29,19,.95)!important;backdrop-filter:blur(15px)}
+.chat-topbar>strong{color:#fff0c4!important}
+.chat-secure-label{color:#b5cbbd!important}
+.chat-messages{flex:1;max-height:none!important;padding:18px 14px!important;background:radial-gradient(ellipse at top right,rgba(12,79,49,.17),transparent 65%)}
+.chat-bubble{padding:11px 13px!important;border-radius:16px!important;border:1px solid rgba(223,191,99,.1)!important;box-shadow:0 4px 15px #0002}
+.chat-theirs{background:#0c3021!important;color:#f4f3e7!important;border-top-left-radius:5px!important}
+.chat-mine{background:linear-gradient(135deg,#126b45,#0b4a30)!important;color:#fff8e4!important;border-top-right-radius:5px!important}
+.chat-bubble time{color:#b5c9bc!important}
+.chat-compose{display:flex;align-items:center;gap:8px;padding:12px!important;border-top:1px solid rgba(219,185,89,.2)!important;background:rgba(3,24,15,.97)!important}
+.chat-compose>input[aria-label="Écris un message"]{flex:1;min-width:0;border:1px solid rgba(219,185,89,.25)!important;border-radius:999px!important;background:#061e13!important;color:#fff7e3!important;padding:12px 14px!important}
+.chat-compose>input[aria-label="Écris un message"]::placeholder{color:#9db4a5}
+.chat-compose .profile-back-button{border:1px solid rgba(219,185,89,.3)!important;border-radius:50%!important;background:#0b3523!important;color:#e7c86c!important}
+.chat-compose .modal-primary,.chat-sidebar .modal-primary{border:0!important;border-radius:999px!important;background:linear-gradient(135deg,#f4d77c,#c8a344)!important;color:#092619!important;font-weight:800!important}
+.chat-sidebar .profile-back-button{width:100%;margin-top:8px;border-radius:12px!important}
+@media(max-width:760px){
+ .chat-shell{display:flex!important;flex-direction:column!important;border-radius:17px!important}
+ .emi-messages-heading{padding:17px 15px 14px}
+ .emi-messages-heading h2{font-size:24px}
+ .chat-sidebar{max-height:none!important;padding:12px!important;border-right:0!important;border-bottom:1px solid rgba(219,185,89,.2)}
+ .chat-list{max-height:32dvh;overflow-y:auto}
+ .chat-list-item{padding:9px 7px!important}
+ .chat-window{min-height:54dvh!important}
+ .chat-topbar{gap:7px}
+ .chat-compose{position:sticky!important;bottom:0}
+ .chat-compose .modal-primary{min-width:42px;padding:11px!important;font-size:0!important}
+ .chat-compose .modal-primary svg{width:18px;height:18px}
+}
+@media(max-width:380px){.emi-messages-heading h2{font-size:22px}.emi-messages-head-actions button{width:39px;height:39px}.chat-compose{gap:5px!important;padding:8px!important}}
