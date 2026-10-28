@@ -2129,9 +2129,11 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .story-viewer .story-viewer-nav .story-nav-pause{border:1px solid #e8cf7d!important;background:#08271f!important;color:#f8e7a2!important;font-weight:800!important}
 
 
-/* Press-and-hold story pause interaction */
-.story-viewer .story-touch-zones .story-touch-pause{touch-action:none!important;user-select:none!important;-webkit-user-select:none!important;-webkit-touch-callout:none!important}
+/* EMi Stories: explicit tap controls; no press-and-hold gestures required */
+.story-viewer .story-touch-zones .story-touch-pause{touch-action:manipulation!important;user-select:none!important;-webkit-user-select:none!important;-webkit-touch-callout:default!important;min-height:38px!important;padding:8px 15px!important;border:1px solid rgba(232,198,105,.8)!important;border-radius:999px!important;background:linear-gradient(145deg,rgba(29,24,13,.92),rgba(0,0,0,.82))!important;color:#ffe7a0!important;box-shadow:0 3px 12px #0008,inset 0 1px #fff3!important;font-weight:800!important;pointer-events:auto!important}
 .story-viewer .story-touch-zones .story-touch-pause span{pointer-events:none!important}
+.camera-shutter{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;user-select:none!important}
+.camera-status.recording{border-color:#f4d06c!important;color:#ffe6a0!important;background:#090807e8!important;letter-spacing:.02em!important}
 
 
 /* EMi Creation Studio — royal black & metallic gold, dimensional 3D finish */
