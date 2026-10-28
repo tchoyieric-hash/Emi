@@ -1709,7 +1709,7 @@ export default function HomePage() {
       }
     }, 160);
     return () => window.clearTimeout(timer);
-  }, [active, selectedReelId, filteredPosts, reelSoundOn]);
+  }, [active, selectedReelId, reelSoundOn]);
 
   // Reels : une seule vidéo visible à la fois, lecture au défilement.
   useEffect(() => {
