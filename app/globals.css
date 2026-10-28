@@ -2127,3 +2127,8 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .story-viewer .story-viewer-nav{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}
 .story-viewer .story-viewer-nav button{min-height:42px!important;touch-action:manipulation!important}
 .story-viewer .story-viewer-nav .story-nav-pause{border:1px solid #e8cf7d!important;background:#08271f!important;color:#f8e7a2!important;font-weight:800!important}
+
+
+/* Press-and-hold story pause interaction */
+.story-viewer .story-touch-zones .story-touch-pause{touch-action:none!important;user-select:none!important;-webkit-user-select:none!important;-webkit-touch-callout:none!important}
+.story-viewer .story-touch-zones .story-touch-pause span{pointer-events:none!important}
