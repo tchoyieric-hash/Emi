@@ -1704,3 +1704,39 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
  .emi-home-market-card{flex-basis:78%!important;width:78%!important}
 }
 @media(prefers-reduced-motion:reduce){.emi-ecosystem-entry,.emi-ecosystem-panel,.emi-ecosystem-tile{animation:none!important;transition:none!important}}
+
+
+/* Reels EMi — expérience verticale immersive, tout en conservant les actions existantes */
+@media(max-width:700px){
+  .main-column:has(.reel-post){padding:0!important;margin:0!important;min-width:0!important}
+  .main-column:has(.reel-post) .feed-header{padding:9px 12px!important;margin:0!important}
+  .main-column:has(.reel-post) .feed-tabs{display:none!important}
+  .main-column:has(.reel-post) .feed-list:has(.reel-post){display:flex!important;flex-direction:column!important;gap:0!important;margin:0!important;padding:0!important;scroll-snap-type:y mandatory!important;overscroll-behavior-y:contain!important}
+  .reel-post{position:relative!important;isolation:isolate!important;box-sizing:border-box!important;width:100%!important;height:calc(100dvh - 142px)!important;min-height:470px!important;max-height:none!important;flex:0 0 calc(100dvh - 142px)!important;margin:0!important;padding:0!important;overflow:hidden!important;border:0!important;border-radius:0!important;background:#020805!important;scroll-snap-align:start!important;scroll-snap-stop:always!important}
+  .reel-post .post-top{position:absolute!important;z-index:5!important;top:12px!important;left:10px!important;right:10px!important;display:flex!important;align-items:center!important;gap:8px!important;padding:8px!important;border:0!important;border-radius:13px!important;background:linear-gradient(90deg,rgba(0,0,0,.65),rgba(0,0,0,.05))!important;box-shadow:none!important}
+  .reel-post .post-top .avatar{width:37px!important;height:37px!important;flex:0 0 37px!important}
+  .reel-post .post-author{min-width:0!important;flex:1!important;text-align:left!important}
+  .reel-post .post-author strong{font-size:13px!important;color:#fff!important}
+  .reel-post .post-author span{font-size:10px!important;color:#e4e8e2!important}
+  .reel-post .post-top .profile-more-action{color:#fff!important;background:#07170db8!important;border:1px solid #e8c96f55!important;border-radius:50%!important;width:34px!important;height:34px!important;padding:0!important}
+  .reel-post .post-top button[style*="margin-left"]{padding:6px 9px!important;border-radius:20px!important;background:#0a3d29!important;border-color:#e8c96f!important;color:#ffe49a!important}
+  .reel-post .reel-video{position:absolute!important;inset:0!important;z-index:0!important;display:block!important;width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;object-fit:cover!important;background:#020805!important}
+  .reel-post .post-caption-wrap{position:absolute!important;z-index:4!important;left:12px!important;right:76px!important;bottom:14px!important;max-width:calc(100% - 90px)!important;padding:0!important;margin:0!important;background:linear-gradient(0deg,rgba(0,0,0,.65),transparent)!important}
+  .reel-post .post-caption{position:static!important;display:-webkit-box!important;-webkit-line-clamp:4!important;-webkit-box-orient:vertical!important;overflow:hidden!important;margin:0!important;padding:20px 0 8px!important;background:transparent!important;color:#fff!important;font-size:13px!important;line-height:1.45!important;text-shadow:0 1px 5px #000!important}
+  .reel-post .post-caption-wrap>button{color:#f1d77c!important;text-shadow:0 1px 4px #000!important}
+  .reel-post .post-actions{position:absolute!important;z-index:6!important;right:8px!important;left:auto!important;bottom:105px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-end!important;gap:17px!important;width:48px!important;padding:8px 3px!important;border:0!important;border-radius:18px!important;background:linear-gradient(90deg,transparent,rgba(0,0,0,.25))!important;color:#fff!important}
+  .reel-post .post-actions button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;min-width:39px!important;max-width:44px!important;padding:2px!important;border:0!important;background:transparent!important;color:#fff!important;text-shadow:0 1px 5px #000!important}
+  .reel-post .post-actions button svg{width:24px!important;height:24px!important;filter:drop-shadow(0 1px 3px #000)!important}
+  .reel-post .post-actions button span{display:block!important;max-width:44px!important;font-size:9px!important;line-height:1.15!important;color:#fff!important;overflow-wrap:anywhere!important;text-align:center!important}
+  .reel-post .post-actions .emi-post-views{display:flex!important;flex-direction:column!important;align-items:center!important;gap:2px!important;font-size:9px!important;color:#fff!important}
+  .reel-post .emi-post-music{position:absolute!important;z-index:5!important;left:12px!important;right:72px!important;bottom:7px!important;display:flex!important;align-items:center!important;gap:8px!important;max-width:calc(100% - 90px)!important;padding:7px 10px!important;border:1px solid rgba(232,201,111,.35)!important;border-radius:12px!important;background:rgba(3,18,11,.78)!important;backdrop-filter:blur(8px)!important}
+  .reel-post .emi-post-music-icon{color:#e8c96f!important}
+  .reel-post .emi-post-music-title strong{display:block!important;max-width:100%!important;font-size:10px!important;color:#fff0bd!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .reel-post .emi-post-music-title small{display:block!important;font-size:9px!important;color:#d0d9d2!important}
+  .reel-post .emi-post-audio{display:none!important}
+  .reel-post .comments-panel{position:absolute!important;z-index:8!important;left:0!important;right:0!important;bottom:0!important;max-height:52dvh!important;overflow:auto!important;border-radius:20px 20px 0 0!important;background:#09251a!important;border:1px solid #d6b75d55!important;box-shadow:0 -15px 45px #0009!important}
+  .reel-post .post-media,.reel-post .post-media-wrap{position:absolute!important;inset:0!important}
+}
+@media(min-width:701px){
+ .reel-post{scroll-snap-align:start}
+}
