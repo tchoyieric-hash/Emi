@@ -492,7 +492,7 @@ export default function HomePage() {
         gradient.addColorStop(1, "#06100d");
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        const theme = storyTextStyle === "gold" ? "#e8cf7d" : "#e8cf7d";
+        const theme = "#e8cf7d";
         ctx.textAlign = "center";
         ctx.fillStyle = theme;
         ctx.font = "700 34px Arial, sans-serif";
