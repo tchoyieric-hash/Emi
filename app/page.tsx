@@ -1629,6 +1629,46 @@ export default function HomePage() {
     return ()=>observer.disconnect();
   }, [posts, active, viewingProfile?.id, user?.id]);
 
+  // Vidéos classiques du fil : lecture automatique à l’écran, pause hors écran.
+  // Les Reels gardent leur comportement et leur espace dédiés.
+  useEffect(() => {
+    if (active === "Reels" || (viewingProfile && profileTab === "reels")) return;
+    const videos = Array.from(document.querySelectorAll<HTMLVideoElement>(".emi-feed-video"));
+    if (!videos.length) return;
+    const pauseAllExcept = (current: HTMLVideoElement) => {
+      videos.forEach(video => {
+        if (video !== current && !video.paused) video.pause();
+      });
+    };
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.7 && document.visibilityState === "visible") {
+          pauseAllExcept(video);
+          video.muted = true;
+          void video.play().catch(() => {
+            // Si l’autoplay est bloqué, les commandes natives restent disponibles.
+          });
+        } else if (!video.paused) {
+          video.pause();
+        }
+      });
+    }, { threshold: [0, 0.35, 0.7, 0.9] });
+    videos.forEach(video => {
+      video.setAttribute("playsinline", "");
+      observer.observe(video);
+    });
+    const handleVisibility = () => {
+      if (document.visibilityState !== "visible") videos.forEach(video => video.pause());
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibility);
+      videos.forEach(video => video.pause());
+    };
+  }, [posts, active, viewingProfile?.id, profileTab]);
+
   const isReelPost = (post: Post) => post.media_type === "video" && (post.media_urls || []).length > 0 && /^\s*\[EMI_REEL\]/.test(post.content || "");
   const cleanPostContent = (content: string) => content.replace(/^\s*\[EMI_REEL\]\s*/, "");
   const filteredPosts = viewingProfile ? (profileTab === "shared" ? sharedPosts.filter(p => !query || cleanPostContent(p.content).toLowerCase().includes(query.toLowerCase())) : profileTab === "reels" ? visiblePosts.filter(isReelPost) : visiblePosts.filter(p => !isReelPost(p))) : active === "Reels" ? visiblePosts.filter(post => post.media_type === "video" && isReelPost(post)) : active === "Vidéos" ? visiblePosts.filter(post => post.media_type === "video" && !isReelPost(post)) : visiblePosts.filter(post => !isReelPost(post));
