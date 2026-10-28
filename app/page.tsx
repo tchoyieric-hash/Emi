@@ -109,6 +109,7 @@ export default function HomePage() {
   const [offlineDrafts, setOfflineDrafts] = useState<OfflinePostDraft[]>([]);
   const [offlineDraftsOpen, setOfflineDraftsOpen] = useState(false);
   const [createStudioOpen, setCreateStudioOpen] = useState(false);
+  const [ecosystemOpen, setEcosystemOpen] = useState(false);
   const [manageContentOpen, setManageContentOpen] = useState(false);
   const [managedPosts, setManagedPosts] = useState<Post[]>([]);
   const [managedStories, setManagedStories] = useState<Story[]>([]);
@@ -1703,12 +1704,22 @@ export default function HomePage() {
         {!viewingProfile && <>
         <div className="stories-card" style={{display:["Reels","Vidéos","Découvrir","Messages"].includes(active) ? "none" : undefined}}><div className="section-label"><strong>Les stories</strong><button onClick={() => { if (!user) { setAuthOpen(true); setMessage("Connecte-toi pour partager une story."); } else setStoryComposerOpen(true); }}>Partager <span>→</span></button></div><div className="stories-row"><button className="story" onClick={() => { if (!user) { setAuthOpen(true); setMessage("Connecte-toi pour partager une story."); } else setStoryComposerOpen(true); }}><span className="story-ring story-add"><span className="story-avatar">{user?.avatar_url ? <img src={user.avatar_url} alt=""/> : <Plus size={18}/>}</span><span className="story-plus"><Plus size={13}/></span>{user && onlineNow && <span className="story-online-dot" title="Tu es en ligne" aria-label="Tu es en ligne"/>}</span><span className="story-name">{user ? displayName : "Ta story"}</span></button>{stories.map((story, index) => { const author = story.profiles?.display_name || story.profiles?.username || "Membre EMi"; const isOnline = onlineProfileIds.includes(story.user_id) || (story.user_id === user?.id && onlineNow); return <button className="story" key={story.id} onClick={() => setActiveStory(story)} aria-label={"Voir la story de " + author + (isOnline ? ", en ligne" : "")}><span className="story-ring story-media-ring"><span className="story-avatar story-media-thumb">{story.media_type === "image" ? <img src={story.media_url} alt="Aperçu du statut"/> : <span className="story-video-thumb"><img src="/emi-story-video.svg" alt="Vidéo"/><Video size={16}/></span>}</span>{isOnline && <span className="story-online-dot" title={author + " est en ligne"} aria-label={author + " est en ligne"}/>}</span><span className="story-name">{author}</span></button>; })}{stories.length === 0 && <span className="stories-empty">Les stories de la communauté apparaîtront ici.</span>}</div></div>
         {active === "Accueil" && !viewingProfile && <section className="emi-ecosystem-home" aria-label="Découvrir les services EMi">
-           <div className="emi-services-heading"><div><span className="eyebrow">UN SEUL ÉCOSYSTÈME</span><h2>Tout EMi</h2><p>Tous tes espaces, à portée de main.</p></div><a href="/annonces" className="emi-services-all">Voir tout <ChevronRight size={15}/></a></div>
-           <div className="emi-services-grid">
-             <a href="/annonces" className="emi-service-card emi-service-market"><span className="emi-service-icon"><ShoppingBag size={21}/></span><strong>Marché</strong><small>Offres & vendeurs</small><ChevronRight size={15}/></a>
-             <a href="/annonces/tontine" className="emi-service-card emi-service-flow"><span className="emi-service-icon"><Users size={21}/></span><strong>Flow · Djangui</strong><small>Groupes & cotisations</small><ChevronRight size={15}/></a>
-             <a href="/annonces/philanthropy" className="emi-service-card emi-service-foundation"><span className="emi-service-icon"><Heart size={21}/></span><strong>Fondation</strong><small>Solidarité & initiatives</small><ChevronRight size={15}/></a>
-             <a href="/annonces/master-health-check" className="emi-service-card emi-service-help"><span className="emi-service-icon"><CircleHelp size={21}/></span><strong>Help EMi</strong><small>Aide & assistance</small><ChevronRight size={15}/></a>
+           <div className="emi-ecosystem-entry-wrap">
+             <button type="button" className="emi-ecosystem-entry" aria-expanded={ecosystemOpen} onClick={() => setEcosystemOpen(open => !open)}>
+               <span className="emi-ecosystem-entry-icon"><Sparkles size={19}/></span>
+               <span className="emi-ecosystem-entry-copy"><strong>Écosystème EMi</strong><small>Marché · Fondation · Flow Djangui · Help</small></span>
+               <span className="emi-ecosystem-entry-action">{ecosystemOpen ? "Fermer" : "Explorer"} <ChevronRight size={17} className={ecosystemOpen ? "is-open" : ""}/></span>
+             </button>
+             {ecosystemOpen && <div className="emi-ecosystem-panel" aria-label="Menu Écosystème EMi">
+               <div className="emi-ecosystem-panel-head"><div><span className="eyebrow">UN SEUL UNIVERS</span><h2>Tout EMi, au même endroit</h2><p>Choisis l’espace que tu veux explorer.</p></div><button type="button" aria-label="Fermer le menu Écosystème" onClick={() => setEcosystemOpen(false)}><X size={19}/></button></div>
+               <div className="emi-ecosystem-panel-grid">
+                 <a href="/annonces" className="emi-ecosystem-tile ecosystem-market"><span><ShoppingBag size={23}/></span><strong>Marché</strong><small>Acheter · Vendre · Échanger</small><ChevronRight size={16}/></a>
+                 <a href="/annonces/philanthropy" className="emi-ecosystem-tile ecosystem-foundation"><span><Heart size={23}/></span><strong>Fondation</strong><small>Solidarité · Projets sociaux</small><ChevronRight size={16}/></a>
+                 <a href="/annonces/tontine" className="emi-ecosystem-tile ecosystem-flow"><span><Users size={23}/></span><strong>Flow Djangui</strong><small>Groupes · Cotisations</small><ChevronRight size={16}/></a>
+                 <a href="/annonces/master-health-check" className="emi-ecosystem-tile ecosystem-help"><span><CircleHelp size={23}/></span><strong>Help</strong><small>Assistance · Accompagnement</small><ChevronRight size={16}/></a>
+               </div>
+               <div className="emi-ecosystem-panel-foot"><Sparkles size={15}/> Plus qu’une application, une communauté.</div>
+             </div>}
            </div>
            <section className="emi-home-market" aria-label="Publications de tous les espaces EMi">
               <div className="emi-home-market-heading"><div><span className="eyebrow">UN SEUL FIL · TOUTE LA COMMUNAUTÉ</span><h2>À la une sur EMi</h2><p>Les offres et profils publiés dans les différents espaces, avec leur badge d’origine.</p></div><a href="/annonces">Voir tout <ChevronRight size={15}/></a></div>
