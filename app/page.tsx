@@ -1909,7 +1909,7 @@ export default function HomePage() {
   const filteredPosts = viewingProfile ? (profileTab === "shared" ? sharedPosts.filter(p => !query || cleanPostContent(p.content).toLowerCase().includes(query.toLowerCase())) : profileTab === "reels" ? visiblePosts.filter(isReelPost) : visiblePosts.filter(p => !isReelPost(p))) : active === "Reels" ? visiblePosts.filter(post => post.media_type === "video" && isReelPost(post)).sort((a,b)=>a.id===selectedReelId?-1:b.id===selectedReelId?1:0) : active === "Vidéos" ? visiblePosts.filter(post => post.media_type === "video" && !isReelPost(post)) : visiblePosts.filter(post => !isReelPost(post));
 
   return (
-    <style>{`@keyframes emiPublishSpin{to{transform:rotate(360deg)}}`}</style><main className="app-shell">
+    <main className="app-shell"><style>{`@keyframes emiPublishSpin{to{transform:rotate(360deg)}}`}</style>
       <aside className="sidebar">
         <a className="brand" href="#" aria-label="EMi accueil"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a>
         <button className="profile-mini profile-mini-button" onClick={() => user ? void openProfile(user.id) : setAuthOpen(true)}><div className="avatar avatar-me">{user?.avatar_url ? <img src={user.avatar_url} alt=""/> : user ? displayName.slice(0,2).toUpperCase() : "ME"}</div><div><strong>{user ? displayName : "Bienvenue sur EMi"}</strong><span>{user ? "Voir mon profil" : "Ton espace social"}</span></div></button>
