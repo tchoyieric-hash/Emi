@@ -1043,14 +1043,14 @@ export default function HomePage() {
     if (musicFile && filesToUpload.length===0) { setMessage("Ajoute une photo ou une vidéo pour accompagner ta musique."); return; }
     if (musicFile && !musicFile.type.startsWith("audio/")) { setMessage("Choisis un fichier audio valide."); return; }
     if (musicFile && musicFile.size > 15 * 1024 * 1024) { setMessage("Le fichier audio doit faire moins de 15 Mo."); return; }
-    if (publishDestination === "reel" && (filesToUpload.length !== 1 || !(filesToUpload[0].type.startsWith("video/") || /\\.(mp4|mov|webm|m4v|3gp|mkv)$/i.test(filesToUpload[0].name)))) {
+    if (publishDestination === "reel" && (filesToUpload.length !== 1 || !(filesToUpload[0].type.startsWith("video/") || /\.(mp4|mov|webm|m4v|3gp|mkv)$/i.test(filesToUpload[0].name)))) {
       setMessage("Pour publier un Reel, sélectionne une seule vidéo.");
       return;
     }
     if (filesToUpload.length > 10) { setMessage("Tu peux sélectionner jusqu’à 10 photos par publication."); return; }
     if (filesToUpload.some(f=>f.type.startsWith("video/")) && filesToUpload.length > 1) { setMessage("Pour une publication multiple, sélectionne des photos uniquement. Une vidéo peut être publiée seule."); return; }
     const allowed = ["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime","video/x-m4v","video/3gpp","video/x-matroska"];
-    if (filesToUpload.some(f=>!allowed.includes(f.type) && !((f.type.startsWith("video/") || /\\.(mp4|mov|webm|m4v|3gp|mkv)$/i.test(f.name)) && publishDestination==="reel"))) {
+    if (filesToUpload.some(f=>!allowed.includes(f.type) && !((f.type.startsWith("video/") || /\.(mp4|mov|webm|m4v|3gp|mkv)$/i.test(f.name)) && publishDestination==="reel"))) {
       setMessage("Format non pris en charge. Choisis une photo ou une vidéo courante.");
       return;
     }
@@ -1070,14 +1070,14 @@ export default function HomePage() {
           ctx.drawImage(bitmap, 0, 0);
           if (creatorTextOnPhoto && creatorOverlayText.trim()) {
             const fontSize=Math.max(22,Math.round(canvas.width*0.055)); ctx.filter="none"; ctx.font=`800 ${fontSize}px system-ui, sans-serif`; ctx.textAlign="center"; ctx.textBaseline="bottom"; ctx.lineWidth=Math.max(3,fontSize*0.12); ctx.strokeStyle="rgba(0,0,0,.8)"; ctx.fillStyle="#fff";
-            const words=creatorOverlayText.trim().split(/\\s+/); const lines:string[]=[]; let line="";
+            const words=creatorOverlayText.trim().split(/\s+/); const lines:string[]=[]; let line="";
             for(const word of words){const test=line?line+" "+word:word;if(ctx.measureText(test).width>canvas.width*.88&&line){lines.push(line);line=word;}else line=test;}
             if(line)lines.push(line); let y=canvas.height-Math.max(24,canvas.height*.06);
             for(let i=lines.length-1;i>=0;i--){ctx.strokeText(lines[i],canvas.width/2,y);ctx.fillText(lines[i],canvas.width/2,y);y-=fontSize*1.18;}
           }
           bitmap.close();
           const blob = await new Promise<Blob>((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Échec du traitement de l’image.")), "image/jpeg", .94));
-          uploadFile = new File([blob], sourceFile.name.replace(/\\.[^.]+$/, "") + "-emi.jpg", {type:"image/jpeg"});
+          uploadFile = new File([blob], sourceFile.name.replace(/\.[^.]+$/, "") + "-emi.jpg", {type:"image/jpeg"});
         }
         const path = user.id + "/" + crypto.randomUUID() + "-" + uploadFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
         const { error: uploadError } = await supabase!.storage.from("post-media").upload(path, uploadFile, { contentType: uploadFile.type || "video/mp4", upsert: false, cacheControl: "31536000" });
@@ -1093,7 +1093,7 @@ export default function HomePage() {
         urls = await Promise.all(filesToUpload.map((sourceFile,index)=>uploadOne(sourceFile,index)));
       }
       const firstFile = filesToUpload[0];
-      const isVideo = !!firstFile && (firstFile.type.startsWith("video/") || /\\.(mp4|mov|webm|m4v|3gp|mkv)$/i.test(firstFile.name));
+      const isVideo = !!firstFile && (firstFile.type.startsWith("video/") || /\.(mp4|mov|webm|m4v|3gp|mkv)$/i.test(firstFile.name));
       const mediaType = filesToUpload.length ? (isVideo ? "video" : filesToUpload.length > 1 ? "carousel" : "image") : "text";
       if (publishDestination === "reel" && mediaType !== "video") throw new Error("Pour publier un Reel, sélectionne une vidéo.");
 
@@ -1106,7 +1106,7 @@ export default function HomePage() {
         if (audioUploadError) throw new Error("Impossible d’envoyer la musique. Vérifie les autorisations du stockage : " + audioUploadError.message);
         uploadedPaths.push(audioPath);
         musicUrl = supabase.storage.from("post-media").getPublicUrl(audioPath).data.publicUrl;
-        musicMeta = {title: musicTitle.trim() || musicFile.name.replace(/\\.[^.]+$/, ""),artist:"Audio de ton téléphone",start:0,end:30};
+        musicMeta = {title: musicTitle.trim() || musicFile.name.replace(/\.[^.]+$/, ""),artist:"Audio de ton téléphone",start:0,end:30};
       }
 
       setPublishProgress("Finalisation de la publication…");
