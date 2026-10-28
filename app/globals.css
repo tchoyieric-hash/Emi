@@ -1604,3 +1604,21 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 @media(prefers-reduced-motion:reduce){
   .emi-service-card{animation:none!important;transform:none!important;will-change:auto!important}
 }
+
+/* Statuts EMi : cartes verticales compactes, inspirées des dimensions du modèle vidéo */
+@media(max-width:700px){
+  .stories-card{padding:10px 10px 9px!important;margin:0 0 10px!important;border-radius:12px!important}
+  .stories-row{display:flex!important;align-items:flex-start!important;gap:7px!important;padding:10px 1px 3px!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x proximity!important}
+  .stories-row .story{flex:0 0 66px!important;width:66px!important;min-width:66px!important;max-width:66px!important;gap:5px!important;scroll-snap-align:start}
+  .stories-row .story-ring{position:relative!important;width:66px!important;height:88px!important;min-width:66px!important;border-radius:11px!important;padding:2px!important;overflow:hidden!important;display:grid!important;place-items:stretch!important}
+  .stories-row .story-avatar{width:100%!important;height:100%!important;border:0!important;border-radius:9px!important;overflow:hidden!important}
+  .stories-row .story-media-thumb img{width:100%!important;height:100%!important;object-fit:cover!important}
+  .stories-row .story-name{width:66px!important;max-width:66px!important;font-size:10px!important;line-height:14px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;text-align:center!important}
+  .stories-row .story-add .story-avatar{display:grid!important;place-items:center!important;background:linear-gradient(160deg,#174a35,#061a12)!important}
+  .stories-row .story-add .story-plus{right:50%!important;bottom:20px!important;transform:translateX(50%)!important;width:25px!important;height:25px!important;border:2px solid #061a12!important}
+  .stories-row .story-media-ring{background:linear-gradient(145deg,#fff0b0,#d2a441 45%,#13dba0)!important}
+  .stories-row .story-online-dot{right:3px!important;bottom:3px!important}
+}
+@media(min-width:701px){
+  .stories-row .story-media-ring{border-radius:13px}
+}
