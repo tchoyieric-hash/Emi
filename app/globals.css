@@ -2288,3 +2288,8 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .story-viewer .emi-story-music audio{width:100%!important;max-width:100%!important;height:38px!important;flex:1 1 100%!important}
 .story-viewer .story-viewer-nav{bottom:max(12px,env(safe-area-inset-bottom))!important;z-index:9!important}
 @media(max-width:520px){.story-viewer .story-touch-zones{inset:80px 0 170px!important}.story-viewer .story-touch-zones .story-touch-pause{min-height:40px!important;padding:9px 15px!important;font-size:13px!important}.story-viewer .story-viewer-caption{bottom:190px!important}.story-viewer .emi-story-music{bottom:72px!important;max-height:108px!important}.story-viewer .story-viewer-nav{bottom:max(10px,env(safe-area-inset-bottom))!important}}
+
+/* Stories: never show pause overlay or music player */
+.story-viewer .story-touch-pause,.story-viewer .story-nav-pause,.story-viewer .emi-story-music,.story-viewer audio{display:none!important;visibility:hidden!important;pointer-events:none!important}
+.story-viewer .story-viewer-media{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important;background:#000!important}
+.story-viewer .story-viewer-caption{left:16px!important;right:16px!important;bottom:90px!important;text-align:center!important;color:#fff!important;text-shadow:0 2px 8px #000!important}
