@@ -1935,3 +1935,18 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .emi-post-gallery{position:relative;z-index:1}
 .emi-gallery-sound-toggle.emi-photo-music-toggle{right:12px!important;bottom:12px!important;z-index:100!important}
 .reel-post .emi-reel-sound-toggle{z-index:100!important;pointer-events:auto!important}
+
+
+/* Reels mobile : afficher toute l'image vidéo, sans recadrage ni découpe */
+@media(max-width:700px){
+ .main-column:has(.reel-post){min-height:0!important;padding-bottom:0!important}
+ .main-column:has(.reel-post) .feed-list:has(.reel-post){display:block!important;width:100%!important;min-height:0!important;margin:0!important;padding:0!important}
+ .reel-post{position:relative!important;width:100%!important;height:calc(100dvh - 145px - env(safe-area-inset-bottom,0px))!important;min-height:0!important;max-height:none!important;margin:0!important;border-radius:0!important;overflow:hidden!important;background:#000!important}
+ .reel-post .reel-video{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center center!important;background:#000!important}
+ .reel-post .emi-feed-media-wrap{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;overflow:hidden!important;background:#000!important}
+ .reel-post .emi-feed-media-wrap>.reel-video{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:contain!important}
+ .reel-post .emi-post-gallery{height:100%!important;min-height:0!important;max-height:100%!important}
+ .reel-post .post-top{z-index:20!important}
+ .reel-post .post-actions{z-index:25!important}
+ .reel-post .emi-reel-sound-toggle{z-index:100!important}
+}
