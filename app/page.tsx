@@ -518,7 +518,7 @@ export default function HomePage() {
     setMarketHighlights(marketCards);
     const marketKeys = marketCards.map(item=>({item_type:item.viewType,item_id:String(item.id)}));
     if (marketKeys.length) {
-      const {data:mv}=await supabase.from("market_highlight_views").select("item_type,item_id").in("item_type",["market","elite","troc","flow"]);
+      const {data:mv}=await supabase.from("market_highlight_views").select("item_type,item_id").in("item_type",["market","elite","troc","flow"]).in("item_id",marketKeys.map(item=>item.item_id));
       const counts:Record<string,number>={}; (mv||[]).forEach((row:{item_type:string;item_id:string})=>{const k=row.item_type+":"+row.item_id;counts[k]=(counts[k]||0)+1;});
       setMarketViewCounts(old=>({...old,...counts}));
     }
