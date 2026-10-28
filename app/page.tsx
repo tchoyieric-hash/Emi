@@ -730,7 +730,11 @@ export default function HomePage() {
       nextVideo.playsInline = true;
       nextVideo.loop = true;
       // Les navigateurs mobiles autorisent plus facilement l’autoplay muet.
-      nextVideo.muted = true;
+      const postId = nextVideo.closest("article")?.id.replace("emi-post-", "") || "";
+      // L'état sonore suit le média réellement visible : le scroll ne réactive pas le muet par-dessus le choix utilisateur.
+      nextVideo.muted = selector === ".reel-video" ? !reelSoundOn : !postSoundEnabled[postId];
+      const linkedAudio = document.getElementById("emi-track-" + postId) as HTMLAudioElement | null;
+      if (linkedAudio) linkedAudio.muted = nextVideo.muted;
       if (nextVideo.paused) void nextVideo.play().catch(() => undefined);
     }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
     videos.forEach(video => {
@@ -741,7 +745,7 @@ export default function HomePage() {
       observer.disconnect();
       videos.forEach(video => video.pause());
     };
-  }, [active, viewingProfile?.id, posts.length]);
+  }, [active, viewingProfile?.id, posts.length, reelSoundOn, postSoundEnabled]);
 
   useEffect(() => {
     if (!supabase || !activeStory) return;
