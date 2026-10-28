@@ -2234,3 +2234,42 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .camera-shutter.is-recording span{border-radius:7px!important;background:#d9ad3d!important;box-shadow:0 2px 0 #694b12,0 0 15px #f5d77b99!important}
 @media(max-width:520px){.story-viewer{width:100vw!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important;border:0!important}.emi-story-studio{border-radius:25px 25px 0 0!important;padding:22px 16px max(20px,env(safe-area-inset-bottom))!important}.story-viewer header{padding-top:max(24px,env(safe-area-inset-top))!important}.story-viewer-nav button{font-size:12px!important;padding:9px 10px!important}.emi-story-format{min-height:74px!important}}
 @media(prefers-reduced-motion:reduce){.emi-story-format,.story-studio-picker,.story-studio-publish{transition:none!important}}
+
+
+/* EMi Stories reference board — production mobile UI */
+.stories-card{position:relative!important;margin:18px 0 22px!important;padding:18px 15px 15px!important;border:1px solid rgba(218,181,84,.32)!important;border-radius:24px!important;background:radial-gradient(ellipse at 12% 0%,rgba(206,163,62,.13),transparent 44%),linear-gradient(155deg,#0e0d0a 0%,#050505 70%,#100c05 100%)!important;box-shadow:0 12px 34px #0008,inset 0 1px #fff1!important;overflow:hidden!important}
+.stories-card:before{content:"";position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,#f4d989,#b8892d,transparent);box-shadow:0 0 12px #e8c36688;pointer-events:none}
+.stories-card .section-label{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;margin:0 0 15px!important}
+.stories-card .section-label strong{display:flex!important;align-items:center!important;gap:9px!important;color:#f5df9c!important;font-size:17px!important;font-weight:900!important;letter-spacing:.01em!important}
+.stories-card .section-label strong:before{content:"♛";display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:linear-gradient(145deg,#f8df8e,#9a6b19 55%,#2a1e08);color:#171006;text-shadow:0 1px #fff8;box-shadow:0 3px 0 #3b2b0c,inset 0 1px #fff9}
+.stories-card .section-label button{border:1px solid #d4b15c88!important;border-radius:999px!important;background:linear-gradient(145deg,#29200e,#090807)!important;color:#f3d986!important;padding:9px 13px!important;font-size:12px!important;font-weight:850!important;box-shadow:0 3px 0 #030303,inset 0 1px #fff2!important}
+.stories-row{display:flex!important;gap:13px!important;overflow-x:auto!important;overscroll-behavior-x:contain!important;padding:3px 2px 10px!important;scrollbar-width:none!important;scroll-snap-type:x proximity!important}
+.stories-row::-webkit-scrollbar{display:none!important}
+.stories-row .story{flex:0 0 66px!important;width:66px!important;min-width:66px!important;display:flex!important;align-items:center!important;gap:7px!important;scroll-snap-align:start!important}
+.stories-row .story-ring{width:60px!important;height:60px!important;padding:3px!important;border:1px solid #f2d786!important;background:conic-gradient(from 30deg,#fff0b2,#b17b1c,#fff0b2,#8d611b,#f9e8a6)!important;box-shadow:0 0 0 2px #090806,0 0 15px #d7ae4b25,inset 0 1px #fff9!important}
+.stories-row .story-ring .story-avatar{border:2px solid #090806!important;background:linear-gradient(145deg,#32250d,#050505)!important;overflow:hidden!important}
+.stories-row .story-name{width:66px!important;max-width:66px!important;color:#e9dfc4!important;font-size:11px!important;font-weight:650!important;white-space:nowrap!important;text-overflow:ellipsis!important;overflow:hidden!important;text-align:center!important}
+.stories-row .story-add .story-avatar{display:grid!important;place-items:center!important;color:#f4d987!important}
+.stories-row .story-plus{background:linear-gradient(145deg,#fff0b2,#c89a36 55%,#77500d)!important;color:#1a1204!important;border:2px solid #090806!important;box-shadow:0 2px 0 #4d350b!important}
+.stories-empty{color:#9c927a!important;font-size:12px!important;padding:18px 8px!important}
+.emi-story-studio{max-height:min(90dvh,900px)!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+.emi-story-format-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+.emi-story-format{min-height:124px!important;align-items:flex-start!important;flex-direction:column!important;justify-content:space-between!important;padding:14px!important;gap:10px!important}
+.emi-story-format>span:nth-child(2){display:block!important;width:100%!important}
+.emi-story-format>svg{position:absolute!important;right:12px!important;top:13px!important;width:16px!important}
+.emi-story-format-icon{width:48px!important;height:48px!important;min-width:48px!important;display:grid!important;place-items:center!important}
+.emi-story-format strong{font-size:14px!important}
+.emi-story-format small{font-size:11px!important;line-height:1.35!important}
+.emi-story-footer-note{margin-top:15px!important}
+.story-studio-form{width:100%!important}
+.story-studio-caption{min-height:76px!important;resize:vertical!important}
+.story-studio-picker{min-height:76px!important}
+.story-viewer-backdrop{background:radial-gradient(ellipse at 50% 0%,#b38a2a22,transparent 50%),#000f!important;backdrop-filter:blur(14px)!important}
+.story-viewer{border-radius:24px!important;border:1px solid #d2ad57!important;background:#030303!important;box-shadow:0 0 0 1px #fff1,0 22px 80px #000f,0 0 28px #d4aa4a1b!important}
+.story-progress{height:3px!important;gap:3px!important}
+.story-progress span{background:linear-gradient(90deg,#9c701b,#fff0ac,#d1a341)!important}
+.story-viewer-author img{border:2px solid #e5c46c!important;box-shadow:0 0 0 2px #090806!important}
+.story-viewer .story-touch-pause{min-width:92px!important}
+.story-viewer-nav button{min-height:42px!important}
+@media(max-width:520px){.stories-card{border-radius:0!important;margin:10px -12px 18px!important;padding:16px 13px 13px!important;border-left:0!important;border-right:0!important}.emi-story-format{min-height:118px!important}.emi-story-studio{border-radius:25px 25px 0 0!important}.story-viewer{border-radius:0!important}}
+@media(min-width:700px){.stories-card{max-width:780px!important;margin-left:auto!important;margin-right:auto!important}.emi-story-studio{width:min(94vw,620px)!important}.emi-story-format{min-height:138px!important}}
