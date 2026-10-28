@@ -1910,3 +1910,12 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
   .reel-post{scroll-margin-top:18px}
   .reel-post .reel-video{max-height:78dvh!important;object-fit:contain!important;background:#010805!important}
 }
+
+
+/* Petit insigne sonore discret sur les médias du fil : vidéo et photo avec musique */
+.emi-feed-media-wrap{position:relative;width:100%;display:grid;place-items:center;background:#09090d;overflow:hidden}
+.emi-feed-media-wrap>.emi-feed-video,.emi-feed-media-wrap>.reel-video{display:block;max-width:100%}
+.emi-feed-sound-toggle{position:absolute;right:12px;bottom:12px;z-index:15;display:grid;place-items:center;width:38px;height:38px;min-width:38px;border:1px solid rgba(229,197,105,.55);border-radius:50%;background:rgba(3,26,17,.86);color:#f1d477;box-shadow:0 3px 14px rgba(0,0,0,.3);backdrop-filter:blur(10px);touch-action:manipulation;cursor:pointer}
+.emi-feed-sound-toggle:active{transform:scale(.94)}
+.emi-gallery-sound-toggle{bottom:12px;right:58px}
+@media(max-width:700px){.emi-feed-sound-toggle{width:40px;height:40px;min-width:40px;right:10px;bottom:10px}.emi-gallery-sound-toggle{right:55px}}
