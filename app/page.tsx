@@ -1670,6 +1670,40 @@ export default function HomePage() {
     };
   }, [posts, active, viewingProfile?.id, profileTab]);
 
+  // Reels : une seule vidéo visible à la fois, lecture au défilement.
+  useEffect(() => {
+    const videos = Array.from(document.querySelectorAll<HTMLVideoElement>(".reel-post .reel-video"));
+    if (active !== "Reels" || viewingProfile) {
+      videos.forEach(video => video.pause());
+      return;
+    }
+    if (!videos.length) return;
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.65 && document.visibilityState === "visible") {
+          videos.forEach(other => { if (other !== video) other.pause(); });
+          // Autoplay mobile doit démarrer muet; l’utilisateur peut activer le son avec les commandes vidéo.
+          video.muted = true;
+          void video.play().catch(() => undefined);
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: [0, 0.35, 0.65, 0.85] });
+    videos.forEach(video => {
+      video.setAttribute("playsinline", "");
+      observer.observe(video);
+    });
+    const onVisibility = () => { if (document.visibilityState !== "visible") videos.forEach(video => video.pause()); };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      videos.forEach(video => video.pause());
+    };
+  }, [active, viewingProfile?.id, posts]);
+
   const isReelPost = (post: Post) => post.media_type === "video" && (post.media_urls || []).length > 0 && /^\s*\[EMI_REEL\]/.test(post.content || "");
   const cleanPostContent = (content: string) => content.replace(/^\s*\[EMI_REEL\]\s*/, "");
   const filteredPosts = viewingProfile ? (profileTab === "shared" ? sharedPosts.filter(p => !query || cleanPostContent(p.content).toLowerCase().includes(query.toLowerCase())) : profileTab === "reels" ? visiblePosts.filter(isReelPost) : visiblePosts.filter(p => !isReelPost(p))) : active === "Reels" ? visiblePosts.filter(post => post.media_type === "video" && isReelPost(post)) : active === "Vidéos" ? visiblePosts.filter(post => post.media_type === "video" && !isReelPost(post)) : visiblePosts.filter(post => !isReelPost(post));
