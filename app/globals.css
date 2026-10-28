@@ -2119,3 +2119,11 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .story-viewer .story-progress span{animation-fill-mode:forwards!important}
 .story-viewer .story-viewer-views{cursor:pointer!important}
 @media(max-width:600px){.story-viewer .story-touch-zones{inset:58px 0 100px!important}}
+
+
+/* Clear, accessible Facebook-style story pause controls */
+.story-viewer .story-touch-zones .story-touch-pause{display:flex!important;align-items:center!important;justify-content:center!important;pointer-events:auto!important;background:transparent!important;color:#fff!important}
+.story-viewer .story-touch-zones .story-touch-pause span{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 13px;border:1px solid #ffffff70;border-radius:999px;background:#07110dcc;box-shadow:0 3px 18px #0005;font-size:12px;font-weight:800;white-space:nowrap;opacity:.94}
+.story-viewer .story-viewer-nav{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important}
+.story-viewer .story-viewer-nav button{min-height:42px!important;touch-action:manipulation!important}
+.story-viewer .story-viewer-nav .story-nav-pause{border:1px solid #e8cf7d!important;background:#08271f!important;color:#f8e7a2!important;font-weight:800!important}
