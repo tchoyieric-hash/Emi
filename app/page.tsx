@@ -210,6 +210,7 @@ export default function HomePage() {
   const chatMediaInput = useRef<HTMLInputElement>(null);
   const [chatLoading, setChatLoading] = useState(false);
   const [chatSearch, setChatSearch] = useState("");
+  const [chatFilter, setChatFilter] = useState<"Tout"|"Non lus"|"Groupes">("Tout");
   const [notifications, setNotifications] = useState<{id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;message:string;is_read:boolean;created_at:string;actor?:Profile|null}[]>([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState(0);
@@ -1815,10 +1816,12 @@ export default function HomePage() {
           {!notificationsLoading && notifications.length===0 && <div className="empty-feature"><Bell size={28}/><h2>Tu es à jour</h2><p>Les nouveaux abonnements, likes et commentaires apparaîtront ici.</p></div>}</div>
         </section>}
         {active === "Messages" && !viewingProfile && <section className="chat-shell">
+          <header className="emi-messages-heading"><div><span className="emi-messages-kicker">EMi · RESTONS CONNECTÉS</span><h2>Messages <span>✦</span></h2><p>Reste proche de ceux qui comptent.</p></div><div className="emi-messages-head-actions"><button type="button" aria-label="Trouver des membres" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}><Search size={19}/></button><button type="button" aria-label="Créer un groupe" onClick={()=>void createGroupConversation()}><Plus size={21}/></button></div></header>
           <aside className="chat-sidebar">
-            <label className="discovery-search"><Search size={17}/><input value={chatSearch} onChange={e=>setChatSearch(e.target.value)} placeholder="Rechercher une conversation…" aria-label="Rechercher une conversation"/></label>
+            <label className="discovery-search emi-chat-search"><Search size={17}/><input value={chatSearch} onChange={e=>setChatSearch(e.target.value)} placeholder="Rechercher une conversation…" aria-label="Rechercher une conversation"/></label>
+            <div className="emi-chat-filters" role="group" aria-label="Filtrer les conversations">{(["Tout","Non lus","Groupes"] as const).map(filter=><button key={filter} type="button" className={chatFilter===filter?"is-active":""} onClick={()=>setChatFilter(filter)}>{filter}</button>)}</div>
             <div className="chat-list">
-              {conversations.filter(conv => ((conv.is_group ? conv.title || "Groupe EMi" : conv.other?.display_name || conv.other?.username || conv.title || "Conversation").toLowerCase().includes(chatSearch.toLowerCase()))).map(conv => <button key={conv.id} className={"chat-list-item "+(activeConversation===conv.id?"chat-selected":"")} onClick={()=>void openConversation(conv.id)}><span className="chat-avatar">{conv.other?.avatar_url?<img src={conv.other.avatar_url} alt=""/>:(conv.other?.display_name||conv.other?.username||conv.title||"EM").slice(0,2).toUpperCase()}</span><span className="chat-list-copy"><strong>{conv.is_group ? conv.title || "Groupe EMi" : conv.other?.display_name||conv.other?.username||conv.title||"Conversation"}</strong><small>{conv.lastMessage}</small></span></button>)}
+              {conversations.filter(conv => (chatFilter!=="Groupes" || conv.is_group) && (chatFilter!=="Non lus") && ((conv.is_group ? conv.title || "Groupe EMi" : conv.other?.display_name || conv.other?.username || conv.title || "Conversation").toLowerCase().includes(chatSearch.toLowerCase()))).map(conv => <button key={conv.id} className={"chat-list-item "+(activeConversation===conv.id?"chat-selected":"")} onClick={()=>void openConversation(conv.id)}><span className="chat-avatar">{conv.other?.avatar_url?<img src={conv.other.avatar_url} alt=""/>:(conv.other?.display_name||conv.other?.username||conv.title||"EM").slice(0,2).toUpperCase()}</span><span className="chat-list-copy"><strong>{conv.is_group ? conv.title || "Groupe EMi" : conv.other?.display_name||conv.other?.username||conv.title||"Conversation"}</strong><small>{conv.lastMessage}</small></span></button>)}
               {!conversations.length && <p className="chat-empty">{chatLoading?"Chargement…":"Pas encore de conversation. Va dans Découvrir et choisis un membre pour lui écrire."}</p>}
             </div>
             <button className="modal-primary" style={{width:"100%",marginTop:10}} onClick={()=>void createGroupConversation()} disabled={chatLoading}>+ Créer un groupe</button>
