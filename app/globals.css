@@ -1966,3 +1966,28 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
  .story-viewer-video .story-viewer-media{width:100%!important;height:100%!important;object-fit:contain!important}
  .story-viewer-video header{top:23px!important;left:12px!important;right:12px!important}
 }
+
+
+/* EMi Studio Stories — premium emerald and gold composer */
+.story-composer-card{width:min(560px,calc(100vw - 24px))!important;max-height:calc(100dvh - 110px)!important;overflow-y:auto!important;padding:clamp(20px,5vw,34px)!important;border:1px solid rgba(224,190,94,.42)!important;border-radius:28px!important;background:radial-gradient(ellipse at 12% 0%,rgba(22,101,71,.42),transparent 42%),linear-gradient(155deg,#062a1f 0%,#031a13 58%,#07110e 100%)!important;box-shadow:0 28px 90px rgba(0,0,0,.58),inset 0 1px rgba(255,255,255,.06)!important}
+.story-composer-card .eyebrow{color:#e4c66f!important;letter-spacing:.22em!important;font-size:11px!important;font-weight:800!important}
+.story-composer-card h2{font-size:clamp(27px,6vw,34px)!important;letter-spacing:-.04em!important;color:#fff2c5!important;margin:12px 0!important}
+.story-composer-card>p{color:#b8cfc4!important;line-height:1.65!important}
+.story-studio-form{display:flex;flex-direction:column;gap:13px!important;margin-top:22px}
+.story-studio-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:5px;border:1px solid rgba(224,190,94,.18);border-radius:16px;background:rgba(0,0,0,.2)}
+.story-studio-tab{display:flex;justify-content:center;align-items:center;gap:5px;padding:11px 4px;border-radius:11px;color:#a9c1b5;font-size:12px;font-weight:750;text-align:center}
+.story-studio-tab.active{color:#ffe9a0;background:linear-gradient(135deg,rgba(214,183,89,.24),rgba(6,92,61,.45));box-shadow:inset 0 0 0 1px rgba(224,190,94,.35)}
+.story-studio-picker{display:flex!important;align-items:center!important;gap:14px!important;width:100%!important;min-height:76px!important;padding:15px 16px!important;border:1px solid rgba(224,190,94,.24)!important;border-radius:18px!important;background:linear-gradient(120deg,rgba(9,73,52,.68),rgba(3,25,18,.9))!important;color:#e5d6a0!important;text-align:left!important}
+.story-studio-picker>span{display:flex;flex:1;flex-direction:column;gap:5px;min-width:0}
+.story-studio-picker strong{color:#f8f0d5;font-size:14px;overflow-wrap:anywhere}
+.story-studio-picker small{color:#9bb7aa;font-size:11px;line-height:1.45}
+.story-studio-caption,.story-studio-music-title{width:100%!important;box-sizing:border-box!important;border:1px solid rgba(224,190,94,.22)!important;border-radius:16px!important;background:rgba(1,12,9,.7)!important;color:#fff4d3!important;padding:15px!important;font:inherit!important;line-height:1.6!important;outline:none!important}
+.story-studio-caption:focus,.story-studio-music-title:focus{border-color:#d9bd68!important;box-shadow:0 0 0 3px rgba(217,189,104,.12)!important}
+.story-studio-caption::placeholder,.story-studio-music-title::placeholder{color:#829d90!important}
+.story-studio-selected{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:13px;background:rgba(0,0,0,.25);color:#d8e5dd;font-size:12px;overflow-wrap:anywhere}
+.story-studio-selected button{border:1px solid rgba(224,190,94,.3);border-radius:9px;padding:7px 10px;background:transparent;color:#f1d989}
+.story-studio-note{display:flex;gap:9px;align-items:flex-start;color:#9bb7aa;font-size:12px;line-height:1.6;padding:2px 2px}
+.story-studio-note svg{flex:none;color:#d9bd68}
+.story-studio-publish{display:flex!important;justify-content:center!important;align-items:center!important;gap:8px!important;width:100%!important;min-height:58px!important;border-radius:17px!important;background:linear-gradient(115deg,#f4df92,#c5a64d 54%,#f6e6a6)!important;color:#16251b!important;font-size:15px!important;font-weight:850!important;box-shadow:0 8px 24px rgba(197,166,77,.2)!important}
+.story-studio-publish:disabled{opacity:.5!important}
+@media(max-width:480px){.story-composer-card{width:calc(100vw - 16px)!important;max-height:calc(100dvh - 90px)!important;padding:22px 18px!important;border-radius:24px!important}.story-studio-picker{min-height:70px!important;padding:13px!important}.story-studio-tabs{gap:4px}.story-studio-tab{font-size:11px}}
