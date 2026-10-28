@@ -1919,3 +1919,11 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .emi-feed-sound-toggle:active{transform:scale(.94)}
 .emi-gallery-sound-toggle{bottom:12px;right:58px}
 @media(max-width:700px){.emi-feed-sound-toggle{width:40px;height:40px;min-width:40px;right:10px;bottom:10px}.emi-gallery-sound-toggle{right:55px}}
+
+
+/* Contrôle de musique visible et explicite sur les photos accompagnées d'un son */
+.emi-photo-music-toggle{width:auto!important;min-width:112px!important;height:40px!important;padding:0 12px!important;display:flex!important;align-items:center;justify-content:center;gap:7px!important;border-radius:999px!important;background:rgba(2,25,16,.96)!important;border:1px solid #d9b957!important;color:#f7df91!important;box-shadow:0 4px 18px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.04)!important;white-space:nowrap!important}
+.emi-photo-music-toggle span{font-size:11px!important;font-weight:750!important;letter-spacing:.1px!important}
+.emi-feed-media-wrap .emi-photo-music-toggle{right:12px;bottom:12px}
+.emi-gallery-sound-toggle.emi-photo-music-toggle{right:12px;bottom:12px}
+@media(max-width:700px){.emi-photo-music-toggle{min-width:112px!important;height:42px!important;padding:0 12px!important}.emi-photo-music-toggle span{font-size:11px!important}}
