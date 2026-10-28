@@ -1817,3 +1817,12 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .reel-post .emi-reel-sound-toggle{pointer-events:auto!important;touch-action:manipulation!important;z-index:30!important}
 .reel-post .emi-reel-sound-toggle svg,.reel-post .emi-reel-sound-toggle span{pointer-events:none!important}
 .emi-home-reel-caption{overflow-wrap:anywhere}
+
+
+/* Reels: la vidéo occupe le lecteur sans contrôles natifs qui chevauchent les commandes EMi */
+@media(max-width:700px){
+ .reel-post .reel-video{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important}
+ .reel-post .emi-reel-sound-toggle{top:76px!important;right:14px!important;width:64px!important;height:66px!important;min-width:64px!important;max-width:64px!important}
+ .reel-post .emi-reel-comment-bar{z-index:35!important}
+ .reel-post .post-actions{z-index:20!important}
+}
