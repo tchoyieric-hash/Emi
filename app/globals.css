@@ -1622,3 +1622,31 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 @media(min-width:701px){
   .stories-row .story-media-ring{border-radius:13px}
 }
+
+
+/* EMi Ecosystem hub — compact green & gold premium treatment */
+.emi-ecosystem-entry-wrap{position:relative;margin:0 0 14px}
+.emi-ecosystem-entry{width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;text-align:left;border:1px solid rgba(205,165,73,.58);border-radius:15px;background:linear-gradient(110deg,rgba(10,43,31,.98),rgba(8,24,19,.98));color:#f5f2e7;box-shadow:0 5px 18px rgba(0,0,0,.14);cursor:pointer;transition:border-color .18s,transform .18s,box-shadow .18s}
+.emi-ecosystem-entry:hover{border-color:#e1bd65;box-shadow:0 8px 24px rgba(4,30,20,.22);transform:translateY(-1px)}
+.emi-ecosystem-entry-icon{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border-radius:12px;color:#f2ca68;background:linear-gradient(145deg,#174b35,#0a281d);border:1px solid rgba(218,179,86,.4)}
+.emi-ecosystem-entry-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.emi-ecosystem-entry-copy strong{font-size:14px;font-weight:750;letter-spacing:.01em}
+.emi-ecosystem-entry-copy small{font-size:11px;line-height:1.35;color:#aebfb3;white-space:normal}
+.emi-ecosystem-entry-action{display:flex;align-items:center;gap:3px;flex:0 0 auto;font-size:11px;font-weight:700;color:#e8c46e}
+.emi-ecosystem-entry-action svg{transition:transform .2s}.emi-ecosystem-entry-action svg.is-open{transform:rotate(90deg)}
+.emi-ecosystem-panel{margin-top:9px;padding:16px;border-radius:18px;border:1px solid rgba(211,174,86,.46);background:linear-gradient(145deg,#0c241a,#07140f 72%);box-shadow:0 18px 42px rgba(0,0,0,.26);animation:emi-ecosystem-appear .2s ease-out}
+.emi-ecosystem-panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:15px}
+.emi-ecosystem-panel-head .eyebrow{font-size:10px;letter-spacing:.16em;color:#d9b65d}
+.emi-ecosystem-panel-head h2{margin:5px 0 4px;font-size:19px;line-height:1.2;color:#f5f1df}
+.emi-ecosystem-panel-head p{margin:0;font-size:12px;line-height:1.5;color:#a9b9ae}
+.emi-ecosystem-panel-head>button{width:34px;height:34px;flex:0 0 34px;border-radius:10px;border:1px solid rgba(221,186,99,.3);background:#102d21;color:#e8c46e;display:grid;place-items:center;cursor:pointer}
+.emi-ecosystem-panel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.emi-ecosystem-tile{position:relative;display:flex;min-width:0;min-height:116px;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;padding:13px 14px;text-decoration:none;color:#f4f2e8;border-radius:14px;border:1px solid rgba(206,171,88,.35);background:linear-gradient(145deg,rgba(20,57,41,.95),rgba(8,26,19,.98));transition:transform .18s,border-color .18s,background .18s}
+.emi-ecosystem-tile:hover{transform:translateY(-2px);border-color:#d7b35f;background:linear-gradient(145deg,#1a5139,#0b261b)}
+.emi-ecosystem-tile>span{width:37px;height:37px;display:grid;place-items:center;border-radius:11px;color:#f0c762;background:rgba(211,171,75,.12);border:1px solid rgba(218,181,91,.35)}
+.emi-ecosystem-tile strong{font-size:14px;font-weight:750}
+.emi-ecosystem-tile small{font-size:10px;line-height:1.4;color:#b3c0b5}
+.emi-ecosystem-tile>svg{position:absolute;right:11px;top:13px;color:#d9b65d}
+.emi-ecosystem-panel-foot{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(215,180,94,.18);font-size:11px;color:#d6b65e;text-align:center}
+@keyframes emi-ecosystem-appear{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:520px){.emi-ecosystem-entry{padding:10px 11px;gap:9px}.emi-ecosystem-entry-icon{width:36px;height:36px;flex-basis:36px}.emi-ecosystem-entry-copy strong{font-size:13px}.emi-ecosystem-entry-copy small{font-size:10px}.emi-ecosystem-entry-action{font-size:10px}.emi-ecosystem-panel{padding:12px}.emi-ecosystem-panel-head h2{font-size:17px}.emi-ecosystem-tile{min-height:108px;padding:11px}.emi-ecosystem-tile small{font-size:9.5px}}
