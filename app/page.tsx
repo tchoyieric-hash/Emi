@@ -838,7 +838,7 @@ export default function HomePage() {
       setActiveStory(nextAuthorStory || null);
     }, 6000);
     return () => window.clearTimeout(timer);
-  }, [activeStory, stories, storyPaused, storyViewersOpen]);
+  }, [activeStory, stories, storyViewersOpen]);
 
   async function authenticate(e: React.FormEvent) {
     e.preventDefault();
