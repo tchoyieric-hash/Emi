@@ -734,7 +734,18 @@ export default function HomePage() {
       // L'état sonore suit le média réellement visible : le scroll ne réactive pas le muet par-dessus le choix utilisateur.
       nextVideo.muted = selector === ".reel-video" ? !reelSoundOn : !postSoundEnabled[postId];
       const linkedAudio = document.getElementById("emi-track-" + postId) as HTMLAudioElement | null;
-      if (linkedAudio) linkedAudio.muted = nextVideo.muted;
+      // Un seul média sonore à la fois : les autres pistes sont arrêtées quand une vidéo prend le focus.
+      document.querySelectorAll<HTMLAudioElement>(".emi-post-music audio").forEach(audio => {
+        if (audio !== linkedAudio) audio.pause();
+      });
+      if (linkedAudio) {
+        linkedAudio.muted = nextVideo.muted;
+        if (nextVideo.muted) linkedAudio.pause();
+        else {
+          try { linkedAudio.currentTime = Math.max(Number(linkedAudio.dataset.trackStart || 0), nextVideo.currentTime); } catch {}
+          void linkedAudio.play().catch(() => undefined);
+        }
+      }
       if (nextVideo.paused) void nextVideo.play().catch(() => undefined);
     }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
     videos.forEach(video => {
