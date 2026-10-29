@@ -1885,7 +1885,7 @@ export default function HomePage() {
       </aside>
 
       <section className="main-column">
-        <header className="mobile-header" style={active === "Accueil" && !viewingProfile ? { display: "none" } : undefined}>{(viewingProfile || active !== "Accueil") && <button className="icon-button back-navigation" aria-label="Retour à l’accueil" onClick={goBack}><ChevronLeft size={23}/></button>}<a className="brand" href="#" onClick={e => { e.preventDefault(); goBack(); }}><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a><button className="icon-button" aria-label="Compte" onClick={() => user ? void logout() : setAuthOpen(true)}>{user ? <LogOut size={21}/> : <UserRound size={21}/>}</button></header>
+        {(viewingProfile || active !== "Accueil") && <header className="mobile-header">{(viewingProfile || active !== "Accueil") && <button className="icon-button back-navigation" aria-label="Retour à l’accueil" onClick={goBack}><ChevronLeft size={23}/></button>}<a className="brand" href="#" onClick={e => { e.preventDefault(); goBack(); }}><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a><button className="icon-button" aria-label="Compte" onClick={() => user ? void logout() : setAuthOpen(true)}>{user ? <LogOut size={21}/> : <UserRound size={21}/>}</button></header>}
         {!viewingProfile && active === "Accueil" && <section className="emi-royal-masthead" aria-label="En-tête EMi nouvelle génération">
           <div className="emi-royal-backdrop" />
           <div className="emi-royal-topline">
