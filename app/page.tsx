@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Bell, Camera, ChevronLeft, Compass, Heart, Home, Repeat2, LogIn, LogOut, MessageCircle, Plus, Search, Send, Settings, Sparkles, UserRound, Video, X, Image as ImageIcon, Clapperboard, ShieldCheck, BadgeCheck, LockKeyhole, Bookmark, Archive, Languages, Palette, CircleHelp, Ban, Eye, SlidersHorizontal, Smartphone, ChevronRight, Clock3, Share2, UserRoundCog, Music2, Play, Headphones, TrendingUp, Mic2, Disc3, ShoppingBag, Users, Volume2, VolumeX } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
-type WhatsAppEmiPublication = { id: string; texte: string | null; media_url: string | null; media_type: "image" | "video" | "text"; created_at: string };
+type WhatsAppEmiPublication = { id: string; texte: string | null; media_url: string | null; media_type: "image" | "video" | "text"; source_type?: "whatsapp_message" | "whatsapp_status"; created_at: string };
 
 type Post = {
   id: string; user_id: string; content: string; created_at: string;
@@ -551,7 +551,7 @@ function decodeVapidKey(base64String: string) {
   const loadFeed = useCallback(async () => {
     if (!supabase) { setMessage("Connexion Supabase non configurée. Vérifie les variables d’environnement Vercel."); return; }
     const cutoff24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const { data: whatsAppRows, error: whatsAppError } = await supabase.from("publications_emi").select("id,texte,media_url,media_type,created_at").gte("created_at", cutoff24h).order("created_at", { ascending: false }).limit(50);
+    const { data: whatsAppRows, error: whatsAppError } = await supabase.from("publications_emi").select("id,texte,media_url,media_type,source_type,created_at").gte("created_at", cutoff24h).order("created_at", { ascending: false }).limit(50);
     if (!whatsAppError) setWhatsAppEmiPublications((whatsAppRows || []) as WhatsAppEmiPublication[]);
     const { data, error } = await supabase.from("posts").select("id,user_id,content,created_at,media_type,media_urls,visibility").eq("visibility", "public").order("created_at", { ascending: false }).limit(40);
     if (error) { setMessage("Impossible de charger le fil : " + error.message); return; }
@@ -1923,7 +1923,7 @@ function decodeVapidKey(base64String: string) {
             {item.media_url && item.media_type === "image" && <img src={item.media_url} alt={item.texte || "Publication relayée depuis WhatsApp"} loading="lazy" style={{display:"block",width:"100%",maxHeight:520,objectFit:"cover"}}/>}
             {item.media_url && item.media_type === "video" && <video src={item.media_url} controls playsInline preload="metadata" style={{display:"block",width:"100%",maxHeight:520,background:"#000"}}/>}
             {item.texte && <p style={{padding:"12px 13px",margin:0,whiteSpace:"pre-wrap",overflowWrap:"anywhere",fontSize:14,lineHeight:1.5}}>{item.texte.replace(/#emi/ig,"").trim()}</p>}
-            <div style={{padding:"0 13px 11px",fontSize:10,opacity:.65}}>{new Date(item.created_at).toLocaleString("fr-FR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})} · WhatsApp</div>
+            <div style={{padding:"0 13px 11px",fontSize:10,opacity:.65}}>{new Date(item.created_at).toLocaleString("fr-FR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})} · {item.source_type === "whatsapp_status" ? "Statut WhatsApp" : "Message WhatsApp"}</div>
           </article>)}</div>
         </section>}
         {active === "Accueil" && !viewingProfile && <section className="emi-ecosystem-home" aria-label="Découvrir les services EMi">
