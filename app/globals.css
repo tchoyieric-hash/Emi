@@ -2646,3 +2646,17 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .emi-author-name { display: inline-flex; align-items: center; gap: 5px; }
 .emi-verified-badge { display: inline-flex; align-items: center; justify-content: center; width: 19px; height: 19px; color: #1877F2; vertical-align: middle; flex: 0 0 19px; filter: drop-shadow(0 1px 1px #0002); }
 .emi-verified-badge svg { width: 19px; height: 19px; }
+
+
+/* Compact royal brand header used on mobile sub-pages, including Reels */
+@media (max-width: 700px) {
+  .mobile-header.emi-mobile-royal-header { box-sizing: border-box; min-height: 76px; height: auto; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: linear-gradient(110deg,#020806 0%,#062319 52%,#020806 100%); border-bottom: 1px solid rgba(225,188,91,.78); box-shadow: 0 4px 18px rgba(0,0,0,.25); }
+  .emi-mobile-royal-header .back-navigation, .emi-mobile-royal-header .emi-mobile-royal-account { box-sizing: border-box; flex: 0 0 42px; width: 42px; height: 42px; min-width: 42px; min-height: 42px; display: grid; place-items: center; border: 1px solid #d8bd67; border-radius: 50%; background: rgba(0,15,10,.8); color: #f8df91; padding: 0; }
+  .emi-mobile-royal-brand { display: flex; flex: 1 1 auto; min-width: 0; align-items: center; justify-content: center; gap: 9px; color: #ffe7a0; text-decoration: none; }
+  .emi-mobile-royal-emblem { box-sizing: border-box; width: 43px; height: 43px; flex: 0 0 43px; display: grid; place-items: center; border: 1px solid #ffe9a0; border-radius: 13px; background: linear-gradient(145deg,#fff0a7 0%,#c89b32 38%,#51380a 70%,#f6d66c 100%); box-shadow: inset 0 2px 6px #fff8c6,0 0 0 2px rgba(212,171,60,.12); color: #052117; font: 900 32px/1 Manrope,sans-serif; }
+  .emi-mobile-royal-wordmark { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; }
+  .emi-mobile-royal-wordmark strong { font: 900 27px/.95 Manrope,sans-serif; letter-spacing: -1px; color: #ffe7a0; white-space: nowrap; }
+  .emi-mobile-royal-wordmark strong span { color: #17c987; }
+  .emi-mobile-royal-wordmark small { display: block; font-size: clamp(6px,1.7vw,8px); line-height: 1.25; letter-spacing: .13em; font-weight: 800; color: #e6cb76; white-space: nowrap; }
+}
+@media (max-width: 360px) { .emi-mobile-royal-header { gap: 6px; padding-inline: 8px; } .emi-mobile-royal-header .back-navigation,.emi-mobile-royal-header .emi-mobile-royal-account { flex-basis: 36px; width: 36px; height: 36px; min-width: 36px; min-height: 36px; } .emi-mobile-royal-emblem { width: 37px; height: 37px; flex-basis: 37px; font-size: 28px; } .emi-mobile-royal-wordmark strong { font-size: 24px; } }
