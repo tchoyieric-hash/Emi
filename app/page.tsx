@@ -236,7 +236,7 @@ export default function HomePage() {
   const [pushEnabled, setPushEnabled] = useState(false);
 
   function hasBlueVerificationBadge(name: string | null | undefined): boolean {
-  const normalized = (name || "").trim().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLocaleLowerCase("fr-FR").replace(/\\s+/g, " ");
+  const normalized = (name || "").trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("fr-FR").replace(/\s+/g, " ");
   return normalized === "eric tchoyi" || normalized === "saa freddy";
 }
 
