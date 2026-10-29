@@ -1886,15 +1886,27 @@ export default function HomePage() {
 
       <section className="main-column">
         <header className="mobile-header">{(viewingProfile || active !== "Accueil") && <button className="icon-button back-navigation" aria-label="Retour à l’accueil" onClick={goBack}><ChevronLeft size={23}/></button>}<a className="brand" href="#" onClick={e => { e.preventDefault(); goBack(); }}><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a><button className="icon-button" aria-label="Compte" onClick={() => user ? void logout() : setAuthOpen(true)}>{user ? <LogOut size={21}/> : <UserRound size={21}/>}</button></header>
-        {!viewingProfile && !["Découvrir","EMi Pulse","Messages","Reels","Vidéos"].includes(active) && <section className="welcome-hero" aria-label="Bienvenue sur EMi">
-          <img className="welcome-cover" src="https://raw.githubusercontent.com/tchoyieric-hash/Emi/main/emi-cover-3.jpg" alt="Photo de couverture EMi" />
-          <div className="welcome-shade" />
-          <div className="welcome-content">
-            <div className="welcome-brand"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></div>
-            <span className="welcome-kicker">TON ESPACE, TES RENCONTRES</span>
-            <h2>Bienvenue sur EMi</h2>
-            <p>Partage tes moments, découvre de nouvelles histoires et reste proche de ceux qui comptent.</p>
-            <div className="welcome-actions"><button onClick={() => setComposerOpen(true)}><Plus size={17}/> Créer une publication</button><button className="welcome-secondary" onClick={() => { setActive("Accueil"); void loadFeed(); document.querySelector(".feed-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>Découvrir <Compass size={16}/></button></div>
+        {!viewingProfile && active === "Accueil" && <section className="emi-royal-masthead" aria-label="En-tête EMi nouvelle génération">
+          <div className="emi-royal-backdrop" />
+          <div className="emi-royal-topline">
+            <a className="emi-royal-logo" href="#" onClick={e => { e.preventDefault(); setActive("Accueil"); }} aria-label="EMi accueil">
+              <span className="emi-royal-emblem"><span>e</span><i>♛</i></span>
+              <span className="emi-royal-wordmark"><strong>EMi<span>.</span></strong><small>L’UNIVERS SOCIAL ROYAL</small></span>
+            </a>
+            <div className="emi-royal-tools">
+              <button aria-label="Rechercher sur EMi" onClick={() => setActive("Découvrir")}><Search size={19}/><span>Rechercher sur EMi…</span></button>
+              <button aria-label="Notifications" onClick={() => { setActive("Notifications"); if (!user) setAuthOpen(true); }}><Bell size={19}/></button>
+              <button className="emi-royal-account" aria-label="Mon compte" onClick={() => user ? void openProfile(user.id) : setAuthOpen(true)}>{user?.avatar_url ? <img src={user.avatar_url} alt=""/> : <UserRound size={20}/>}<ChevronRight size={14}/></button>
+            </div>
+          </div>
+          <div className="emi-royal-message"><span>CONNECTER · PARTAGER · CONSTRUIRE ENSEMBLE</span><strong>Le Cameroun dans une seule communauté.</strong><i>🇨🇲</i></div>
+          <div className="emi-royal-actions" aria-label="Raccourcis de création">
+            <button onClick={() => setComposerOpen(true)}><span><ImageIcon size={23}/></span><strong>Publier</strong><small>Partager une pensée</small></button>
+            <button onClick={() => { if (!user) { setAuthOpen(true); setMessage("Connecte-toi pour partager une story."); } else { setStoryStep("choose"); setStoryComposerOpen(true); } }}><span><Camera size={23}/></span><strong>Story</strong><small>Mon quotidien</small></button>
+            <button onClick={() => setActive("Reels")}><span><Clapperboard size={23}/></span><strong>Reel</strong><small>Vidéo & création</small></button>
+            <button onClick={() => setCameraOpen(true)}><span><Camera size={23}/></span><strong>Photo</strong><small>Image & moment</small></button>
+            <button onClick={() => { if (!user) setAuthOpen(true); else setActive("Messages"); }}><span><MessageCircle size={23}/></span><strong>Direct</strong><small>Échanger ensemble</small></button>
+            <button onClick={() => setCreateStudioOpen(true)}><span><Plus size={24}/></span><strong>Plus</strong><small>Autres options</small></button>
           </div>
         </section>}
         <div className={"feed-header" + (active === "Reels" && !viewingProfile ? " reels-mode-header" : "")}>{(viewingProfile || active !== "Accueil") && <button className="icon-button desktop-back-navigation" aria-label="Retour à l’accueil" onClick={goBack}><ChevronLeft size={22}/></button>}<div><span className="eyebrow">{viewingProfile ? "EMi · PROFIL PERSONNEL" : "TON UNIVERS, TES LIENS"}</span><h1>{viewingProfile ? currentProfileName : active === "Accueil" ? "Le fil des moments" : active === "EMi Pulse" ? "EMi Pulse" : active === "Découvrir" ? "Découvrir la communauté" : active === "Reels" || active === "Vidéos" ? "Reels EMi" : active === "Messages" ? "Ta messagerie" : active === "Paramètres" ? "Paramètres et activité" : active}</h1><p>{viewingProfile ? "@" + (viewingProfile.username || "membre") : active === "Découvrir" ? "Trouve des membres et découvre leurs publications." : active === "Messages" ? "Retrouve tes conversations au même endroit." : active === "Reels" || active === "Vidéos" ? "Les vidéos de la communauté, dans un fil dédié." : user ? "Connecté en tant que " + displayName : "Découvre les publications publiques."}</p></div><button className="round-action" onClick={() => viewingProfile && user?.id === viewingProfile.id ? (setActive("Paramètres"),setSettingsSection(null),window.scrollTo({top:0,behavior:"smooth"})) : setCreateStudioOpen(true)} aria-label={viewingProfile && user?.id === viewingProfile.id ? "Ouvrir les réglages du profil" : "Créer une publication"}>{viewingProfile && user?.id === viewingProfile.id ? <Settings size={22}/> : <Plus size={22}/>}</button></div>
