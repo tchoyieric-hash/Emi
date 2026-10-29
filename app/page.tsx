@@ -189,6 +189,7 @@ export default function HomePage() {
   const [activeStory, setActiveStory] = useState<Story | null>(null);
   
   const storyVideoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => { setStoryReaction(null); setStoryReply(""); }, [activeStory?.id]);
   
   
   const [storyReaction, setStoryReaction] = useState<string | null>(null);
