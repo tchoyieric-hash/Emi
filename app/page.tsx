@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bell, Camera, ChevronLeft, Compass, Heart, Home, Repeat2, LogIn, LogOut, MessageCircle, Plus, Search, Send, Settings, Sparkles, UserRound, Video, X, Image as ImageIcon, Clapperboard, ShieldCheck, LockKeyhole, Bookmark, Archive, Languages, Palette, CircleHelp, Ban, Eye, SlidersHorizontal, Smartphone, ChevronRight, Clock3, Share2, UserRoundCog, Music2, Play, Headphones, TrendingUp, Mic2, Disc3, ShoppingBag, Users, Volume2, VolumeX, ShieldCheck } from "lucide-react";
+import { Bell, Camera, ChevronLeft, Compass, Heart, Home, Repeat2, LogIn, LogOut, MessageCircle, Plus, Search, Send, Settings, Sparkles, UserRound, Video, X, Image as ImageIcon, Clapperboard, ShieldCheck, LockKeyhole, Bookmark, Archive, Languages, Palette, CircleHelp, Ban, Eye, SlidersHorizontal, Smartphone, ChevronRight, Clock3, Share2, UserRoundCog, Music2, Play, Headphones, TrendingUp, Mic2, Disc3, ShoppingBag, Users, Volume2, VolumeX } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 type Post = {
