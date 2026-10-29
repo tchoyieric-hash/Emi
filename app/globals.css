@@ -2589,3 +2589,41 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
   .emi-royal-wordmark small{display:block!important;font-size:clamp(6px,1.8vw,8px)!important;letter-spacing:.12em!important;white-space:nowrap!important;line-height:1.4!important}
   .emi-royal-emblem{flex:0 0 auto!important}
 }
+
+
+/* EMi Reels — mise en page immersive inspirée de la maquette royale */
+@media (max-width:700px) {
+  .main-column:has(.reel-post) {padding:0!important;margin:0!important;background:#020805!important}
+  .main-column:has(.reel-post) .feed-list:has(.reel-post) {display:flex!important;flex-direction:column!important;gap:0!important;padding:0!important;margin:0!important}
+  .reel-post {position:relative!important;width:100%!important;height:calc(100dvh - 145px)!important;min-height:580px!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;overflow:hidden!important;background:#020805!important;scroll-snap-align:start!important}
+  .reel-post .emi-feed-media-wrap {position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;background:#000!important;overflow:hidden!important}
+  .reel-post .emi-feed-media-wrap > .reel-video {position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:center!important;background:#000!important;border-radius:0!important}
+  .reel-post .post-top {position:absolute!important;z-index:8!important;top:12px!important;left:12px!important;right:12px!important;display:flex!important;align-items:center!important;gap:9px!important;padding:8px 4px!important;border:0!important;border-radius:0!important;background:linear-gradient(180deg,rgba(0,0,0,.48),transparent)!important;box-shadow:none!important;color:#fff!important}
+  .reel-post .post-avatar-button {flex:0 0 48px!important;width:48px!important;height:48px!important;padding:2px!important;border:2px solid #d9b85f!important;border-radius:50%!important;background:#073221!important}
+  .reel-post .post-avatar-button .avatar {width:100%!important;height:100%!important;border-radius:50%!important;overflow:hidden!important}
+  .reel-post .post-author {min-width:0!important;flex:1 1 auto!important;display:flex!important;flex-direction:column!important;gap:3px!important;text-align:left!important;color:#fff!important}
+  .reel-post .post-author strong {font-size:15px!important;font-weight:800!important;line-height:1.2!important;color:#fff!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .reel-post .post-author span {font-size:12px!important;line-height:1.25!important;color:rgba(255,255,255,.78)!important;white-space:nowrap!important}
+  .reel-post .post-top .profile-more-action {flex:0 0 36px!important;width:36px!important;height:36px!important;border:0!important;border-radius:50%!important;background:transparent!important;color:#fff!important;font-size:22px!important}
+  .reel-post .post-top > button[aria-label^="Suivre"], .reel-post .post-top > button[aria-label^="Ne plus suivre"] {flex:0 0 auto!important;margin-left:4px!important;padding:9px 16px!important;border:1.5px solid #e2c46d!important;border-radius:999px!important;background:rgba(4,35,24,.82)!important;color:#f7dc8c!important;font-size:12px!important;font-weight:800!important}
+  .reel-post .post-actions {position:absolute!important;z-index:8!important;top:50%!important;right:10px!important;bottom:auto!important;transform:translateY(-36%)!important;display:flex!important;flex-direction:column!important;align-items:center!important;gap:20px!important;width:54px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+  .reel-post .post-actions button {display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;min-width:48px!important;max-width:52px!important;padding:0!important;border:0!important;background:transparent!important;color:#fff!important;text-shadow:0 1px 4px #000!important}
+  .reel-post .post-actions button svg {width:27px!important;height:27px!important;stroke-width:2.1!important;filter:drop-shadow(0 1px 3px #000)!important}
+  .reel-post .post-actions button span {display:block!important;max-width:52px!important;font-size:11px!important;line-height:1.15!important;text-align:center!important;overflow-wrap:normal!important;word-break:normal!important;color:#fff!important}
+  .reel-post .post-actions .emi-post-views {display:flex!important;flex-direction:column!important;align-items:center!important;gap:3px!important;color:#fff!important;font-size:11px!important}
+  .reel-post .post-actions .emi-post-views svg {width:25px!important;height:25px!important}
+  .reel-post .post-actions .emi-post-views strong {font-size:12px!important;color:#f7dc8c!important}
+  .reel-post .post-caption-wrap {position:absolute!important;z-index:7!important;left:16px!important;right:76px!important;bottom:82px!important;margin:0!important;padding:0!important;background:transparent!important}
+  .reel-post .post-caption {display:block!important;margin:0!important;color:#fff!important;font-size:14px!important;line-height:1.4!important;text-shadow:0 1px 5px #000!important;overflow-wrap:anywhere!important}
+  .reel-post .emi-post-music {left:14px!important;right:76px!important;bottom:132px!important;max-width:none!important;padding:7px 10px!important;border:1px solid rgba(232,201,111,.45)!important;border-radius:12px!important;background:rgba(0,0,0,.48)!important}
+  .reel-post .emi-post-music-title strong {font-size:12px!important}
+  .reel-post .emi-post-music-title small {font-size:10px!important}
+  .reel-post .emi-reel-sound-toggle {top:76px!important;right:14px!important;width:42px!important;height:42px!important;min-width:42px!important;max-width:42px!important;border-radius:50%!important;background:rgba(0,0,0,.45)!important;border:1px solid rgba(255,255,255,.6)!important;box-shadow:none!important}
+  .reel-post .emi-reel-sound-toggle svg {width:21px!important;height:21px!important;flex:0 0 21px!important}
+  .reel-post .emi-reel-sound-toggle span {display:none!important}
+  .reel-post .emi-reel-comment-bar {left:16px!important;right:16px!important;bottom:14px!important;min-height:48px!important;padding:0 9px 0 15px!important;border:1px solid rgba(255,255,255,.32)!important;border-radius:999px!important;background:rgba(22,25,24,.78)!important;backdrop-filter:blur(16px)!important}
+  .reel-post .emi-reel-comment-bar input {height:44px!important;font-size:14px!important}
+  .reel-post .emi-reel-comment-bar button {width:36px!important;height:36px!important;flex:0 0 36px!important;border-radius:50%!important;background:#e0bd60!important;color:#062719!important}
+  .reel-post .comments-panel {z-index:15!important;max-height:65dvh!important;border-radius:22px 22px 0 0!important;background:#062116!important}
+  .reel-post .emi-post-views {margin-top:0!important}
+}
