@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "whatsapp:emi": "node scripts/whatsapp-emi-bot.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
@@ -15,7 +16,8 @@
     "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "@whiskeysockets/baileys": "^6.7.18"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",
