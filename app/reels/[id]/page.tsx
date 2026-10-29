@@ -114,7 +114,7 @@ export default function ImmersiveReelsPage() {
 
   if (loading) return <main className="emi-immersive-loading"><span className="emi-immersive-spinner" /><p>Préparation de ton flux vidéo…</p></main>;
   if (error) return <main className="emi-immersive-empty"><button onClick={() => router.back()}><ChevronLeft size={20}/> Retour</button><h1>Le lecteur EMi est momentanément indisponible</h1><p>{error}</p><button onClick={() => void load()}>Réessayer</button></main>;
-  if (!items.length) return <main className="emi-immersive-empty"><button onClick={() => router.push("/")}><ChevronLeft size={20}/> Accueil</button><h1>Aucune vidéo disponible pour le moment</h1><p>Les vidéos publiques apparaîtront ici dès qu’elles seront publiées.</p></main>;
+  if (!items.length) return <main className="emi-immersive-empty"><button onClick={() => { if (window.history.length > 1) router.back(); else router.push("/"); }}><ChevronLeft size={20}/> Accueil</button><h1>Aucune vidéo disponible pour le moment</h1><p>Les vidéos publiques apparaîtront ici dès qu’elles seront publiées.</p></main>;
 
   return <main className="emi-immersive-shell">
     <div className="emi-immersive-topbar"><button aria-label="Retour" onClick={() => router.push("/")}><ChevronLeft size={24}/></button><strong>EMi <span>REELS</span></strong><span className="emi-immersive-counter">{index + 1} / {items.length}</span></div>
