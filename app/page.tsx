@@ -237,7 +237,7 @@ export default function HomePage() {
 
   function hasBlueVerificationBadge(name: string | null | undefined): boolean {
   const normalized = (name || "").trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("fr-FR").replace(/\s+/g, " ");
-  return normalized === "eric tchoyi" || normalized === "saa freddy";
+  return normalized === "eric tchoyi" || normalized === "saa freddy" || normalized === "freddysaa";
 }
 
 function decodeVapidKey(base64String: string) {
