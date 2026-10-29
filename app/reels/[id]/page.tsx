@@ -69,7 +69,7 @@ export default function ImmersiveReelsPage() {
     const root = scrollerRef.current;
     if (!root || !items.length) return;
     const child = root.querySelector<HTMLElement>('[data-reel-index="' + index + '"]');
-    if (child) child.scrollIntoView({ behavior: "instant", block: "start" });
+    if (child) child.scrollIntoView({ behavior: "auto", block: "start" });
     const post = items[index];
     if (post && window.location.pathname !== "/reels/" + post.id) router.replace("/reels/" + post.id, { scroll: false });
   }, [index, items, router]);
@@ -84,7 +84,7 @@ export default function ImmersiveReelsPage() {
     });
   }, [index, items, soundOn]);
 
-  const move = (direction: number) => setIndex(old => Math.max(0, Math.min(items.length - 1, old + direction)));
+  const move = (direction: number) => setIndex(old => items.length ? (old + direction + items.length) % items.length : 0);
 
   const toggleLike = async (post: Reel) => {
     if (!supabase) return;
@@ -137,7 +137,7 @@ export default function ImmersiveReelsPage() {
         </section>;
       })}
     </div>
-    <div className="emi-immersive-nav"><button disabled={index===0} onClick={() => move(-1)}>↑ Précédente</button><span>SWIPE VERTICAL</span><button disabled={index===items.length-1} onClick={() => move(1)}>Suivante ↓</button></div>
+    <div className="emi-immersive-nav"><button onClick={() => move(-1)}>↑ Précédente</button><span>SWIPE VERTICAL</span><button onClick={() => move(1)}>Suivante ↓</button></div>
     {message && <button className="emi-immersive-toast" onClick={() => setMessage("")}>{message} <span>×</span></button>}
     <style jsx global>{`
       .emi-immersive-shell{position:fixed;inset:0;z-index:9999;background:#030504;color:#fff;font-family:Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
