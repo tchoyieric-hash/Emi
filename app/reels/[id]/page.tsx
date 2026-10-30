@@ -36,31 +36,54 @@ export default function ImmersiveReelsPage() {
 
   const load = useCallback(async () => {
     if (!supabase) { setError("La connexion à Supabase n’est pas configurée."); setLoading(false); return; }
-    setLoading(true); setError("");
+    setError("");
+
+    // Charger d’abord le Reel demandé pour afficher la bonne vidéo sans attendre tout le flux.
+    const { data: requestedPost, error: requestedError } = await supabase.from("posts")
+      .select("id,user_id,content,created_at,media_type,media_urls,visibility")
+      .eq("id", requestedId).eq("media_type", "video").maybeSingle();
+
+    if (requestedPost && (requestedPost.media_urls || []).length > 0) {
+      setItems([requestedPost as Reel]);
+      setIndex(0);
+      setLoading(false);
+    }
+
+    // Compléter ensuite le flux en arrière-plan, sans bloquer la première image/lecture.
     const { data, error: queryError } = await supabase.from("posts")
       .select("id,user_id,content,created_at,media_type,media_urls,visibility")
-      .eq("visibility", "public").eq("media_type", "video").order("created_at", { ascending: false }).limit(100);
-    if (queryError) { setError("Impossible de charger les vidéos : " + queryError.message); setLoading(false); return; }
+      .eq("visibility", "public").eq("media_type", "video").order("created_at", { ascending: false }).limit(30);
+
+    if (queryError) {
+      if (!requestedPost) { setError("Impossible de charger les vidéos : " + queryError.message); setLoading(false); }
+      return;
+    }
+
     const videos = ((data || []) as Reel[]).filter(p => (p.media_urls || []).length > 0);
-    const requestedIndex = videos.findIndex(p => p.id === requestedId);
-    // Afficher la vidéo demandée dès que la requête principale répond : profils et likes ne doivent pas bloquer l’ouverture.
-    setItems(videos);
+    // Si la publication demandée n’est pas publique ou n’apparaît pas dans le flux, la garder comme vidéo initiale.
+    const merged = requestedPost && (requestedPost.media_urls || []).length > 0
+      ? (videos.some(p => p.id === requestedPost.id) ? videos : [requestedPost as Reel, ...videos])
+      : videos;
+    const requestedIndex = merged.findIndex(p => p.id === requestedId);
+    setItems(merged);
     setIndex(requestedIndex >= 0 ? requestedIndex : 0);
     setLoading(false);
-    const ids = [...new Set(videos.map(p => p.user_id))];
-    const postIds = videos.map(p => p.id);
+
+    const ids = [...new Set(merged.map(p => p.user_id))];
+    const postIds = merged.map(p => p.id);
     const [profileResult, likesResult, authResult] = await Promise.all([
       ids.length ? supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", ids) : Promise.resolve({ data: [] as any[] }),
       postIds.length ? supabase.from("post_likes").select("post_id,user_id").in("post_id", postIds) : Promise.resolve({ data: [] as any[] }),
       supabase.auth.getUser()
     ]);
     const byId = new Map((profileResult.data || []).map((p: any) => [p.id, p]));
-    setItems(videos.map(p => ({ ...p, profiles: byId.get(p.user_id) || null })));
+    setItems(merged.map(p => ({ ...p, profiles: byId.get(p.user_id) || null })));
     const counts: Record<string, number> = {};
     const mine: string[] = [];
     (likesResult.data || []).forEach((row: any) => { counts[row.post_id] = (counts[row.post_id] || 0) + 1; if (row.user_id) mine.push(row.post_id + ":" + row.user_id); });
     setLikeCounts(counts);
     if (authResult.data.user) setLikedIds(mine.filter(v => v.endsWith(":" + authResult.data.user!.id)).map(v => v.split(":")[0]));
+    if (requestedError && !requestedPost && !videos.length) setError("Impossible de retrouver cette vidéo.");
   }, [requestedId]);
 
   useEffect(() => { void load(); }, [load]);
