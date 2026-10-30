@@ -145,11 +145,11 @@ export default function ImmersiveReelsPage() {
     setCommentsOpen(true);
     setCommentsLoading(true);
     setComments([]);
-    const result = await supabase.from("comments")
+    const result = await supabase.from("post_comments")
       .select("id,post_id,user_id,content,created_at")
       .eq("post_id", post.id).order("created_at", { ascending: true }).limit(100);
     if (result.error) {
-      setMessage("Les commentaires ne sont pas encore configurés dans la base de données.");
+      setMessage("Impossible de charger les commentaires : " + result.error.message);
       setCommentsLoading(false);
       return;
     }
@@ -164,24 +164,30 @@ export default function ImmersiveReelsPage() {
   };
 
   const submitComment = async () => {
-    if (!active || !supabase || !commentText.trim() || commentSending) return;
-    const { data: authData } = await supabase.auth.getUser();
-    if (!authData.user) { setMessage("Connecte-toi pour commenter cette vidéo."); return; }
-    setCommentSending(true);
     const text = commentText.trim();
-    const result = await supabase.from("comments").insert({
-      post_id: active.id,
-      user_id: authData.user.id,
-      content: text
-    }).select("id,post_id,user_id,content,created_at").single();
-    if (result.error) {
-      setMessage("Impossible de publier le commentaire. Vérifie la configuration des commentaires.");
+    if (!active || !supabase || !text || commentSending) return;
+    setCommentSending(true);
+    setMessage("");
+    try {
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError || !authData.user) {
+        setMessage("Connecte-toi pour commenter cette vidéo.");
+        return;
+      }
+      const { data, error: insertError } = await supabase.from("post_comments")
+        .insert({ post_id: active.id, user_id: authData.user.id, content: text })
+        .select("id,post_id,user_id,content,created_at").single();
+      if (insertError) {
+        setMessage("Échec de l’envoi : " + insertError.message);
+        return;
+      }
+      setComments(old => [...old, { ...data, profile: { display_name: authData.user?.user_metadata?.display_name || authData.user?.email?.split("@")[0] || "Moi" } }]);
+      setCommentText("");
+    } catch (err) {
+      setMessage("Erreur réseau pendant l’envoi. Vérifie ta connexion puis réessaie.");
+    } finally {
       setCommentSending(false);
-      return;
     }
-    setComments(old => [...old, { ...result.data, profile: { display_name: authData.user?.user_metadata?.display_name || authData.user?.email?.split("@")[0] || "Moi" } }]);
-    setCommentText("");
-    setCommentSending(false);
   };
 
   const share = async (post: Reel) => {
@@ -223,7 +229,7 @@ export default function ImmersiveReelsPage() {
           {commentsLoading ? <p className="emi-comments-muted">Chargement des commentaires…</p> : comments.length === 0 ? <p className="emi-comments-muted">Aucun commentaire pour le moment. Lance la conversation !</p> : comments.map((comment: any) => <article className="emi-comment" key={comment.id}><span className="emi-comment-avatar">{(comment.profile?.display_name || comment.profile?.username || "M").slice(0,1).toUpperCase()}</span><div><strong>{comment.profile?.display_name || comment.profile?.username || "Membre EMi"}</strong><p>{comment.content}</p></div></article>)}
         </div>
         <form className="emi-comment-form" onSubmit={e => { e.preventDefault(); void submitComment(); }}>
-          <input value={commentText} onChange={e => setCommentText(e.target.value)} placeholder="Écrire un commentaire…" maxLength={1000} aria-label="Écrire un commentaire" />
+          <input value={commentText} onChange={e => setCommentText(e.target.value)} placeholder="Écrire un commentaire…" maxLength={2000} aria-label="Écrire un commentaire" />
           <button type="submit" disabled={!commentText.trim() || commentSending}>{commentSending ? "…" : "Envoyer"}</button>
         </form>
       </section>
