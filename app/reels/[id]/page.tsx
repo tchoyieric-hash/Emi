@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft, Heart, MessageCircle, Volume2, VolumeX, Share2 } from "lucide-react";
+import { ChevronLeft, Heart, MessageCircle, Volume2, VolumeX, Share2, Home, Compass, Plus, Store, Clapperboard, UserRound, Repeat2, Send } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 type Reel = {
@@ -225,7 +225,11 @@ export default function ImmersiveReelsPage() {
   if (!items.length) return <main className="emi-immersive-empty"><button onClick={() => { if (window.history.length > 1) router.back(); else router.push("/"); }}><ChevronLeft size={20}/> Accueil</button><h1>Aucune vidéo disponible pour le moment</h1><p>Les vidéos publiques apparaîtront ici dès qu’elles seront publiées.</p></main>;
 
   return <main className="emi-immersive-shell">
-    <div className="emi-immersive-topbar"><button aria-label="Retour" onClick={() => router.push("/")}><ChevronLeft size={24}/></button><strong>EMi <span>REELS</span></strong><span className="emi-immersive-counter">{index + 1} / {items.length}</span></div>
+    <div className="emi-immersive-topbar">
+      <button aria-label="Retour" onClick={() => router.push("/")}><ChevronLeft size={26}/></button>
+      <strong>EMi <span>REELS</span></strong>
+      <span className="emi-immersive-counter">{index + 1} / {items.length}</span>
+    </div>
     <div className="emi-immersive-scroller" ref={scrollerRef} onScroll={e => { const root = e.currentTarget; const next = Math.round(root.scrollTop / Math.max(1, root.clientHeight)); setIndex(old => next !== old && next >= 0 && next < items.length ? next : old); }}>
       {items.map((post, i) => {
         const author = post.profiles?.display_name || post.profiles?.username || "Membre EMi";
@@ -233,20 +237,39 @@ export default function ImmersiveReelsPage() {
         return <section className="emi-immersive-slide" data-reel-index={i} key={post.id}>
           {url && <video data-reel-video playsInline loop preload={i === index ? "auto" : Math.abs(i - index) === 1 ? "metadata" : "none"} src={url} muted={i !== index || !soundOn} controls={false} onClick={e => { const v=e.currentTarget; if(v.paused) void v.play().catch(()=>undefined); else v.pause(); }} />}
           <div className="emi-immersive-shade" />
-          <div className="emi-immersive-author"><span className="emi-immersive-avatar">{post.profiles?.avatar_url ? <img src={post.profiles.avatar_url} alt="" /> : author.slice(0,1).toUpperCase()}</span><strong>{author}</strong><span className="emi-immersive-follow-label">· EMi</span></div>
-          <div className="emi-immersive-caption"><strong>{isReel(post) ? "REEL" : "VIDÉO"}</strong><p>{captionOf(post.content) || "Découvre ce moment sur EMi."}</p></div>
+          <div className="emi-immersive-author">
+            <span className="emi-immersive-avatar">{post.profiles?.avatar_url ? <img src={post.profiles.avatar_url} alt="" /> : author.slice(0,1).toUpperCase()}</span>
+            <div><strong>{author}</strong><span>· EMi · {new Date(post.created_at).toLocaleDateString("fr-FR",{day:"2-digit",month:"short"})}</span></div>
+          </div>
+          <div className="emi-immersive-caption"><p>{captionOf(post.content) || "Découvre ce moment sur EMi."}</p></div>
           <div className="emi-immersive-actions">
-            <button aria-label={likedIds.includes(post.id) ? "Retirer le J’aime" : "Aimer"} onClick={() => void toggleLike(post)} className={likedIds.includes(post.id) ? "is-liked" : ""}><Heart size={27} fill={likedIds.includes(post.id) ? "currentColor" : "none"}/><span>{likeCounts[post.id] || 0}</span></button>
-            <button aria-label={`Commentaires : ${commentCounts[post.id] || 0}`} onClick={() => void openComments(post)}><MessageCircle size={26}/><span>{commentCounts[post.id] || 0} Commentaires</span></button>
-            <button aria-label="Partager" onClick={() => void share(post)}><Share2 size={25}/><span>Partager</span></button>
-            <button aria-label={soundOn ? "Couper le son" : "Activer le son"} onClick={() => setSoundOn(v => !v)}>{soundOn ? <Volume2 size={24}/> : <VolumeX size={24}/>}<span>{soundOn ? "Son" : "Muet"}</span></button>
+            <button aria-label={likedIds.includes(post.id) ? "Retirer le J’aime" : "Aimer"} onClick={() => void toggleLike(post)} className={likedIds.includes(post.id) ? "is-liked" : ""}><Heart size={29} fill={likedIds.includes(post.id) ? "currentColor" : "none"}/><span>{likeCounts[post.id] || 0}</span></button>
+            <button aria-label={`Commentaires : ${commentCounts[post.id] || 0}`} onClick={() => void openComments(post)}><MessageCircle size={29}/><span>{commentCounts[post.id] || 0}</span></button>
+            <button aria-label="Repartager" onClick={() => void share(post)}><Repeat2 size={29}/><span>Repartager</span></button>
+            <button aria-label="Partager" onClick={() => void share(post)}><Send size={27}/><span>Partager</span></button>
+            <button aria-label={soundOn ? "Couper le son" : "Activer le son"} onClick={() => setSoundOn(v => !v)}>{soundOn ? <Volume2 size={26}/> : <VolumeX size={26}/>}<span>{soundOn ? "Son" : "Muet"}</span></button>
           </div>
         </section>;
       })}
     </div>
+    <form className="emi-quick-comment" onSubmit={e => { e.preventDefault(); if (commentText.trim()) { if (!commentsOpen) void openComments(active); void submitComment(); } }}>
+      <MessageCircle size={23} aria-hidden="true"/>
+      <input value={commentText} onChange={e => setCommentText(e.target.value)} placeholder="Ajouter un commentaire…" maxLength={2000} aria-label="Ajouter un commentaire"/>
+      <button type="button" aria-label="Ouvrir les commentaires" onClick={() => active && void openComments(active)}><MessageCircle size={21}/></button>
+      <button type="submit" aria-label="Envoyer le commentaire" disabled={!commentText.trim() || commentSending}><Send size={21}/></button>
+    </form>
+    <nav className="emi-reels-bottom-nav" aria-label="Navigation principale">
+      <button onClick={() => router.push("/")}><Home/><span>Accueil</span></button>
+      <button onClick={() => router.push("/?tab=explorer")}><Compass/><span>Explorer</span></button>
+      <button className="emi-nav-create" aria-label="Créer" onClick={() => router.push("/?create=1")}><Plus/></button>
+      <button onClick={() => router.push("/?tab=marche")}><Store/><span>Marché</span></button>
+      <button className="active" aria-current="page"><Clapperboard/><span>Reels</span></button>
+      <button onClick={() => router.push("/?tab=messages")}><MessageCircle/><span>Messages</span></button>
+      <button onClick={() => router.push("/?tab=profil")}><UserRound/><span>Profil</span></button>
+    </nav>
     {commentsOpen && <div className="emi-comments-backdrop" onClick={() => setCommentsOpen(false)}>
       <section className="emi-comments-panel" role="dialog" aria-modal="true" aria-label="Commentaires" onClick={e => e.stopPropagation()}>
-        <div className="emi-comments-head"><strong>Commentaires</strong><button aria-label="Fermer les commentaires" onClick={() => setCommentsOpen(false)}>×</button></div>
+        <div className="emi-comments-head"><strong>Commentaires · {active ? commentCounts[active.id] || 0 : 0}</strong><button aria-label="Fermer les commentaires" onClick={() => setCommentsOpen(false)}>×</button></div>
         <div className="emi-comments-list">
           {commentsLoading ? <p className="emi-comments-muted">Chargement des commentaires…</p> : comments.length === 0 ? <p className="emi-comments-muted">Aucun commentaire pour le moment. Lance la conversation !</p> : comments.map((comment: any) => <article className="emi-comment" key={comment.id}><span className="emi-comment-avatar">{(comment.profile?.display_name || comment.profile?.username || "M").slice(0,1).toUpperCase()}</span><div><strong>{comment.profile?.display_name || comment.profile?.username || "Membre EMi"}</strong><p>{comment.content}</p></div></article>)}
         </div>
@@ -258,26 +281,29 @@ export default function ImmersiveReelsPage() {
     </div>}
     {message && <button className="emi-immersive-toast" onClick={() => setMessage("")}>{message} <span>×</span></button>}
     <style jsx global>{`
-      .emi-immersive-shell{position:fixed;inset:0;z-index:9999;background:#030504;color:#fff;font-family:Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
-      .emi-immersive-topbar{height:48px;flex:0 0 48px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#07130e;border-bottom:1px solid #bda45a55;z-index:3}
-      .emi-immersive-topbar button,.emi-immersive-empty button{border:0;background:transparent;color:#f0d78b;display:flex;align-items:center;gap:5px;padding:8px}
-      .emi-immersive-topbar strong{font-size:16px;letter-spacing:2px}.emi-immersive-topbar strong span{color:#e6cb78;font-size:10px;margin-left:5px}.emi-immersive-counter{margin-left:auto;color:#e3d5a4;font-size:12px}
-      .emi-immersive-scroller{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none;touch-action:pan-y;-webkit-overflow-scrolling:touch}.emi-immersive-scroller::-webkit-scrollbar{display:none}
+      .emi-immersive-shell{position:fixed;inset:0;z-index:9999;background:#030504;color:#fff;font-family:Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden;padding-bottom:env(safe-area-inset-bottom)}
+      .emi-immersive-topbar{position:absolute;top:0;left:0;right:0;height:58px;display:flex;align-items:center;gap:18px;padding:0 18px;background:linear-gradient(180deg,#03100de8,#03100d60,transparent);z-index:4}
+      .emi-immersive-topbar button{border:0;background:transparent;color:#f2d780;display:flex;align-items:center;padding:6px}
+      .emi-immersive-topbar strong{font-size:21px;letter-spacing:3px;color:#f8f5e9}.emi-immersive-topbar strong span{color:#e7ca70;font-size:12px;letter-spacing:3px;margin-left:8px;padding-left:12px;border-left:1px solid #c9a84d}
+      .emi-immersive-counter{margin-left:auto;color:#f5e5b4;font-size:14px}
+      .emi-immersive-scroller{position:absolute;inset:0 0 142px;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none;touch-action:pan-y;-webkit-overflow-scrolling:touch}.emi-immersive-scroller::-webkit-scrollbar{display:none}
       .emi-immersive-slide{height:100%;min-height:100%;flex:0 0 100%;position:relative;scroll-snap-align:start;scroll-snap-stop:always;background:#090b0a;overflow:hidden;isolation:isolate}
-      .emi-immersive-slide>video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;z-index:-2}
-      .emi-immersive-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#0009,transparent 22%,transparent 58%,#000b 100%);z-index:-1}
-      .emi-immersive-author{position:absolute;top:22px;left:18px;display:flex;align-items:center;gap:9px;text-shadow:0 2px 8px #000;font-size:14px}.emi-immersive-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#d8bd6e;color:#10140d;border:2px solid #f4df9b;overflow:hidden;font-weight:800}.emi-immersive-avatar img{width:100%;height:100%;object-fit:cover}.emi-immersive-follow-label{color:#e7d59a;font-size:12px}
-      .emi-immersive-caption{position:absolute;left:18px;right:86px;bottom:36px;text-shadow:0 2px 8px #000}.emi-immersive-caption>strong{display:inline-block;border:1px solid #e5cc78;border-radius:20px;padding:5px 9px;color:#f0d88c;font-size:10px;letter-spacing:1.5px}.emi-immersive-caption p{font-size:15px;line-height:1.5;margin:10px 0 0;overflow-wrap:anywhere}
-      .emi-immersive-actions{position:absolute;right:13px;bottom:42px;display:flex;flex-direction:column;align-items:center;gap:20px}.emi-immersive-actions button{border:0;background:#05070575;color:#fff;border-radius:30px;min-width:50px;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:6px 4px;text-shadow:0 2px 5px #000}.emi-immersive-actions button span{font-size:10px}.emi-immersive-actions button.is-liked{color:#ff4e72}
+      .emi-immersive-slide>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;z-index:-2}
+      .emi-immersive-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#0008 0%,transparent 22%,transparent 60%,#0009 100%);z-index:-1}
+      .emi-immersive-author{position:absolute;top:76px;left:18px;display:flex;align-items:center;gap:11px;text-shadow:0 2px 8px #000;font-size:15px}.emi-immersive-author>div{display:flex;flex-direction:column;gap:4px}.emi-immersive-author>div>span{font-size:12px;color:#e2e2dc}.emi-immersive-avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#d8bd6e;color:#10140d;border:2px solid #f4df9b;overflow:hidden;font-weight:800;flex-shrink:0}.emi-immersive-avatar img{width:100%;height:100%;object-fit:cover}.emi-immersive-follow-label{color:#e7d59a;font-size:12px}
+      .emi-immersive-caption{position:absolute;left:18px;right:88px;bottom:28px;text-shadow:0 2px 8px #000}.emi-immersive-caption p{font-size:16px;line-height:1.45;margin:0;overflow-wrap:anywhere}
+      .emi-immersive-actions{position:absolute;right:10px;bottom:24px;display:flex;flex-direction:column;align-items:center;gap:16px}.emi-immersive-actions button{border:0;background:transparent;color:#fff;min-width:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:3px;text-shadow:0 2px 5px #000}.emi-immersive-actions button span{font-size:11px}.emi-immersive-actions button.is-liked{color:#ff4e72}
+      .emi-quick-comment{position:absolute;z-index:4;left:16px;right:16px;bottom:80px;min-height:52px;display:flex;align-items:center;gap:10px;padding:6px 8px 6px 14px;border:1px solid #b99b4e;border-radius:30px;background:#061710eF;color:#fff;box-shadow:0 5px 24px #0006}.emi-quick-comment>svg{color:#e7cb76;flex-shrink:0}.emi-quick-comment input{flex:1;min-width:0;background:transparent;border:0;outline:none;color:#fff;font-size:14px}.emi-quick-comment input::placeholder{color:#c3c8c2}.emi-quick-comment button{width:38px;height:38px;border:0;border-radius:50%;display:grid;place-items:center;background:#173329;color:#e9d17d}.emi-quick-comment button[type=submit]{background:#e8cb70;color:#10170f}.emi-quick-comment button:disabled{opacity:.45}
+      .emi-reels-bottom-nav{position:absolute;z-index:4;bottom:0;left:0;right:0;height:68px;padding:5px 4px max(5px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-around;background:#04120df5;border-top:1px solid #b99b4e55;backdrop-filter:blur(18px)}.emi-reels-bottom-nav button{flex:1;min-width:0;border:0;background:transparent;color:#aab6ae;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;padding:3px 0}.emi-reels-bottom-nav button svg{width:22px;height:22px}.emi-reels-bottom-nav button.active{color:#f2d47a}.emi-reels-bottom-nav button.active:after{content:"";width:24px;height:2px;border-radius:2px;background:#e8ca70;margin-top:1px}.emi-reels-bottom-nav .emi-nav-create{flex:0 0 48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#fff0b0,#d9ad3c);color:#0b160e;box-shadow:0 3px 16px #d6b54d40}.emi-reels-bottom-nav .emi-nav-create svg{width:28px;height:28px}
       .emi-comments-backdrop{position:absolute;inset:0;z-index:8;background:#0009;display:flex;align-items:flex-end}
       .emi-comments-panel{width:100%;height:min(70%,620px);background:#101712;border:1px solid #bda45a77;border-radius:22px 22px 0 0;display:flex;flex-direction:column;color:#fff;overflow:hidden;padding-bottom:env(safe-area-inset-bottom)}
       .emi-comments-head{height:58px;flex:0 0 58px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #ffffff18;position:relative}.emi-comments-head strong{font-size:16px}.emi-comments-head button{position:absolute;right:16px;border:0;background:transparent;color:#f0d78b;font-size:28px}
       .emi-comments-list{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px}.emi-comments-muted{color:#b8c1bb;text-align:center;margin:auto;line-height:1.5}
       .emi-comment{display:flex;align-items:flex-start;gap:10px}.emi-comment-avatar{flex:0 0 34px;height:34px;border-radius:50%;background:#d8bd6e;color:#10140d;display:grid;place-items:center;font-weight:800}.emi-comment>div{min-width:0;background:#1a241d;border-radius:14px;padding:9px 12px}.emi-comment strong{font-size:12px;color:#e7d59a}.emi-comment p{font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0 0}
       .emi-comment-form{display:flex;gap:8px;padding:12px;border-top:1px solid #ffffff18}.emi-comment-form input{flex:1;min-width:0;background:#080d09;color:white;border:1px solid #ffffff25;border-radius:22px;padding:12px 14px;outline:none}.emi-comment-form button{border:1px solid #bda45a;border-radius:22px;background:#d8bd6e;color:#11180f;font-weight:700;padding:0 14px}.emi-comment-form button:disabled{opacity:.5}
-      .emi-immersive-toast{position:absolute;bottom:64px;left:16px;right:16px;border:1px solid #bda45a;background:#101a14;color:white;padding:13px;border-radius:13px;text-align:left;z-index:5}.emi-immersive-toast span{float:right}
+      .emi-immersive-toast{position:absolute;bottom:150px;left:16px;right:16px;border:1px solid #bda45a;background:#101a14;color:white;padding:13px;border-radius:13px;text-align:left;z-index:9}.emi-immersive-toast span{float:right}
       .emi-immersive-loading,.emi-immersive-empty{min-height:100dvh;background:#050806;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;padding:24px;text-align:center}.emi-immersive-empty h1{font-size:23px}.emi-immersive-empty p{color:#b8c1bb;line-height:1.6}.emi-immersive-empty>button:last-child{border:1px solid #bda45a;border-radius:12px;padding:12px 20px}.emi-immersive-spinner{width:32px;height:32px;border:3px solid #354237;border-top-color:#e6cb78;border-radius:50%;animation:emiReelSpin .8s linear infinite}@keyframes emiReelSpin{to{transform:rotate(360deg)}}
-      @media(min-width:700px){.emi-immersive-slide{max-width:520px;margin:auto}.emi-immersive-scroller{background:#111}.emi-immersive-topbar{padding-left:max(16px,calc((100vw - 520px)/2));padding-right:max(16px,calc((100vw - 520px)/2))}}
+      @media(min-width:700px){.emi-immersive-slide{max-width:520px;margin:auto}.emi-immersive-scroller{background:#111}.emi-immersive-topbar{padding-left:max(16px,calc((100vw - 520px)/2));padding-right:max(16px,calc((100vw - 520px)/2))}.emi-quick-comment{max-width:488px;margin:auto}}
     `}</style>
   </main>;
 }
