@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft, Heart, MessageCircle, MoreHorizontal, Play, Volume2, VolumeX, Share2 } from "lucide-react";
+import { ChevronLeft, Heart, MessageCircle, Volume2, VolumeX, Share2 } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 type Reel = {
@@ -32,7 +32,6 @@ export default function ImmersiveReelsPage() {
   const [likeCounts, setLikeCounts] = useState<Record<string, number>>({});
   const [message, setMessage] = useState("");
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const touchStartY = useRef<number | null>(null);
   const active = items[index];
 
   const load = useCallback(async () => {
@@ -84,8 +83,6 @@ export default function ImmersiveReelsPage() {
     });
   }, [index, items, soundOn]);
 
-  const move = (direction: number) => setIndex(old => items.length ? (old + direction + items.length) % items.length : 0);
-
   const toggleLike = async (post: Reel) => {
     if (!supabase) return;
     const { data } = await supabase.auth.getUser();
@@ -133,15 +130,13 @@ export default function ImmersiveReelsPage() {
             <button aria-label="Partager" onClick={() => void share(post)}><Share2 size={25}/><span>Partager</span></button>
             <button aria-label={soundOn ? "Couper le son" : "Activer le son"} onClick={() => setSoundOn(v => !v)}>{soundOn ? <Volume2 size={24}/> : <VolumeX size={24}/>}<span>{soundOn ? "Son" : "Muet"}</span></button>
           </div>
-          <button className="emi-immersive-play-hint" aria-label="Lecture / pause" onClick={() => { const v=scrollerRef.current?.querySelector<HTMLVideoElement>('[data-reel-index="' + i + '"] video'); if(v?.paused)void v.play().catch(()=>undefined);else v?.pause(); }}><Play size={24} fill="currentColor"/></button>
         </section>;
       })}
     </div>
-    <div className="emi-immersive-nav"><button onClick={() => move(-1)}>↑ Précédente</button><span>SWIPE VERTICAL</span><button onClick={() => move(1)}>Suivante ↓</button></div>
     {message && <button className="emi-immersive-toast" onClick={() => setMessage("")}>{message} <span>×</span></button>}
     <style jsx global>{`
       .emi-immersive-shell{position:fixed;inset:0;z-index:9999;background:#030504;color:#fff;font-family:Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
-      .emi-immersive-topbar{height:58px;flex:0 0 58px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#07130e;border-bottom:1px solid #bda45a55;z-index:3}
+      .emi-immersive-topbar{height:48px;flex:0 0 48px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#07130e;border-bottom:1px solid #bda45a55;z-index:3}
       .emi-immersive-topbar button,.emi-immersive-empty button{border:0;background:transparent;color:#f0d78b;display:flex;align-items:center;gap:5px;padding:8px}
       .emi-immersive-topbar strong{font-size:16px;letter-spacing:2px}.emi-immersive-topbar strong span{color:#e6cb78;font-size:10px;margin-left:5px}.emi-immersive-counter{margin-left:auto;color:#e3d5a4;font-size:12px}
       .emi-immersive-scroller{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none;touch-action:pan-y;-webkit-overflow-scrolling:touch}.emi-immersive-scroller::-webkit-scrollbar{display:none}
@@ -151,11 +146,9 @@ export default function ImmersiveReelsPage() {
       .emi-immersive-author{position:absolute;top:22px;left:18px;display:flex;align-items:center;gap:9px;text-shadow:0 2px 8px #000;font-size:14px}.emi-immersive-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#d8bd6e;color:#10140d;border:2px solid #f4df9b;overflow:hidden;font-weight:800}.emi-immersive-avatar img{width:100%;height:100%;object-fit:cover}.emi-immersive-follow-label{color:#e7d59a;font-size:12px}
       .emi-immersive-caption{position:absolute;left:18px;right:86px;bottom:36px;text-shadow:0 2px 8px #000}.emi-immersive-caption>strong{display:inline-block;border:1px solid #e5cc78;border-radius:20px;padding:5px 9px;color:#f0d88c;font-size:10px;letter-spacing:1.5px}.emi-immersive-caption p{font-size:15px;line-height:1.5;margin:10px 0 0;overflow-wrap:anywhere}
       .emi-immersive-actions{position:absolute;right:13px;bottom:42px;display:flex;flex-direction:column;align-items:center;gap:20px}.emi-immersive-actions button{border:0;background:#05070575;color:#fff;border-radius:30px;min-width:50px;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:6px 4px;text-shadow:0 2px 5px #000}.emi-immersive-actions button span{font-size:10px}.emi-immersive-actions button.is-liked{color:#ff4e72}
-      .emi-immersive-play-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:1px solid #ffffff66;border-radius:50%;width:58px;height:58px;display:grid;place-items:center;background:#0005;color:white;opacity:.7}
-      .emi-immersive-nav{height:50px;flex:0 0 50px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px;background:#07130e;border-top:1px solid #bda45a55;z-index:3}.emi-immersive-nav button{background:#141a14;border:1px solid #c8ac60;border-radius:12px;padding:9px 12px;color:#f1dc9a;font-size:12px}.emi-immersive-nav button:disabled{opacity:.35}.emi-immersive-nav span{font-size:9px;letter-spacing:1.4px;color:#b7a977}
       .emi-immersive-toast{position:absolute;bottom:64px;left:16px;right:16px;border:1px solid #bda45a;background:#101a14;color:white;padding:13px;border-radius:13px;text-align:left;z-index:5}.emi-immersive-toast span{float:right}
       .emi-immersive-loading,.emi-immersive-empty{min-height:100dvh;background:#050806;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;padding:24px;text-align:center}.emi-immersive-empty h1{font-size:23px}.emi-immersive-empty p{color:#b8c1bb;line-height:1.6}.emi-immersive-empty>button:last-child{border:1px solid #bda45a;border-radius:12px;padding:12px 20px}.emi-immersive-spinner{width:32px;height:32px;border:3px solid #354237;border-top-color:#e6cb78;border-radius:50%;animation:emiReelSpin .8s linear infinite}@keyframes emiReelSpin{to{transform:rotate(360deg)}}
-      @media(min-width:700px){.emi-immersive-slide{max-width:520px;margin:auto}.emi-immersive-scroller{background:#111}.emi-immersive-topbar,.emi-immersive-nav{padding-left:max(16px,calc((100vw - 520px)/2));padding-right:max(16px,calc((100vw - 520px)/2))}}
+      @media(min-width:700px){.emi-immersive-slide{max-width:520px;margin:auto}.emi-immersive-scroller{background:#111}.emi-immersive-topbar{padding-left:max(16px,calc((100vw - 520px)/2));padding-right:max(16px,calc((100vw - 520px)/2))}}
     `}</style>
   </main>;
 }
