@@ -31,6 +31,11 @@ export default function ImmersiveReelsPage() {
   const [likedIds, setLikedIds] = useState<string[]>([]);
   const [likeCounts, setLikeCounts] = useState<Record<string, number>>({});
   const [message, setMessage] = useState("");
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [comments, setComments] = useState<any[]>([]);
+  const [commentText, setCommentText] = useState("");
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [commentSending, setCommentSending] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const active = items[index];
 
@@ -135,6 +140,50 @@ export default function ImmersiveReelsPage() {
     }
   };
 
+  const openComments = async (post: Reel) => {
+    if (!supabase) { setMessage("Connexion indisponible."); return; }
+    setCommentsOpen(true);
+    setCommentsLoading(true);
+    setComments([]);
+    const result = await supabase.from("comments")
+      .select("id,post_id,user_id,content,created_at")
+      .eq("post_id", post.id).order("created_at", { ascending: true }).limit(100);
+    if (result.error) {
+      setMessage("Les commentaires ne sont pas encore configurés dans la base de données.");
+      setCommentsLoading(false);
+      return;
+    }
+    const rows = result.data || [];
+    const userIds = [...new Set(rows.map((row: any) => row.user_id).filter(Boolean))];
+    const profiles = userIds.length
+      ? await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", userIds)
+      : { data: [] as any[] };
+    const byId = new Map((profiles.data || []).map((p: any) => [p.id, p]));
+    setComments(rows.map((row: any) => ({ ...row, profile: byId.get(row.user_id) || null })));
+    setCommentsLoading(false);
+  };
+
+  const submitComment = async () => {
+    if (!active || !supabase || !commentText.trim() || commentSending) return;
+    const { data: authData } = await supabase.auth.getUser();
+    if (!authData.user) { setMessage("Connecte-toi pour commenter cette vidéo."); return; }
+    setCommentSending(true);
+    const text = commentText.trim();
+    const result = await supabase.from("comments").insert({
+      post_id: active.id,
+      user_id: authData.user.id,
+      content: text
+    }).select("id,post_id,user_id,content,created_at").single();
+    if (result.error) {
+      setMessage("Impossible de publier le commentaire. Vérifie la configuration des commentaires.");
+      setCommentSending(false);
+      return;
+    }
+    setComments(old => [...old, { ...result.data, profile: { display_name: authData.user?.user_metadata?.display_name || authData.user?.email?.split("@")[0] || "Moi" } }]);
+    setCommentText("");
+    setCommentSending(false);
+  };
+
   const share = async (post: Reel) => {
     const url = window.location.origin + "/reels/" + post.id;
     try {
@@ -160,13 +209,25 @@ export default function ImmersiveReelsPage() {
           <div className="emi-immersive-caption"><strong>{isReel(post) ? "REEL" : "VIDÉO"}</strong><p>{captionOf(post.content) || "Découvre ce moment sur EMi."}</p></div>
           <div className="emi-immersive-actions">
             <button aria-label={likedIds.includes(post.id) ? "Retirer le J’aime" : "Aimer"} onClick={() => void toggleLike(post)} className={likedIds.includes(post.id) ? "is-liked" : ""}><Heart size={27} fill={likedIds.includes(post.id) ? "currentColor" : "none"}/><span>{likeCounts[post.id] || 0}</span></button>
-            <button aria-label="Commentaires" onClick={() => setMessage("Les commentaires seront accessibles depuis la fiche complète de cette vidéo.")}><MessageCircle size={26}/><span>Commenter</span></button>
+            <button aria-label="Commentaires" onClick={() => void openComments(post)}><MessageCircle size={26}/><span>Commenter</span></button>
             <button aria-label="Partager" onClick={() => void share(post)}><Share2 size={25}/><span>Partager</span></button>
             <button aria-label={soundOn ? "Couper le son" : "Activer le son"} onClick={() => setSoundOn(v => !v)}>{soundOn ? <Volume2 size={24}/> : <VolumeX size={24}/>}<span>{soundOn ? "Son" : "Muet"}</span></button>
           </div>
         </section>;
       })}
     </div>
+    {commentsOpen && <div className="emi-comments-backdrop" onClick={() => setCommentsOpen(false)}>
+      <section className="emi-comments-panel" role="dialog" aria-modal="true" aria-label="Commentaires" onClick={e => e.stopPropagation()}>
+        <div className="emi-comments-head"><strong>Commentaires</strong><button aria-label="Fermer les commentaires" onClick={() => setCommentsOpen(false)}>×</button></div>
+        <div className="emi-comments-list">
+          {commentsLoading ? <p className="emi-comments-muted">Chargement des commentaires…</p> : comments.length === 0 ? <p className="emi-comments-muted">Aucun commentaire pour le moment. Lance la conversation !</p> : comments.map((comment: any) => <article className="emi-comment" key={comment.id}><span className="emi-comment-avatar">{(comment.profile?.display_name || comment.profile?.username || "M").slice(0,1).toUpperCase()}</span><div><strong>{comment.profile?.display_name || comment.profile?.username || "Membre EMi"}</strong><p>{comment.content}</p></div></article>)}
+        </div>
+        <form className="emi-comment-form" onSubmit={e => { e.preventDefault(); void submitComment(); }}>
+          <input value={commentText} onChange={e => setCommentText(e.target.value)} placeholder="Écrire un commentaire…" maxLength={1000} aria-label="Écrire un commentaire" />
+          <button type="submit" disabled={!commentText.trim() || commentSending}>{commentSending ? "…" : "Envoyer"}</button>
+        </form>
+      </section>
+    </div>}
     {message && <button className="emi-immersive-toast" onClick={() => setMessage("")}>{message} <span>×</span></button>}
     <style jsx global>{`
       .emi-immersive-shell{position:fixed;inset:0;z-index:9999;background:#030504;color:#fff;font-family:Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
@@ -180,6 +241,12 @@ export default function ImmersiveReelsPage() {
       .emi-immersive-author{position:absolute;top:22px;left:18px;display:flex;align-items:center;gap:9px;text-shadow:0 2px 8px #000;font-size:14px}.emi-immersive-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#d8bd6e;color:#10140d;border:2px solid #f4df9b;overflow:hidden;font-weight:800}.emi-immersive-avatar img{width:100%;height:100%;object-fit:cover}.emi-immersive-follow-label{color:#e7d59a;font-size:12px}
       .emi-immersive-caption{position:absolute;left:18px;right:86px;bottom:36px;text-shadow:0 2px 8px #000}.emi-immersive-caption>strong{display:inline-block;border:1px solid #e5cc78;border-radius:20px;padding:5px 9px;color:#f0d88c;font-size:10px;letter-spacing:1.5px}.emi-immersive-caption p{font-size:15px;line-height:1.5;margin:10px 0 0;overflow-wrap:anywhere}
       .emi-immersive-actions{position:absolute;right:13px;bottom:42px;display:flex;flex-direction:column;align-items:center;gap:20px}.emi-immersive-actions button{border:0;background:#05070575;color:#fff;border-radius:30px;min-width:50px;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:6px 4px;text-shadow:0 2px 5px #000}.emi-immersive-actions button span{font-size:10px}.emi-immersive-actions button.is-liked{color:#ff4e72}
+      .emi-comments-backdrop{position:absolute;inset:0;z-index:8;background:#0009;display:flex;align-items:flex-end}
+      .emi-comments-panel{width:100%;height:min(70%,620px);background:#101712;border:1px solid #bda45a77;border-radius:22px 22px 0 0;display:flex;flex-direction:column;color:#fff;overflow:hidden;padding-bottom:env(safe-area-inset-bottom)}
+      .emi-comments-head{height:58px;flex:0 0 58px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #ffffff18;position:relative}.emi-comments-head strong{font-size:16px}.emi-comments-head button{position:absolute;right:16px;border:0;background:transparent;color:#f0d78b;font-size:28px}
+      .emi-comments-list{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px}.emi-comments-muted{color:#b8c1bb;text-align:center;margin:auto;line-height:1.5}
+      .emi-comment{display:flex;align-items:flex-start;gap:10px}.emi-comment-avatar{flex:0 0 34px;height:34px;border-radius:50%;background:#d8bd6e;color:#10140d;display:grid;place-items:center;font-weight:800}.emi-comment>div{min-width:0;background:#1a241d;border-radius:14px;padding:9px 12px}.emi-comment strong{font-size:12px;color:#e7d59a}.emi-comment p{font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0 0}
+      .emi-comment-form{display:flex;gap:8px;padding:12px;border-top:1px solid #ffffff18}.emi-comment-form input{flex:1;min-width:0;background:#080d09;color:white;border:1px solid #ffffff25;border-radius:22px;padding:12px 14px;outline:none}.emi-comment-form button{border:1px solid #bda45a;border-radius:22px;background:#d8bd6e;color:#11180f;font-weight:700;padding:0 14px}.emi-comment-form button:disabled{opacity:.5}
       .emi-immersive-toast{position:absolute;bottom:64px;left:16px;right:16px;border:1px solid #bda45a;background:#101a14;color:white;padding:13px;border-radius:13px;text-align:left;z-index:5}.emi-immersive-toast span{float:right}
       .emi-immersive-loading,.emi-immersive-empty{min-height:100dvh;background:#050806;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;padding:24px;text-align:center}.emi-immersive-empty h1{font-size:23px}.emi-immersive-empty p{color:#b8c1bb;line-height:1.6}.emi-immersive-empty>button:last-child{border:1px solid #bda45a;border-radius:12px;padding:12px 20px}.emi-immersive-spinner{width:32px;height:32px;border:3px solid #354237;border-top-color:#e6cb78;border-radius:50%;animation:emiReelSpin .8s linear infinite}@keyframes emiReelSpin{to{transform:rotate(360deg)}}
       @media(min-width:700px){.emi-immersive-slide{max-width:520px;margin:auto}.emi-immersive-scroller{background:#111}.emi-immersive-topbar{padding-left:max(16px,calc((100vw - 520px)/2));padding-right:max(16px,calc((100vw - 520px)/2))}}
