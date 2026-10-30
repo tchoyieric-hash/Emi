@@ -174,16 +174,32 @@ export default function ImmersiveReelsPage() {
         setMessage("Connecte-toi pour commenter cette vidéo.");
         return;
       }
-      const { data, error: insertError } = await supabase.from("post_comments")
-        .insert({ post_id: active.id, user_id: authData.user.id, content: text })
-        .select("id,post_id,user_id,content,created_at").single();
+
+      // Same write-only insert used by the working Home feed. Avoid chained SELECT,
+      // which may fail when row-level security permits INSERT but not SELECT.
+      const { error: insertError } = await supabase.from("post_comments").insert({
+        post_id: active.id,
+        user_id: authData.user.id,
+        content: text
+      });
       if (insertError) {
         setMessage("Échec de l’envoi : " + insertError.message);
         return;
       }
-      setComments(old => [...old, { ...data, profile: { display_name: authData.user?.user_metadata?.display_name || authData.user?.email?.split("@")[0] || "Moi" } }]);
+
+      const localComment = {
+        id: `local-${Date.now()}`,
+        post_id: active.id,
+        user_id: authData.user.id,
+        content: text,
+        created_at: new Date().toISOString(),
+        profile: {
+          display_name: authData.user.user_metadata?.display_name || authData.user.email?.split("@")[0] || "Moi"
+        }
+      };
+      setComments(old => [...old, localComment]);
       setCommentText("");
-    } catch (err) {
+    } catch {
       setMessage("Erreur réseau pendant l’envoi. Vérifie ta connexion puis réessaie.");
     } finally {
       setCommentSending(false);
