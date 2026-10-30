@@ -71,8 +71,7 @@ export default function ImmersiveReelsPage() {
     if (!root || !items.length) return;
     const child = root.querySelector<HTMLElement>('[data-reel-index="' + index + '"]');
     if (child) child.scrollIntoView({ behavior: "auto", block: "start" });
-    const post = items[index];
-    if (post && window.location.pathname !== "/reels/" + post.id) router.replace("/reels/" + post.id, { scroll: false });
+    // Ne pas remplacer l’URL à chaque swipe : cela relançait le chargement complet et bloquait le flux.
   }, [index, items, router]);
 
   useEffect(() => {
@@ -124,7 +123,7 @@ export default function ImmersiveReelsPage() {
         const author = post.profiles?.display_name || post.profiles?.username || "Membre EMi";
         const url = post.media_urls?.[0];
         return <section className="emi-immersive-slide" data-reel-index={i} key={post.id}>
-          {url && <video data-reel-video playsInline loop preload={i === index ? "auto" : "metadata"} src={url} muted={i !== index || !soundOn} controls={false} onClick={e => { const v=e.currentTarget; if(v.paused) void v.play().catch(()=>undefined); else v.pause(); }} />}
+          {url && <video data-reel-video playsInline loop preload={i === index ? "auto" : Math.abs(i - index) === 1 ? "metadata" : "none"} src={url} muted={i !== index || !soundOn} controls={false} onClick={e => { const v=e.currentTarget; if(v.paused) void v.play().catch(()=>undefined); else v.pause(); }} />}
           <div className="emi-immersive-shade" />
           <div className="emi-immersive-author"><span className="emi-immersive-avatar">{post.profiles?.avatar_url ? <img src={post.profiles.avatar_url} alt="" /> : author.slice(0,1).toUpperCase()}</span><strong>{author}</strong><span className="emi-immersive-follow-label">· EMi</span></div>
           <div className="emi-immersive-caption"><strong>{isReel(post) ? "REEL" : "VIDÉO"}</strong><p>{captionOf(post.content) || "Découvre ce moment sur EMi."}</p></div>
