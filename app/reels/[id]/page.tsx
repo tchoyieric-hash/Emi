@@ -43,24 +43,25 @@ export default function ImmersiveReelsPage() {
       .eq("visibility", "public").eq("media_type", "video").order("created_at", { ascending: false }).limit(100);
     if (queryError) { setError("Impossible de charger les vidéos : " + queryError.message); setLoading(false); return; }
     const videos = ((data || []) as Reel[]).filter(p => (p.media_urls || []).length > 0);
-    const ids = [...new Set(videos.map(p => p.user_id))];
-    const { data: profiles } = ids.length ? await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", ids) : { data: [] };
-    const byId = new Map((profiles || []).map((p: any) => [p.id, p]));
-    const enriched = videos.map(p => ({ ...p, profiles: byId.get(p.user_id) || null }));
-    setItems(enriched);
-    const requestedIndex = enriched.findIndex(p => p.id === requestedId);
+    const requestedIndex = videos.findIndex(p => p.id === requestedId);
+    // Afficher la vidéo demandée dès que la requête principale répond : profils et likes ne doivent pas bloquer l’ouverture.
+    setItems(videos);
     setIndex(requestedIndex >= 0 ? requestedIndex : 0);
-    const postIds = enriched.map(p => p.id);
-    if (postIds.length) {
-      const { data: likes } = await supabase.from("post_likes").select("post_id,user_id").in("post_id", postIds);
-      const counts: Record<string, number> = {};
-      const mine: string[] = [];
-      (likes || []).forEach((row: any) => { counts[row.post_id] = (counts[row.post_id] || 0) + 1; if (row.user_id) mine.push(row.post_id + ":" + row.user_id); });
-      setLikeCounts(counts);
-      const { data: authData } = await supabase.auth.getUser();
-      if (authData.user) setLikedIds(mine.filter(v => v.endsWith(":" + authData.user!.id)).map(v => v.split(":")[0]));
-    }
     setLoading(false);
+    const ids = [...new Set(videos.map(p => p.user_id))];
+    const postIds = videos.map(p => p.id);
+    const [profileResult, likesResult, authResult] = await Promise.all([
+      ids.length ? supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", ids) : Promise.resolve({ data: [] as any[] }),
+      postIds.length ? supabase.from("post_likes").select("post_id,user_id").in("post_id", postIds) : Promise.resolve({ data: [] as any[] }),
+      supabase.auth.getUser()
+    ]);
+    const byId = new Map((profileResult.data || []).map((p: any) => [p.id, p]));
+    setItems(videos.map(p => ({ ...p, profiles: byId.get(p.user_id) || null })));
+    const counts: Record<string, number> = {};
+    const mine: string[] = [];
+    (likesResult.data || []).forEach((row: any) => { counts[row.post_id] = (counts[row.post_id] || 0) + 1; if (row.user_id) mine.push(row.post_id + ":" + row.user_id); });
+    setLikeCounts(counts);
+    if (authResult.data.user) setLikedIds(mine.filter(v => v.endsWith(":" + authResult.data.user!.id)).map(v => v.split(":")[0]));
   }, [requestedId]);
 
   useEffect(() => { void load(); }, [load]);
@@ -118,7 +119,7 @@ export default function ImmersiveReelsPage() {
 
   return <main className="emi-immersive-shell">
     <div className="emi-immersive-topbar"><button aria-label="Retour" onClick={() => router.push("/")}><ChevronLeft size={24}/></button><strong>EMi <span>REELS</span></strong><span className="emi-immersive-counter">{index + 1} / {items.length}</span></div>
-    <div className="emi-immersive-scroller" ref={scrollerRef} onTouchStart={e => { touchStartY.current = e.touches[0]?.clientY ?? null; }} onTouchEnd={e => { if (touchStartY.current === null) return; const delta = touchStartY.current - (e.changedTouches[0]?.clientY ?? touchStartY.current); if (Math.abs(delta) > 45) move(delta > 0 ? 1 : -1); touchStartY.current = null; }} onWheel={e => { if (Math.abs(e.deltaY) > 25) move(e.deltaY > 0 ? 1 : -1); }}>
+    <div className="emi-immersive-scroller" ref={scrollerRef} onScroll={e => { const root = e.currentTarget; const next = Math.round(root.scrollTop / Math.max(1, root.clientHeight)); setIndex(old => next !== old && next >= 0 && next < items.length ? next : old); }}>
       {items.map((post, i) => {
         const author = post.profiles?.display_name || post.profiles?.username || "Membre EMi";
         const url = post.media_urls?.[0];
@@ -144,8 +145,8 @@ export default function ImmersiveReelsPage() {
       .emi-immersive-topbar{height:58px;flex:0 0 58px;display:flex;align-items:center;gap:14px;padding:0 16px;background:#07130e;border-bottom:1px solid #bda45a55;z-index:3}
       .emi-immersive-topbar button,.emi-immersive-empty button{border:0;background:transparent;color:#f0d78b;display:flex;align-items:center;gap:5px;padding:8px}
       .emi-immersive-topbar strong{font-size:16px;letter-spacing:2px}.emi-immersive-topbar strong span{color:#e6cb78;font-size:10px;margin-left:5px}.emi-immersive-counter{margin-left:auto;color:#e3d5a4;font-size:12px}
-      .emi-immersive-scroller{flex:1;min-height:0;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none}.emi-immersive-scroller::-webkit-scrollbar{display:none}
-      .emi-immersive-slide{height:100%;min-height:0;position:relative;scroll-snap-align:start;scroll-snap-stop:always;background:#090b0a;overflow:hidden;isolation:isolate}
+      .emi-immersive-scroller{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none;touch-action:pan-y;-webkit-overflow-scrolling:touch}.emi-immersive-scroller::-webkit-scrollbar{display:none}
+      .emi-immersive-slide{height:100%;min-height:100%;flex:0 0 100%;position:relative;scroll-snap-align:start;scroll-snap-stop:always;background:#090b0a;overflow:hidden;isolation:isolate}
       .emi-immersive-slide>video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;z-index:-2}
       .emi-immersive-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#0009,transparent 22%,transparent 58%,#000b 100%);z-index:-1}
       .emi-immersive-author{position:absolute;top:22px;left:18px;display:flex;align-items:center;gap:9px;text-shadow:0 2px 8px #000;font-size:14px}.emi-immersive-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#d8bd6e;color:#10140d;border:2px solid #f4df9b;overflow:hidden;font-weight:800}.emi-immersive-avatar img{width:100%;height:100%;object-fit:cover}.emi-immersive-follow-label{color:#e7d59a;font-size:12px}
