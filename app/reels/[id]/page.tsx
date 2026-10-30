@@ -30,6 +30,7 @@ export default function ImmersiveReelsPage() {
   const [soundOn, setSoundOn] = useState(false);
   const [likedIds, setLikedIds] = useState<string[]>([]);
   const [likeCounts, setLikeCounts] = useState<Record<string, number>>({});
+  const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
   const [message, setMessage] = useState("");
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [comments, setComments] = useState<any[]>([]);
@@ -85,6 +86,7 @@ export default function ImmersiveReelsPage() {
     // Profils, likes et session sont secondaires : les charger après que les vidéos soient visibles.
     const ids = [...new Set(merged.map(p => p.user_id))];
     const postIds = merged.map(p => p.id);
+    const commentCountResult = postIds.length ? await supabase.from("post_comments").select("post_id").in("post_id", postIds) : { data: [] as any[] };
     const [profileResult, likesResult, authResult] = await Promise.all([
       ids.length ? supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", ids) : Promise.resolve({ data: [] as any[] }),
       postIds.length ? supabase.from("post_likes").select("post_id,user_id").in("post_id", postIds) : Promise.resolve({ data: [] as any[] }),
@@ -99,6 +101,9 @@ export default function ImmersiveReelsPage() {
       if (row.user_id) mine.push(row.post_id + ":" + row.user_id);
     });
     setLikeCounts(counts);
+    const commentTotals: Record<string, number> = {};
+    (commentCountResult.data || []).forEach((row: any) => { commentTotals[row.post_id] = (commentTotals[row.post_id] || 0) + 1; });
+    setCommentCounts(commentTotals);
     if (authResult.data.user) setLikedIds(mine.filter(v => v.endsWith(":" + authResult.data.user!.id)).map(v => v.split(":")[0]));
   }, [requestedId]);
 
@@ -198,6 +203,7 @@ export default function ImmersiveReelsPage() {
         }
       };
       setComments(old => [...old, localComment]);
+      setCommentCounts(old => ({ ...old, [active.id]: (old[active.id] || 0) + 1 }));
       setCommentText("");
     } catch {
       setMessage("Erreur réseau pendant l’envoi. Vérifie ta connexion puis réessaie.");
@@ -231,7 +237,7 @@ export default function ImmersiveReelsPage() {
           <div className="emi-immersive-caption"><strong>{isReel(post) ? "REEL" : "VIDÉO"}</strong><p>{captionOf(post.content) || "Découvre ce moment sur EMi."}</p></div>
           <div className="emi-immersive-actions">
             <button aria-label={likedIds.includes(post.id) ? "Retirer le J’aime" : "Aimer"} onClick={() => void toggleLike(post)} className={likedIds.includes(post.id) ? "is-liked" : ""}><Heart size={27} fill={likedIds.includes(post.id) ? "currentColor" : "none"}/><span>{likeCounts[post.id] || 0}</span></button>
-            <button aria-label="Commentaires" onClick={() => void openComments(post)}><MessageCircle size={26}/><span>Commenter</span></button>
+            <button aria-label={`Commentaires : ${commentCounts[post.id] || 0}`} onClick={() => void openComments(post)}><MessageCircle size={26}/><span>{commentCounts[post.id] || 0} Commentaires</span></button>
             <button aria-label="Partager" onClick={() => void share(post)}><Share2 size={25}/><span>Partager</span></button>
             <button aria-label={soundOn ? "Couper le son" : "Activer le son"} onClick={() => setSoundOn(v => !v)}>{soundOn ? <Volume2 size={24}/> : <VolumeX size={24}/>}<span>{soundOn ? "Son" : "Muet"}</span></button>
           </div>
