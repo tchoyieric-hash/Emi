@@ -3103,3 +3103,84 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
   .emi-feed-post.reel-post .post-actions { right: 6px !important; }
   .emi-feed-post.reel-post .post-actions > button { width: 48px !important; min-width: 48px !important; max-width: 48px !important; }
 }
+
+/* EMi — vrai flux Reels vertical avec défilement par écran */
+@media (max-width: 700px) {
+  .main-column:has(.reel-post) {
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+  }
+  .main-column:has(.reel-post) .feed-list:has(.reel-post) {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    width: 100% !important;
+    height: calc(100dvh - 174px) !important;
+    min-height: 420px !important;
+    max-height: calc(100dvh - 174px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: y mandatory !important;
+    scroll-padding: 0 !important;
+    touch-action: pan-y !important;
+    scrollbar-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .main-column:has(.reel-post) .feed-list:has(.reel-post)::-webkit-scrollbar { display:none !important; }
+  .main-column:has(.reel-post) .reel-post {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
+    overflow: hidden !important;
+    position: relative !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #020805 !important;
+  }
+  .main-column:has(.reel-post) .reel-post .emi-feed-media-wrap {
+    position:absolute !important;
+    inset:0 !important;
+    width:100% !important;
+    height:100% !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
+    background:#020805 !important;
+  }
+  .main-column:has(.reel-post) .reel-post video.reel-video {
+    position:absolute !important;
+    inset:0 !important;
+    display:block !important;
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+    min-height:0 !important;
+    object-fit:contain !important;
+    object-position:center !important;
+    background:#020805 !important;
+  }
+}
+@media (min-width: 701px) {
+  .main-column:has(.reel-post) .feed-list:has(.reel-post) {
+    max-height:calc(100dvh - 110px) !important;
+    overflow-y:auto !important;
+    scroll-snap-type:y mandatory !important;
+    overscroll-behavior-y:contain !important;
+  }
+  .main-column:has(.reel-post) .reel-post {
+    min-height:calc(100dvh - 110px) !important;
+    scroll-snap-align:start !important;
+    scroll-snap-stop:always !important;
+  }
+}
