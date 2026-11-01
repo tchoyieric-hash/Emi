@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Bookmark, Check, ChevronDown, Heart, MessageCircle, MoreHorizontal, Search, Send, Share2, Volume2, VolumeX, Repeat2, Crown, Play, Clapperboard } from "lucide-react";
+import { ArrowLeft, Bookmark, Check, Heart, MessageCircle, Search, Send, Volume2, VolumeX, Repeat2, Crown, Play, Clapperboard } from "lucide-react";
 
 export type RoyalReelPost = {
   id: string;
@@ -87,6 +87,19 @@ export default function ReelsRoyalScreen(props: Props) {
     if (current) current.scrollIntoView({ block: "start" });
   }, [tab, visibleVideos]);
 
+  useEffect(() => {
+    const handleVisibility = () => {
+      const root = scrollerRef.current;
+      if (!root) return;
+      root.querySelectorAll<HTMLVideoElement>(".emi-royal-reel-video").forEach(video => {
+        if (document.hidden) video.pause();
+        else if (video.dataset.reelId === activeId) void video.play().catch(() => undefined);
+      });
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, [activeId]);
+
   const toggleSound = () => {
     const next = !soundOn;
     setSoundOn(next);
@@ -149,7 +162,6 @@ export default function ReelsRoyalScreen(props: Props) {
                   {!isOwn && <button type="button" className={"emi-reels-follow " + (isFollowing ? "is-following" : "")} disabled={followPendingIds.includes(post.user_id)} onClick={() => onFollow(post.user_id)}>
                     {followPendingIds.includes(post.user_id) ? "…" : isFollowing ? <><Check size={14}/> Suivi</> : "Suivre"}
                   </button>}
-                  <button type="button" className="emi-reels-more" aria-label="Plus d'options"><MoreHorizontal size={21}/></button>
                 </div>
 
                 <div className="emi-reels-action-rail" aria-label="Actions vidéo">
