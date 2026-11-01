@@ -20,6 +20,7 @@ type Props = {
   liked: string[];
   likes: Record<string, number>;
   commentCounts: Record<string, number>;
+  viewCounts: Record<string, number>;
   repostCounts: Record<string, number>;
   reposted: string[];
   savedPostIds: string[];
@@ -44,7 +45,7 @@ const cleanCaption = (value: string) => value
 
 export default function ReelsRoyalScreen(props: Props) {
   const {
-    posts, userId, liked, likes, commentCounts, repostCounts, reposted, savedPostIds,
+    posts, userId, liked, likes, commentCounts, viewCounts, repostCounts, reposted, savedPostIds,
     followedIds, followPendingIds, onLike, onComments, onRepost, onShare, onSave,
     onFollow, onProfile, onDiscover, onClose, formatCount
   } = props;
@@ -140,7 +141,7 @@ export default function ReelsRoyalScreen(props: Props) {
             const isFollowing = followedIds.includes(post.user_id);
             const caption = cleanCaption(post.content);
             return (
-              <article className="emi-royal-reel-card" data-reel-card={post.id} key={post.id}>
+              <article className="emi-royal-reel-card emi-feed-post" data-reel-card={post.id} data-post-id={post.id} key={post.id}>
                 <video
                   className="emi-royal-reel-video"
                   data-reel-id={post.id}
@@ -185,7 +186,7 @@ export default function ReelsRoyalScreen(props: Props) {
 
                 <div className="emi-reels-caption">
                   {caption && <p>{caption}</p>}
-                  <small><Play size={12} fill="currentColor"/> Vidéo de la communauté EMi</small>
+                  <small><Play size={12} fill="currentColor"/> {formatCount(viewCounts[post.id] || 0)} vues · Vidéo de la communauté EMi</small>
                 </div>
                 <button type="button" className="emi-reels-comment-entry" onClick={() => onComments(post)}>
                   <MessageCircle size={19}/><span>Ajouter un commentaire…</span><Send size={18}/>
