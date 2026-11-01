@@ -1429,13 +1429,21 @@ function decodeVapidKey(base64String: string) {
     if (!supabase || !user) { setHomeSuggestedProfiles([]); return; }
     setHomeSuggestionsLoading(true);
     try {
-      const [{ data: profiles, error: profilesError }, { data: follows, error: followsError }] = await Promise.all([
-        supabase.from("profiles").select("id,username,display_name,avatar_url,bio").limit(40),
-        supabase.from("follows").select("following_id").eq("follower_id", user.id)
+      const [{ data: profiles, error: profilesError }, { data: follows, error: followsError }, { data: recentPosts, error: postsError }] = await Promise.all([
+        supabase.from("profiles").select("id,username,display_name,avatar_url,bio").limit(100),
+        supabase.from("follows").select("following_id").eq("follower_id", user.id),
+        supabase.from("posts").select("user_id,created_at").order("created_at", { ascending: false }).limit(300)
       ]);
       if (profilesError) throw profilesError;
       if (followsError) throw followsError;
+      if (postsError) throw postsError;
       const excluded = new Set([user.id, ...(follows || []).map(row => row.following_id as string)]);
+      const activity = new Map<string, { count: number; latest: number }>();
+      for (const post of recentPosts || []) {
+        const previous = activity.get(post.user_id) || { count: 0, latest: 0 };
+        const timestamp = new Date(post.created_at).getTime();
+        activity.set(post.user_id, { count: previous.count + 1, latest: Math.max(previous.latest, Number.isFinite(timestamp) ? timestamp : 0) });
+      }
       const isRealIdentity = (value?: string | null) => {
         const normalized = (value || "").trim().toLocaleLowerCase("fr-FR").replace(/^@/, "");
         return normalized.length >= 2 && !["membre", "membre emi", "utilisateur", "user", "unknown", "inconnu", "sans nom"].includes(normalized);
@@ -1444,7 +1452,15 @@ function decodeVapidKey(base64String: string) {
         if (excluded.has(profile.id)) return false;
         return isRealIdentity(profile.display_name) || isRealIdentity(profile.username);
       });
-      setHomeSuggestedProfiles(eligibleProfiles.slice(0, 8));
+      const now = Date.now();
+      const rankedProfiles = eligibleProfiles.map(profile => {
+        const stats = activity.get(profile.id) || { count: 0, latest: 0 };
+        const daysSincePost = stats.latest ? Math.max(0, (now - stats.latest) / 86_400_000) : Infinity;
+        const activityScore = stats.count * 3 + (daysSincePost <= 7 ? 12 : daysSincePost <= 30 ? 6 : 0);
+        const profileScore = (profile.avatar_url ? 5 : 0) + (profile.bio?.trim() ? 3 : 0) + (isRealIdentity(profile.display_name) ? 2 : 0);
+        return { profile, score: activityScore + profileScore, latest: stats.latest };
+      }).sort((a, b) => b.score - a.score || b.latest - a.latest);
+      setHomeSuggestedProfiles(rankedProfiles.slice(0, 8).map(item => item.profile));
     } catch (err) {
       console.error("Suggestions EMi indisponibles", err);
       setHomeSuggestedProfiles([]);
