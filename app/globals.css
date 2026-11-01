@@ -4920,3 +4920,104 @@ video,img,canvas { accent-color:var(--emi-accent); }
  .emi-reels-follow{padding:6px 9px}
  .emi-reels-caption{right:72px;left:12px}
 }
+
+
+/* EMi Accueil — composition premium inspirée de la maquette validée */
+.app-shell:not(.emi-reels-shell) .main-column{min-width:0}
+.app-shell:not(.emi-reels-shell) .emi-royal-masthead{
+  margin:0 0 14px;padding:0;overflow:hidden;border:1px solid rgba(196,165,91,.32);
+  border-radius:22px;background:linear-gradient(145deg,#071711 0%,#07100e 55%,#050807 100%);
+  box-shadow:0 10px 28px rgba(0,0,0,.22);color:#f5f1e5
+}
+.app-shell:not(.emi-reels-shell) .emi-royal-backdrop{opacity:.16;background:radial-gradient(ellipse at 18% 0%,rgba(25,111,76,.32),transparent 55%)}
+.app-shell:not(.emi-reels-shell) .emi-royal-topline{padding:15px 17px 13px;border-bottom:1px solid rgba(204,174,105,.2)}
+.app-shell:not(.emi-reels-shell) .emi-royal-emblem{width:48px;height:48px;flex-basis:48px;border-radius:14px;background:linear-gradient(145deg,#d8c17f,#91753c);border-color:#d8c17f;box-shadow:none}
+.app-shell:not(.emi-reels-shell) .emi-royal-emblem>span{font-size:35px}
+.app-shell:not(.emi-reels-shell) .emi-royal-emblem i{font-size:14px;top:-7px}
+.app-shell:not(.emi-reels-shell) .emi-royal-wordmark strong{font-size:30px;letter-spacing:-1.2px;text-shadow:none;color:#eee2bd}
+.app-shell:not(.emi-reels-shell) .emi-royal-wordmark strong span{color:#d4bd79}
+.app-shell:not(.emi-reels-shell) .emi-royal-wordmark small{font-size:8px;letter-spacing:1.5px;color:#b9ad8d}
+.app-shell:not(.emi-reels-shell) .emi-royal-tools{gap:8px}
+.app-shell:not(.emi-reels-shell) .emi-royal-tools button{width:42px;min-width:42px;min-height:42px;padding:0;border:1px solid rgba(202,178,116,.35);border-radius:50%;background:#07110f;color:#e1d3a8}
+.app-shell:not(.emi-reels-shell) .emi-royal-tools button:first-child{width:42px;min-width:42px;justify-content:center}
+.app-shell:not(.emi-reels-shell) .emi-royal-tools button:first-child span{display:none}
+.app-shell:not(.emi-reels-shell) .emi-royal-tools .emi-royal-account{width:auto;min-width:54px;border-radius:999px;padding:4px 8px}
+.app-shell:not(.emi-reels-shell) .emi-royal-account img{width:32px;height:32px}
+.emi-home-shortcuts{display:flex;gap:8px;align-items:center;overflow-x:auto;padding:10px 12px 12px;scrollbar-width:none}
+.emi-home-shortcuts::-webkit-scrollbar{display:none}
+.emi-home-shortcuts button{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:9px 13px;border:1px solid rgba(199,177,119,.26);border-radius:999px;background:#080f0d;color:#c8c4b5;font-size:11px;font-weight:650;white-space:nowrap}
+.emi-home-shortcuts button.is-current{border-color:#c6ad70;background:#bca46a;color:#11150f}
+.emi-home-welcome{position:relative;isolation:isolate;display:flex;align-items:center;min-height:194px;overflow:hidden;margin:0 0 18px;border:1px solid rgba(196,165,91,.35);border-radius:20px;background:linear-gradient(105deg,#062017 0%,#0a1711 54%,#14180f 100%);color:#f4f0e4}
+.emi-home-welcome:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 5% 90%,rgba(30,104,68,.22),transparent 55%),linear-gradient(90deg,transparent 50%,rgba(0,0,0,.2))}
+.emi-home-welcome-copy{position:relative;z-index:2;width:62%;padding:22px 10px 22px 22px}
+.emi-home-welcome-copy>span{font-size:8px;font-weight:800;letter-spacing:1.7px;color:#c8b77f}
+.emi-home-welcome-copy h2{margin:10px 0 8px;font-size:clamp(22px,4vw,34px);line-height:1.12;letter-spacing:-1px;font-weight:750}
+.emi-home-welcome-copy h2 strong{display:block;color:#dfc987;font-size:1.45em;letter-spacing:-1.8px}
+.emi-home-welcome-copy p{max-width:320px;margin:0 0 15px;color:#c0c5b9;font-size:11px;line-height:1.5}
+.emi-home-welcome-copy button{display:inline-flex;align-items:center;gap:6px;padding:9px 13px;border:1px solid rgba(218,194,131,.62);border-radius:999px;background:rgba(4,12,8,.4);color:#e4d39f;font-size:10px;font-weight:750}
+.emi-home-welcome-portrait{position:absolute;z-index:1;right:0;top:0;bottom:0;width:44%;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;background:linear-gradient(90deg,#0a1711 0%,transparent 38%)}
+.emi-home-welcome-portrait img{width:100%;height:100%;object-fit:cover;object-position:center 28%;mask-image:linear-gradient(90deg,transparent 0%,#000 30%)}
+.emi-home-welcome-portrait>span{align-self:center;margin-left:10px;color:#d5c184;font-size:30px;font-weight:900;letter-spacing:-2px}
+.emi-home-welcome-portrait>span span{color:#6a9c7d}
+.app-shell:not(.emi-reels-shell) .feed-header.home-feed-header{display:none}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-home{display:none}
+.app-shell:not(.emi-reels-shell) .stories-card{margin:0 0 17px;padding:13px 14px 12px;border:1px solid rgba(192,170,113,.25);border-radius:18px;background:linear-gradient(145deg,#0c1714,#09110f);box-shadow:none}
+.app-shell:not(.emi-reels-shell) .section-label{color:#eee8d8;font-size:14px}
+.app-shell:not(.emi-reels-shell) .section-label strong{font-size:15px;font-weight:750}
+.app-shell:not(.emi-reels-shell) .section-label button{color:#d5bf83;font-size:10px;font-weight:700}
+.app-shell:not(.emi-reels-shell) .stories-row{gap:17px;padding-top:13px}
+.app-shell:not(.emi-reels-shell) .story{min-width:66px;color:#d4d0c4}
+.app-shell:not(.emi-reels-shell) .story-ring{width:64px;height:64px;padding:2px;background:linear-gradient(145deg,#e0cf9b,#9d824c,#d7c58c)}
+.app-shell:not(.emi-reels-shell) .story-add{border:1px solid #bca46b;background:#101812}
+.app-shell:not(.emi-reels-shell) .story-avatar{border:2px solid #0b1511;background:#15241b;color:#e8d79d}
+.app-shell:not(.emi-reels-shell) .story-plus{width:20px;height:20px;border:2px solid #0b1511;background:#d6c184;color:#172018}
+.app-shell:not(.emi-reels-shell) .story-name{max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ded8c8;font-size:10px;font-weight:600}
+.app-shell:not(.emi-reels-shell) .stories-empty{color:#9eaa9f;font-size:11px}
+.app-shell:not(.emi-reels-shell) .feed-list{gap:14px}
+.app-shell:not(.emi-reels-shell) .post-card{padding:14px 13px 10px;border:1px solid rgba(188,168,113,.25);border-radius:19px;background:#0b1512;box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.app-shell:not(.emi-reels-shell) .post-author strong{color:#f0eadb;font-size:13px}
+.app-shell:not(.emi-reels-shell) .post-author span,.app-shell:not(.emi-reels-shell) .post-author small{color:#a9b2a7}
+.app-shell:not(.emi-reels-shell) .post-caption{color:#e3e0d6;font-size:13px}
+.app-shell:not(.emi-reels-shell) .post-actions{border-top:1px solid rgba(193,174,123,.14);padding-top:10px;color:#d7c58d}
+.app-shell:not(.emi-reels-shell) .mobile-nav{border-top:1px solid rgba(194,170,105,.24);background:rgba(5,12,10,.96);backdrop-filter:blur(18px)}
+.app-shell:not(.emi-reels-shell) .mobile-nav button{color:#9ba89e}
+.app-shell:not(.emi-reels-shell) .mobile-nav button.mobile-active{color:#d8c384}
+.app-shell:not(.emi-reels-shell) .mobile-nav .mobile-create{border:1px solid #c9b477;border-radius:50%;background:linear-gradient(145deg,#e2d29e,#b39a5d);color:#172018;box-shadow:none}
+@media(max-width:700px){
+  .app-shell:not(.emi-reels-shell){padding:0 10px}
+  .app-shell:not(.emi-reels-shell) .main-column{padding:0 0 92px}
+  .app-shell:not(.emi-reels-shell) .emi-royal-masthead{margin:0 0 12px;border-radius:0 0 17px 17px}
+  .app-shell:not(.emi-reels-shell) .emi-royal-topline{padding:12px 12px 10px;gap:8px}
+  .app-shell:not(.emi-reels-shell) .emi-royal-emblem{width:43px;height:43px;flex-basis:43px;border-radius:12px}
+  .app-shell:not(.emi-reels-shell) .emi-royal-emblem>span{font-size:31px}
+  .app-shell:not(.emi-reels-shell) .emi-royal-wordmark strong{font-size:27px}
+  .app-shell:not(.emi-reels-shell) .emi-royal-wordmark small{font-size:7px;letter-spacing:1px}
+  .app-shell:not(.emi-reels-shell) .emi-royal-tools{gap:6px}
+  .app-shell:not(.emi-reels-shell) .emi-royal-tools button{width:38px;min-width:38px;min-height:38px}
+  .app-shell:not(.emi-reels-shell) .emi-royal-tools .emi-royal-account{width:48px;min-width:48px;padding:3px 5px}
+  .app-shell:not(.emi-reels-shell) .emi-royal-account img{width:29px;height:29px}
+  .emi-home-shortcuts{gap:6px;padding:9px 9px 10px}
+  .emi-home-shortcuts button{padding:8px 11px;font-size:10px}
+  .emi-home-welcome{min-height:172px;margin-bottom:14px;border-radius:17px}
+  .emi-home-welcome-copy{width:66%;padding:18px 4px 18px 16px}
+  .emi-home-welcome-copy>span{font-size:7px;letter-spacing:1.1px}
+  .emi-home-welcome-copy h2{font-size:23px}
+  .emi-home-welcome-copy h2 strong{font-size:1.38em}
+  .emi-home-welcome-copy p{max-width:190px;font-size:10px;margin-bottom:12px}
+  .emi-home-welcome-copy button{font-size:9px;padding:8px 10px}
+  .emi-home-welcome-portrait{width:43%}
+  .app-shell:not(.emi-reels-shell) .stories-card{padding:12px 11px 10px;margin-bottom:14px}
+  .app-shell:not(.emi-reels-shell) .stories-row{gap:13px;padding-top:12px}
+  .app-shell:not(.emi-reels-shell) .story-ring{width:58px;height:58px}
+  .app-shell:not(.emi-reels-shell) .story{min-width:60px}
+  .app-shell:not(.emi-reels-shell) .post-card{padding:12px 10px 9px}
+  .app-shell:not(.emi-reels-shell) .mobile-nav{padding:8px 4px calc(8px + env(safe-area-inset-bottom))}
+  .app-shell:not(.emi-reels-shell) .mobile-nav button{min-width:0;flex:1;font-size:8px}
+  .app-shell:not(.emi-reels-shell) .mobile-nav .mobile-create{flex:0 0 43px;width:43px;height:43px}
+}
+@media(min-width:701px){
+  .emi-home-welcome{min-height:260px}
+  .emi-home-welcome-copy{padding:30px}
+  .emi-home-welcome-copy h2{font-size:40px}
+  .emi-home-welcome-portrait{width:42%}
+}
