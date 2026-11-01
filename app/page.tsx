@@ -1257,6 +1257,9 @@ function decodeVapidKey(base64String: string) {
       if (error) throw error;
       if (!conversationId || typeof conversationId !== "string") throw new Error("Supabase n'a pas retourné l'identifiant de la conversation.");
       await loadConversations();
+      // Quitte le contexte du profil : l'écran Messages est masqué tant que viewingProfile reste défini.
+      setViewingProfile(null);
+      setProfileTab("posts");
       setActive("Messages");
       await openConversation(conversationId);
     } catch (err) {
