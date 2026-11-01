@@ -2279,6 +2279,41 @@ function decodeVapidKey(base64String: string) {
       }
       .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-sound-toggle svg{width:18px!important;height:18px!important;filter:none!important}
       .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-sound-toggle span{display:none!important}
+
+      /* Correctif de visibilité Reels sur mobile : commandes et légende au-dessus du média. */
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions{
+        z-index:80!important;overflow:visible!important;gap:12px!important;
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>.emi-reel-sound-toggle{
+        order:5!important;position:static!important;display:grid!important;visibility:visible!important;
+        opacity:1!important;pointer-events:auto!important;transform:none!important;
+        width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;
+        max-width:36px!important;max-height:36px!important;flex:0 0 36px!important;
+        margin:2px 0 0!important;padding:0!important;border:1px solid #f7d774!important;
+        border-radius:50%!important;background:rgba(0,0,0,.78)!important;color:#f7d774!important;
+        box-shadow:0 2px 10px #0009!important;
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>.emi-reel-sound-toggle svg{
+        display:block!important;width:19px!important;height:19px!important;filter:none!important
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>.emi-reel-sound-toggle span{display:none!important}
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>button:last-child{order:6!important}
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-caption-wrap{
+        display:block!important;visibility:visible!important;opacity:1!important;z-index:75!important;
+        left:18px!important;right:82px!important;bottom:calc(158px + env(safe-area-inset-bottom))!important;
+        top:auto!important;max-height:24vh!important;overflow:visible!important;
+        padding:9px 11px!important;border-radius:10px!important;
+        background:linear-gradient(90deg,rgba(0,0,0,.58),rgba(0,0,0,.12))!important;
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-caption-wrap>.post-caption{
+        display:-webkit-box!important;-webkit-line-clamp:3!important;-webkit-box-orient:vertical!important;
+        overflow:hidden!important;visibility:visible!important;opacity:1!important;
+        color:#fff!important;font-size:14px!important;font-weight:600!important;line-height:1.45!important;
+        white-space:pre-wrap!important;text-shadow:0 2px 7px #000!important;
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-caption-wrap>button{
+        display:inline-block!important;visibility:visible!important;color:#f7d774!important;
+      }
     `}</style>
     </main>
   );
