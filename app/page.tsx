@@ -1832,7 +1832,7 @@ function decodeVapidKey(base64String: string) {
               <div className="emi-home-market-row">
                 {marketHighlights.map(item=><a href={item.href} className="emi-home-market-card" key={item.badge+item.id} data-view-type={item.viewType} data-view-id={item.id} data-view-key={item.viewType+":"+item.id}>
                   <div className="emi-home-market-image">{item.image?<img src={item.image} alt={item.title} loading="lazy"/>:<span><ShoppingBag size={28}/></span>}<span className={"emi-home-market-badge "+(item.badge.includes("ELITE")?"is-hospitality":item.badge.includes("TROC")?"is-troc":item.badge.includes("DJANGUI")?"is-flow":"is-market")}>{item.badge}</span><span className="emi-market-view-count"><Eye size={14}/><strong>{marketViewCounts[item.viewType+":"+item.id]||0}</strong><span>vues</span></span></div>
-                  <div className="emi-home-market-copy"><strong>{item.title}</strong>{item.price!==undefined&&<b>{new Intl.NumberFormat("fr-FR").format(Number(item.price))} FCFA</b>}<p>{item.description}</p>{item.meta&&<small>{item.meta}</small>}</div>
+                  <div className="emi-home-market-copy"><strong>{item.title}</strong>{item.price!==undefined&&<b>{new Intl.NumberFormat("fr-FR").format(Number(item.price))} FCFA</b>}<p>{item.description}</p>{item.meta&&<small>{item.meta}</small>}<span className="emi-market-card-cta">Voir l’offre <ChevronRight size={14}/></span></div>
                 </a>)}
                 {marketHighlights.length===0&&<a href="/annonces" className="emi-home-market-empty"><ShoppingBag size={22}/><strong>Découvrir le Marché EMi</strong><span>Les annonces publiées apparaîtront ici automatiquement.</span></a>}
               </div>
