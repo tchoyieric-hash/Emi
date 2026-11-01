@@ -1415,12 +1415,26 @@ function decodeVapidKey(base64String: string) {
     if (!supabase) return;
     setExploreLoading(true);
     try {
-      let request = supabase.from("profiles").select("id,username,display_name,avatar_url,bio").limit(60);
       const term = query.trim().replace(/[%,()]/g, "");
-      if (term) request = request.or(`display_name.ilike.%${term}%,username.ilike.%${term}%`);
-      const { data, error } = await request;
+      const [{ data, error }, { data: follows, error: followsError }] = await Promise.all([
+        (() => {
+          let request = supabase.from("profiles").select("id,username,display_name,avatar_url,bio").limit(100);
+          if (term) request = request.or(`display_name.ilike.%${term}%,username.ilike.%${term}%,bio.ilike.%${term}%`);
+          return request;
+        })(),
+        user ? supabase.from("follows").select("following_id").eq("follower_id", user.id) : Promise.resolve({ data: [], error: null } as any)
+      ]);
       if (error) throw error;
-      setExploreProfiles(((data || []) as Profile[]).filter(profile => profile.id !== user?.id));
+      if (followsError) throw followsError;
+      const excluded = new Set([...(user ? [user.id] : []), ...(follows || []).map((row: {following_id:string}) => row.following_id)]);
+      const isRealIdentity = (value?: string | null) => {
+        const normalized = (value || "").trim().toLocaleLowerCase("fr-FR").replace(/^@/, "");
+        return normalized.length >= 2 && !["membre", "membre emi", "utilisateur", "user", "unknown", "inconnu", "sans nom"].includes(normalized);
+      };
+      const cleanProfiles = ((data || []) as Profile[]).filter(profile =>
+        !excluded.has(profile.id) && (isRealIdentity(profile.display_name) || isRealIdentity(profile.username))
+      );
+      setExploreProfiles(cleanProfiles);
     } catch (err) { setMessage(err instanceof Error ? "Impossible de charger Explorer : " + err.message : "Impossible de charger Explorer."); }
     finally { setExploreLoading(false); }
   }
@@ -1900,9 +1914,9 @@ function decodeVapidKey(base64String: string) {
         {active === "Découvrir" && !viewingProfile && <section className="discovery-panel emi-people-discovery">
           <button type="button" className="emi-people-discovery-toggle" aria-expanded={peopleDiscoveryOpen} onClick={() => {setPeopleDiscoveryOpen(open => !open);if(!peopleDiscoveryOpen && exploreProfiles.length===0) void loadExploreProfiles();}}><span className="emi-people-toggle-icon"><Users size={19}/></span><span><small>COMMUNAUTÉ EMi</small><strong>Trouver des personnes</strong><em>Rencontre les membres et développe ton réseau</em></span><span className={"emi-people-toggle-chevron"+(peopleDiscoveryOpen?" is-open":"")}><ChevronRight size={19}/></span></button>
           {peopleDiscoveryOpen && <div className="emi-people-discovery-content">
-          <div className="emi-people-search-row"><label className="discovery-search"><Search size={19}/><input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => { if (e.key === "Enter") void loadExploreProfiles(); }} placeholder="Nom, pseudo ou métier…" aria-label="Rechercher des membres"/></label><button className="emi-people-search-button" onClick={() => void loadExploreProfiles()} disabled={exploreLoading}>{exploreLoading ? "Recherche…" : <><Search size={17}/> Rechercher</>}</button></div>
+          <div className="emi-people-search-row"><label className="discovery-search"><Search size={19}/><input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => { if (e.key === "Enter") void loadExploreProfiles(); }} placeholder="Nom, pseudo ou biographie…" aria-label="Rechercher des membres"/></label><button className="emi-people-search-button" onClick={() => void loadExploreProfiles()} disabled={exploreLoading}>{exploreLoading ? "Recherche…" : <><Search size={17}/> Rechercher</>}</button></div>
           <div className="emi-people-list-heading"><div><strong>Membres à découvrir</strong><small>{query.trim() ? "Résultats de ta recherche" : "Suggestions de la communauté"}</small></div><span>{exploreProfiles.length}</span></div>
-          <div className="discovery-list">{exploreProfiles.map(profile => <article className="discovery-person" key={profile.id}><button className="discovery-person-main" onClick={() => void openProfile(profile.id)}><span className="discovery-avatar">{profile.avatar_url ? <img src={profile.avatar_url} alt=""/> : (profile.display_name || profile.username || "M").slice(0,2).toUpperCase()}</span><span><strong>{profile.display_name || profile.username || "Membre EMi"}{hasBlueVerificationBadge(profile.display_name || profile.username) && <span className="emi-people-verified" aria-label="Profil vérifié">✓</span>}</strong><small>@{profile.username || "membre"}</small>{profile.bio && <small className="discovery-bio">{profile.bio}</small>}</span></button><div className="discovery-person-actions"><button className="profile-back-button" onClick={() => void openProfile(profile.id)}>Profil</button>{user && <><button className="emi-people-follow-button" onClick={() => void toggleFollow(profile.id)}>{followedIds.includes(profile.id) ? "Suivi" : "Suivre"}</button><button className="emi-people-message-button" onClick={() => void startConversation(profile)}>Message</button></>}</div></article>)}{!exploreLoading && exploreProfiles.length === 0 && <div className="empty-feature"><Compass size={30}/><h2>Ta communauté t’attend</h2><p>{query.trim() ? "Aucun membre ne correspond à cette recherche. Essaie un autre nom ou pseudo." : "Recherche un nom, un pseudo ou un métier pour découvrir des membres EMi."}</p></div>}</div>
+          <div className="discovery-list">{exploreProfiles.map(profile => <article className="discovery-person" key={profile.id}><button className="discovery-person-main" onClick={() => void openProfile(profile.id)}><span className="discovery-avatar">{profile.avatar_url ? <img src={profile.avatar_url} alt=""/> : (profile.display_name || profile.username || "M").slice(0,2).toUpperCase()}</span><span><strong>{(profile.display_name && !["membre","membre emi","utilisateur","user","unknown","inconnu","sans nom"].includes(profile.display_name.trim().toLocaleLowerCase("fr-FR")) ? profile.display_name.trim() : profile.username?.trim().replace(/^@/,""))}{hasBlueVerificationBadge(profile.display_name || profile.username) && <span className="emi-people-verified" aria-label="Profil vérifié">✓</span>}</strong><small>{profile.username && profile.username.replace(/^@/,"").toLocaleLowerCase("fr-FR") !== (profile.display_name || "").trim().toLocaleLowerCase("fr-FR") ? "@"+profile.username.replace(/^@/,"") : ""}</small>{profile.bio && <small className="discovery-bio">{profile.bio}</small>}</span></button><div className="discovery-person-actions"><button className="profile-back-button" onClick={() => void openProfile(profile.id)}>Profil</button>{user && <><button className="emi-people-follow-button" onClick={() => void toggleFollow(profile.id)}>{followedIds.includes(profile.id) ? "Suivi" : "Suivre"}</button><button className="emi-people-message-button" onClick={() => void startConversation(profile)}>Message</button></>}</div></article>)}{!exploreLoading && exploreProfiles.length === 0 && <div className="empty-feature"><Compass size={30}/><h2>Ta communauté t’attend</h2><p>{query.trim() ? "Aucun membre ne correspond à cette recherche. Essaie un autre nom ou pseudo." : "Recherche un nom, un pseudo ou un métier pour découvrir des membres EMi."}</p></div>}</div>
           </div>}
         </section>}
          {active === "Découvrir" && !viewingProfile && <section className="emi-ecosystem-home" aria-label="Écosystème EMi">
