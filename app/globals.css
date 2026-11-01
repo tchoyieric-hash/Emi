@@ -4846,3 +4846,77 @@ video,img,canvas { accent-color:var(--emi-accent); }
   .main-column { padding-bottom:calc(100px + env(safe-area-inset-bottom)) !important; }
   .mobile-nav { padding-bottom:calc(9px + env(safe-area-inset-bottom)) !important; }
 }
+
+/* EMi Reels Royal — première base immersive */
+.emi-reels-shell{display:block!important;max-width:none!important;min-height:100dvh!important;padding:0!important;margin:0!important;background:#030303!important}
+.emi-reels-shell .sidebar,.emi-reels-shell .right-column{display:none!important}
+.emi-reels-shell .main-column{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:0!important}
+.emi-reels-shell .main-column>:not(.emi-reels-screen){display:none!important}
+.emi-reels-screen{position:fixed;inset:0;z-index:4;overflow:hidden;background:#030303;color:#fff;font-family:'DM Sans',sans-serif}
+.emi-reels-topbar{position:absolute;z-index:7;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top)) 16px 9px;background:linear-gradient(180deg,rgba(0,0,0,.82),transparent)}
+.emi-reels-brand{display:flex;align-items:center;gap:9px;border:0;background:transparent;color:#f6df9a;text-align:left;padding:0}
+.emi-reels-crown{width:38px;height:38px;display:grid;place-items:center;border:1px solid #b99a55;border-radius:13px;background:linear-gradient(145deg,#211a0c,#090909);box-shadow:0 0 20px #c9a64b22}
+.emi-reels-brand strong{display:block;font:900 23px Manrope,sans-serif;letter-spacing:-1px;color:#f4d987}
+.emi-reels-brand strong span{color:#fff}
+.emi-reels-brand small{display:block;margin-top:-3px;font-size:8px;font-weight:900;letter-spacing:1.5px;color:#d6bd7c}
+.emi-reels-top-actions{display:flex;align-items:center;gap:8px}
+.emi-reels-top-actions button{width:38px;height:38px;display:grid;place-items:center;border:1px solid #d4b86d55;border-radius:50%;background:#080808a8;color:#f3dc9b}
+.emi-reels-tabs{position:absolute;z-index:7;top:calc(58px + env(safe-area-inset-top));left:16px;right:16px;display:flex;align-items:center;gap:19px}
+.emi-reels-tabs button{position:relative;border:0;background:transparent;color:#ffffffa8;padding:8px 0;font-size:13px;font-weight:700}
+.emi-reels-tabs button.is-active{color:#f7dfa0}
+.emi-reels-tabs button.is-active:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:4px;background:#d8b96d;box-shadow:0 0 12px #d8b96d}
+.emi-reels-live-label{margin-left:auto;display:flex;align-items:center;gap:6px;color:#e5d29d;font-size:9px;font-weight:800;letter-spacing:1.1px}
+.emi-reels-live-label i{width:6px;height:6px;border-radius:50%;background:#d9b85f;box-shadow:0 0 9px #d9b85f}
+.emi-reels-scroller{position:absolute;inset:0;overflow-y:auto;overscroll-behavior-y:contain;scroll-snap-type:y mandatory;scrollbar-width:none}
+.emi-reels-scroller::-webkit-scrollbar{display:none}
+.emi-royal-reel-card{position:relative;width:100%;height:100dvh;min-height:100dvh;overflow:hidden;scroll-snap-align:start;scroll-snap-stop:always;background:#090909}
+.emi-royal-reel-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#050505}
+.emi-reels-video-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.46) 0%,transparent 23%,transparent 49%,rgba(0,0,0,.18) 64%,rgba(0,0,0,.78) 100%)}
+.emi-reels-author{position:absolute;z-index:3;left:15px;right:80px;bottom:calc(194px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:9px;min-width:0}
+.emi-reels-avatar{width:43px;height:43px;flex:none;overflow:hidden;display:grid;place-items:center;border:2px solid #e0c77f;border-radius:50%;background:#211b0e;color:#f6df9a;font-weight:800}
+.emi-reels-avatar img{width:100%;height:100%;object-fit:cover}
+.emi-reels-author-name{min-width:0;display:grid;gap:3px;border:0;background:transparent;color:#fff;text-align:left}
+.emi-reels-author-name strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:800}
+.emi-reels-author-name small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ffffffb8;font-size:10px}
+.emi-reels-follow{flex:none;display:flex;align-items:center;gap:4px;padding:7px 13px;border:1px solid #e0c77f;border-radius:999px;background:linear-gradient(120deg,#f1d88d,#bd9950);color:#15110a;font-size:11px;font-weight:900}
+.emi-reels-follow.is-following{background:#090909b8;color:#f0d995}
+.emi-reels-follow:disabled{opacity:.65}
+.emi-reels-more{width:32px;height:32px;flex:none;display:grid;place-items:center;border:1px solid #e0c77f77;border-radius:50%;background:#080808a6;color:#f1d98f}
+.emi-reels-action-rail{position:absolute;z-index:4;right:12px;bottom:calc(205px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:14px}
+.emi-reels-action-rail button{min-width:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:0;background:transparent;color:#fff;text-shadow:0 2px 7px #000;font-size:10px;font-weight:700}
+.emi-reels-action-rail button svg{filter:drop-shadow(0 2px 5px #000)}
+.emi-reels-action-rail button.is-liked{color:#ff667e}
+.emi-reels-action-rail button.is-reposted,.emi-reels-action-rail button.is-saved{color:#f3d98f}
+.emi-reels-caption{position:absolute;z-index:3;left:16px;right:83px;bottom:calc(132px + env(safe-area-inset-bottom));display:grid;gap:8px}
+.emi-reels-caption p{margin:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.45;text-shadow:0 2px 8px #000}
+.emi-reels-caption small{display:flex;align-items:center;gap:6px;color:#f4dda0;font-size:10px;font-weight:700}
+.emi-reels-comment-entry{position:absolute;z-index:6;left:14px;right:14px;bottom:calc(77px + env(safe-area-inset-bottom));height:48px;display:flex;align-items:center;gap:10px;padding:0 15px;border:1px solid #d6b96e;border-radius:999px;background:rgba(8,8,8,.78);backdrop-filter:blur(15px);color:#f3d98e;text-align:left}
+.emi-reels-comment-entry span{flex:1;color:#ffffffc0;font-size:12px}
+.emi-reels-position{position:absolute;right:15px;top:calc(116px + env(safe-area-inset-top));color:#f3d98f88;font-size:8px;font-weight:900;letter-spacing:1.4px;writing-mode:vertical-rl}
+.emi-reels-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 30px 130px;text-align:center;background:radial-gradient(ellipse at 50% 40%,#35270f 0%,#0b0b0b 48%,#030303 100%)}
+.emi-reels-empty-icon{width:78px;height:78px;display:grid;place-items:center;border:1px solid #c6a85f;border-radius:25px;color:#e8cb7d;box-shadow:0 0 40px #d4ae4b20}
+.emi-reels-empty-kicker{margin-top:24px;color:#e4c77c;font-size:10px;font-weight:900;letter-spacing:2px}
+.emi-reels-empty h2{max-width:320px;margin:12px 0 8px;font:800 25px Manrope,sans-serif}
+.emi-reels-empty p{max-width:320px;color:#b7b1a3;font-size:13px;line-height:1.6}
+.emi-reels-empty>button{margin-top:15px;padding:12px 20px;border:1px solid #e1c67a;border-radius:999px;background:linear-gradient(120deg,#f2d88c,#b9954e);color:#17120a;font-weight:900}
+.emi-reels-shell .mobile-nav{position:fixed!important;z-index:8!important;left:0!important;right:0!important;bottom:0!important;display:flex!important;justify-content:space-around!important;align-items:center!important;gap:0!important;padding:8px 5px calc(8px + env(safe-area-inset-bottom))!important;border-top:1px solid #c7a85b66!important;background:rgba(3,3,3,.94)!important;backdrop-filter:blur(18px)}
+.emi-reels-shell .mobile-nav button{flex:1!important;min-width:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;color:#aaa18a!important;font-size:8px!important}
+.emi-reels-shell .mobile-nav button.mobile-active{color:#f1d78e!important}
+.emi-reels-shell .mobile-nav .mobile-create{flex:0 0 42px!important;width:42px!important;height:42px!important;min-width:42px!important;border:1px solid #f1d78e!important;border-radius:50%!important;background:linear-gradient(145deg,#f7e4a6,#c29b4d)!important;color:#171108!important;box-shadow:0 0 18px #d9b85f44}
+.emi-reels-shell .mobile-nav .emi-mobile-nav-badge{display:none}
+@media(min-width:701px){
+ .emi-reels-topbar{padding-left:28px;padding-right:28px}
+ .emi-reels-author{left:30px;bottom:125px}
+ .emi-reels-action-rail{right:30px;bottom:150px}
+ .emi-reels-caption{left:30px;bottom:70px}
+ .emi-reels-comment-entry{left:30px;right:auto;width:min(540px,55vw);bottom:18px}
+ .emi-reels-shell .mobile-nav{left:50%!important;right:auto!important;bottom:14px!important;transform:translateX(-50%);width:min(650px,80vw);border:1px solid #c7a85b66!important;border-radius:999px;padding:8px 14px!important}
+ .emi-reels-shell .mobile-nav .mobile-create{flex-basis:46px!important;width:46px!important;height:46px!important}
+}
+@media(max-width:380px){
+ .emi-reels-action-rail{right:7px;gap:11px}
+ .emi-reels-action-rail button svg{width:23px;height:23px}
+ .emi-reels-author{right:68px;left:10px;gap:6px}
+ .emi-reels-follow{padding:6px 9px}
+ .emi-reels-caption{right:72px;left:12px}
+}
