@@ -288,7 +288,7 @@ export default function ImmersiveReelsPage() {
       </div>}
       {notice && <button className="emi-reels-notice" onClick={() => setNotice("")}>{notice}<span>×</span></button>}
 
-      <style jsx global>{\`
+      <style jsx global>{`
         .emi-reels-page{position:fixed;inset:0;z-index:9999;width:100%;height:100dvh;overflow:hidden;background:#020a06;color:#fff;font-family:'DM Sans',Roboto,system-ui,sans-serif;isolation:isolate}
         .emi-reels-feed{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:#000}
         .emi-reels-feed::-webkit-scrollbar{display:none}
@@ -363,7 +363,7 @@ export default function ImmersiveReelsPage() {
         @media(max-width:390px){.emi-reels-brand>span{font-size:22px}.emi-reels-brand small{font-size:6px}.emi-reels-brand>svg{width:27px}.emi-reels-tabs button{padding:8px 8px;font-size:11px}.emi-reels-top-actions{gap:2px}.emi-reels-top-actions button{width:29px}.emi-reel-actions{right:8px;gap:6px}.emi-reel-action-circle{width:39px;height:39px}.emi-reel-author{left:13px;right:77px}.emi-reel-caption{left:16px;right:76px}}
         @media(max-height:720px){.emi-reel-actions{top:36%;gap:5px}.emi-reel-action-circle{width:38px;height:38px}.emi-reel-author{bottom:calc(153px + env(safe-area-inset-bottom))}.emi-reel-caption{bottom:calc(112px + env(safe-area-inset-bottom))}}
         @media(prefers-reduced-motion:reduce){.emi-reels-page *{animation:none!important;scroll-behavior:auto!important}}
-      \`}</style>
+      `}</style>
     </main>
   );
 }
