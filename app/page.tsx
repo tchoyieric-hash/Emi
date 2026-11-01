@@ -1995,7 +1995,7 @@ function decodeVapidKey(base64String: string) {
 .emi-reels-screen .reel-post .emi-reel-comment-bar{left:12px!important;right:12px!important;bottom:10px!important;height:54px!important}
 .emi-reels-screen .reel-post .emi-reel-sound-toggle{right:14px!important;bottom:78px!important;width:42px!important;height:42px!important}
 }
-`}</style>}}
+`}</style>}
       <style>{`@keyframes emiPublishSpin{to{transform:rotate(360deg)}}`}</style>
       <aside className="sidebar">
         <a className="brand" href="#" aria-label="EMi accueil"><span className="brand-mark">e</span><span>EMi<span className="brand-dot">.</span></span></a>
