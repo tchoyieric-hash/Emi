@@ -5410,3 +5410,81 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
     border-radius:18px!important;
   }
 }
+
+
+/* EMi ROYAL BALANCED — polish de la vitrine d'accueil */
+.app-shell:not(.emi-reels-shell) .emi-royal-masthead{
+  border-color:rgba(104,206,165,.28)!important;
+  background:radial-gradient(ellipse at 82% 8%,rgba(24,153,111,.24),transparent 42%),linear-gradient(125deg,#061b13 0%,#09271c 56%,#06140f 100%)!important;
+  box-shadow:0 16px 42px rgba(0,0,0,.24),inset 0 1px 0 rgba(221,255,238,.05)!important;
+  color:#f3fff8!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-royal-backdrop{
+  opacity:.34!important;
+  background:radial-gradient(ellipse at 74% 90%,rgba(39,198,151,.18),transparent 46%),linear-gradient(110deg,transparent 28%,rgba(19,116,81,.24) 56%,transparent 82%)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-royal-topline{border-bottom-color:rgba(111,185,153,.2)!important}
+.app-shell:not(.emi-reels-shell) .emi-royal-emblem{
+  border-color:rgba(153,239,207,.62)!important;
+  background:linear-gradient(145deg,#b9f6df 0%,#36c99a 42%,#087b5c 78%,#0d4c39 100%)!important;
+  box-shadow:0 0 0 3px rgba(50,205,151,.12),inset 0 1px 7px rgba(255,255,255,.3)!important;
+  color:#05251a!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-royal-emblem>span{text-shadow:0 1px 0 rgba(255,255,255,.35)!important}
+.app-shell:not(.emi-reels-shell) .emi-royal-emblem i{color:#e8d6a2!important;text-shadow:0 2px 5px #00180f!important}
+.app-shell:not(.emi-reels-shell) .emi-royal-wordmark strong{color:#eafff4!important;text-shadow:0 2px 16px rgba(48,206,153,.18)!important}
+.app-shell:not(.emi-reels-shell) .emi-royal-wordmark strong span{color:#6ce8bd!important}
+.app-shell:not(.emi-reels-shell) .emi-royal-wordmark small{color:#a8dfc6!important}
+.app-shell:not(.emi-reels-shell) .emi-royal-tools button{
+  border-color:rgba(113,199,161,.28)!important;background:rgba(4,24,17,.72)!important;color:#b9f3dc!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-royal-tools button:first-child span{color:#b8cfc2!important}
+.app-shell:not(.emi-reels-shell) .emi-royal-account img{border-color:#73dcb5!important}
+.app-shell:not(.emi-reels-shell) .emi-home-shortcuts{
+  border-top:1px solid rgba(113,185,153,.12)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-shortcuts button{color:#afcabc!important}
+.app-shell:not(.emi-reels-shell) .emi-home-shortcuts button.is-current{
+  color:#9af0d0!important;background:rgba(44,190,139,.12)!important;border-color:rgba(87,220,171,.28)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-welcome{
+  border:1px solid rgba(103,196,153,.24)!important;
+  background:radial-gradient(ellipse at 88% 20%,rgba(35,178,129,.2),transparent 44%),linear-gradient(120deg,#0c3022,#081b14 68%,#0b2119)!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.2),inset 0 1px 0 rgba(224,255,239,.035)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-welcome-copy>span{color:#8fe3bd!important}
+.app-shell:not(.emi-reels-shell) .emi-home-welcome-copy h2{color:#f4fff8!important}
+.app-shell:not(.emi-reels-shell) .emi-home-welcome-copy h2 strong{color:#80e8bd!important}
+.app-shell:not(.emi-reels-shell) .emi-home-welcome-copy p{color:#bfd4c8!important}
+.app-shell:not(.emi-reels-shell) .emi-home-welcome-copy button{
+  background:linear-gradient(120deg,#a9f1d5,#43c99b 62%,#15916c)!important;color:#06291d!important;
+  box-shadow:0 5px 16px rgba(35,190,137,.18)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-welcome-portrait{
+  border-color:rgba(113,222,174,.25)!important;
+  background:radial-gradient(circle at 50% 38%,rgba(104,237,190,.25),transparent 58%),linear-gradient(145deg,#14583e,#09251a)!important;
+  color:#caffea!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-welcome-portrait>span{color:#d9ffed!important;text-shadow:0 4px 20px rgba(47,211,151,.22)!important}
+.app-shell:not(.emi-reels-shell) .emi-home-market{
+  border-color:rgba(113,185,153,.22)!important;
+  background:radial-gradient(ellipse at 100% 0%,rgba(39,174,126,.1),transparent 48%),linear-gradient(145deg,#0b281d,#071811 82%)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-market-card{border-color:rgba(113,185,153,.2)!important;background:linear-gradient(155deg,#103525,#081b13)!important}
+.app-shell:not(.emi-reels-shell) .emi-home-market-badge.is-market,
+.app-shell:not(.emi-reels-shell) .emi-home-market-badge.is-hospitality{background:#b7efd6!important;color:#073b29!important}
+.app-shell:not(.emi-reels-shell) .emi-home-market-badge.is-troc{background:#bce9e4!important;color:#073b39!important}
+.app-shell:not(.emi-reels-shell) .emi-home-market-badge.is-flow{background:#c9e9d8!important;color:#123c2b!important}
+.app-shell:not(.emi-reels-shell) .emi-home-market-copy>b,
+.app-shell:not(.emi-reels-shell) .emi-market-card-cta{color:#9ce8c7!important}
+.app-shell:not(.emi-reels-shell) .emi-market-card-cta{border-top-color:rgba(113,185,153,.18)!important}
+.app-shell:not(.emi-reels-shell) .emi-home-market-copy>small{color:#b9d7c6!important}
+.app-shell:not(.emi-reels-shell) .emi-feed-discovery-bar>div:first-child span{color:#8ddbb8!important}
+.app-shell:not(.emi-reels-shell) .emi-feed-sort{border-color:rgba(113,185,153,.2)!important}
+.app-shell:not(.emi-reels-shell) .emi-feed-sort button.is-active{background:linear-gradient(135deg,#a8f0d2,#35c795)!important;color:#06271c!important}
+.app-shell:not(.emi-reels-shell) .emi-home-shortcuts button:focus-visible,
+.app-shell:not(.emi-reels-shell) .emi-royal-tools button:focus-visible{outline:2px solid #7ce8c0!important;outline-offset:3px}
+@media(max-width:700px){
+  .app-shell:not(.emi-reels-shell) .emi-royal-masthead{margin-bottom:16px!important}
+  .app-shell:not(.emi-reels-shell) .emi-home-welcome{margin:0 10px 16px!important;padding:17px!important;border-radius:18px!important}
+}
