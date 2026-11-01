@@ -5246,3 +5246,39 @@ video,img,canvas { accent-color:var(--emi-accent); }
   color:#05271d!important;
   box-shadow:0 2px 8px rgba(0,0,0,.5)!important;
 }
+
+
+/* EMi Stories — anneaux modernes sans dorure */
+.stories-card .story-ring,
+.stories-row .story-ring,
+.app-shell:not(.emi-reels-shell) .story-ring {
+  background: linear-gradient(135deg, #35e0b0 0%, #16a982 48%, #4ccfe0 100%) !important;
+  border: 0 !important;
+  box-shadow: 0 0 0 1px rgba(68, 224, 190, .24), 0 0 12px rgba(34, 211, 170, .14) !important;
+}
+.stories-card .story-ring .story-avatar,
+.stories-row .story-ring .story-avatar,
+.app-shell:not(.emi-reels-shell) .story-avatar {
+  border: 2px solid #08251d !important;
+  background: #0b3025 !important;
+  color: #d7fff2 !important;
+}
+.stories-card .story-ring:after,
+.stories-row .story-ring:after {
+  border-color: rgba(104, 246, 213, .2) !important;
+  box-shadow: none !important;
+}
+.stories-row .story-ring.story-add .story-avatar {
+  background: linear-gradient(145deg, #0d4937, #08251d) !important;
+}
+@media (max-width: 700px) {
+  .stories-card .story-ring,
+  .stories-row .story-ring {
+    border-radius: 50% !important;
+  }
+  .stories-card .story-ring .story-avatar,
+  .stories-row .story-ring .story-avatar,
+  .stories-row .story-ring .story-avatar img {
+    border-radius: 50% !important;
+  }
+}
