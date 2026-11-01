@@ -85,8 +85,7 @@ export default function ReelsRoyalScreen(props: Props) {
   useEffect(() => {
     const root = scrollerRef.current;
     if (!root || !visibleVideos.length) return;
-    const current = root.querySelector<HTMLElement>(`[data-reel-card="${visibleVideos[0].id}"]`);
-    if (current) current.scrollIntoView({ block: "start" });
+    root.scrollTo({ top: 0, behavior: "instant" });
   }, [tab, visibleVideos]);
 
   useEffect(() => {
