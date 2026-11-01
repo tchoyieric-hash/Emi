@@ -1923,7 +1923,6 @@ function decodeVapidKey(base64String: string) {
         <button type="button" className="emi-reels-back" aria-label="Retour à l’accueil" onClick={() => setActive("Accueil")}><ChevronLeft size={30}/></button>
         <div className="emi-reels-brand"><span className="emi-reels-logo">e</span><span><strong>EMi<span>.</span></strong><small>L’UNIVERS SOCIAL ROYAL</small></span></div>
         <div className="emi-reels-header-tools">
-          <button type="button" aria-label="Rechercher" onClick={() => { document.querySelector<HTMLInputElement>(".right-search input")?.focus(); }}><Search size={27}/></button>
           <button type="button" aria-label="Options EMi" onClick={() => setMessage("Bienvenue dans l’univers social royal EMi.")}>•••</button>
         </div>
       </header>}
@@ -2265,6 +2264,21 @@ function decodeVapidKey(base64String: string) {
       .emi-royal-tools .emi-notification-bell{position:relative!important;display:grid!important;place-items:center!important}
       .emi-royal-tools .emi-notification-badge{position:absolute!important;top:-7px!important;right:-6px!important;min-width:19px!important;height:19px!important;padding:0 5px!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;border:2px solid #06130d!important;border-radius:999px!important;background:#e8c96c!important;color:#06130d!important;font-size:10px!important;font-weight:900!important;line-height:1!important;box-shadow:0 2px 8px #0008!important}
       .emi-nav-badge{min-width:17px!important;height:17px!important}
+
+      /* Maquette Reels : pas de loupe ; volume compact immédiatement sous Partager. */
+      .emi-reels-screen .emi-reels-header-tools{margin-left:auto!important}
+      .emi-reels-screen .emi-reels-header-tools button{width:30px!important;min-width:30px!important;flex:0 0 30px!important;height:48px!important;border:0!important;border-radius:0!important;background:transparent!important;font-size:24px!important}
+      .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-sound-toggle{
+        position:static!important;inset:auto!important;order:5!important;
+        display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+        width:34px!important;min-width:34px!important;max-width:34px!important;
+        height:34px!important;min-height:34px!important;max-height:34px!important;
+        flex:0 0 34px!important;margin:0!important;padding:0!important;place-items:center!important;
+        border:1px solid rgba(247,217,120,.75)!important;border-radius:50%!important;
+        background:rgba(0,0,0,.68)!important;color:#f7d978!important;
+      }
+      .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-sound-toggle svg{width:18px!important;height:18px!important;filter:none!important}
+      .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-sound-toggle span{display:none!important}
     `}</style>
     </main>
   );
