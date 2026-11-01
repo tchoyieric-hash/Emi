@@ -1805,7 +1805,7 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
 .emi-simple-step{display:inline-flex;align-items:center;padding:5px 9px;border-radius:99px;background:rgba(226,192,102,.13);color:#e7c66e;font-size:10px;letter-spacing:.13em;font-weight:800}
 .emi-simple-publish-intro h2{margin:10px 0 5px;font-size:21px;line-height:1.25;color:#fff2c8}
 .emi-simple-publish-intro>p{margin:0 0 14px;color:#c2d0c7;font-size:13px;line-height:1.5}
-.emi-simple-publish-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.emi-simple-publish-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .emi-simple-publish-choices>button{display:flex;min-width:0;min-height:116px;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:12px 7px;border:1px solid rgba(220,185,91,.4);border-radius:13px;background:#0a2419;color:#f7f2df;text-align:center;cursor:pointer;transition:background .18s,border-color .18s,transform .18s}
 .emi-simple-publish-choices>button:active{transform:scale(.98);background:#12452f;border-color:#e7c66e}
 .emi-simple-choice-icon{display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(220,185,91,.42);border-radius:13px;background:#17452f;color:#f0cd72}
