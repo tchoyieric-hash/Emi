@@ -46,6 +46,7 @@ export default function ImmersiveReelsPage() {
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [commentSending, setCommentSending] = useState(false);
   const [notice, setNotice] = useState("");
+  const [selectedTab, setSelectedTab] = useState<"Reels" | "Vidéos" | "Stories">("Reels");
   const scrollerRef = useRef<HTMLDivElement>(null);
   const active = items[index];
 
@@ -214,6 +215,18 @@ export default function ImmersiveReelsPage() {
 
   return (
     <main className="emi-reels-page">
+      <header className="emi-reels-topbar">
+        <button className="emi-reels-brand" type="button" onClick={() => router.push("/")} aria-label="EMi, accueil">
+          <Crown size={34} strokeWidth={2.4}/><span>EMi<small>L’UNIVERS SOCIAL ROYAL</small></span>
+        </button>
+        <div className="emi-reels-tabs" role="tablist" aria-label="Formats vidéo">
+          {(["Reels","Vidéos","Stories"] as const).map(tab => <button key={tab} type="button" role="tab" aria-selected={selectedTab===tab} className={selectedTab===tab ? "active" : ""} onClick={() => { setSelectedTab(tab); if(tab==="Stories") setNotice("Les Stories sont accessibles depuis l’accueil EMi."); }}>{tab}</button>)}
+        </div>
+        <div className="emi-reels-top-actions">
+          <button type="button" aria-label="Rechercher" onClick={() => router.push("/")}><Search/></button>
+          <button type="button" aria-label="Notifications" onClick={() => setNotice("Tes notifications sont disponibles depuis l’accueil EMi.")}><Bell/></button>
+        </div>
+      </header>
       <div className="emi-reels-feed" ref={scrollerRef} onScroll={event => {
         const root = event.currentTarget;
         const next = Math.round(root.scrollTop / Math.max(1, root.clientHeight));
