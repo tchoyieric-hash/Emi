@@ -168,6 +168,7 @@ export default function AnnoncesPage() {
           {["Tout","Mode","Électronique","Sacs","Chaussures","Maison","Immobilier"].map(cat=><button type="button" key={cat} className={category===cat?"selected":""} aria-pressed={category===cat} onClick={()=>{setCategory(cat);document.getElementById("annonces-list")?.scrollIntoView({behavior:"smooth",block:"start"});}}>{cat}</button>)}
         </div>
         <div className="emi-market-benefits"><span><strong>01</strong> Parcourez les offres</span><span><strong>02</strong> Comparez les prix</span><span><strong>03</strong> Contactez le vendeur</span></div>
+      </section>
       {open&&<form id="emi-sell-form" onSubmit={publier} className="mb-8 scroll-mt-6 grid gap-4 rounded-3xl border border-amber-200/30 bg-white/[.04] p-5 shadow-xl shadow-black/20 sm:grid-cols-2 sm:p-7">
         <h2 className="sm:col-span-2 text-xl font-semibold">Publier une annonce</h2>
         <label className="grid gap-2 text-sm">Nom de l'article<input required minLength={3} maxLength={120} value={titre} onChange={e=>setTitre(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="Ex. Smartphone en bon état"/></label>
