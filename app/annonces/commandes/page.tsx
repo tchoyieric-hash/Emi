@@ -52,7 +52,16 @@ export default function CommandesPage() {
 
   const visible = orders.filter(o => mode === "buyer" ? o.buyer_id === userId : o.businesses?.owner_id === userId);
 
-  async function cancelOrder(order: Order) {\n    if (!supabase || !userId) return;\n    setSaving(order.id); setNotice("");\n    const { error } = await supabase.rpc("emi_cancel_order", { p_order_id: order.id });\n    if (error) setNotice("Annulation impossible : " + error.message);\n    else { setNotice("Commande annulée et stock remis en vente."); await load(); }\n    setSaving("");\n  }\n\n  async function updateStatus(order: Order, status: Order["status"]) {
+  async function cancelOrder(order: Order) {
+    if (!supabase || !userId) return;
+    setSaving(order.id); setNotice("");
+    const { error } = await supabase.rpc("emi_cancel_order", { p_order_id: order.id });
+    if (error) setNotice("Annulation impossible : " + error.message);
+    else { setNotice("Commande annulée et stock remis en vente."); await load(); }
+    setSaving("");
+  }
+
+  async function updateStatus(order: Order, status: Order["status"]) {
     if (!supabase || !userId) return;
     setSaving(order.id); setNotice("");
     const { error } = await supabase.from("orders").update({ status, updated_at: new Date().toISOString() }).eq("id", order.id);
