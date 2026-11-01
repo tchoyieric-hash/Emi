@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Package, RefreshCw, Store, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Package, RefreshCw, Store, ShoppingBag, Ban } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 type Order = {
@@ -52,7 +52,7 @@ export default function CommandesPage() {
 
   const visible = orders.filter(o => mode === "buyer" ? o.buyer_id === userId : o.businesses?.owner_id === userId);
 
-  async function updateStatus(order: Order, status: Order["status"]) {
+  async function cancelOrder(order: Order) {\n    if (!supabase || !userId) return;\n    setSaving(order.id); setNotice("");\n    const { error } = await supabase.rpc("emi_cancel_order", { p_order_id: order.id });\n    if (error) setNotice("Annulation impossible : " + error.message);\n    else { setNotice("Commande annulée et stock remis en vente."); await load(); }\n    setSaving("");\n  }\n\n  async function updateStatus(order: Order, status: Order["status"]) {
     if (!supabase || !userId) return;
     setSaving(order.id); setNotice("");
     const { error } = await supabase.from("orders").update({ status, updated_at: new Date().toISOString() }).eq("id", order.id);
@@ -87,7 +87,7 @@ export default function CommandesPage() {
           <div className="mt-4 space-y-2">{(order.order_items || []).map((item, i) => <div key={i} className="flex items-center justify-between gap-3 text-sm"><span className="min-w-0 flex-1 text-white/75">{item.products?.name || "Produit"} × {item.quantity}</span><strong className="shrink-0">{(Number(item.unit_price) * item.quantity).toLocaleString("fr-FR")} FCFA</strong></div>)}</div>
           {order.buyer_note && <p className="mt-3 rounded-xl bg-black/20 p-3 text-xs text-white/55">Note acheteur : {order.buyer_note}</p>}
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-3"><span className="text-xs text-white/50">Total commande</span><strong className="text-lg text-[#f3d77c]">{Number(order.subtotal).toLocaleString("fr-FR")} {order.currency}</strong></div>
-          {mode === "seller" && NEXT[order.status] && <button disabled={saving === order.id} onClick={() => void updateStatus(order, NEXT[order.status]!)} className="mt-4 min-h-10 rounded-full bg-[#f3d77c] px-4 py-2 text-sm font-black text-[#102318] disabled:opacity-50">{saving === order.id ? "Mise à jour…" : "Passer à : " + LABELS[NEXT[order.status]!]}</button>}
+          {mode === "seller" && NEXT[order.status] && <button disabled={saving === order.id} onClick={() => void updateStatus(order, NEXT[order.status]!)} className="mt-4 min-h-10 rounded-full bg-[#f3d77c] px-4 py-2 text-sm font-black text-[#102318] disabled:opacity-50">{saving === order.id ? "Mise à jour…" : "Passer à : " + LABELS[NEXT[order.status]!]}</button>}\n          {(order.status === "pending" || order.status === "confirmed" || order.status === "preparing") && <button disabled={saving === order.id} onClick={() => void cancelOrder(order)} className="ml-2 mt-4 inline-flex min-h-10 items-center gap-2 rounded-full border border-red-300/25 px-4 py-2 text-sm font-bold text-red-200 disabled:opacity-50"><Ban size={14}/>{saving === order.id ? "Annulation…" : "Annuler et remettre le stock"}</button>}
         </article>)}
       </section>}
       <p className="mt-8 text-center text-[11px] leading-5 text-white/35">Les commandes sont enregistrées dans EMi. Le paiement et la livraison sont convenus directement entre l’acheteur et le vendeur ; aucun paiement n’est encaissé par EMi à ce stade.</p>
