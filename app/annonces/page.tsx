@@ -21,6 +21,7 @@ export default function AnnoncesPage() {
   const [saving,setSaving] = useState(false);
   const [notice,setNotice] = useState("");
   const [search,setSearch] = useState("");
+  const [category,setCategory] = useState("Tout");
   const [titre,setTitre] = useState("");
   const [description,setDescription] = useState("");
   const [prix,setPrix] = useState("");
@@ -80,7 +81,12 @@ export default function AnnoncesPage() {
     finally { setSaving(false); }
   }
 
-  const annoncesFiltrees = annonces.filter(a => `${a.titre} ${a.description}`.toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr")));
+  const annoncesFiltrees = annonces.filter(a => {
+    const text = `${a.titre} ${a.description}`.toLocaleLowerCase("fr");
+    const matchesSearch = text.includes(search.trim().toLocaleLowerCase("fr"));
+    const matchesCategory = category === "Tout" || text.includes(category.toLocaleLowerCase("fr"));
+    return matchesSearch && matchesCategory;
+  });
   const communityFiltered = communityItems.filter(a => `${a.title} ${a.description} ${a.badge} ${a.meta}`.toLocaleLowerCase("fr").includes(search.trim().toLocaleLowerCase("fr")));
 
   return <main className="min-h-screen w-full overflow-x-hidden bg-[#09090d] text-white">
@@ -144,75 +150,24 @@ export default function AnnoncesPage() {
         <p style={{fontSize:10,color:"#9db8aa",lineHeight:1.5,margin:"13px 2px 0"}}>Les raccourcis ouvrent les espaces existants. Les fonctions non encore implémentées affichent leur état réel au lieu de simuler une action.</p>
       </section>}
       {notice&&<div role="status" className="mb-5 rounded-2xl border border-amber-200/20 bg-amber-100/10 p-4 text-sm text-amber-100">{notice}</div>}
-        <section className="emi-market-pulse" aria-label="EMi Pulse intégré au Marché"><div className="emi-market-pulse-mark"><Sparkles size={24}/></div><div className="emi-market-pulse-copy"><span>EMi PULSE · RADAR DE L’ÉCOSYSTÈME</span><h2>Repère ce qui bouge dans la communauté</h2><p>Explore les publications émergentes, découvre des talents et retrouve les initiatives et opportunités partagées sur EMi.</p><Link href="/" className="emi-market-pulse-link">Explorer le radar EMi <ArrowRight size={16}/></Link></div><div className="emi-market-pulse-wave" aria-hidden="true">〰</div></section>
-        <div className="emi-shop-profile"><div className="emi-shop-avatar">EM<span>✦</span></div><div className="emi-shop-profile-copy"><h1>Le Marché EMi</h1><p>Mode, technologie, maison & découvertes</p><div className="emi-shop-trust">✦ La boutique de la communauté</div></div><button type="button" className="emi-shop-sell" aria-label="Ouvrir le formulaire pour vendre un produit" aria-expanded={open} onClick={()=>{setOpen(true);setSpacesOpen(false);setRoyalOpen(false);setNotice("");window.setTimeout(()=>document.getElementById("emi-sell-form")?.scrollIntoView({behavior:"smooth",block:"start"}),100);}}><Plus size={15}/> Vendre</button></div>
-        <label htmlFor="annonces-search" className="emi-shop-search"><Search size={18}/><input id="annonces-search" type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un produit…"/><span>⌕</span></label>
-        <div className="emi-shop-categories">{["Tout","Mode","Électronique","Sacs","Chaussures","Maison","Immobilier"].map((cat,i)=><button key={cat} className={i===0&&!search?"selected":""} onClick={()=>{setSearch(i===0?"":cat);document.getElementById("annonces-list")?.scrollIntoView({behavior:"smooth",block:"start"});}}>{cat}</button>)}</div>
-        <Link href="/annonces/tontine" style={{position:"relative",display:"flex",alignItems:"flex-end",height:"min(230px, 30svh)",minHeight:"190px",maxHeight:"260px",width:"100%",overflow:"hidden",borderRadius:"22px",margin:"14px 0 0",border:"1px solid rgba(231,205,101,.65)",color:"#fff",textDecoration:"none",background:"#063b2a"}} className="emi-flow-feature" aria-label="Découvrir EMi Djangui Flow">
-          <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=85" alt="Une communauté réunie" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 42%"}} />
-          <span className="emi-flow-feature-shade" style={{position:"absolute",inset:0,background:"linear-gradient(90deg,rgba(2,29,21,.94),rgba(2,29,21,.62) 60%,rgba(2,29,21,.12))"}} />
-          <span className="emi-flow-feature-copy" style={{position:"relative",display:"flex",flexDirection:"column",alignItems:"flex-start",gap:"7px",maxWidth:"560px",padding:"18px"}}>
-            <span className="emi-flow-feature-kicker">NOUVEAU · SOLIDARITÉ COMMUNAUTAIRE</span>
-            <strong>EMi Djangui Flow</strong>
-            <span>Réunissez-vous, créez un cercle et avancez ensemble vers un objectif commun.</span>
-            <span className="emi-flow-feature-cta">Découvrir les cercles <ArrowUpRight size={16}/></span>
-          </span>
-        </Link>
-        <Link href="/annonces/battle" style={{position:"relative",display:"flex",alignItems:"flex-end",minHeight:210,width:"100%",overflow:"hidden",borderRadius:22,margin:"12px 0 0",border:"1px solid rgba(231,205,101,.8)",color:"#fff",textDecoration:"none",background:"radial-gradient(ellipse at 80% 15%,rgba(247,211,91,.28),transparent 45%),linear-gradient(135deg,#10150f,#032c20 58%,#050505)",boxShadow:"0 10px 32px rgba(0,0,0,.2)"}} aria-label="Découvrir Battle of Commerçants">
-          <span aria-hidden="true" style={{position:"absolute",inset:0,background:"linear-gradient(110deg,rgba(3,23,17,.97),rgba(3,23,17,.74) 62%,rgba(3,23,17,.28))"}}/>
-          <span style={{position:"relative",display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,padding:20,maxWidth:620}}>
-            <span style={{display:"inline-flex",alignItems:"center",gap:7,borderRadius:999,background:"#f1d45e",color:"#173629",padding:"7px 12px",fontSize:10,fontWeight:900,letterSpacing:".1em"}}>♛ NOUVEAU · EMi LIVE</span>
-            <strong style={{fontSize:"clamp(23px,5vw,32px)",lineHeight:1.1}}>Battle of Commerçants</strong>
-            <span style={{fontSize:14,lineHeight:1.55,color:"rgba(255,255,255,.9)"}}>Des duels de boutiques, des votes communautaires et les produits en vedette. Qui sera le champion EMi ?</span>
-            <span style={{display:"inline-flex",alignItems:"center",gap:8,marginTop:5,borderRadius:999,background:"#f1d45e",color:"#143629",padding:"12px 17px",fontSize:13,fontWeight:900}}>Entrer dans l’arène <ArrowUpRight size={17}/></span>
-          </span>
-        </Link>
-        <nav aria-label="Catégories du marché" style={{display:"flex",gap:8,overflowX:"auto",padding:"12px 0 4px"}}>
-          {[["Tout","/annonces"],["EMi Market","/annonces"],["EMi Troc","/annonces/troc"],["Djangui Flow","/annonces/tontine"],["Battle of Commerçants","/annonces/battle"],["Elite Hospitality","/annonces/elite-directory"],["EMi Fondation","/annonces/philanthropy"],["EMi Help","/annonces/master-health-check"]].map(([label,href],i)=><Link key={label} href={href} style={{flexShrink:0,border:"1px solid rgba(231,205,101,.55)",borderRadius:999,padding:"10px 14px",background:i===0?"#f1d45e":"rgba(3,44,32,.8)",color:i===0?"#143629":"#f5f3e9",fontWeight:700,fontSize:12,textDecoration:"none"}}>{label}</Link>)}
-        </nav>
-        <Link href="/annonces/elite-directory" style={{position:"relative",display:"flex",alignItems:"flex-end",minHeight:220,margin:"14px 0 0",overflow:"hidden",border:"1px solid #e6ca59",borderRadius:22,color:"#fff",textDecoration:"none",background:"#063b2a"}}>
-          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=85" alt="Restaurant élégant" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
-          <span style={{position:"absolute",inset:0,background:"linear-gradient(90deg,rgba(2,25,18,.95),rgba(2,25,18,.65) 62%,rgba(2,25,18,.1))"}}/>
-          <span style={{position:"relative",padding:20,maxWidth:620}}><span style={{display:"inline-block",borderRadius:999,background:"#f1d45e",color:"#173629",padding:"7px 12px",fontSize:10,fontWeight:900}}>🏨 ELITE HOSPITALITY</span><strong style={{display:"block",fontSize:"clamp(22px,5vw,32px)",lineHeight:1.12,marginTop:12}}>Séjournez, savourez, vivez l’exception</strong><span style={{display:"block",fontSize:13,lineHeight:1.5,marginTop:8}}>Hôtels, restaurants et services premium près de chez vous.</span><span style={{display:"inline-flex",marginTop:12,borderRadius:999,background:"#f1d45e",color:"#143629",padding:"11px 15px",fontSize:12,fontWeight:800}}>Découvrir les professionnels ↗</span></span>
-        </Link>
-        <section aria-label="Découvrir tous les espaces EMi" style={{marginTop:"20px",paddingBottom:"18px"}}>
-          <div style={{display:"flex",alignItems:"end",justifyContent:"space-between",gap:"12px",marginBottom:"12px"}}>
-            <div><p style={{fontSize:"10px",fontWeight:800,letterSpacing:"0.18em",color:"#d9bd53",margin:0}}>LA COMMUNAUTÉ EMi</p><h2 style={{fontSize:"clamp(20px,5vw,26px)",fontWeight:800,lineHeight:1.2,color:"#fff",margin:"5px 0 0"}}>Découvrir tous les espaces</h2></div>
-            <span style={{fontSize:"11px",color:"#c6d6ce",whiteSpace:"nowrap"}}>Nos services</span>
+        <section className="emi-market-hero" aria-label="Bienvenue sur EMi Market">
+          <div className="emi-market-hero-copy">
+            <span className="emi-market-eyebrow">EMi MARKET · ACHETER LOCAL</span>
+            <h1>Le bon produit.<br/><em>Le bon vendeur.</em></h1>
+            <p>Découvrez les offres de la communauté EMi et échangez directement avec les vendeurs.</p>
+            <div className="emi-market-trust-row"><span>✦ Vendeurs de la communauté</span><span>·</span><span>Prix en FCFA</span></div>
           </div>
-          <div style={{display:"flex",flexDirection:"column",gap:"12px"}}>
-            {[
-              {title:"EMi Fondation",desc:"Ensemble, faisons grandir l’espoir. Découvrez les initiatives solidaires et les projets à soutenir.",href:"/annonces/philanthropy",kicker:"SOLIDARITÉ · IMPACT COMMUNAUTAIRE",cta:"Découvrir la Fondation",image:"https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=1200&q=85",position:"center 42%"},
-              {title:"EMi Troc",desc:"Donnez une seconde vie aux objets et trouvez des échanges utiles dans la communauté.",href:"/annonces/troc",kicker:"ÉCHANGE · ÉCONOMIE CIRCULAIRE",cta:"Explorer les échanges",image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=85",position:"center"},
-              {title:"EMi Help",desc:"Retrouvez les services d’aide disponibles et découvrez comment la communauté peut se soutenir.",href:"/annonces/master-health-check",kicker:"ENTRAIDE · SERVICES COMMUNAUTAIRES",cta:"Découvrir EMi Help",image:"https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1200&q=85",position:"center 40%"},
-              {title:"Espace vendeur",desc:"Présentez vos produits et gérez vos annonces pour toucher la communauté EMi.",href:"/annonces/espace-vendeur",kicker:"ENTREPRENDRE · VENDRE SUR EMi",cta:"Accéder à l’espace vendeur",image:"https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=85",position:"center"},
-              {title:"EMi Business",desc:"Créez la vitrine de votre entreprise, publiez votre catalogue et présentez vos produits à la communauté camerounaise.",href:"/annonces/business",kicker:"ENTREPRISES · BOUTIQUES · CATALOGUE",cta:"Créer ma vitrine professionnelle",image:"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=85",position:"center"},
-              {title:"Elite Hospitality",desc:"Publiez les offres de votre hôtel, restaurant ou service professionnel et soyez visible sur le Marché EMi.",href:"/annonces/elite-directory",kicker:"HÔTELLERIE · RESTAURATION · ACCUEIL",cta:"Découvrir l’espace professionnel",image:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=85",position:"center"},
-            ].map((space)=><Link key={space.href} href={space.href} aria-label={space.cta} style={{position:"relative",display:"flex",alignItems:"flex-end",height:"min(230px, 30svh)",minHeight:"190px",maxHeight:"260px",width:"100%",overflow:"hidden",borderRadius:"22px",border:"1px solid rgba(231,205,101,.65)",color:"#fff",textDecoration:"none",background:"#063b2a"}}>
-              <img src={space.image} alt="" loading="lazy" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:space.position}} />
-              <span aria-hidden="true" style={{position:"absolute",inset:0,background:"linear-gradient(90deg,rgba(2,29,21,.94),rgba(2,29,21,.65) 62%,rgba(2,29,21,.12))"}} />
-              <span style={{position:"relative",display:"flex",flexDirection:"column",alignItems:"flex-start",gap:"7px",maxWidth:"560px",padding:"18px"}}>
-                <span style={{fontSize:"10px",fontWeight:800,letterSpacing:"0.14em",color:"#f2d86a"}}>{space.kicker}</span>
-                <strong style={{fontSize:"clamp(21px,5vw,28px)",lineHeight:1.1}}>{space.title}</strong>
-                <span style={{fontSize:"13px",lineHeight:1.5,color:"rgba(255,255,255,.92)"}}>{space.desc}</span>
-                <span style={{display:"inline-flex",alignItems:"center",gap:"7px",marginTop:"4px",borderRadius:"999px",background:"#f0d45f",color:"#12392c",padding:"10px 14px",fontSize:"12px",fontWeight:800}}>{space.cta}<ArrowUpRight size={16}/></span>
-              </span>
-            </Link>)}
-          </div>
-          <Link href="/annonces" style={{display:"flex",alignItems:"center",justifyContent:"center",marginTop:"10px",padding:"12px",borderRadius:"14px",border:"1px solid rgba(222,199,105,.32)",color:"#e8d47c",fontWeight:700,fontSize:"13px",textDecoration:"none"}}>Voir toutes les annonces du Marché <ArrowUpRight size={15}/></Link>
+          <div className="emi-market-hero-art" aria-hidden="true"><span className="emi-market-orbit emi-market-orbit-one"/><span className="emi-market-orbit emi-market-orbit-two"/><span className="emi-market-bag">M</span><span className="emi-market-spark">✦</span></div>
         </section>
-      </section>
-      <style jsx>{`
-        .emi-flow-feature{position:relative;display:flex;align-items:flex-end;min-height:190px;margin:14px 0 0;overflow:hidden;border:1px solid rgba(231,205,101,.65);border-radius:22px;color:#fff;text-decoration:none;background:#063b2a}
-        .emi-flow-feature>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%}
-        .emi-flow-feature-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,29,21,.94),rgba(2,29,21,.62) 60%,rgba(2,29,21,.12))}
-        .emi-flow-feature-copy{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:7px;max-width:560px;padding:18px}
-        .emi-flow-feature-kicker{font-size:10px;font-weight:800;letter-spacing:.14em;color:#f2d86a}
-        .emi-flow-feature-copy strong{font-size:clamp(21px,5vw,30px);line-height:1.1}
-        .emi-flow-feature-copy>span:nth-child(3){max-width:420px;font-size:13px;line-height:1.5;color:rgba(255,255,255,.9)}
-        .emi-flow-feature-cta{display:inline-flex;align-items:center;gap:6px;margin-top:4px;border-radius:999px;background:#f0d45f;color:#12392c;padding:9px 13px;font-size:12px;font-weight:800}
-        @media(min-width:640px){.emi-flow-feature{min-height:220px;margin-top:18px}.emi-flow-feature-copy{padding:25px}.emi-flow-feature-copy>span:nth-child(3){font-size:14px}}
-      `}</style>
+        <div className="emi-market-toolbar">
+          <div className="emi-market-toolbar-heading"><span>LA SÉLECTION EMi</span><strong>Qu’allez-vous découvrir ?</strong></div>
+          <button type="button" className="emi-shop-sell" aria-label="Ouvrir le formulaire pour vendre un produit" aria-expanded={open} onClick={()=>{setOpen(true);setSpacesOpen(false);setRoyalOpen(false);setNotice("");window.setTimeout(()=>document.getElementById("emi-sell-form")?.scrollIntoView({behavior:"smooth",block:"start"}),100);}}><Plus size={15}/> Vendre</button>
+        </div>
+        <label htmlFor="annonces-search" className="emi-shop-search"><Search size={18}/><input id="annonces-search" type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un produit, une marque…"/><span><Search size={15}/></span></label>
+        <div className="emi-shop-categories" aria-label="Filtrer par catégorie">
+          {["Tout","Mode","Électronique","Sacs","Chaussures","Maison","Immobilier"].map(cat=><button type="button" key={cat} className={category===cat?"selected":""} aria-pressed={category===cat} onClick={()=>{setCategory(cat);document.getElementById("annonces-list")?.scrollIntoView({behavior:"smooth",block:"start"});}}>{cat}</button>)}
+        </div>
+        <div className="emi-market-benefits"><span><strong>01</strong> Parcourez les offres</span><span><strong>02</strong> Comparez les prix</span><span><strong>03</strong> Contactez le vendeur</span></div>
       {open&&<form id="emi-sell-form" onSubmit={publier} className="mb-8 scroll-mt-6 grid gap-4 rounded-3xl border border-amber-200/30 bg-white/[.04] p-5 shadow-xl shadow-black/20 sm:grid-cols-2 sm:p-7">
         <h2 className="sm:col-span-2 text-xl font-semibold">Publier une annonce</h2>
         <label className="grid gap-2 text-sm">Nom de l'article<input required minLength={3} maxLength={120} value={titre} onChange={e=>setTitre(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="Ex. Smartphone en bon état"/></label>
