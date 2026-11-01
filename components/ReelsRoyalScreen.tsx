@@ -17,7 +17,6 @@ export type RoyalReelPost = {
 type Props = {
   posts: RoyalReelPost[];
   initialPostId?: string | null;
-  onInitialPostHandled?: () => void;
   userId?: string;
   liked: string[];
   likes: Record<string, number>;
@@ -47,7 +46,7 @@ const cleanCaption = (value: string) => value
 
 export default function ReelsRoyalScreen(props: Props) {
   const {
-    posts, initialPostId, onInitialPostHandled, userId, liked, likes, commentCounts, viewCounts, repostCounts, reposted, savedPostIds,
+    posts, initialPostId, userId, liked, likes, commentCounts, viewCounts, repostCounts, reposted, savedPostIds,
     followedIds, followPendingIds, onLike, onComments, onRepost, onShare, onSave,
     onFollow, onProfile, onDiscover, onClose, formatCount
   } = props;
@@ -92,12 +91,11 @@ export default function ReelsRoyalScreen(props: Props) {
         .find(node => node.dataset.reelCard === initialPostId);
       if (selected) {
         root.scrollTo({ top: selected.offsetTop, behavior: "instant" });
-        onInitialPostHandled?.();
         return;
       }
     }
     root.scrollTo({ top: 0, behavior: "instant" });
-  }, [tab, visibleVideos, initialPostId, onInitialPostHandled]);
+  }, [tab, visibleVideos, initialPostId]);
 
   useEffect(() => {
     const handleVisibility = () => {
