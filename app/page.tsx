@@ -1767,9 +1767,12 @@ function decodeVapidKey(base64String: string) {
           return 24 / (24 + ageHours);
         };
         const score = (post: Post) => {
-          const followedBoost = user && followedIds.includes(post.user_id) ? 100 : 0;
-          const creatorBoost = user?.id === post.user_id ? 8 : 0;
-          return followedBoost + creatorBoost + Math.log1p(engagement(post)) * 5 + freshness(post) * 12;
+          // Un fil personnalisé doit valoriser les abonnements sans masquer
+          // les découvertes récentes et les contenus pertinents de la communauté.
+          const followedBoost = user && followedIds.includes(post.user_id) ? 10 : 0;
+          const creatorBoost = user?.id === post.user_id ? 3 : 0;
+          const engagementScore = Math.log1p(engagement(post)) * 3.5;
+          return followedBoost + creatorBoost + engagementScore + freshness(post) * 18;
         };
         if (homeFeedSort === "recent") return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
         if (homeFeedSort === "popular") return engagement(b) - engagement(a) || new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
