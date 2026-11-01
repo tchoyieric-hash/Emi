@@ -38,8 +38,8 @@ type Props = {
 };
 
 const cleanCaption = (value: string) => value
-  .replace(/^\\s*\\[EMI_REEL\\]\\s*/i, "")
-  .replace(/\\[EMI_MUSIC\\][\\s\\S]*?(?:\\[\\/EMI_MUSIC\\]|$)/gi, "")
+  .replace(/^\s*\[EMI_REEL\]\s*/i, "")
+  .replace(/\[EMI_MUSIC\][\s\S]*?(?:\[\/EMI_MUSIC\]|$)/gi, "")
   .trim();
 
 export default function ReelsRoyalScreen(props: Props) {
