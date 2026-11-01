@@ -4,8 +4,8 @@
   "description": "Un lien, une histoire, une famille.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#101014",
-  "theme_color": "#5520c9",
+  "background_color": "#050b13",
+  "theme_color": "#050b13",
   "icons": [
     {
       "src": "/icons/emi-192.png",
