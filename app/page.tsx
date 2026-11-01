@@ -1865,11 +1865,11 @@ function decodeVapidKey(base64String: string) {
              {ecosystemOpen && <div className="emi-ecosystem-panel" aria-label="Menu Écosystème EMi">
                <div className="emi-ecosystem-panel-head"><div><span className="eyebrow">EMi ROYAL NEXUS</span><h2>Les univers de la communauté</h2><p>Accède directement au service qui t’intéresse.</p></div><button type="button" aria-label="Fermer le menu Écosystème" onClick={() => setEcosystemOpen(false)}><X size={19}/></button></div>
                <div className="emi-ecosystem-panel-grid">
-                 <a href="/annonces" className="emi-ecosystem-tile ecosystem-market"><span><ShoppingBag size={23}/></span><strong>Marché</strong><small>Acheter · Vendre · Échanger</small><ChevronRight size={16}/></a>
-                 <a href="/annonces/philanthropy" className="emi-ecosystem-tile ecosystem-foundation"><span><Heart size={23}/></span><strong>Fondation</strong><small>Solidarité · Projets sociaux</small><ChevronRight size={16}/></a>
-                 <a href="/annonces/tontine" className="emi-ecosystem-tile ecosystem-flow"><span><Users size={23}/></span><strong>Flow Djangui</strong><small>Groupes · Cotisations</small><ChevronRight size={16}/></a>
-                 <a href="/annonces/master-health-check" className="emi-ecosystem-tile ecosystem-help"><span><CircleHelp size={23}/></span><strong>Help</strong><small>Assistance · Accompagnement</small><ChevronRight size={16}/></a>
-                 <a href="/annonces" className="emi-ecosystem-tile ecosystem-troc"><span><Repeat2 size={23}/></span><strong>Troc</strong><small>Donner · Échanger · Réutiliser</small><ChevronRight size={16}/></a>
+                 <a href="/annonces" className="emi-ecosystem-tile ecosystem-market"><span><ShoppingBag size={23}/></span><em>COMMERCE</em><strong>EMi Market</strong><small>Découvre des offres, achète et développe ton activité.</small><b>Explorer le marché <ChevronRight size={14}/></b></a>
+                 <a href="/annonces/philanthropy" className="emi-ecosystem-tile ecosystem-foundation"><span><Heart size={23}/></span><em>IMPACT POSITIF</em><strong>EMi Fondation</strong><small>Participe aux initiatives solidaires et projets communautaires.</small><b>Voir les actions <ChevronRight size={14}/></b></a>
+                 <a href="/annonces/tontine" className="emi-ecosystem-tile ecosystem-flow"><span><Users size={23}/></span><em>FINANCE COLLECTIVE</em><strong>Djangui Flow</strong><small>Organise tes groupes et suis les cotisations.</small><b>Accéder à Flow <ChevronRight size={14}/></b></a>
+                 <a href="/annonces/master-health-check" className="emi-ecosystem-tile ecosystem-help"><span><CircleHelp size={23}/></span><em>ENTRAIDE</em><strong>EMi Help</strong><small>Trouve un accompagnement et des réponses utiles.</small><b>Obtenir de l’aide <ChevronRight size={14}/></b></a>
+                 <a href="/annonces" className="emi-ecosystem-tile ecosystem-troc"><span><Repeat2 size={23}/></span><em>ÉCONOMIE CIRCULAIRE</em><strong>EMi Troc</strong><small>Donne une seconde vie aux objets grâce aux échanges.</small><b>Découvrir le troc <ChevronRight size={14}/></b></a>
                </div>
                <div className="emi-ecosystem-panel-foot"><Sparkles size={15}/> Plus qu’une application, une communauté.</div>
              </div>}
