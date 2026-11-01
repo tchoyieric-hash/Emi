@@ -2058,11 +2058,11 @@ function decodeVapidKey(base64String: string) {
           .emi-reels-screen .reel-post .emi-reel-follow-button{padding:7px 9px!important;font-size:11px!important}
           .emi-reels-screen .reel-post>.emi-reel-comment-bar{left:10px!important;right:10px!important}
         }
-      `}
         /* Son compact, placé juste sous Partager dans la colonne d'actions. */
         .emi-reels-screen .post-actions.emi-reel-social-actions .emi-reel-sound-toggle{position:static!important;inset:auto!important;transform:none!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;margin:0!important;padding:0!important;display:grid!important;place-items:center!important;border:1px solid rgba(247,215,116,.65)!important;border-radius:50%!important;background:rgba(0,0,0,.62)!important;color:#f7d774!important;box-shadow:0 2px 8px #0008!important;}
         .emi-reels-screen .post-actions.emi-reel-social-actions .emi-reel-sound-toggle svg{width:17px!important;height:17px!important;filter:none!important;}
         .emi-reels-screen .post-actions.emi-reel-social-actions .emi-reel-sound-toggle span{display:none!important;}
+      `}
 </style>}
       <style>{`@keyframes emiPublishSpin{to{transform:rotate(360deg)}}`}</style>
       <aside className="sidebar">
