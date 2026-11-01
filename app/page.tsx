@@ -1923,6 +1923,7 @@ function decodeVapidKey(base64String: string) {
         <button type="button" className="emi-reels-back" aria-label="Retour à l’accueil" onClick={() => setActive("Accueil")}><ChevronLeft size={30}/></button>
         <div className="emi-reels-brand"><span className="emi-reels-logo">e</span><span><strong>EMi<span>.</span></strong><small>L’UNIVERS SOCIAL ROYAL</small></span></div>
         <div className="emi-reels-header-tools">
+          <button type="button" aria-label="Rechercher" onClick={() => { document.querySelector<HTMLInputElement>(".right-search input")?.focus(); }}><Search size={25}/></button>
           <button type="button" aria-label="Options EMi" onClick={() => setMessage("Bienvenue dans l’univers social royal EMi.")}>•••</button>
         </div>
       </header>}
