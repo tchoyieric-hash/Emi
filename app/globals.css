@@ -4214,3 +4214,206 @@ body {
   .emi-ecosystem-panel-grid { gap:8px !important; }
   .emi-ecosystem-tile { min-height:112px !important; padding:11px !important; border-radius:15px !important; }
 }
+
+
+/* EMi — calm Snapchat-inspired identity: midnight navy, soft cyan and platinum */
+:root {
+  --bg:#050b13 !important;
+  --panel:#0b1623 !important;
+  --panel2:#101f2e !important;
+  --line:rgba(128,166,194,.20) !important;
+  --text:#f3f7fb !important;
+  --muted:#9aabba !important;
+  --purple:#42c8e8 !important;
+  --pink:#57d8ed !important;
+  --green:#5bd5c0 !important;
+}
+html,body { background:#050b13 !important; color:#f3f7fb !important; }
+body {
+  background:
+    radial-gradient(ellipse at 50% -18%,rgba(19,83,125,.22),transparent 43%),
+    radial-gradient(ellipse at 100% 40%,rgba(25,120,151,.07),transparent 38%),
+    #050b13 !important;
+}
+button:focus-visible,a:focus-visible,input:focus-visible { outline-color:#43c9e8 !important; }
+.app-shell { background:transparent !important; }
+.sidebar { border-color:rgba(125,165,194,.16) !important; }
+.brand-mark,.avatar,.avatar-me {
+  background:linear-gradient(145deg,#b9f4ff,#35b9dc 58%,#197da7) !important;
+  color:#04121d !important;
+  box-shadow:0 5px 18px rgba(37,190,225,.18) !important;
+}
+.brand-dot { color:#42c8e8 !important; }
+.nav-item { color:#a8b8c7 !important; }
+.nav-item:hover,.nav-item.selected {
+  background:rgba(48,190,222,.11) !important;
+  color:#65dcf2 !important;
+}
+.nav-badge,.emi-nav-badge { background:#39c8e8 !important;color:#04121b !important; }
+.create-button,.modal-primary {
+  color:#04121b !important;
+  background:linear-gradient(110deg,#b8f3fb,#43c8e8 62%,#279bc8) !important;
+  box-shadow:0 8px 24px rgba(35,187,222,.18) !important;
+}
+.sidebar-note { background:linear-gradient(140deg,#102337,#091522) !important;border-color:rgba(87,174,207,.22) !important;color:#55d3ec !important; }
+.sidebar-note p,.sidebar-note strong { color:#c4d3df !important; }
+.eyebrow { color:#68cde3 !important; }
+.round-action,.icon-button { background:#0d1a28 !important;border-color:rgba(102,174,203,.27) !important;color:#c8f5ff !important; }
+.emi-royal-masthead {
+  margin:0 0 15px !important;
+  overflow:hidden !important;
+  border:1px solid rgba(83,181,211,.20) !important;
+  border-radius:0 0 22px 22px !important;
+  background:linear-gradient(135deg,#071321 0%,#0b2031 58%,#07111e 100%) !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.22) !important;
+}
+.emi-royal-backdrop { opacity:.38 !important; background:radial-gradient(ellipse at 15% 0%,rgba(36,171,210,.22),transparent 52%) !important; }
+.emi-royal-topline { padding:15px 14px !important; }
+.emi-royal-emblem {
+  border:1px solid rgba(88,207,232,.55) !important;
+  background:linear-gradient(145deg,#12344a,#071522) !important;
+  color:#eafaff !important;
+  box-shadow:0 5px 16px rgba(35,174,211,.15) !important;
+}
+.emi-royal-emblem i { color:#64d9ef !important; }
+.emi-royal-wordmark strong { color:#f3f8fc !important; }
+.emi-royal-wordmark strong span { color:#3dc6e7 !important; }
+.emi-royal-wordmark small { color:#a7c4d2 !important; }
+.emi-royal-tools button {
+  border:1px solid rgba(91,177,207,.30) !important;
+  background:rgba(5,17,29,.76) !important;
+  color:#d6f7ff !important;
+}
+.emi-royal-tools .emi-royal-account { border-radius:999px !important; }
+.emi-royal-account img { border:1px solid #4bcde8 !important; }
+.emi-notification-badge { background:#ef5269 !important;color:#fff !important; }
+.emi-royal-message { display:none !important; }
+.home-feed-header { display:none !important; }
+.stories-card {
+  margin:0 0 16px !important;
+  padding:15px 14px 12px !important;
+  border:1px solid rgba(106,169,196,.18) !important;
+  border-radius:21px !important;
+  background:linear-gradient(145deg,#0b1927,#08121e) !important;
+  box-shadow:0 9px 25px rgba(0,0,0,.16) !important;
+}
+.section-label { color:#eef5fa !important; }
+.section-label button { color:#55cce7 !important; }
+.stories-row { gap:16px !important; }
+.story-ring {
+  background:linear-gradient(145deg,#c5f7ff,#34c5e7 55%,#247da9) !important;
+  box-shadow:0 0 0 2px rgba(56,192,222,.10) !important;
+}
+.story-add { background:linear-gradient(145deg,#163b50,#0a1b2a) !important;border:1px solid rgba(72,201,229,.58) !important; }
+.story-avatar { border-color:#091522 !important;background:#0b1c2a !important;color:#65d9ed !important; }
+.story-plus { background:#45cbe8 !important;color:#061522 !important;border-color:#091522 !important; }
+.story-name { color:#dce7ef !important;font-weight:650 !important; }
+.story-online-dot { border-color:#091522 !important; }
+.emi-ecosystem-entry-wrap {
+  border:1px solid rgba(92,170,201,.22) !important;
+  border-radius:21px !important;
+  background:linear-gradient(145deg,#0c1c2a,#08131f) !important;
+  box-shadow:0 10px 27px rgba(0,0,0,.18) !important;
+}
+.emi-ecosystem-entry {
+  background:radial-gradient(ellipse at 0% 50%,rgba(39,157,192,.12),transparent 58%),transparent !important;
+}
+.emi-ecosystem-entry-icon,.emi-ecosystem-tile>span {
+  border-color:rgba(75,192,219,.30) !important;
+  background:linear-gradient(145deg,#123149,#0a1b2a) !important;
+  color:#60d4ec !important;
+  box-shadow:none !important;
+}
+.emi-ecosystem-entry-copy strong,.emi-ecosystem-panel-head h2 { color:#edf5fa !important; }
+.emi-ecosystem-entry-copy small,.emi-ecosystem-panel-head p { color:#9eb1c1 !important; }
+.emi-ecosystem-entry-action,.emi-ecosystem-panel-foot { color:#61d2eb !important; }
+.emi-ecosystem-panel-head { border-color:rgba(112,168,192,.16) !important; }
+.emi-ecosystem-tile {
+  border:1px solid rgba(95,165,194,.19) !important;
+  background:linear-gradient(145deg,#102438,#091724) !important;
+  box-shadow:0 6px 17px rgba(0,0,0,.13) !important;
+}
+.emi-ecosystem-tile strong { color:#e9f1f7 !important; }
+.emi-ecosystem-tile small { color:#9fb1c0 !important; }
+.emi-ecosystem-tile>svg { color:#54cde7 !important; }
+.emi-home-market,.emi-home-reels {
+  border:1px solid rgba(100,166,194,.18) !important;
+  border-radius:21px !important;
+  background:linear-gradient(145deg,#0b1927,#07121e) !important;
+  box-shadow:0 10px 27px rgba(0,0,0,.16) !important;
+}
+.emi-home-market-heading h2,.emi-home-reels-heading h2 { color:#f0f5f9 !important; }
+.emi-home-market-heading a,.emi-home-reels-heading button { color:#55cce7 !important; }
+.emi-home-market-card {
+  border-color:rgba(91,165,194,.20) !important;
+  background:linear-gradient(155deg,#102438,#091724) !important;
+}
+.emi-home-market-image { background:#091724 !important; }
+.emi-home-market-copy strong { color:#eaf2f7 !important; }
+.post-card {
+  border-color:rgba(105,164,190,.18) !important;
+  background:linear-gradient(155deg,#0d1b29,#08131f) !important;
+  color:#eff5f9 !important;
+  box-shadow:0 10px 28px rgba(0,0,0,.20) !important;
+}
+.post-author strong { color:#f0f6fa !important; }
+.post-author span,.post-author small { color:#9eb1c0 !important; }
+.post-caption { color:#d9e4ec !important; }
+.more-button { color:#a9c4d3 !important; }
+.post-actions { border-color:rgba(111,167,191,.15) !important; }
+.post-actions button { color:#afc1ce !important; }
+.post-actions button.liked { color:#ff7894 !important; }
+.emi-post-views { border-color:rgba(84,191,219,.25) !important;color:#5bcce6 !important; }
+.mobile-nav {
+  background:rgba(5,13,22,.96) !important;
+  border-top:1px solid rgba(100,170,198,.20) !important;
+  box-shadow:0 -8px 28px rgba(0,0,0,.35) !important;
+  backdrop-filter:blur(22px) saturate(145%) !important;
+}
+.mobile-nav button { color:#91a7b8 !important; }
+.mobile-nav button.mobile-active { color:#58d1eb !important; }
+.mobile-nav button.mobile-active svg { filter:drop-shadow(0 0 5px rgba(64,197,228,.20)) !important; }
+.mobile-nav .mobile-create {
+  border:1px solid rgba(120,230,246,.72) !important;
+  border-radius:15px !important;
+  background:linear-gradient(145deg,#c6f7ff,#45c8e7 62%,#228eb8) !important;
+  color:#061522 !important;
+  box-shadow:0 5px 17px rgba(42,187,220,.18) !important;
+}
+.profile-page,.discovery-person,.chat-shell,.emi-settings-hero,.emi-settings-profile-card {
+  background:linear-gradient(145deg,#0d2030,#081522) !important;
+  border-color:rgba(96,166,196,.20) !important;
+  color:#edf5fa !important;
+}
+.profile-page-identity h2,.profile-stats strong { color:#f0f6fa !important; }
+.profile-page-identity span,.profile-stats span,.profile-bio { color:#a8bac8 !important; }
+.profile-back-button { background:#0b1b29 !important;border-color:rgba(87,177,207,.25) !important;color:#c5eaf3 !important; }
+.profile-field-label input,.profile-field-label textarea { background:#071522 !important;border-color:rgba(87,177,207,.24) !important;color:#eff7fb !important; }
+.modal-backdrop { background:rgba(0,5,12,.78) !important;backdrop-filter:blur(12px) !important; }
+.modal-card { background:linear-gradient(145deg,#102234,#081522) !important;border-color:rgba(90,172,203,.25) !important;color:#eef5fa !important; }
+@media(max-width:700px) {
+  .main-column { padding-top:8px !important; }
+  .emi-royal-masthead { margin:0 -2px 13px !important;border-radius:0 0 18px 18px !important; }
+  .emi-royal-topline { padding:12px 12px !important; }
+  .emi-royal-emblem { width:43px !important;height:43px !important;flex-basis:43px !important;border-radius:13px !important; }
+  .emi-royal-emblem>span { font-size:31px !important; }
+  .emi-royal-wordmark strong { font-size:27px !important; }
+  .emi-royal-wordmark small { color:#a9c7d5 !important;letter-spacing:1px !important; }
+  .emi-royal-tools { gap:7px !important; }
+  .emi-royal-tools button { width:39px !important;min-width:39px !important;height:39px !important;border-radius:50% !important; }
+  .emi-royal-tools .emi-royal-account { min-width:54px !important;width:auto !important; }
+  .stories-card { margin-bottom:13px !important;padding:13px 11px 10px !important;border-radius:19px !important; }
+  .stories-row { gap:14px !important;padding-top:13px !important; }
+  .story-ring { width:64px !important;height:64px !important; }
+  .story-name { font-size:10px !important; }
+  .emi-ecosystem-home { gap:12px !important; }
+  .emi-ecosystem-entry-wrap { border-radius:19px !important; }
+  .emi-ecosystem-entry { min-height:72px !important;padding:11px 12px !important; }
+  .emi-ecosystem-panel { padding:0 10px 12px !important; }
+  .emi-ecosystem-panel-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:9px !important; }
+  .emi-ecosystem-tile { min-height:105px !important;padding:11px !important;border-radius:15px !important; }
+  .emi-home-market,.emi-home-reels { border-radius:18px !important; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .mobile-nav,.stories-card,.emi-ecosystem-entry-wrap,.emi-ecosystem-tile,.emi-home-market-card { transition:none !important; }
+}
