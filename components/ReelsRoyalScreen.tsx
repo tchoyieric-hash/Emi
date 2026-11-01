@@ -53,7 +53,7 @@ export default function ReelsRoyalScreen(props: Props) {
   const [soundOn, setSoundOn] = useState(false);
   const [tab, setTab] = useState<"for-you" | "following">("for-you");
   const [activeId, setActiveId] = useState<string | null>(null);
-  const videos = useMemo(() => posts.filter(post => post.media_type === "video" && post.media_urls?.[0]), [posts]);
+  const videos = useMemo(() => posts.filter(post => post.media_type === "video" && post.media_urls?.[0] && !/^\\s*\\[EMI_VIDEO_POST\\]/i.test(post.content || "")), [posts]);
   const visibleVideos = useMemo(
     () => tab === "following" ? videos.filter(post => followedIds.includes(post.user_id)) : videos,
     [videos, tab, followedIds]
