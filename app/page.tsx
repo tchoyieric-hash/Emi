@@ -222,6 +222,8 @@ export default function HomePage() {
   const [connectionProfiles, setConnectionProfiles] = useState<Profile[]>([]);
   const [exploreProfiles, setExploreProfiles] = useState<Profile[]>([]);
   const [exploreLoading, setExploreLoading] = useState(false);
+  const [homeSuggestedProfiles, setHomeSuggestedProfiles] = useState<Profile[]>([]);
+  const [homeSuggestionsLoading, setHomeSuggestionsLoading] = useState(false);
   const [profilePostCount, setProfilePostCount] = useState(0);
   const [profileFollowerCount, setProfileFollowerCount] = useState(0);
   const [profileFollowingCount, setProfileFollowingCount] = useState(0);
@@ -1423,6 +1425,24 @@ function decodeVapidKey(base64String: string) {
     finally { setExploreLoading(false); }
   }
 
+  async function loadHomeSuggestedProfiles() {
+    if (!supabase || !user) { setHomeSuggestedProfiles([]); return; }
+    setHomeSuggestionsLoading(true);
+    try {
+      const [{ data: profiles, error: profilesError }, { data: follows, error: followsError }] = await Promise.all([
+        supabase.from("profiles").select("id,username,display_name,avatar_url,bio").limit(40),
+        supabase.from("follows").select("following_id").eq("follower_id", user.id)
+      ]);
+      if (profilesError) throw profilesError;
+      if (followsError) throw followsError;
+      const excluded = new Set([user.id, ...(follows || []).map(row => row.following_id as string)]);
+      setHomeSuggestedProfiles(((profiles || []) as Profile[]).filter(profile => !excluded.has(profile.id)).slice(0, 8));
+    } catch (err) {
+      console.error("Suggestions EMi indisponibles", err);
+      setHomeSuggestedProfiles([]);
+    } finally { setHomeSuggestionsLoading(false); }
+  }
+
   function goBack() {
     if (viewingProfile) {
       setViewingProfile(null);
@@ -1718,6 +1738,9 @@ function decodeVapidKey(base64String: string) {
 
   const visiblePosts = posts.filter(p => !query || p.content.toLowerCase().includes(query.toLowerCase()) || (p.profiles?.display_name || p.profiles?.username || "").toLowerCase().includes(query.toLowerCase()));
   const displayName = user?.display_name || user?.username || user?.email?.split("@")[0] || "Mon compte";
+  useEffect(() => {
+    if (active === "Accueil" && user?.id && homeSuggestedProfiles.length === 0 && !homeSuggestionsLoading) void loadHomeSuggestedProfiles();
+  }, [active, user?.id]);
   const currentProfileName = viewingProfile?.display_name || viewingProfile?.username || "Membre EMi";
   useEffect(() => {
     if (!supabase || !user?.id) { setOnlineNow(false); return; }
@@ -1884,6 +1907,29 @@ function decodeVapidKey(base64String: string) {
         </>}
 
         {active === "Accueil" && !viewingProfile && <div className="emi-feed-discovery-bar" role="group" aria-label="Trier le fil d’actualité"><div><span>TON FIL EMi</span><strong>À découvrir</strong></div><div className="emi-feed-sort"><button type="button" className={homeFeedSort === "for-you" ? "is-active" : ""} aria-pressed={homeFeedSort === "for-you"} onClick={() => setHomeFeedSort("for-you")}>Pour toi</button><button type="button" className={homeFeedSort === "recent" ? "is-active" : ""} aria-pressed={homeFeedSort === "recent"} onClick={() => setHomeFeedSort("recent")}>Récents</button><button type="button" className={homeFeedSort === "popular" ? "is-active" : ""} aria-pressed={homeFeedSort === "popular"} onClick={() => setHomeFeedSort("popular")}>Populaires</button></div></div>}
+        {active === "Accueil" && !viewingProfile && user && <section aria-label="Personnes et créateurs à suivre" style={{margin:"0 0 22px",padding:"17px 16px 16px",border:"1px solid rgba(210,177,83,.42)",borderRadius:20,background:"linear-gradient(135deg,rgba(7,45,31,.98),rgba(5,25,20,.98) 62%,rgba(35,29,13,.92))",boxShadow:"0 12px 30px rgba(0,0,0,.18)",overflow:"hidden"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:5}}>
+            <div><span style={{display:"block",fontSize:9,fontWeight:800,letterSpacing:1.8,color:"#dfc16c"}}>AGRANDIS TON CERCLE</span><h2 style={{margin:"5px 0 0",fontSize:18,fontWeight:800,color:"#fff7df",letterSpacing:"-.4px"}}>Personnes à suivre</h2></div>
+            <button type="button" onClick={()=>void loadHomeSuggestedProfiles()} disabled={homeSuggestionsLoading} aria-label="Actualiser les suggestions" style={{border:"1px solid rgba(222,190,102,.5)",borderRadius:12,width:38,height:38,background:"rgba(255,255,255,.05)",color:"#efd47d",fontSize:18}}>{homeSuggestionsLoading?"…":"↻"}</button>
+          </div>
+          <p style={{margin:"0 0 14px",fontSize:11,color:"#b7c9bd"}}>Découvre des membres et créateurs qui font vivre la communauté EMi.</p>
+          {homeSuggestedProfiles.length>0 ? <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10}}>
+            {homeSuggestedProfiles.slice(0,4).map(profile=><article key={profile.id} style={{minWidth:0,padding:"13px 10px 11px",border:"1px solid rgba(224,197,119,.2)",borderRadius:16,background:"linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025))",display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
+              <button type="button" onClick={()=>void openProfile(profile.id)} aria-label={"Voir le profil de "+(profile.display_name||profile.username||"ce membre")} style={{width:58,height:58,borderRadius:"50%",padding:2,border:"1.5px solid #d8b95e",background:"linear-gradient(135deg,#0dbb78,#d8b95e)",marginBottom:9,overflow:"hidden",color:"#f9e6a8",fontWeight:800}}>
+                {profile.avatar_url?<img src={profile.avatar_url} alt="" loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/>:<span style={{display:"grid",placeItems:"center",height:"100%",borderRadius:"50%",background:"#103a2b"}}>{(profile.display_name||profile.username||"M").slice(0,2).toUpperCase()}</span>}
+              </button>
+              <strong style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,maxWidth:"100%",fontSize:11,color:"#fff8e8",overflowWrap:"anywhere"}}>{profile.display_name||profile.username||"Membre EMi"}{hasBlueVerificationBadge(profile.display_name||profile.username)&&<BadgeCheck size={14} fill="#1877F2" color="#fff" aria-label="Profil vérifié"/>}</strong>
+              <span style={{marginTop:3,fontSize:9,color:"#b6c9bd"}}>@{profile.username||"membre"}</span>
+              {profile.bio&&<p style={{width:"100%",margin:"7px 0 10px",fontSize:9,lineHeight:1.45,color:"#c1cbbf",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{profile.bio}</p>}
+              <div style={{display:"flex",gap:6,width:"100%",marginTop:"auto",paddingTop:profile.bio?0:10}}>
+                <button type="button" onClick={()=>void toggleFollow(profile.id)} disabled={followPendingIds.includes(profile.id)} style={{flex:1,minWidth:0,padding:"8px 5px",border:0,borderRadius:9,background:followedIds.includes(profile.id)?"rgba(255,255,255,.1)":"linear-gradient(110deg,#e8d18a,#c5a64d)",color:followedIds.includes(profile.id)?"#f2e7c2":"#14291d",fontSize:10,fontWeight:800}}>{followPendingIds.includes(profile.id)?"…":followedIds.includes(profile.id)?"Suivi":"Suivre"}</button>
+                <button type="button" onClick={()=>void openProfile(profile.id)} aria-label="Ouvrir le profil" style={{width:34,flex:"0 0 34px",border:"1px solid rgba(224,197,119,.35)",borderRadius:9,background:"rgba(255,255,255,.04)",color:"#e7d18a",fontSize:15}}>↗</button>
+              </div>
+            </article>)}
+          </div> : <div style={{padding:"15px 10px",borderRadius:13,background:"rgba(255,255,255,.035)",textAlign:"center",color:"#c1cbbf",fontSize:11}}>{homeSuggestionsLoading?"Recherche de membres à te présenter…":"Tu suis déjà les membres proposés. Reviens bientôt découvrir de nouveaux profils."}</div>}
+          <button type="button" onClick={()=>{setActive("Découvrir");setPeopleDiscoveryOpen(true);if(exploreProfiles.length===0)void loadExploreProfiles();window.scrollTo({top:0,behavior:"smooth"});}} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:7,width:"100%",marginTop:12,padding:"10px 12px",border:"1px solid rgba(222,190,102,.3)",borderRadius:11,background:"rgba(0,0,0,.12)",color:"#e8d18a",fontSize:10,fontWeight:700}}>Découvrir toute la communauté <ChevronRight size={14}/></button>
+        </section>}
+
         {active === "Paramètres" && <section className="emi-settings-page">
           {!settingsSection ? <><div className="emi-settings-hero"><span className="emi-settings-crest"><Settings size={24}/></span><div><span className="eyebrow">EMi · ESPACE PERSONNEL</span><h2>Réglages</h2><p>Ton univers, ton identité, tes choix.</p></div></div>
           {user && <section className="emi-settings-profile-card" aria-label="Profil et publications personnelles">
