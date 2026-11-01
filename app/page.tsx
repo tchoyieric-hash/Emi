@@ -2608,6 +2608,57 @@ function decodeVapidKey(base64String: string) {
           height:45px!important;min-height:45px!important;max-height:45px!important;flex-basis:45px!important;
         }
       }
+
+      /* Reels: colonne fixe de 5 actions, chaque rang possède sa propre position. */
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions{
+        position:absolute!important;z-index:220!important;top:34%!important;right:7px!important;left:auto!important;
+        bottom:auto!important;transform:none!important;width:58px!important;height:310px!important;
+        min-height:310px!important;max-height:310px!important;display:block!important;overflow:visible!important;
+        padding:0!important;margin:0!important;background:transparent!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button,
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(n){
+        position:absolute!important;left:0!important;right:0!important;top:auto!important;bottom:auto!important;
+        transform:none!important;display:flex!important;visibility:visible!important;opacity:1!important;
+        pointer-events:auto!important;width:58px!important;min-width:58px!important;max-width:58px!important;
+        height:56px!important;min-height:56px!important;max-height:56px!important;flex:none!important;
+        flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;
+        margin:0!important;padding:0!important;border:0!important;border-radius:0!important;
+        background:transparent!important;color:#fff!important;overflow:visible!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(1){top:0!important}
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(2){top:62px!important}
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(3){top:124px!important}
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(4){top:186px!important}
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(5){top:248px!important}
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button svg{
+        display:block!important;visibility:visible!important;opacity:1!important;width:31px!important;height:31px!important;flex:none!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button span{
+        display:block!important;visibility:visible!important;opacity:1!important;color:#fff!important;
+        font-size:11px!important;line-height:13px!important;font-weight:700!important;text-align:center!important;
+        text-shadow:0 2px 6px #000!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button{
+        border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#fff!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button.is-saved svg{
+        fill:#f4d477!important;color:#f4d477!important;
+      }
+      @media(max-width:390px){
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions{
+          top:32%!important;right:4px!important;width:52px!important;height:285px!important;min-height:285px!important;max-height:285px!important;
+        }
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button,
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(n){
+          width:52px!important;min-width:52px!important;max-width:52px!important;height:51px!important;min-height:51px!important;max-height:51px!important;
+        }
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(1){top:0!important}
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(2){top:57px!important}
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(3){top:114px!important}
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(4){top:171px!important}
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(5){top:228px!important}
+      }
     `}</style>
     </main>
   );
