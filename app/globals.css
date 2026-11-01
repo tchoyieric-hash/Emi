@@ -4182,3 +4182,35 @@ body {
 @media(prefers-reduced-motion:reduce) {
   .emi-nexus-intro,.emi-ecosystem-entry,.emi-ecosystem-tile,.emi-home-market-card { transition:none !important; animation:none !important; }
 }
+
+
+/* Royal Nexus hub — one entry point, with its five destinations visible immediately */
+.emi-ecosystem-home { display:flex !important; flex-direction:column !important; gap:16px !important; }
+.emi-ecosystem-entry-wrap { overflow:hidden !important; border:1px solid rgba(231,201,110,.48) !important; border-radius:22px !important; background:linear-gradient(145deg,rgba(8,49,34,.98),rgba(2,16,10,.99)) !important; box-shadow:0 16px 36px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.07) !important; }
+.emi-ecosystem-entry { min-height:84px !important; padding:15px 16px !important; border:0 !important; border-radius:0 !important; background:radial-gradient(ellipse at 0% 50%,rgba(19,116,73,.28),transparent 55%),transparent !important; }
+.emi-ecosystem-entry-icon { width:48px !important; height:48px !important; flex:0 0 48px !important; display:grid !important; place-items:center !important; border:1px solid rgba(235,207,128,.6) !important; border-radius:15px !important; background:linear-gradient(145deg,#174d37,#092719) !important; color:#f0d37c !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 5px 13px rgba(0,0,0,.2) !important; }
+.emi-ecosystem-entry-copy { display:flex !important; flex-direction:column !important; gap:5px !important; min-width:0 !important; }
+.emi-ecosystem-entry-copy strong { color:#f6e5b2 !important; font-size:17px !important; font-weight:850 !important; letter-spacing:-.3px !important; }
+.emi-ecosystem-entry-copy small { color:#b6c9bd !important; font-size:11px !important; line-height:1.4 !important; }
+.emi-ecosystem-entry-action { color:#f0d37c !important; font-size:11px !important; font-weight:850 !important; white-space:nowrap !important; }
+.emi-ecosystem-panel { margin:0 !important; padding:0 14px 15px !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; }
+.emi-ecosystem-panel-head { align-items:center !important; margin:2px 0 13px !important; padding-top:13px !important; border-top:1px solid rgba(226,198,118,.17) !important; }
+.emi-ecosystem-panel-head h2 { color:#f4e4b5 !important; font-size:19px !important; letter-spacing:-.45px !important; }
+.emi-ecosystem-panel-head p { color:#b2c3b8 !important; }
+.emi-ecosystem-panel-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:10px !important; }
+.emi-ecosystem-tile { min-height:122px !important; padding:13px !important; justify-content:flex-start !important; border:1px solid rgba(224,196,116,.34) !important; border-radius:17px !important; background:radial-gradient(ellipse at 100% 0%,rgba(196,158,69,.10),transparent 50%),linear-gradient(145deg,#0b3827,#04180f) !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 7px 16px rgba(0,0,0,.17) !important; }
+.emi-ecosystem-tile>span { width:39px !important; height:39px !important; display:grid !important; place-items:center !important; border:1px solid rgba(232,204,126,.42) !important; border-radius:13px !important; background:linear-gradient(145deg,#194c36,#092719) !important; color:#f0d27a !important; }
+.emi-ecosystem-tile strong { color:#f4e5bc !important; font-size:13px !important; font-weight:850 !important; }
+.emi-ecosystem-tile small { color:#b3c5b9 !important; font-size:10px !important; }
+.emi-ecosystem-tile>svg { color:#e5c66f !important; }
+.emi-ecosystem-panel-foot { padding-top:13px !important; color:#d8c27e !important; font-size:10px !important; letter-spacing:.2px !important; }
+@media(max-width:700px) {
+  .emi-ecosystem-home { gap:13px !important; }
+  .emi-ecosystem-entry { min-height:78px !important; padding:12px !important; gap:10px !important; }
+  .emi-ecosystem-entry-icon { width:43px !important; height:43px !important; flex-basis:43px !important; border-radius:13px !important; }
+  .emi-ecosystem-entry-copy strong { font-size:15px !important; }
+  .emi-ecosystem-entry-copy small { font-size:10px !important; }
+  .emi-ecosystem-panel { padding:0 11px 13px !important; }
+  .emi-ecosystem-panel-grid { gap:8px !important; }
+  .emi-ecosystem-tile { min-height:112px !important; padding:11px !important; border-radius:15px !important; }
+}
