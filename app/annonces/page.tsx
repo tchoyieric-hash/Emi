@@ -130,7 +130,7 @@ export default function AnnoncesPage() {
           </button>
           {[
             {title:"Mon espace vendeur",desc:"Mes annonces, vues et interactions",href:"/annonces/espace-vendeur",icon:"🏪"},
-            {title:"Mes commandes",desc:"Suivi des commandes non encore activé",action:"orders",icon:"📦"},
+            {title:"Mes commandes",desc:"Suivre mes achats et gérer les commandes reçues",href:"/annonces/commandes",icon:"📦"},
             {title:"Messages acheteurs",desc:"Contacter les vendeurs via WhatsApp",action:"messages",icon:"💬"},
             {title:"Mes favoris produits",desc:"Retrouver et retirer les produits enregistrés",href:"/annonces/favoris",icon:"❤️"},
             {title:"Statistiques",desc:"Consulter les métriques disponibles",href:"/annonces/espace-vendeur",icon:"📊"},
