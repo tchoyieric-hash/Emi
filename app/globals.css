@@ -3445,3 +3445,172 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
     color: #08251a !important;
   }
 }
+
+
+/* EMi Reels hotfix — override des anciennes règles contradictoires */
+@media (max-width: 700px) {
+  .main-column:has(.emi-feed-post.reel-post) .feed-list:has(.emi-feed-post.reel-post) {
+    height: calc(100dvh - 174px) !important;
+    min-height: 0 !important;
+    max-height: calc(100dvh - 174px) !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+  .emi-feed-post.reel-post {
+    position: relative !important;
+    display: block !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    height: calc(100dvh - 174px) !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    isolation: isolate !important;
+    background: #020805 !important;
+  }
+  .emi-feed-post.reel-post .emi-feed-media-wrap {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #020805 !important;
+  }
+  .emi-feed-post.reel-post .emi-feed-media-wrap video.reel-video {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    background: #020805 !important;
+  }
+  .emi-feed-post.reel-post > .post-top {
+    z-index: 20 !important;
+    top: 14px !important;
+    left: 18px !important;
+    right: 18px !important;
+    min-height: 76px !important;
+    padding: 8px 4px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: linear-gradient(90deg,rgba(0,0,0,.62),rgba(0,0,0,.12)) !important;
+    backdrop-filter: none !important;
+  }
+  .emi-feed-post.reel-post .emi-reel-sound-toggle {
+    z-index: 22 !important;
+    top: 108px !important;
+    right: 20px !important;
+  }
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions {
+    position: absolute !important;
+    z-index: 22 !important;
+    top: 43% !important;
+    right: 18px !important;
+    bottom: auto !important;
+    left: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 20px !important;
+    width: 58px !important;
+    max-width: 58px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    transform: none !important;
+    backdrop-filter: none !important;
+  }
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button {
+    position: relative !important;
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    width: 58px !important;
+    min-width: 58px !important;
+    max-width: 58px !important;
+    min-height: 58px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: #fff !important;
+  }
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button::before {
+    content: none !important;
+    display: none !important;
+  }
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button svg {
+    display: block !important;
+    flex: 0 0 52px !important;
+    width: 52px !important;
+    height: 52px !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+    border: 1px solid rgba(255,255,255,.38) !important;
+    border-radius: 50% !important;
+    background: rgba(0,0,0,.38) !important;
+    color: currentColor !important;
+    filter: none !important;
+  }
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button span,
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button:nth-child(2) span,
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button:nth-child(3) span {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    width: 58px !important;
+    min-width: 58px !important;
+    max-width: 58px !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    line-height: 1.15 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    text-shadow: 0 2px 5px #000 !important;
+    overflow: visible !important;
+  }
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button.liked {
+    color: #ff5b78 !important;
+  }
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button.is-saved {
+    color: #f2d47a !important;
+  }
+  .emi-feed-post.reel-post .post-caption-wrap {
+    z-index: 18 !important;
+    left: 22px !important;
+    right: 96px !important;
+    bottom: 112px !important;
+  }
+  .emi-feed-post.reel-post .emi-reel-comment-bar {
+    z-index: 24 !important;
+    left: 22px !important;
+    right: 22px !important;
+    bottom: 18px !important;
+  }
+}
