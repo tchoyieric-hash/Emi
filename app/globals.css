@@ -1136,6 +1136,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#e6c768}
 .emi-home-market-copy>b{font-size:15px;color:#f0d574}
 .emi-home-market-copy>p{margin:0;color:#b9c9bf;font-size:11px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .emi-home-market-copy>small{font-size:10px;color:#d9c887}
+.emi-market-card-cta{display:inline-flex;align-items:center;justify-content:space-between;gap:8px;margin-top:3px;padding-top:9px;border-top:1px solid rgba(216,187,92,.18);color:#f0d574;font-size:11px;font-weight:850;letter-spacing:.01em}
 .emi-home-market-empty{display:grid;gap:8px;justify-items:start;padding:15px;border:1px dashed #d8bb5c66;border-radius:14px;color:#f0d574;font-size:12px}
 .emi-home-market-empty span{color:#b9c9bf;font-size:11px}
 
