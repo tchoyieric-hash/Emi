@@ -16,6 +16,8 @@ export type RoyalReelPost = {
 
 type Props = {
   posts: RoyalReelPost[];
+  initialPostId?: string | null;
+  onInitialPostHandled?: () => void;
   userId?: string;
   liked: string[];
   likes: Record<string, number>;
@@ -45,7 +47,7 @@ const cleanCaption = (value: string) => value
 
 export default function ReelsRoyalScreen(props: Props) {
   const {
-    posts, userId, liked, likes, commentCounts, viewCounts, repostCounts, reposted, savedPostIds,
+    posts, initialPostId, onInitialPostHandled, userId, liked, likes, commentCounts, viewCounts, repostCounts, reposted, savedPostIds,
     followedIds, followPendingIds, onLike, onComments, onRepost, onShare, onSave,
     onFollow, onProfile, onDiscover, onClose, formatCount
   } = props;
@@ -53,7 +55,7 @@ export default function ReelsRoyalScreen(props: Props) {
   const [soundOn, setSoundOn] = useState(false);
   const [tab, setTab] = useState<"for-you" | "following">("for-you");
   const [activeId, setActiveId] = useState<string | null>(null);
-  const videos = useMemo(() => posts.filter(post => post.media_type === "video" && post.media_urls?.[0] && !/^\s*\[EMI_VIDEO_POST\]/i.test(post.content || "")), [posts]);
+  const videos = useMemo(() => posts.filter(post => post.media_type === "video" && post.media_urls?.[0]), [posts]);
   const visibleVideos = useMemo(
     () => tab === "following" ? videos.filter(post => followedIds.includes(post.user_id)) : videos,
     [videos, tab, followedIds]
@@ -85,8 +87,17 @@ export default function ReelsRoyalScreen(props: Props) {
   useEffect(() => {
     const root = scrollerRef.current;
     if (!root || !visibleVideos.length) return;
+    if (initialPostId) {
+      const selected = Array.from(root.querySelectorAll<HTMLElement>("[data-reel-card]"))
+        .find(node => node.dataset.reelCard === initialPostId);
+      if (selected) {
+        root.scrollTo({ top: selected.offsetTop, behavior: "instant" });
+        onInitialPostHandled?.();
+        return;
+      }
+    }
     root.scrollTo({ top: 0, behavior: "instant" });
-  }, [tab, visibleVideos]);
+  }, [tab, visibleVideos, initialPostId, onInitialPostHandled]);
 
   useEffect(() => {
     const handleVisibility = () => {
