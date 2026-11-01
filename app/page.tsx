@@ -1926,7 +1926,7 @@ function decodeVapidKey(base64String: string) {
           <button type="button" aria-label="Rechercher" onClick={() => { document.querySelector<HTMLInputElement>(".right-search input")?.focus(); }}><Search size={27}/></button>
           <button type="button" aria-label="Options EMi" onClick={() => setMessage("Bienvenue dans l’univers social royal EMi.")}>•••</button>
         </div>
-      </header>
+      </header>}
       {active === "Reels" && !viewingProfile && <style>{`
         .emi-reels-screen{display:block!important;width:100%;max-width:none!important;height:100dvh;min-height:100dvh;padding:0!important;margin:0!important;overflow:hidden;background:#020806!important}
         .emi-reels-screen .sidebar,.emi-reels-screen .right-column,.emi-reels-screen .mobile-header,.emi-reels-screen .emi-royal-masthead,.emi-reels-screen .feed-header{display:none!important}
