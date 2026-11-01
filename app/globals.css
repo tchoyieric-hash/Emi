@@ -5081,3 +5081,54 @@ video,img,canvas { accent-color:var(--emi-accent); }
  .emi-people-discovery .discovery-person{align-items:flex-start;flex-wrap:wrap}
  .emi-people-discovery .discovery-person-actions{width:100%;justify-content:flex-end;padding-left:54px}
 }
+
+
+/* Découvrir EMi — page d'exploration dédiée, sobre et lisible */
+.app-shell:not(.emi-reels-shell) .feed-header:has(+ .profile-page){margin-bottom:12px}
+.app-shell:not(.emi-reels-shell) .feed-header:has(+ .stories-card){margin-bottom:14px}
+.app-shell:not(.emi-reels-shell) .feed-header h1{letter-spacing:-.65px}
+.app-shell:not(.emi-reels-shell) .emi-people-discovery{margin:8px 0 18px;padding:18px;border:1px solid rgba(196,165,91,.22);border-radius:19px;background:linear-gradient(145deg,#0c1914 0%,#09120f 100%);box-shadow:0 9px 24px rgba(0,0,0,.12)}
+.app-shell:not(.emi-reels-shell) .emi-people-heading{margin-bottom:15px}
+.app-shell:not(.emi-reels-shell) .emi-people-heading .eyebrow{color:#c9b77f;font-size:9px;letter-spacing:1.65px}
+.app-shell:not(.emi-reels-shell) .emi-people-heading h2{font-size:21px;letter-spacing:-.55px;color:#f0eadb}
+.app-shell:not(.emi-reels-shell) .emi-people-heading p{font-size:12px;line-height:1.55;color:#aeb9ae}
+.app-shell:not(.emi-reels-shell) .emi-people-search-row .discovery-search{min-height:47px;border-radius:12px;background:#07100d;border-color:rgba(196,165,91,.3)}
+.app-shell:not(.emi-reels-shell) .emi-people-search-button{min-height:45px;border-radius:12px;background:#c6b47c;border-color:#c6b47c;color:#171b13}
+.app-shell:not(.emi-reels-shell) .emi-people-list-heading{margin:17px 0 10px}
+.app-shell:not(.emi-reels-shell) .emi-people-list-heading strong{font-size:12px;color:#e9e4d7}
+.app-shell:not(.emi-reels-shell) .emi-people-list-heading small{font-size:10px;color:#9ca99e}
+.app-shell:not(.emi-reels-shell) .emi-people-discovery .discovery-person{border-color:rgba(196,165,91,.14);background:rgba(4,11,8,.45)}
+.app-shell:not(.emi-reels-shell) .emi-people-discovery .discovery-person-actions .profile-back-button{border:1px solid rgba(196,165,91,.2);background:transparent;color:#d3c79f}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-home{margin-top:0}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-entry-wrap{margin-bottom:14px}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-entry{min-height:84px;border-radius:18px;padding:15px 16px;background:linear-gradient(125deg,#0d1a14,#0a120f);border-color:rgba(196,165,91,.26)}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-entry-copy strong{font-size:16px;letter-spacing:-.25px}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-entry-copy small{font-size:11px;line-height:1.45}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-entry-action{font-size:11px;color:#d5c184}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-panel{margin-top:9px;padding:16px;border-radius:17px;border-color:rgba(196,165,91,.22);background:#0a1511}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-panel-grid{gap:10px}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-tile{min-height:112px;padding:13px;border-radius:14px;background:#101e17;border-color:rgba(196,165,91,.17)}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-tile>span{width:36px;height:36px;border-radius:11px;background:#1a2a20;color:#d9c68e}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-tile strong{font-size:13px;color:#eee8d9}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-tile small{font-size:10px;color:#aeb8ac}
+.app-shell:not(.emi-reels-shell) .emi-home-market{margin-top:14px;padding:16px;border-radius:18px;border:1px solid rgba(196,165,91,.2);background:#0a1511}
+.app-shell:not(.emi-reels-shell) .emi-home-market-heading h2{font-size:20px;color:#f0eadb;letter-spacing:-.55px}
+.app-shell:not(.emi-reels-shell) .emi-home-market-heading p{font-size:11px;line-height:1.5;color:#aeb9ae}
+.app-shell:not(.emi-reels-shell) .emi-home-market-heading>a{color:#d5c184;font-size:10px}
+.app-shell:not(.emi-reels-shell) .emi-home-market-card{border:1px solid rgba(196,165,91,.17);border-radius:15px;background:#101c17;overflow:hidden}
+.app-shell:not(.emi-reels-shell) .emi-home-market-copy{padding:12px}
+.app-shell:not(.emi-reels-shell) .emi-home-market-copy>strong{font-size:13px;color:#eee8d9}
+.app-shell:not(.emi-reels-shell) .emi-home-market-copy>p,.app-shell:not(.emi-reels-shell) .emi-home-market-copy>small{color:#aeb9ae;font-size:10px}
+@media(max-width:700px){
+ .app-shell:not(.emi-reels-shell) .emi-people-discovery{margin:5px 0 14px;padding:14px 12px;border-radius:16px}
+ .app-shell:not(.emi-reels-shell) .emi-people-heading h2{font-size:19px}
+ .app-shell:not(.emi-reels-shell) .emi-people-search-row{gap:7px}
+ .app-shell:not(.emi-reels-shell) .emi-people-search-row .discovery-search{min-height:44px;padding:0 10px}
+ .app-shell:not(.emi-reels-shell) .emi-people-search-button{min-height:44px;padding:0 10px;font-size:10px}
+ .app-shell:not(.emi-reels-shell) .emi-ecosystem-entry{min-height:76px;padding:12px}
+ .app-shell:not(.emi-reels-shell) .emi-ecosystem-entry-copy strong{font-size:14px}
+ .app-shell:not(.emi-reels-shell) .emi-ecosystem-entry-copy small{font-size:10px}
+ .app-shell:not(.emi-reels-shell) .emi-ecosystem-panel{padding:12px}
+ .app-shell:not(.emi-reels-shell) .emi-ecosystem-tile{min-height:100px;padding:10px}
+ .app-shell:not(.emi-reels-shell) .emi-home-market{padding:13px 11px}
+}
