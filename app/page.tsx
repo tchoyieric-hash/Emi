@@ -1436,7 +1436,15 @@ function decodeVapidKey(base64String: string) {
       if (profilesError) throw profilesError;
       if (followsError) throw followsError;
       const excluded = new Set([user.id, ...(follows || []).map(row => row.following_id as string)]);
-      setHomeSuggestedProfiles(((profiles || []) as Profile[]).filter(profile => !excluded.has(profile.id)).slice(0, 8));
+      const isRealIdentity = (value?: string | null) => {
+        const normalized = (value || "").trim().toLocaleLowerCase("fr-FR").replace(/^@/, "");
+        return normalized.length >= 2 && !["membre", "membre emi", "utilisateur", "user", "unknown", "inconnu", "sans nom"].includes(normalized);
+      };
+      const eligibleProfiles = ((profiles || []) as Profile[]).filter(profile => {
+        if (excluded.has(profile.id)) return false;
+        return isRealIdentity(profile.display_name) || isRealIdentity(profile.username);
+      });
+      setHomeSuggestedProfiles(eligibleProfiles.slice(0, 8));
     } catch (err) {
       console.error("Suggestions EMi indisponibles", err);
       setHomeSuggestedProfiles([]);
@@ -1918,8 +1926,8 @@ function decodeVapidKey(base64String: string) {
               <button type="button" onClick={()=>void openProfile(profile.id)} aria-label={"Voir le profil de "+(profile.display_name||profile.username||"ce membre")} style={{width:58,height:58,borderRadius:"50%",padding:2,border:"1.5px solid #d8b95e",background:"linear-gradient(135deg,#0dbb78,#d8b95e)",marginBottom:9,overflow:"hidden",color:"#f9e6a8",fontWeight:800}}>
                 {profile.avatar_url?<img src={profile.avatar_url} alt="" loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/>:<span style={{display:"grid",placeItems:"center",height:"100%",borderRadius:"50%",background:"#103a2b"}}>{(profile.display_name||profile.username||"M").slice(0,2).toUpperCase()}</span>}
               </button>
-              <strong style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,maxWidth:"100%",fontSize:11,color:"#fff8e8",overflowWrap:"anywhere"}}>{profile.display_name||profile.username||"Membre EMi"}{hasBlueVerificationBadge(profile.display_name||profile.username)&&<BadgeCheck size={14} fill="#1877F2" color="#fff" aria-label="Profil vérifié"/>}</strong>
-              <span style={{marginTop:3,fontSize:9,color:"#b6c9bd"}}>@{profile.username||"membre"}</span>
+              <strong style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,maxWidth:"100%",fontSize:11,color:"#fff8e8",overflowWrap:"anywhere"}}>{(profile.display_name && !["membre","membre emi","utilisateur","user","unknown","inconnu","sans nom"].includes(profile.display_name.trim().toLocaleLowerCase("fr-FR")) ? profile.display_name.trim() : profile.username?.trim().replace(/^@/,""))}{hasBlueVerificationBadge(profile.display_name||profile.username)&&<BadgeCheck size={14} fill="#1877F2" color="#fff" aria-label="Profil vérifié"/>}</strong>
+              {profile.username?.trim() && !["membre","utilisateur","user","unknown","inconnu"].includes(profile.username.trim().toLocaleLowerCase("fr-FR").replace(/^@/,"")) && <span style={{marginTop:3,fontSize:9,color:"#b6c9bd"}}>@{profile.username.trim().replace(/^@/,"")}</span>}
               {profile.bio&&<p style={{width:"100%",margin:"7px 0 10px",fontSize:9,lineHeight:1.45,color:"#c1cbbf",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{profile.bio}</p>}
               <div style={{display:"flex",gap:6,width:"100%",marginTop:"auto",paddingTop:profile.bio?0:10}}>
                 <button type="button" onClick={()=>void toggleFollow(profile.id)} disabled={followPendingIds.includes(profile.id)} style={{flex:1,minWidth:0,padding:"8px 5px",border:0,borderRadius:9,background:followedIds.includes(profile.id)?"rgba(255,255,255,.1)":"linear-gradient(110deg,#e8d18a,#c5a64d)",color:followedIds.includes(profile.id)?"#f2e7c2":"#14291d",fontSize:10,fontWeight:800}}>{followPendingIds.includes(profile.id)?"…":followedIds.includes(profile.id)?"Suivi":"Suivre"}</button>
