@@ -10,6 +10,7 @@ export type RoyalReelPost = {
   created_at: string;
   media_type: string;
   media_urls: string[];
+  visibility: string;
   profiles?: { username?: string | null; display_name?: string | null; avatar_url?: string | null } | null;
 };
 
