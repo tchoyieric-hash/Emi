@@ -1815,11 +1815,11 @@ function decodeVapidKey(base64String: string) {
             <div style={{padding:"0 13px 11px",fontSize:10,opacity:.65}}>{new Date(item.created_at).toLocaleString("fr-FR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})} · {item.source_type === "whatsapp_status" ? "Statut WhatsApp" : "Message WhatsApp"}</div>
           </article>)}</div>
         </section>}
-        {active === "Accueil" && !viewingProfile && <section className="emi-ecosystem-home" aria-label="Découvrir les services EMi">
+        {active === "Découvrir" && !viewingProfile && <section className="emi-ecosystem-home" aria-label="Écosystème EMi">
            <div className="emi-ecosystem-entry-wrap">
              <button type="button" className="emi-ecosystem-entry" aria-expanded={ecosystemOpen} onClick={() => setEcosystemOpen(open => !open)}>
                <span className="emi-ecosystem-entry-icon"><Sparkles size={19}/></span>
-               <span className="emi-ecosystem-entry-copy"><strong>Explorer les univers EMi</strong><small>Un seul espace pour découvrir les services de la communauté</small></span>
+               <span className="emi-ecosystem-entry-copy"><strong>Écosystème EMi</strong><small>Tous les services et univers de la communauté au même endroit</small></span>
                <span className="emi-ecosystem-entry-action">{ecosystemOpen ? "Fermer" : "Explorer"} <ChevronRight size={17} className={ecosystemOpen ? "is-open" : ""}/></span>
              </button>
              {ecosystemOpen && <div className="emi-ecosystem-panel" aria-label="Menu Écosystème EMi">
