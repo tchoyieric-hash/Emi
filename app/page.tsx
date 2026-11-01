@@ -2017,6 +2017,47 @@ function decodeVapidKey(base64String: string) {
         .emi-reels-screen .mobile-nav button.mobile-create{width:58px!important;min-width:58px!important;height:58px!important;flex:0 0 58px!important;border:3px solid #e8b94a!important;border-radius:50%!important;background:linear-gradient(145deg,#f7d774,#b8862b)!important;color:#241a05!important;box-shadow:0 0 18px #e8b94a55!important}
         .emi-reels-screen .mobile-nav button:nth-child(4){display:flex!important}
         @media(max-width:380px){.emi-reels-screen .emi-reels-brand strong{font-size:29px!important}.emi-reels-screen .emi-reels-logo{width:42px!important;height:44px!important;font-size:38px!important}.emi-reels-screen .reel-post>.post-top{left:10px!important;right:10px!important;gap:6px!important}.emi-reels-screen .reel-post .post-avatar-button .avatar{width:46px!important;height:46px!important;min-width:46px!important}.emi-reels-screen .reel-post .emi-reel-follow-button{padding:8px 10px!important}.emi-reels-screen .reel-post>.emi-reel-comment-bar{left:10px!important;right:10px!important}}
+
+        /* Correctif structurel Android : la liste commence sous le bandeau,
+           chaque Reel occupe exactement l'espace entre l'en-tête et la navigation. */
+        .emi-reels-screen .emi-reels-header{height:calc(94px + env(safe-area-inset-top))!important;min-height:calc(94px + env(safe-area-inset-top))!important}
+        .emi-reels-screen .emi-reels-brand{left:50%!important;right:auto!important;max-width:48vw!important;gap:7px!important;top:calc(env(safe-area-inset-top) + 12px)!important}
+        .emi-reels-screen .emi-reels-logo{width:42px!important;height:44px!important;font-size:37px!important;flex:0 0 42px!important}
+        .emi-reels-screen .emi-reels-brand strong{font-size:29px!important;line-height:30px!important}
+        .emi-reels-screen .emi-reels-brand small{font-size:6px!important;letter-spacing:1px!important;white-space:nowrap!important}
+        .emi-reels-screen .emi-reels-header-tools{margin-left:auto!important;gap:8px!important}
+        .emi-reels-screen .emi-reels-header-tools button:first-child{width:44px!important;height:44px!important;flex:0 0 44px!important}
+        .emi-reels-screen .emi-reels-header-tools button:last-child{width:28px!important;flex:0 0 28px!important}
+        .emi-reels-screen .feed-list{position:fixed!important;inset:calc(94px + env(safe-area-inset-top)) 0 calc(82px + env(safe-area-inset-bottom)) 0!important;height:auto!important;padding:0!important;overflow-y:auto!important}
+        .emi-reels-screen .reel-post{position:relative!important;width:100vw!important;height:100%!important;min-height:100%!important;max-height:none!important;margin:0!important;padding:0!important;overflow:hidden!important}
+        .emi-reels-screen .reel-post>.post-top{position:absolute!important;top:12px!important;left:16px!important;right:16px!important;z-index:25!important;min-height:58px!important;padding:0!important;display:flex!important;align-items:center!important;gap:8px!important;background:linear-gradient(90deg,#0009,transparent)!important}
+        .emi-reels-screen .reel-post .post-avatar-button .avatar{width:48px!important;height:48px!important;min-width:48px!important}
+        .emi-reels-screen .reel-post .post-author{flex:1 1 auto!important;min-width:0!important}
+        .emi-reels-screen .reel-post .post-author strong{font-size:15px!important;white-space:nowrap!important}
+        .emi-reels-screen .reel-post .post-author span{font-size:11px!important}
+        .emi-reels-screen .reel-post .emi-reel-follow-button{padding:8px 13px!important;font-size:12px!important}
+        .emi-reels-screen .reel-post>.emi-feed-media-wrap{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:100%!important;max-height:none!important;overflow:hidden!important}
+        .emi-reels-screen .reel-post .emi-feed-media-wrap video.reel-video,.emi-reels-screen .reel-post .emi-feed-media-wrap img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:100%!important;max-height:none!important;object-fit:cover!important;object-position:center center!important}
+        .emi-reels-screen .reel-post>.post-caption-wrap{position:absolute!important;z-index:28!important;left:20px!important;right:92px!important;bottom:88px!important;top:auto!important;width:auto!important;margin:0!important;padding:0!important}
+        .emi-reels-screen .reel-post .post-caption{font-size:16px!important;line-height:1.35!important;text-shadow:0 2px 8px #000!important}
+        .emi-reels-screen .reel-post>.post-actions.emi-reel-social-actions{position:absolute!important;z-index:32!important;top:50%!important;right:12px!important;bottom:auto!important;transform:translateY(-35%)!important;width:54px!important;display:flex!important;flex-direction:column!important;align-items:center!important;gap:9px!important}
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions button{min-width:48px!important;min-height:43px!important;gap:2px!important;font-size:11px!important}
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions button svg{width:27px!important;height:27px!important}
+        .emi-reels-screen .reel-post .emi-reel-sound-toggle{top:86px!important;right:18px!important;width:44px!important;height:44px!important}
+        .emi-reels-screen .reel-post>.emi-reel-comment-bar{position:absolute!important;z-index:42!important;left:16px!important;right:16px!important;bottom:12px!important;top:auto!important;display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;height:54px!important;min-height:54px!important}
+        .emi-reels-screen .reel-post>.emi-reel-comment-bar input{display:block!important;visibility:visible!important;opacity:1!important}
+        .emi-reels-screen .mobile-nav{height:calc(82px + env(safe-area-inset-bottom))!important}
+        @media(max-width:390px){
+          .emi-reels-screen .emi-reels-brand{max-width:43vw!important;gap:5px!important}
+          .emi-reels-screen .emi-reels-logo{width:36px!important;height:38px!important;flex-basis:36px!important;font-size:32px!important}
+          .emi-reels-screen .emi-reels-brand strong{font-size:25px!important}
+          .emi-reels-screen .emi-reels-brand small{font-size:5px!important;letter-spacing:.6px!important}
+          .emi-reels-screen .emi-reels-header-tools button:first-child{width:38px!important;height:38px!important;flex-basis:38px!important}
+          .emi-reels-screen .reel-post>.post-top{left:10px!important;right:10px!important;gap:5px!important}
+          .emi-reels-screen .reel-post .post-avatar-button .avatar{width:42px!important;height:42px!important;min-width:42px!important}
+          .emi-reels-screen .reel-post .emi-reel-follow-button{padding:7px 9px!important;font-size:11px!important}
+          .emi-reels-screen .reel-post>.emi-reel-comment-bar{left:10px!important;right:10px!important}
+        }
       `}</style>}
       <style>{`@keyframes emiPublishSpin{to{transform:rotate(360deg)}}`}</style>
       <aside className="sidebar">
