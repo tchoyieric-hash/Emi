@@ -4678,3 +4678,171 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   .emi-settings-page, .emi-story-studio, .emi-creator, .emi-vibes-page { border-radius: 18px !important; }
   .emi-nexus-intro { border-radius: 18px !important; }
 }
+
+
+/* EMi Royal Nexus — final global pass for every route and responsive surface */
+:root {
+  color-scheme: dark !important;
+  --bg:#050b13 !important;
+  --panel:#0b1623 !important;
+  --panel2:#102235 !important;
+  --line:rgba(132,174,201,.22) !important;
+  --text:#f3f7fb !important;
+  --muted:#a5b6c5 !important;
+  --purple:#55cde8 !important;
+  --pink:#57d8ed !important;
+  --green:#5bd5c0 !important;
+  --emi-bg:#050b13 !important;
+  --emi-surface:#0b1623 !important;
+  --emi-surface-raised:#102235 !important;
+  --emi-surface-soft:#0d1c2a !important;
+  --emi-border:rgba(132,174,201,.22) !important;
+  --emi-text:#f3f7fb !important;
+  --emi-muted:#a5b6c5 !important;
+  --emi-accent:#55cde8 !important;
+  --emi-accent-strong:#32b8dc !important;
+  --emi-accent-soft:rgba(67,198,228,.13) !important;
+  --emi-gold:#d6c17b !important;
+}
+html,body,#root,#__next { min-height:100%; background:#050b13 !important; color:#f3f7fb !important; }
+body {
+  background:
+    radial-gradient(ellipse at 50% -16%,rgba(25,92,132,.18),transparent 44%),
+    linear-gradient(180deg,#050b13 0%,#07111d 58%,#050b13 100%) !important;
+}
+.app-shell,.main-column,.main-content,.page-content,.app-content,.content-area,
+.emi-page,.emi-page-content,.emi-main,.emi-main-content,.emi-route,
+.emi-market-page,.emi-messages-page,.emi-profile-page,.emi-explore-page,
+.emi-reels-page,.emi-feed-page {
+  background:transparent !important;
+  color:var(--emi-text) !important;
+}
+:where(
+  .post-card,.stories-card,.profile-page,.discovery-person,.chat-shell,
+  .chat-sidebar,.chat-window,.chat-welcome,.chat-list,.chat-conversation,
+  .chat-panel,.chat-messages,.emi-settings-page,.emi-settings-hero,
+  .emi-settings-profile-card,.emi-story-studio,.emi-story-editor,
+  .emi-story-preview,.emi-creator,.emi-creator-form,.emi-vibes-page,
+  .emi-vibes-hero,.emi-nexus-intro,.emi-pulse-card,.emi-pulse-post,
+  .emi-market-feature,.emi-market-pulse,.emi-market-card,.emi-market-list,
+  .emi-market-search,.emi-market-filter,.emi-market-product,
+  .emi-explore-card,.emi-discovery-card,.emi-reel-card,.emi-reels-card,
+  .emi-home-market,.emi-home-reels,.emi-home-market-card,
+  .emi-ecosystem-entry-wrap,.emi-ecosystem-tile,.welcome-card,
+  .suggest-card,.modal-card
+) {
+  color:var(--emi-text) !important;
+  border-color:var(--emi-border) !important;
+  background:linear-gradient(145deg,#0d1e2d 0%,#091522 100%) !important;
+  box-shadow:0 10px 28px rgba(0,0,0,.16) !important;
+}
+:where(
+  .post-card,.stories-card,.profile-page,.discovery-person,.chat-shell,
+  .chat-sidebar,.chat-window,.chat-welcome,.chat-list,.chat-conversation,
+  .emi-settings-page,.emi-settings-hero,.emi-settings-profile-card,
+  .emi-story-studio,.emi-story-editor,.emi-creator,.emi-creator-form,
+  .emi-vibes-page,.emi-vibes-hero,.emi-market-feature,.emi-market-pulse,
+  .emi-pulse-card,.emi-pulse-post,.emi-nexus-intro,.emi-home-market,
+  .emi-home-reels,.emi-ecosystem-entry-wrap,.welcome-card,.suggest-card
+) :where(h1,h2,h3,h4,strong,label) { color:#edf5fa !important; }
+:where(
+  .post-author span,.post-author small,.profile-page-identity span,
+  .profile-stats span,.profile-bio,.chat-list-copy small,.chat-secure-label,
+  .emi-settings-subtitle,.emi-settings-detail,.emi-settings-row-copy small,
+  .emi-market-copy p,.emi-market-pulse-copy p,.emi-vibes-note,
+  .emi-ecosystem-entry-copy small,.emi-ecosystem-panel-head p,
+  .emi-ecosystem-tile small,.emi-creator-note,.emi-caption-editor
+) { color:var(--emi-muted) !important; }
+:where(
+  .nav-item:hover,.nav-item.selected,.mobile-nav button.mobile-active,
+  .feed-tabs button.tab-active,.emi-vibes-tabs button.selected,
+  .emi-chat-filters button[aria-pressed="true"],
+  .emi-simple-publish-choices button[aria-pressed="true"]
+) {
+  color:#62d7ed !important;
+  background:rgba(55,188,219,.12) !important;
+  border-color:rgba(85,205,232,.45) !important;
+}
+:where(
+  .create-button,.modal-primary,.emi-market-cta,.emi-settings-edit-profile,
+  .emi-story-publish,.emi-creator-next,.emi-cta-primary,
+  .emi-nexus-intro .primary,.chat-compose .send-button
+) {
+  color:#061521 !important;
+  border-color:rgba(126,229,245,.55) !important;
+  background:linear-gradient(110deg,#b8f1fa 0%,#4ac8e5 62%,#299bc2 100%) !important;
+  box-shadow:0 7px 20px rgba(40,177,211,.15) !important;
+}
+:where(
+  .round-action,.icon-button,.profile-back-button,.profile-more-action,
+  .chat-compose button,.emi-messages-head-actions button,
+  .emi-settings-row-icon,.emi-creator-tools button,
+  .emi-story-format,.emi-story-theme-picker button,
+  .emi-simple-publish-choices button,.emi-vibes-tabs button,
+  .emi-chat-filters button
+) {
+  color:#c8f5ff !important;
+  border-color:var(--emi-border) !important;
+  background:#102235 !important;
+}
+:where(input,textarea,select,.chat-compose input,.chat-compose textarea,
+  .emi-chat-search input,.emi-vibes-search,.emi-market-search input,
+  .profile-field-label input,.profile-field-label textarea) {
+  color:var(--emi-text) !important;
+  border-color:var(--emi-border) !important;
+  background-color:#071522 !important;
+}
+:where(input,textarea,select)::placeholder { color:#8298aa !important; opacity:1; }
+:where(.eyebrow,.emi-market-view-count,.emi-settings-theme-current,
+  .emi-ecosystem-entry-action,.emi-ecosystem-panel-foot,
+  .emi-pulse-card-link,.emi-market-view-all) { color:var(--emi-accent) !important; }
+:where(.emi-royal-masthead,.mobile-header) {
+  background:linear-gradient(135deg,#071321 0%,#0b2031 58%,#07111e 100%) !important;
+  border-color:var(--emi-border) !important;
+}
+.emi-royal-emblem {
+  background:linear-gradient(145deg,#12344a,#071522) !important;
+  border-color:rgba(88,207,232,.55) !important;
+  color:#eafaff !important;
+  box-shadow:0 5px 16px rgba(35,174,211,.15) !important;
+}
+.emi-royal-wordmark strong { color:#f3f8fc !important; }
+.emi-royal-wordmark strong span { color:var(--emi-accent) !important; }
+.emi-royal-wordmark small { color:#a7c4d2 !important; }
+.emi-royal-tools button { color:#d6f7ff !important; border-color:var(--emi-border) !important; background:rgba(5,17,29,.86) !important; }
+.emi-royal-account img { border-color:var(--emi-accent) !important; }
+.emi-ecosystem-entry-icon,.emi-ecosystem-tile>span,.emi-pulse-card-icon,
+.emi-settings-row-icon,.emi-story-brand-icon,.emi-story-format-icon,
+.emi-story-picker-icon,.emi-vibes-orb,.emi-vibes-empty-icon {
+  color:#67d7ed !important;
+  border-color:rgba(80,191,219,.34) !important;
+  background:linear-gradient(145deg,#14364c,#0a1b2a) !important;
+  box-shadow:none !important;
+}
+.story-ring { background:linear-gradient(145deg,#c5f7ff,#34c5e7 55%,#247da9) !important; }
+.story-avatar { background:#0b1c2a !important; border-color:#091522 !important; color:#eafaff !important; }
+.story-plus { background:#45cbe8 !important; color:#061522 !important; border-color:#091522 !important; }
+.post-actions button { color:#afc1ce !important; }
+.post-actions button.liked { color:#ff7894 !important; }
+.mobile-nav {
+  background:rgba(5,13,22,.97) !important;
+  border-top:1px solid var(--emi-border) !important;
+  box-shadow:0 -8px 28px rgba(0,0,0,.35) !important;
+  backdrop-filter:blur(22px) saturate(145%) !important;
+}
+.mobile-nav button { color:#91a7b8 !important; }
+.mobile-nav button.mobile-active { color:#58d1eb !important; }
+.mobile-nav .mobile-create {
+  border:1px solid rgba(120,230,246,.72) !important;
+  background:linear-gradient(145deg,#b8f1fa,#45c8e7 62%,#248eb8) !important;
+  color:#061522 !important;
+  box-shadow:0 5px 17px rgba(42,187,220,.18) !important;
+}
+.modal-backdrop { background:rgba(0,5,12,.82) !important; backdrop-filter:blur(12px) !important; }
+.modal-card { background:linear-gradient(145deg,#102234,#081522) !important; border-color:var(--emi-border) !important; color:var(--emi-text) !important; }
+video,img,canvas { accent-color:var(--emi-accent); }
+@media(max-width:700px) {
+  .app-shell { background:transparent !important; }
+  .main-column { padding-bottom:calc(100px + env(safe-area-inset-bottom)) !important; }
+  .mobile-nav { padding-bottom:calc(9px + env(safe-area-inset-bottom)) !important; }
+}
