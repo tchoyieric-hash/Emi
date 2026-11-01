@@ -5164,3 +5164,38 @@ video,img,canvas { accent-color:var(--emi-accent); }
 .emi-people-toggle-chevron.is-open{transform:rotate(90deg)}
 .emi-people-discovery-content{padding:0 15px 15px;border-top:1px solid rgba(196,165,91,.12)}
 @media(max-width:420px){.emi-people-discovery-toggle{min-height:69px;padding:11px 12px;gap:10px}.emi-people-toggle-icon{width:36px;height:36px;flex-basis:36px}.emi-people-discovery-toggle strong{font-size:13px}.emi-people-discovery-content{padding:0 11px 12px}}
+
+
+/* Discover hub: branded ecosystem destination cards */
+.emi-ecosystem-panel-grid .emi-ecosystem-tile{
+  min-height:176px!important;justify-content:flex-start!important;gap:7px!important;
+  padding:13px!important;border-radius:16px!important;
+  background:linear-gradient(150deg,rgba(22,66,46,.98),rgba(6,24,17,.99))!important;
+  border-color:rgba(220,185,91,.38)!important;
+}
+.emi-ecosystem-panel-grid .emi-ecosystem-tile>span{width:39px!important;height:39px!important;margin-bottom:2px!important}
+.emi-ecosystem-panel-grid .emi-ecosystem-tile>em{
+  display:block!important;font-style:normal!important;font-size:8px!important;
+  line-height:1.2!important;letter-spacing:.13em!important;font-weight:850!important;
+  color:#e5c36d!important;opacity:.95!important;
+}
+.emi-ecosystem-panel-grid .emi-ecosystem-tile>strong{
+  display:block!important;font-size:14px!important;line-height:1.2!important;
+  color:#fff2cb!important;letter-spacing:-.01em!important;
+}
+.emi-ecosystem-panel-grid .emi-ecosystem-tile>small{
+  display:block!important;font-size:10px!important;line-height:1.45!important;
+  color:#c0d0c5!important;white-space:normal!important;overflow-wrap:anywhere!important;
+}
+.emi-ecosystem-panel-grid .emi-ecosystem-tile>b{
+  display:flex!important;align-items:center!important;gap:3px!important;
+  margin-top:auto!important;padding-top:5px!important;font-size:9px!important;
+  font-weight:800!important;color:#edca70!important;
+}
+.emi-ecosystem-panel-grid .emi-ecosystem-tile>b svg{width:13px!important;height:13px!important}
+.emi-ecosystem-panel-grid .emi-ecosystem-tile>svg{display:none!important}
+@media(max-width:520px){
+ .emi-ecosystem-panel-grid .emi-ecosystem-tile{min-height:180px!important;padding:11px!important}
+ .emi-ecosystem-panel-grid .emi-ecosystem-tile>strong{font-size:13px!important}
+ .emi-ecosystem-panel-grid .emi-ecosystem-tile>small{font-size:9.5px!important}
+}
