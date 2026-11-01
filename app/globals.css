@@ -5021,3 +5021,21 @@ video,img,canvas { accent-color:var(--emi-accent); }
   .emi-home-welcome-copy h2{font-size:40px}
   .emi-home-welcome-portrait{width:42%}
 }
+
+
+/* L'écosystème est désormais une rubrique de Découvrir, jamais un bloc de l'accueil. */
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-home{display:block!important;margin:0 0 18px}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-entry{background:linear-gradient(135deg,#0b1914,#0b1210);border:1px solid rgba(196,165,91,.28);box-shadow:none}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-entry-icon{background:#12251b;border-color:rgba(196,165,91,.32);color:#d8c384}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-entry-copy strong{color:#eee7d6}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-entry-copy small{color:#aeb9ae}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-entry-action{color:#d8c384}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-panel{background:#0a1511;border-color:rgba(196,165,91,.25);box-shadow:none}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-panel-head h2{color:#eee7d6}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-panel-head p{color:#aeb9ae}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-tile{background:#101d17;border-color:rgba(196,165,91,.2)}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-tile strong{color:#eee7d6}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-tile small{color:#aeb9ae}
+.app-shell:not(.emi-reels-shell) .emi-home-market{background:#0a1511;border-color:rgba(196,165,91,.22)}
+.app-shell:not(.emi-reels-shell) .emi-home-market-heading h2{color:#eee7d6}
+.app-shell:not(.emi-reels-shell) .emi-home-market-heading p{color:#aeb9ae}
