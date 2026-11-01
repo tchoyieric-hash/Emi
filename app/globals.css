@@ -5488,3 +5488,37 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .app-shell:not(.emi-reels-shell) .emi-royal-masthead{margin-bottom:16px!important}
   .app-shell:not(.emi-reels-shell) .emi-home-welcome{margin:0 10px 16px!important;padding:17px!important;border-radius:18px!important}
 }
+
+
+/* EMi Market — boutique d'abord, espaces communautaires ensuite */
+.emi-market-hero{position:relative;isolation:isolate;display:flex;align-items:center;min-height:225px;overflow:hidden;margin:20px 0 18px;padding:25px 20px;border:1px solid rgba(226,199,92,.62);border-radius:24px;background:radial-gradient(ellipse at 88% 15%,rgba(224,190,76,.2),transparent 35%),linear-gradient(115deg,#05271d 0%,#0a4934 58%,#09291e 100%);box-shadow:0 18px 38px rgba(0,0,0,.2)}
+.emi-market-hero-copy{position:relative;z-index:2;max-width:520px}
+.emi-market-eyebrow{display:inline-flex;color:#f0d574;font-size:9px;font-weight:900;letter-spacing:.2em}
+.emi-market-hero h1{margin:11px 0 9px;color:#fff;font-size:clamp(28px,6vw,42px);font-weight:850;line-height:1.04;letter-spacing:-.04em}
+.emi-market-hero h1 em{color:#f0d574;font-style:normal}
+.emi-market-hero-copy>p{max-width:410px;margin:0;color:#d3e2d9;font-size:12px;line-height:1.65}
+.emi-market-trust-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;color:#f0d574;font-size:10px;font-weight:750}
+.emi-market-hero-art{position:absolute;right:3%;top:0;width:42%;height:100%;pointer-events:none}
+.emi-market-orbit{position:absolute;display:block;right:4%;top:50%;width:170px;height:170px;border:1px solid rgba(239,213,119,.28);border-radius:50%;transform:translateY(-50%)}
+.emi-market-orbit-two{right:15%;width:125px;height:125px;border-color:rgba(239,213,119,.2)}
+.emi-market-bag{position:absolute;right:18%;top:50%;display:grid;place-items:center;width:82px;height:94px;border:1px solid #f0d574;border-radius:17px 17px 24px 24px;background:linear-gradient(145deg,#f6e8ad,#c59d3d);color:#0a3525;font:800 43px Georgia,serif;box-shadow:0 15px 40px #0005;transform:translateY(-42%) rotate(7deg)}
+.emi-market-bag:before{content:"";position:absolute;top:-15px;width:35px;height:22px;border:4px solid #e6ce78;border-bottom:0;border-radius:18px 18px 0 0}
+.emi-market-spark{position:absolute;right:2%;top:20%;color:#f4dc8c;font-size:24px}
+.emi-market-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px}
+.emi-market-toolbar-heading{display:grid;gap:4px}.emi-market-toolbar-heading span{color:#e4c85f;font-size:9px;font-weight:900;letter-spacing:.18em}.emi-market-toolbar-heading strong{color:#fff;font-size:17px;line-height:1.2}
+.emi-market-toolbar .emi-shop-sell{flex:none;padding:10px 14px}
+.emi-market-benefits{display:flex;gap:14px;overflow-x:auto;margin:12px 0 4px;padding:3px 0 7px;scrollbar-width:none}
+.emi-market-benefits span{flex:none;color:#c6d8ce;font-size:9px;white-space:nowrap}.emi-market-benefits strong{margin-right:4px;color:#e8cb67}
+.emi-shop-search{box-shadow:0 7px 20px rgba(0,0,0,.13)}
+.emi-shop-categories button{padding:8px 14px;background:rgba(255,255,255,.055);border-color:rgba(227,210,145,.3);font-weight:650}
+.emi-shop-categories button.selected{background:#efd36b;border-color:#efd36b;color:#123629;box-shadow:0 5px 14px rgba(239,211,107,.17)}
+.emi-shop-list-heading{margin-top:25px}
+.emi-shop-products{gap:12px}
+.emi-shop-product{border:1px solid #e1e7e1;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.16);transition:transform .18s ease,box-shadow .18s ease}
+.emi-shop-product:active{transform:scale(.985)}
+.emi-shop-product-copy{padding:11px 10px 12px}
+.emi-shop-product-copy .emi-shop-price{font-size:16px;letter-spacing:-.02em}
+.emi-shop-product-copy a[href*="wa.me"]{min-height:39px;border-radius:10px}
+.emi-shop-product-copy a[href^="/annonce/"]:last-child{min-height:39px;border-radius:10px}
+@media(min-width:640px){.emi-market-hero{min-height:270px;padding:34px 38px}.emi-market-hero-art{right:7%}.emi-market-bag{width:100px;height:114px;font-size:54px}.emi-market-toolbar-heading strong{font-size:21px}.emi-market-benefits{gap:24px}.emi-shop-products{gap:17px}}
+@media(max-width:420px){.emi-market-hero{min-height:210px;padding:20px 15px}.emi-market-hero-art{right:-13%;width:48%;opacity:.82}.emi-market-bag{right:20%;width:65px;height:78px;font-size:34px}.emi-market-orbit{width:140px;height:140px}.emi-market-orbit-two{width:100px;height:100px}.emi-market-hero-copy{max-width:72%}.emi-market-hero-copy>p{font-size:11px}.emi-market-trust-row{font-size:9px;gap:5px}.emi-market-toolbar-heading strong{font-size:15px}}
