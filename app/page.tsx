@@ -1995,6 +1995,74 @@ function decodeVapidKey(base64String: string) {
 .emi-reels-screen .reel-post .emi-reel-comment-bar{left:12px!important;right:12px!important;bottom:10px!important;height:54px!important}
 .emi-reels-screen .reel-post .emi-reel-sound-toggle{right:14px!important;bottom:78px!important;width:42px!important;height:42px!important}
 }
+
+/* Reels mobile — colonne unique en flux vertical, sans chevauchement */
+.emi-reels-screen .reel-post{position:relative!important}
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions{
+  position:absolute!important;z-index:40!important;
+  top:28%!important;right:12px!important;left:auto!important;bottom:150px!important;
+  width:54px!important;height:auto!important;min-height:0!important;max-height:none!important;
+  display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;
+  align-items:center!important;justify-content:flex-start!important;gap:9px!important;
+  overflow:visible!important;margin:0!important;padding:0!important;
+  background:transparent!important;border:0!important;box-shadow:none!important;
+}
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button{
+  position:relative!important;inset:auto!important;transform:none!important;
+  display:flex!important;flex:0 0 48px!important;
+  width:48px!important;min-width:48px!important;max-width:48px!important;
+  height:48px!important;min-height:48px!important;max-height:48px!important;
+  margin:0!important;padding:0!important;gap:0!important;
+  align-items:center!important;justify-content:center!important;
+  flex-direction:column!important;border:1px solid rgba(239,211,128,.9)!important;
+  border-radius:50%!important;background:rgba(3,20,13,.88)!important;
+  color:#f7e4ad!important;box-shadow:0 3px 12px rgba(0,0,0,.42)!important;
+}
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button svg{
+  display:block!important;visibility:visible!important;opacity:1!important;
+  width:22px!important;height:22px!important;flex:0 0 auto!important;
+}
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button:nth-child(-n+3){
+  height:58px!important;min-height:58px!important;max-height:58px!important;
+  border:0!important;background:transparent!important;box-shadow:none!important;
+}
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button:nth-child(-n+3) svg{
+  width:30px!important;height:30px!important;
+}
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button:nth-child(-n+3) span{
+  display:block!important;margin-top:2px!important;color:#fff!important;
+  font-size:12px!important;line-height:14px!important;font-weight:800!important;
+}
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button[aria-label="Partager"] span,
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button[aria-label="Enregistrer"] span,
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button.emi-reel-sound-toggle span{
+  display:none!important;
+}
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button.emi-reel-sound-toggle{
+  position:relative!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;
+  z-index:41!important;width:48px!important;height:48px!important;min-width:48px!important;
+  min-height:48px!important;max-width:48px!important;max-height:48px!important;
+  border:1.5px solid #f0d27b!important;background:linear-gradient(145deg,#123b29,#06170f)!important;
+  color:#f5d982!important;
+}
+.emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button.is-saved svg{
+  color:#f5d982!important;fill:#f5d982!important;
+}
+@media(max-width:390px){
+ .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions{
+   right:8px!important;top:25%!important;bottom:142px!important;gap:7px!important;width:46px!important;
+ }
+ .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button{
+   width:44px!important;min-width:44px!important;max-width:44px!important;
+   height:44px!important;min-height:44px!important;max-height:44px!important;flex-basis:44px!important;
+ }
+ .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button:nth-child(-n+3){
+   height:54px!important;min-height:54px!important;max-height:54px!important;flex-basis:54px!important;
+ }
+ .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button.emi-reel-sound-toggle{
+   width:44px!important;min-width:44px!important;height:44px!important;min-height:44px!important;
+ }
+}
 `}</style>}
       <style>{`@keyframes emiPublishSpin{to{transform:rotate(360deg)}}`}</style>
       <aside className="sidebar">
