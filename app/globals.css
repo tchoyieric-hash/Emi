@@ -5282,3 +5282,131 @@ video,img,canvas { accent-color:var(--emi-accent); }
     border-radius: 50% !important;
   }
 }
+
+
+/* ==========================================================
+   EMi ROYAL — Direction artistique officielle v1
+   Palette: forêt émeraude / jade / champagne discret
+   Intensité: équilibrée — premium, lisible, sans surcharge
+   ========================================================== */
+:root{
+  color-scheme:dark;
+  --bg:#06130f;
+  --panel:#0b1d17;
+  --panel2:#10271f;
+  --line:rgba(113,177,151,.22);
+  --text:#f4f8f4;
+  --muted:#a6b9ae;
+  --purple:#5ce0b4;
+  --pink:#8debd0;
+  --green:#43d6a5;
+  --emi-emerald:#0b3b2d;
+  --emi-jade:#16a77b;
+  --emi-mint:#65e6c0;
+  --emi-champagne:#d9c58b;
+  --emi-ink:#04100c;
+}
+html,body{background:var(--bg);color:var(--text)}
+body{
+  background:
+    radial-gradient(ellipse at 50% -18%,rgba(18,112,77,.24),transparent 48%),
+    linear-gradient(180deg,#06130f 0%,#050e0c 100%);
+}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+  outline:2px solid var(--emi-mint)!important;
+  outline-offset:3px;
+}
+.app-shell:not(.emi-reels-shell) .stories-card,
+.app-shell:not(.emi-reels-shell) .post-card,
+.app-shell:not(.emi-reels-shell) .suggest-card,
+.app-shell:not(.emi-reels-shell) .emi-home-market,
+.app-shell:not(.emi-reels-shell) .emi-people-discovery{
+  border-color:rgba(113,177,151,.23)!important;
+  background:linear-gradient(155deg,rgba(12,31,24,.98),rgba(6,19,15,.98))!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.16),inset 0 1px 0 rgba(220,255,239,.025)!important;
+}
+.app-shell:not(.emi-reels-shell) .feed-header h1,
+.app-shell:not(.emi-reels-shell) .section-label strong,
+.app-shell:not(.emi-reels-shell) .emi-home-market-heading h2{
+  color:#f4f8f4!important;
+}
+.app-shell:not(.emi-reels-shell) .eyebrow,
+.app-shell:not(.emi-reels-shell) .feed-header .eyebrow{
+  color:#73d9b6!important;
+}
+.app-shell:not(.emi-reels-shell) .section-label button,
+.app-shell:not(.emi-reels-shell) .emi-home-market-heading>a{
+  color:#77dfbc!important;
+}
+.app-shell:not(.emi-reels-shell) .mobile-nav{
+  background:rgba(4,17,13,.96)!important;
+  border-top:1px solid rgba(111,185,153,.22)!important;
+  box-shadow:0 -8px 28px rgba(0,0,0,.2)!important;
+}
+.app-shell:not(.emi-reels-shell) .mobile-nav button.mobile-active{
+  color:#75e5bf!important;
+}
+.app-shell:not(.emi-reels-shell) .mobile-nav .mobile-create{
+  background:linear-gradient(145deg,#a5f4d9,#38c99b 58%,#128564)!important;
+  color:#05271d!important;
+  box-shadow:0 5px 18px rgba(39,205,153,.22)!important;
+}
+.app-shell:not(.emi-reels-shell) .round-action,
+.app-shell:not(.emi-reels-shell) .icon-button{
+  border-color:rgba(116,188,158,.25)!important;
+  background:rgba(16,47,35,.72)!important;
+  color:#b7f4df!important;
+}
+.app-shell:not(.emi-reels-shell) .feed-tabs button.tab-active{
+  color:#a3f0d5!important;
+  border-color:#39c99a!important;
+}
+.app-shell:not(.emi-reels-shell) .post-actions button.liked{
+  color:#70e3bc!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-feed-discovery-bar{
+  border-color:rgba(111,185,153,.24)!important;
+  background:linear-gradient(115deg,#0b2c20,#091b14)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-feed-sort button.is-active{
+  background:linear-gradient(135deg,#a5f0d4,#39c99a)!important;
+  color:#06271d!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-panel-grid .emi-ecosystem-tile{
+  border-color:rgba(104,206,165,.27)!important;
+  background:linear-gradient(150deg,#123c2c,#081c14)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-panel-grid .emi-ecosystem-tile>em,
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-panel-grid .emi-ecosystem-tile>b{
+  color:#a8edcf!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-panel-grid .emi-ecosystem-tile>strong{
+  color:#f1f8f2!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-ecosystem-panel-grid .emi-ecosystem-tile>small{
+  color:#b6cfc1!important;
+}
+.app-shell:not(.emi-reels-shell) .stories-card .story-ring,
+.app-shell:not(.emi-reels-shell) .stories-row .story-ring{
+  background:linear-gradient(135deg,#9af3d7,#25bd8e 54%,#42cbd0)!important;
+  box-shadow:0 0 0 1px rgba(106,231,190,.2),0 0 12px rgba(31,195,145,.12)!important;
+}
+.app-shell:not(.emi-reels-shell) .stories-card .story-ring .story-avatar,
+.app-shell:not(.emi-reels-shell) .stories-row .story-ring .story-avatar{
+  border-color:#08251b!important;
+  background:#0b3023!important;
+}
+@media(prefers-reduced-motion:no-preference){
+  .app-shell:not(.emi-reels-shell) .mobile-nav button,
+  .app-shell:not(.emi-reels-shell) .round-action,
+  .app-shell:not(.emi-reels-shell) .icon-button,
+  .app-shell:not(.emi-reels-shell) .stories-row .story-ring{
+    transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease,color .2s ease!important;
+  }
+}
+@media(max-width:700px){
+  .app-shell:not(.emi-reels-shell) .stories-card,
+  .app-shell:not(.emi-reels-shell) .post-card{
+    border-radius:18px!important;
+  }
+}
