@@ -1754,7 +1754,7 @@ function decodeVapidKey(base64String: string) {
     return ()=>observer.disconnect();
   }, [posts, active, viewingProfile?.id, user?.id]);
 
-  const cleanPostContent = (content: string) => content.replace(/^\s*\[EMI_REEL|EMI_VIDEO_POST\]\s*/i, "").replace(/\[EMI_MUSIC\][\s\S]*?(?:\[\/EMI_MUSIC\]|$)/gi, "").trim();
+  const cleanPostContent = (content: string) => content.replace(/^\s*\[(?:EMI_REEL|EMI_VIDEO_POST)\]\s*/i, "").replace(/\[EMI_MUSIC\][\s\S]*?(?:\[\/EMI_MUSIC\]|$)/gi, "").trim();
   const filteredPosts = viewingProfile ? (profileTab === "shared" ? sharedPosts.filter(p => !query || cleanPostContent(p.content).toLowerCase().includes(query.toLowerCase())) : visiblePosts) : active === "Vidéos" ? visiblePosts.filter(post => post.media_type === "video" && (post.media_urls || []).length > 0) : active === "Accueil" ? visiblePosts : visiblePosts.filter(post => post.media_type !== "video" || !(post.media_urls || []).length);
 
   return (
