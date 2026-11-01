@@ -83,7 +83,7 @@ function describeUnknownError(err: unknown): string {
 
 export default function HomePage() {
   const [active, setActive] = useState("Accueil");
-  const [homeFeedSort, setHomeFeedSort] = useState<"recent" | "popular">("recent");
+  const [homeFeedSort, setHomeFeedSort] = useState<"for-you" | "recent" | "popular">("for-you");
   const [postSoundEnabled, setPostSoundEnabled] = useState<Record<string, boolean>>({});
   const [settingsSection, setSettingsSection] = useState<string | null>(null);
   const [vibesTab, setVibesTab] = useState("Pour toi");
@@ -1757,9 +1757,23 @@ function decodeVapidKey(base64String: string) {
 
   const cleanPostContent = (content: string) => content.replace(/^\s*\[(?:EMI_REEL|EMI_VIDEO_POST)\]\s*/i, "").replace(/\[EMI_MUSIC\][\s\S]*?(?:\[\/EMI_MUSIC\]|$)/gi, "").trim();
   const filteredPosts = viewingProfile ? (profileTab === "shared" ? sharedPosts.filter(p => !query || cleanPostContent(p.content).toLowerCase().includes(query.toLowerCase())) : visiblePosts) : active === "Vidéos" ? visiblePosts.filter(post => post.media_type === "video" && (post.media_urls || []).length > 0) : active === "Accueil" ? visiblePosts : visiblePosts.filter(post => post.media_type !== "video" || !(post.media_urls || []).length);
-  const displayedPosts = active === "Accueil" && !viewingProfile && homeFeedSort === "popular"
-    ? [...filteredPosts].sort((a, b) => ((likes[b.id] || 0) + (commentCounts[b.id] || 0) * 2 + (repostCounts[b.id] || 0) * 2) - ((likes[a.id] || 0) + (commentCounts[a.id] || 0) * 2 + (repostCounts[a.id] || 0) * 2) || new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    : filteredPosts;
+  const displayedPosts = active !== "Accueil" || viewingProfile
+    ? filteredPosts
+    : [...filteredPosts].sort((a, b) => {
+        const engagement = (post: Post) => (likes[post.id] || 0) + (commentCounts[post.id] || 0) * 2 + (repostCounts[post.id] || 0) * 2;
+        const freshness = (post: Post) => {
+          const ageHours = Math.max(0, (Date.now() - new Date(post.created_at).getTime()) / 3_600_000);
+          return 24 / (24 + ageHours);
+        };
+        const score = (post: Post) => {
+          const followedBoost = user && followedIds.includes(post.user_id) ? 100 : 0;
+          const creatorBoost = user?.id === post.user_id ? 8 : 0;
+          return followedBoost + creatorBoost + Math.log1p(engagement(post)) * 5 + freshness(post) * 12;
+        };
+        if (homeFeedSort === "recent") return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        if (homeFeedSort === "popular") return engagement(b) - engagement(a) || new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        return score(b) - score(a) || new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
 
   return (
     <main className={"app-shell" + (active === "Reels" ? " emi-reels-shell" : "")}>
@@ -1862,7 +1876,7 @@ function decodeVapidKey(base64String: string) {
          <div className="feed-tabs" style={{display:["Accueil","Découvrir","Messages"].includes(active) ? "none" : undefined}}><button className={active === "Accueil" ? "tab-active" : ""} onClick={() => {setActive("Accueil"); void loadFeed();}}>Publications</button><button className={active === "Abonnements" ? "tab-active" : ""} onClick={() => void loadFollowingFeed()}>Abonnements</button></div>
         </>}
 
-        {active === "Accueil" && !viewingProfile && <div className="emi-feed-discovery-bar" role="group" aria-label="Trier le fil d’actualité"><div><span>TON FIL EMi</span><strong>À découvrir</strong></div><div className="emi-feed-sort"><button type="button" className={homeFeedSort === "recent" ? "is-active" : ""} aria-pressed={homeFeedSort === "recent"} onClick={() => setHomeFeedSort("recent")}>Récents</button><button type="button" className={homeFeedSort === "popular" ? "is-active" : ""} aria-pressed={homeFeedSort === "popular"} onClick={() => setHomeFeedSort("popular")}>Populaires</button></div></div>}
+        {active === "Accueil" && !viewingProfile && <div className="emi-feed-discovery-bar" role="group" aria-label="Trier le fil d’actualité"><div><span>TON FIL EMi</span><strong>À découvrir</strong></div><div className="emi-feed-sort"><button type="button" className={homeFeedSort === "for-you" ? "is-active" : ""} aria-pressed={homeFeedSort === "for-you"} onClick={() => setHomeFeedSort("for-you")}>Pour toi</button><button type="button" className={homeFeedSort === "recent" ? "is-active" : ""} aria-pressed={homeFeedSort === "recent"} onClick={() => setHomeFeedSort("recent")}>Récents</button><button type="button" className={homeFeedSort === "popular" ? "is-active" : ""} aria-pressed={homeFeedSort === "popular"} onClick={() => setHomeFeedSort("popular")}>Populaires</button></div></div>}
         {active === "Paramètres" && <section className="emi-settings-page">
           {!settingsSection ? <><div className="emi-settings-hero"><span className="emi-settings-crest"><Settings size={24}/></span><div><span className="eyebrow">EMi · ESPACE PERSONNEL</span><h2>Réglages</h2><p>Ton univers, ton identité, tes choix.</p></div></div>
           {user && <section className="emi-settings-profile-card" aria-label="Profil et publications personnelles">
