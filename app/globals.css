@@ -5150,3 +5150,17 @@ video,img,canvas { accent-color:var(--emi-accent); }
 .emi-feed-sort button{min-height:34px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:#aeb9ae;font-size:11px;font-weight:700;white-space:nowrap}
 .emi-feed-sort button.is-active{background:linear-gradient(135deg,#d7c58d,#a98d50);color:#102018;box-shadow:0 2px 9px rgba(0,0,0,.22)}
 @media(max-width:420px){.emi-feed-discovery-bar{padding:11px 10px;gap:7px}.emi-feed-sort button{padding:0 9px;font-size:10px}}
+
+
+/* Découvrir : accès discret à la recherche de membres */
+.app-shell:not(.emi-reels-shell) .emi-people-discovery{margin:0 0 14px;padding:0;overflow:hidden;border:1px solid rgba(196,165,91,.22);border-radius:17px;background:linear-gradient(145deg,#0c1914,#09120f);box-shadow:0 8px 22px rgba(0,0,0,.12)}
+.emi-people-discovery-toggle{width:100%;min-height:76px;display:flex;align-items:center;gap:12px;padding:13px 15px;border:0;background:transparent;color:#eee9dc;text-align:left;cursor:pointer}
+.emi-people-toggle-icon{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border:1px solid rgba(196,165,91,.3);border-radius:13px;background:#14251b;color:#d9c68e}
+.emi-people-discovery-toggle>span:nth-child(2){display:grid;gap:3px;min-width:0;flex:1}
+.emi-people-discovery-toggle small{color:#c9b77e;font-size:8px;font-weight:800;letter-spacing:1.4px}
+.emi-people-discovery-toggle strong{font-size:14px;font-weight:750}
+.emi-people-discovery-toggle em{color:#aeb9ae;font-size:10px;font-style:normal;line-height:1.4}
+.emi-people-toggle-chevron{color:#d5c184;transition:transform .2s ease}
+.emi-people-toggle-chevron.is-open{transform:rotate(90deg)}
+.emi-people-discovery-content{padding:0 15px 15px;border-top:1px solid rgba(196,165,91,.12)}
+@media(max-width:420px){.emi-people-discovery-toggle{min-height:69px;padding:11px 12px;gap:10px}.emi-people-toggle-icon{width:36px;height:36px;flex-basis:36px}.emi-people-discovery-toggle strong{font-size:13px}.emi-people-discovery-content{padding:0 11px 12px}}
