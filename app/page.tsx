@@ -983,6 +983,7 @@ function decodeVapidKey(base64String: string) {
     if (!user) { setComposerOpen(false); setAuthOpen(true); setMessage("Connecte-toi pour publier."); return; }
     const filesToUpload = selectedFiles.length ? selectedFiles : file ? [file] : [];
     if (!caption.trim() && filesToUpload.length===0) { setMessage("Ajoute un texte ou une photo/vidéo."); return; }
+    if (publishDestination === "reel" && (!filesToUpload.length || !filesToUpload[0].type.startsWith("video/"))) { setMessage("Un Reel doit contenir une vidéo. Sélectionne une vidéo depuis ton téléphone."); return; }
     if (musicFile && filesToUpload.length===0) { setMessage("Ajoute une photo ou une vidéo pour accompagner ta musique."); return; }
     if (musicFile && !musicFile.type.startsWith("audio/")) { setMessage("Choisis un fichier audio valide."); return; }
     if (musicFile && musicFile.size > 15 * 1024 * 1024) { setMessage("Le fichier audio doit faire moins de 15 Mo."); return; }
