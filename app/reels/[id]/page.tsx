@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   ChevronLeft, Heart, MessageCircle, Volume2, VolumeX, Send, Repeat2,
-  Home, Compass, Plus, Store, Clapperboard, UserRound, Bookmark, MoreHorizontal
+  Home, Compass, Plus, Store, Clapperboard, UserRound, Bookmark, Crown, Search, Bell
 } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
@@ -245,6 +245,10 @@ export default function ImmersiveReelsPage() {
                 <button aria-label="Commentaires" onClick={() => void openComments(post)}><span className="emi-reel-action-circle"><MessageCircle/></span><b>{formatCount(commentCounts[post.id] || 0)}</b></button>
                 <button aria-label="Repartager" onClick={() => void share(post)}><span className="emi-reel-action-circle"><Repeat2/></span><b>0</b></button>
                 <button aria-label="Partager" onClick={() => void share(post)}><span className="emi-reel-action-circle"><Send/></span><b>Partager</b></button>
+                <button className={saved ? "saved" : ""} aria-label={saved ? "Retirer des enregistrements" : "Enregistrer"} onClick={() => {
+                  setSavedIds(old => saved ? old.filter(id => id !== post.id) : [...old, post.id]);
+                  setNotice(saved ? "Retiré des éléments enregistrés sur cet appareil." : "Enregistré sur cet appareil.");
+                }}><span className="emi-reel-action-circle"><Bookmark fill={saved ? "currentColor" : "none"}/></span></button>
                 <button className="emi-reel-sound" aria-label={soundOn ? "Couper le son" : "Activer le son"} onClick={() => setSoundOn(value => !value)}>{soundOn ? <Volume2/> : <VolumeX/>}</button>
               </div>
 
