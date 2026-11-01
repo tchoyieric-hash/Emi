@@ -4417,3 +4417,264 @@ button:focus-visible,a:focus-visible,input:focus-visible { outline-color:#43c9e8
 @media(prefers-reduced-motion:reduce) {
   .mobile-nav,.stories-card,.emi-ecosystem-entry-wrap,.emi-ecosystem-tile,.emi-home-market-card { transition:none !important; }
 }
+
+
+/* EMi Royal Nexus — unified midnight / soft-cyan design system */
+:root {
+  color-scheme: dark;
+  --emi-bg: #050b13;
+  --emi-surface: #0b1623;
+  --emi-surface-raised: #102235;
+  --emi-surface-soft: #0d1c2a;
+  --emi-border: rgba(132, 174, 201, .22);
+  --emi-text: #f3f7fb;
+  --emi-muted: #a5b6c5;
+  --emi-accent: #55cde8;
+  --emi-accent-strong: #32b8dc;
+  --emi-accent-soft: rgba(67, 198, 228, .13);
+  --emi-gold: #d6c17b;
+  --emi-danger: #ff718b;
+}
+html, body { background-color: var(--emi-bg) !important; color: var(--emi-text) !important; }
+body {
+  background:
+    radial-gradient(ellipse at 50% -16%, rgba(25, 92, 132, .18), transparent 44%),
+    linear-gradient(180deg, #050b13 0%, #07111d 58%, #050b13 100%) !important;
+}
+::selection { background: rgba(65, 194, 225, .28); color: #fff; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--emi-accent) !important;
+  outline-offset: 3px !important;
+}
+
+/* Shared surfaces across every app destination */
+.emi-nexus-intro,
+.emi-ecosystem-entry-wrap,
+.emi-ecosystem-tile,
+.emi-pulse-card,
+.emi-pulse-post,
+.emi-market-feature,
+.emi-market-pulse,
+.emi-settings-page,
+.emi-settings-hero,
+.emi-settings-profile-card,
+.emi-story-studio,
+.emi-story-editor,
+.emi-story-preview,
+.emi-creator,
+.emi-creator-form,
+.emi-vibes-page,
+.emi-vibes-hero,
+.chat-shell,
+.chat-sidebar,
+.chat-window,
+.chat-welcome,
+.chat-list,
+.profile-page,
+.discovery-person,
+.welcome-card,
+.post-card,
+.stories-card,
+.emi-home-market,
+.emi-home-reels {
+  color: var(--emi-text) !important;
+  border-color: var(--emi-border) !important;
+}
+.emi-nexus-intro,
+.emi-ecosystem-entry-wrap,
+.emi-pulse-card,
+.emi-pulse-post,
+.emi-market-feature,
+.emi-market-pulse,
+.emi-settings-page,
+.emi-settings-hero,
+.emi-settings-profile-card,
+.emi-story-studio,
+.emi-story-editor,
+.emi-story-preview,
+.emi-creator,
+.emi-creator-form,
+.emi-vibes-page,
+.emi-vibes-hero,
+.chat-shell,
+.chat-sidebar,
+.chat-window,
+.chat-welcome,
+.chat-list,
+.profile-page,
+.discovery-person,
+.welcome-card {
+  background: linear-gradient(145deg, #0d1e2d 0%, #091522 100%) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .16) !important;
+}
+
+/* Remove leftover green/gold and purple accents from controls and navigation */
+.emi-nexus-intro button,
+.emi-ecosystem-entry-action,
+.emi-ecosystem-panel-foot,
+.emi-pulse-card-link,
+.emi-market-cta,
+.emi-settings-action,
+.emi-settings-edit-profile,
+.emi-story-publish,
+.emi-creator-next,
+.emi-cta-primary,
+.emi-vibes-tabs button,
+.emi-chat-filters button,
+.chat-compose button,
+.emi-messages-head-actions button {
+  border-color: rgba(79, 190, 219, .42) !important;
+}
+.emi-nexus-intro button,
+.emi-market-cta,
+.emi-settings-edit-profile,
+.emi-story-publish,
+.emi-creator-next,
+.emi-cta-primary {
+  background: linear-gradient(110deg, #b8f1fa, #4ac8e5 62%, #299bc2) !important;
+  color: #061521 !important;
+  box-shadow: 0 7px 20px rgba(40, 177, 211, .15) !important;
+}
+.emi-ecosystem-entry-icon,
+.emi-ecosystem-tile > span,
+.emi-pulse-card-icon,
+.emi-settings-row-icon,
+.emi-story-brand-icon,
+.emi-story-format-icon,
+.emi-story-picker-icon,
+.emi-vibes-orb,
+.emi-vibes-empty-icon {
+  background: linear-gradient(145deg, #14364c, #0a1b2a) !important;
+  border-color: rgba(80, 191, 219, .34) !important;
+  color: #67d7ed !important;
+  box-shadow: none !important;
+}
+.emi-ecosystem-entry-copy strong,
+.emi-ecosystem-panel-head h2,
+.emi-ecosystem-tile strong,
+.emi-pulse-card strong,
+.emi-settings-subhead,
+.emi-settings-row-copy strong,
+.emi-market-copy strong,
+.emi-market-pulse-copy strong,
+.emi-vibes-section-head,
+.emi-messages-heading,
+.chat-topbar strong,
+.profile-page-identity h2 {
+  color: #edf5fa !important;
+}
+.emi-ecosystem-entry-copy small,
+.emi-ecosystem-panel-head p,
+.emi-ecosystem-tile small,
+.emi-settings-subtitle,
+.emi-settings-row-copy small,
+.emi-settings-detail,
+.emi-market-copy p,
+.emi-market-pulse-copy p,
+.emi-vibes-note,
+.chat-secure-label,
+.chat-list-copy small,
+.profile-page-identity span,
+.profile-bio {
+  color: var(--emi-muted) !important;
+}
+.emi-ecosystem-entry-action,
+.emi-ecosystem-panel-foot,
+.emi-pulse-card-link,
+.emi-market-view-count,
+.emi-settings-action,
+.emi-settings-theme-current,
+.emi-vibes-tabs button[aria-selected="true"],
+.emi-chat-filters button[aria-pressed="true"] {
+  color: var(--emi-accent) !important;
+}
+
+/* Messages, conversations and profile */
+.chat-shell, .chat-sidebar, .chat-window { background-color: #091522 !important; }
+.chat-list-item, .chat-topbar, .chat-compose {
+  border-color: var(--emi-border) !important;
+}
+.chat-list-item.chat-selected,
+.chat-bubble.chat-mine {
+  background: rgba(58, 183, 215, .15) !important;
+  border-color: rgba(74, 192, 221, .3) !important;
+}
+.chat-bubble.chat-theirs {
+  background: #122638 !important;
+  border-color: var(--emi-border) !important;
+  color: var(--emi-text) !important;
+}
+.chat-compose input, .chat-compose textarea,
+.emi-chat-search input,
+.profile-field-label input, .profile-field-label textarea {
+  background: #071522 !important;
+  border-color: var(--emi-border) !important;
+  color: var(--emi-text) !important;
+}
+.profile-page, .emi-settings-page { background: linear-gradient(155deg, #0d2030, #081522) !important; }
+.profile-back-button, .profile-more-action {
+  background: #0b1b29 !important;
+  border-color: var(--emi-border) !important;
+  color: #c9edf5 !important;
+}
+
+/* Stories, creator, reels and publishing surfaces */
+.emi-story-studio, .emi-story-editor, .emi-creator, .emi-creator-form {
+  background: linear-gradient(155deg, #0d2030, #081522) !important;
+}
+.emi-story-format, .emi-story-theme-picker button,
+.emi-creator-tools button, .emi-simple-publish-choices button {
+  background-color: #102235 !important;
+  border-color: var(--emi-border) !important;
+  color: var(--emi-text) !important;
+}
+.emi-story-format[aria-pressed="true"],
+.emi-story-theme-picker button[aria-pressed="true"],
+.emi-simple-publish-choices button[aria-pressed="true"] {
+  background: var(--emi-accent-soft) !important;
+  border-color: var(--emi-accent) !important;
+}
+.emi-creator-caption, .emi-caption-editor,
+.emi-creator-note, .emi-story-inline-message {
+  color: var(--emi-muted) !important;
+  border-color: var(--emi-border) !important;
+}
+
+/* Home, Nexus, market and discovery */
+.emi-ecosystem-entry-wrap { background: linear-gradient(145deg, #0d2030, #081522) !important; }
+.emi-ecosystem-entry { background: radial-gradient(ellipse at 0 50%, rgba(45, 166, 199, .12), transparent 58%) !important; }
+.emi-ecosystem-tile { background: linear-gradient(145deg, #102438, #091724) !important; }
+.emi-home-market-card, .emi-home-reel-card {
+  background: #0d1c2a !important;
+  border-color: var(--emi-border) !important;
+}
+.emi-home-market-badge { background: rgba(70, 190, 218, .16) !important; color: #8ce4f3 !important; }
+.emi-market-pulse, .emi-pulse-card { background: linear-gradient(145deg, #102235, #091522) !important; }
+.emi-pulse-post-footer button { color: var(--emi-accent) !important; border-color: var(--emi-border) !important; }
+
+/* Consistent app chrome and safe-area navigation */
+.mobile-nav {
+  background: rgba(5, 13, 22, .97) !important;
+  border-top: 1px solid var(--emi-border) !important;
+}
+.mobile-nav button.mobile-active { color: var(--emi-accent) !important; }
+.mobile-nav .mobile-create {
+  background: linear-gradient(145deg, #b8f1fa, #45c8e7 62%, #248eb8) !important;
+  color: #061521 !important;
+}
+.emi-royal-masthead {
+  background: linear-gradient(135deg, #071321, #0b2031 58%, #07111e) !important;
+  border-color: rgba(83, 181, 211, .24) !important;
+}
+.emi-royal-wordmark strong { color: #f3f8fc !important; }
+.emi-royal-wordmark strong span { color: var(--emi-accent) !important; }
+.emi-royal-wordmark small { color: #a7c4d2 !important; }
+
+/* Respect media surfaces; recolor their surrounding chrome only */
+.emi-feed-media-wrap, .emi-post-gallery, .emi-story-preview video,
+.chat-media, video, img { accent-color: var(--emi-accent); }
+@media (max-width: 700px) {
+  .chat-shell { border-radius: 18px !important; }
+  .emi-settings-page, .emi-story-studio, .emi-creator, .emi-vibes-page { border-radius: 18px !important; }
+  .emi-nexus-intro { border-radius: 18px !important; }
+}
