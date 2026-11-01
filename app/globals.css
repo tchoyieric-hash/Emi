@@ -3614,3 +3614,89 @@ body{background:radial-gradient(ellipse at 50% -10%,rgba(13,117,77,.24),transpar
     bottom: 18px !important;
   }
 }
+
+
+/* EMi Reels — séparation nette de la colonne sociale et de la saisie commentaire */
+@media (max-width: 700px) {
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions {
+    top: 29% !important;
+    right: 16px !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: 56px !important;
+    max-width: 56px !important;
+    gap: 11px !important;
+    z-index: 22 !important;
+  }
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    min-height: 48px !important;
+    gap: 3px !important;
+  }
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button svg {
+    flex: 0 0 44px !important;
+    width: 44px !important;
+    height: 44px !important;
+    padding: 9px !important;
+    border-width: 1px !important;
+  }
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button span,
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button:nth-child(2) span,
+  .emi-feed-post.reel-post .post-actions.emi-reel-social-actions > button:nth-child(3) span {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    font-size: 12px !important;
+    line-height: 1.1 !important;
+  }
+  .emi-feed-post.reel-post .emi-reel-comment-bar {
+    position: absolute !important;
+    z-index: 30 !important;
+    left: 18px !important;
+    right: 88px !important;
+    bottom: 20px !important;
+    width: auto !important;
+    min-height: 56px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    border: 1px solid rgba(236, 215, 151, .72) !important;
+    border-radius: 32px !important;
+    background: rgba(13, 25, 20, .94) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.06) !important;
+    backdrop-filter: blur(16px) !important;
+  }
+  .emi-feed-post.reel-post .emi-reel-comment-bar input {
+    flex: 1 1 auto !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    margin: 0 !important;
+    padding: 0 10px !important;
+    border: 0 !important;
+    outline: 0 !important;
+    background: transparent !important;
+    color: #f7f4e8 !important;
+    font-size: 14px !important;
+  }
+  .emi-feed-post.reel-post .emi-reel-comment-bar button {
+    flex: 0 0 42px !important;
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: linear-gradient(145deg,#f6e29a,#c5a54d) !important;
+    color: #08251a !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25) !important;
+  }
+  .emi-feed-post.reel-post .post-caption-wrap {
+    bottom: 92px !important;
+    right: 92px !important;
+  }
+}
