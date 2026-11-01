@@ -363,7 +363,16 @@ function decodeVapidKey(base64String: string) {
       .filter(row => row.last_seen && new Date(row.last_seen).getTime() > onlineCutoff)
       .map(row => row.user_id));
     setStories(rows.map(row => ({ ...row, profiles: byId.get(row.user_id) || null })));
-  }, []);
+    const ownStoryIds = rows.filter(row => row.user_id === user?.id).map(row => row.id);
+    if (ownStoryIds.length) {
+      const { data: ownViews, error: ownViewsError } = await supabase.from("story_views").select("story_id").in("story_id", ownStoryIds);
+      if (!ownViewsError) {
+        const counts: Record<string, number> = {};
+        (ownViews || []).forEach((view: {story_id:string}) => { counts[view.story_id] = (counts[view.story_id] || 0) + 1; });
+        setStoryViewCounts(old => ({ ...old, ...counts }));
+      }
+    }
+  }, [user?.id]);
 
 
   const stopCamera = useCallback(() => {
@@ -800,8 +809,10 @@ function decodeVapidKey(base64String: string) {
       .upsert({ story_id: activeStory.id, viewer_key: viewerKey }, { onConflict: "story_id,viewer_key", ignoreDuplicates: true })
       .then(async ({ error }) => {
         if (error) { console.error("Impossible d’enregistrer la vue de story", error.message); return; }
-        const { data: viewRows, count } = await supabase.from("story_views").select("viewer_key", { count: "exact" }).eq("story_id", activeStory.id);
-        if (cancelled) return;
+        // Seul l’auteur peut consulter les identités des personnes ayant vu sa story.
+        if (user?.id !== activeStory.user_id) return;
+        const { data: viewRows, count, error: viewsError } = await supabase.from("story_views").select("viewer_key", { count: "exact" }).eq("story_id", activeStory.id);
+        if (cancelled || viewsError) return;
         if (typeof count === "number") setStoryViewCounts(old => ({ ...old, [activeStory.id]: count }));
         const viewerIds = [...new Set((viewRows || []).map(row => row.viewer_key).filter((key): key is string => !!key && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(key)))];
         if (viewerIds.length) {
