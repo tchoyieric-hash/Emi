@@ -1333,28 +1333,21 @@ function decodeVapidKey(base64String: string) {
     if (!supabase || !user) { setUnreadMessages(0); return; }
     let alive = true;
     const refreshUnread = async () => {
-      const { data: memberships, error } = await supabase.from("conversation_participants").select("conversation_id,last_read_at").eq("user_id", user.id);
+      const { data, error } = await supabase.rpc("get_unread_message_count", {
+        p_active_conversation: activeConversation
+      });
       if (!alive || error) return;
-      let total = 0;
-      for (const membership of memberships || []) {
-        if (membership.conversation_id === activeConversation) continue;
-        let query = supabase.from("messages").select("id", { count: "exact", head: true }).eq("conversation_id", membership.conversation_id).neq("sender_id", user.id);
-        if (membership.last_read_at) query = query.gt("created_at", membership.last_read_at);
-        const { count } = await query;
-        total += count || 0;
-      }
-      if (alive) setUnreadMessages(total);
+      setUnreadMessages(Number(data || 0));
     };
     void refreshUnread();
     const channel = supabase.channel("emi-incoming-messages-" + user.id)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, async payload => {
-        const row = payload.new as {conversation_id:string;sender_id:string;content?:string};
-        if (!alive || row.sender_id === user.id || row.conversation_id === activeConversation) return;
-        const { data: membership } = await supabase.from("conversation_participants").select("conversation_id").eq("conversation_id", row.conversation_id).eq("user_id", user.id).maybeSingle();
-        if (!alive || !membership) return;
+        const row = payload.new as {sender_id:string};
+        if (!alive || row.sender_id === user.id) return;
+        await refreshUnread();
+        if (!alive) return;
         setIncomingMessageNotice("Tu as reçu un nouveau message.");
         window.setTimeout(() => { if (alive) setIncomingMessageNotice(""); }, 6000);
-        setUnreadMessages(old => old + 1);
       }).subscribe();
     return () => { alive = false; void supabase.removeChannel(channel); };
   }, [user?.id, activeConversation]);
