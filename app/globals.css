@@ -5200,3 +5200,28 @@ video,img,canvas { accent-color:var(--emi-accent); }
  .emi-ecosystem-panel-grid .emi-ecosystem-tile>strong{font-size:13px!important}
  .emi-ecosystem-panel-grid .emi-ecosystem-tile>small{font-size:9.5px!important}
 }
+
+
+/* EMi mobile home shortcuts: show every primary destination without clipping */
+@media (max-width: 700px) {
+  .app-shell:not(.emi-reels-shell) .emi-home-shortcuts {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+    overflow: visible;
+    padding: 9px 10px 12px;
+  }
+  .app-shell:not(.emi-reels-shell) .emi-home-shortcuts button {
+    min-width: 0;
+    justify-content: center;
+    gap: 5px;
+    padding: 9px 3px;
+    font-size: 9px;
+    line-height: 1.1;
+  }
+  .app-shell:not(.emi-reels-shell) .emi-home-shortcuts button svg {
+    flex: 0 0 auto;
+    width: 15px;
+    height: 15px;
+  }
+}
