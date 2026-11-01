@@ -2061,6 +2061,167 @@ function decodeVapidKey(base64String: string) {
         .emi-reels-screen .post-actions.emi-reel-social-actions .emi-reel-sound-toggle{position:static!important;inset:auto!important;transform:none!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;margin:0!important;padding:0!important;display:grid!important;place-items:center!important;border:1px solid rgba(247,215,116,.65)!important;border-radius:50%!important;background:rgba(0,0,0,.62)!important;color:#f7d774!important;box-shadow:0 2px 8px #0008!important;}
         .emi-reels-screen .post-actions.emi-reel-social-actions .emi-reel-sound-toggle svg{width:17px!important;height:17px!important;filter:none!important;}
         .emi-reels-screen .post-actions.emi-reel-social-actions .emi-reel-sound-toggle span{display:none!important;}
+
+        /* Refonte mobile Reels v2 : bandeau compact, actions complètes et zone de saisie dégagée. */
+        .emi-reels-screen .emi-reels-header{
+          position:fixed!important;top:0!important;left:0!important;right:0!important;
+          height:76px!important;min-height:76px!important;padding:0 14px!important;
+          display:flex!important;align-items:center!important;justify-content:space-between!important;
+          background:linear-gradient(105deg,#06251a 0%,#04120d 58%,#020806 100%)!important;
+          border-bottom:1px solid rgba(232,185,74,.72)!important;
+        }
+        .emi-reels-screen .emi-reels-back{width:44px!important;height:44px!important;min-width:44px!important;border:1.5px solid #e8c96e!important;border-radius:50%!important;background:#071b13!important}
+        .emi-reels-screen .emi-reels-brand{position:static!important;left:auto!important;top:auto!important;transform:none!important;max-width:none!important;display:flex!important;align-items:center!important;gap:7px!important}
+        .emi-reels-screen .emi-reels-logo{width:38px!important;height:40px!important;flex:0 0 38px!important;font-size:33px!important}
+        .emi-reels-screen .emi-reels-brand strong{font-size:27px!important;line-height:28px!important}
+        .emi-reels-screen .emi-reels-brand small{font-size:5px!important;letter-spacing:.8px!important}
+        .emi-reels-screen .emi-reels-header-tools{display:flex!important;align-items:center!important;margin:0!important}
+        .emi-reels-screen .emi-reels-header-tools button{width:38px!important;height:42px!important;min-width:38px!important;font-size:23px!important}
+        .emi-reels-screen .feed-list{
+          position:fixed!important;inset:76px 0 calc(82px + env(safe-area-inset-bottom)) 0!important;
+          height:auto!important;padding:0!important;overflow-y:auto!important;overscroll-behavior-y:contain!important;
+        }
+        .emi-reels-screen .feed-list>.emi-feed-post.reel-post{
+          position:relative!important;display:block!important;width:100vw!important;height:100%!important;
+          min-height:100%!important;max-height:none!important;margin:0!important;padding:0!important;
+          overflow:hidden!important;background:#020806!important;
+        }
+        .emi-reels-screen .reel-post>.emi-feed-media-wrap{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:1!important;overflow:hidden!important}
+        .emi-reels-screen .reel-post>.emi-feed-media-wrap video.reel-video,
+        .emi-reels-screen .reel-post>.emi-feed-media-wrap img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:100%!important;object-fit:cover!important;object-position:center!important}
+        .emi-reels-screen .reel-post>.post-top{top:12px!important;left:14px!important;right:14px!important;z-index:25!important;min-height:54px!important}
+        .emi-reels-screen .reel-post>.post-caption-wrap{
+          position:absolute!important;z-index:29!important;left:16px!important;right:82px!important;
+          bottom:82px!important;top:auto!important;width:auto!important;margin:0!important;padding:0!important;
+          max-height:88px!important;overflow:hidden!important;text-align:left!important;
+        }
+        .emi-reels-screen .reel-post .post-caption{
+          display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:3!important;
+          overflow:hidden!important;color:#fff!important;font-size:14px!important;font-weight:650!important;
+          line-height:1.38!important;text-shadow:0 2px 9px #000,0 1px 3px #000!important;
+        }
+        .emi-reels-screen .reel-post>.post-caption-wrap>button{display:inline-block!important;color:#f7d774!important;text-shadow:0 2px 5px #000!important}
+        .emi-reels-screen .reel-post>.post-actions.emi-reel-social-actions{
+          position:absolute!important;z-index:35!important;top:42%!important;right:10px!important;left:auto!important;
+          bottom:auto!important;transform:translateY(-24%)!important;width:48px!important;
+          display:flex!important;flex-direction:column!important;align-items:center!important;
+          justify-content:flex-start!important;gap:5px!important;margin:0!important;padding:0!important;
+          overflow:visible!important;background:transparent!important;
+        }
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button{
+          position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;
+          pointer-events:auto!important;width:46px!important;min-width:46px!important;max-width:46px!important;
+          height:42px!important;min-height:42px!important;max-height:42px!important;flex:0 0 42px!important;
+          flex-direction:column!important;align-items:center!important;justify-content:center!important;
+          gap:1px!important;margin:0!important;padding:0!important;border:0!important;
+          background:transparent!important;color:#fff!important;
+        }
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button svg{width:24px!important;height:24px!important}
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button span{font-size:10px!important;line-height:11px!important}
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-sound-toggle{
+          display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+          place-items:center!important;width:38px!important;min-width:38px!important;max-width:38px!important;
+          height:38px!important;min-height:38px!important;max-height:38px!important;flex:0 0 38px!important;
+          border:1.5px solid #f0ce70!important;border-radius:50%!important;
+          background:rgba(3,20,13,.88)!important;color:#f7d774!important;
+        }
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-sound-toggle svg{width:19px!important;height:19px!important;filter:none!important}
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-sound-toggle span{display:none!important}
+        .emi-reels-screen .reel-post>.emi-reel-comment-bar{
+          position:absolute!important;z-index:45!important;left:14px!important;right:14px!important;
+          bottom:12px!important;top:auto!important;height:48px!important;min-height:48px!important;
+          display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+          gap:8px!important;padding:4px 6px 4px 13px!important;border:1px solid rgba(232,201,110,.85)!important;
+          border-radius:26px!important;background:rgba(4,19,13,.94)!important;box-shadow:0 4px 18px #0008!important;
+        }
+        .emi-reels-screen .reel-post>.emi-reel-comment-bar input{display:block!important;min-width:0!important;height:100%!important;font-size:13px!important}
+        .emi-reels-screen .reel-post>.emi-reel-comment-bar button{width:38px!important;height:38px!important;min-width:38px!important;flex:0 0 38px!important}
+        .emi-reels-screen .reel-post>.comments-panel{z-index:50!important;bottom:70px!important;max-height:45%!important}
+        .emi-reels-screen .mobile-nav{height:calc(82px + env(safe-area-inset-bottom))!important;z-index:70!important}
+        @media(max-width:390px){
+          .emi-reels-screen .emi-reels-header{height:72px!important;min-height:72px!important;padding:0 10px!important}
+          .emi-reels-screen .emi-reels-back{width:40px!important;height:40px!important;min-width:40px!important}
+          .emi-reels-screen .emi-reels-logo{width:34px!important;height:36px!important;flex-basis:34px!important;font-size:29px!important}
+          .emi-reels-screen .emi-reels-brand strong{font-size:24px!important}
+          .emi-reels-screen .feed-list{inset:72px 0 calc(82px + env(safe-area-inset-bottom)) 0!important}
+          .emi-reels-screen .reel-post>.post-actions.emi-reel-social-actions{right:7px!important;gap:3px!important}
+          .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>button{height:39px!important;min-height:39px!important;flex-basis:39px!important}
+          .emi-reels-screen .reel-post>.post-caption-wrap{left:12px!important;right:70px!important;bottom:74px!important}
+  
+
+        /* Partage premium : action native du téléphone avec fallback de copie du lien du Reel. */
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button{
+          display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+          width:54px!important;min-width:54px!important;min-height:54px!important;
+          flex:0 0 54px!important;flex-direction:column!important;align-items:center!important;
+          justify-content:center!important;gap:4px!important;padding:5px 2px!important;
+          border:1px solid rgba(241,211,125,.72)!important;border-radius:18px!important;
+          background:linear-gradient(155deg,rgba(17,48,35,.96),rgba(2,12,8,.96))!important;
+          color:#ffe39a!important;box-shadow:0 5px 16px rgba(0,0,0,.4),inset 0 1px rgba(255,255,255,.12)!important;
+          text-shadow:0 1px 5px #000!important;
+        }
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button svg{
+          display:block!important;width:25px!important;height:25px!important;filter:none!important;
+        }
+        .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button span{
+          display:block!important;color:#ffe39a!important;font-size:10px!important;font-weight:700!important;line-height:12px!important;
+        }
+        @media(max-width:390px){
+          .emi-reels-screen .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button{
+            width:48px!important;min-width:48px!important;min-height:50px!important;flex-basis:50px!important;border-radius:16px!important;
+          }
+        }
+
+        /* Partage Reel : bouton autonome, toujours visible, séparé des réactions. */
+        .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.emi-reel-share-button{
+          position:absolute!important;z-index:85!important;display:flex!important;visibility:visible!important;
+          opacity:1!important;pointer-events:auto!important;right:12px!important;left:auto!important;
+          top:auto!important;bottom:calc(132px + env(safe-area-inset-bottom))!important;
+          transform:none!important;width:52px!important;min-width:52px!important;height:58px!important;
+          min-height:58px!important;padding:6px 3px!important;flex-direction:column!important;
+          align-items:center!important;justify-content:center!important;gap:3px!important;
+          border:1.5px solid rgba(242,211,125,.9)!important;border-radius:17px!important;
+          background:linear-gradient(155deg,rgba(17,53,37,.98),rgba(2,13,9,.98))!important;
+          color:#ffe39a!important;box-shadow:0 5px 18px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.14)!important;
+        }
+        .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.emi-reel-share-button svg{
+          display:block!important;width:23px!important;height:23px!important;filter:none!important;
+        }
+        .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.emi-reel-share-button span{
+          display:block!important;color:#ffe39a!important;font-size:9px!important;
+          font-weight:800!important;line-height:11px!important;
+        }
+        @media(max-width:390px){
+          .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.emi-reel-share-button{
+            right:11px!important;bottom:calc(130px + env(safe-area-inset-bottom))!important;
+            width:48px!important;min-width:48px!important;height:54px!important;min-height:54px!important;
+          }
+        }
+        /* Contrôle sonore indépendant : hors de la colonne sociale pour rester toujours visible. */
+        .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.emi-reel-sound-toggle{
+          position:absolute!important;z-index:80!important;display:grid!important;visibility:visible!important;
+          opacity:1!important;pointer-events:auto!important;right:14px!important;left:auto!important;
+          top:auto!important;bottom:calc(76px + env(safe-area-inset-bottom))!important;
+          transform:none!important;width:48px!important;min-width:48px!important;height:48px!important;
+          min-height:48px!important;padding:0!important;place-items:center!important;
+          border:2px solid #f2d477!important;border-radius:50%!important;
+          background:rgba(3,20,13,.96)!important;color:#ffe28a!important;
+          box-shadow:0 3px 14px #000b!important;
+        }
+        .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.emi-reel-sound-toggle svg{
+          display:block!important;width:25px!important;height:25px!important;filter:none!important;
+        }
+        .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.emi-reel-sound-toggle span{
+          display:none!important;
+        }
+        @media(max-width:390px){
+          .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.emi-reel-sound-toggle{
+            right:12px!important;bottom:calc(76px + env(safe-area-inset-bottom))!important;
+            width:46px!important;height:46px!important;min-width:46px!important;
+          }
+        }
+        .emi-reels-screen .reel-post>.emi-reel-comment-bar{left:10px!important;right:10px!important;height:46px!important;min-height:46px!important}
+        }
       `}
 </style>}
       <style>{`@keyframes emiPublishSpin{to{transform:rotate(360deg)}}`}</style>
@@ -2207,7 +2368,7 @@ function decodeVapidKey(base64String: string) {
           <div className="emi-vibes-note"><ShieldCheck size={16}/><span>Les contenus et profils proviennent d’EMi. Les offres et événements ne sont pas présentés comme vérifiés sans confirmation de leur source.</span></div>
         </section>}
         {active === "EMi Pulse" ? null : active === "Paramètres" ? null : active === "Découvrir" && !viewingProfile ? <section className="discovery-panel"><label className="discovery-search"><Search size={19}/><input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => { if (e.key === "Enter") void loadExploreProfiles(); }} placeholder="Rechercher un nom ou @pseudo…" aria-label="Rechercher des membres"/></label><button className="modal-primary" onClick={() => void loadExploreProfiles()} disabled={exploreLoading}>{exploreLoading ? "Recherche…" : "Rechercher"}</button><div className="discovery-list">{exploreProfiles.map(profile => <article className="discovery-person" key={profile.id}><button className="discovery-person-main" onClick={() => void openProfile(profile.id)}><span className="discovery-avatar">{profile.avatar_url ? <img src={profile.avatar_url} alt=""/> : (profile.display_name || profile.username || "M").slice(0,2).toUpperCase()}</span><span><strong>{profile.display_name || profile.username || "Membre EMi"}</strong><small>@{profile.username || "membre"}</small>{profile.bio && <small className="discovery-bio">{profile.bio}</small>}</span></button><div className="discovery-person-actions"><button className="profile-back-button" onClick={() => void openProfile(profile.id)}>Voir le profil</button>{user && <button className="modal-primary" onClick={() => void startConversation(profile)}>Message</button>}</div></article>)}{!exploreLoading && exploreProfiles.length === 0 && <div className="empty-feature"><Compass size={30}/><h2>Découvre ta communauté</h2><p>Recherche un nom ou un nom d’utilisateur pour trouver des membres EMi.</p></div>}</div></section> : active === "Messages" && !viewingProfile ? null: !supabase ? <div className="post-card"><h2>Connexion à configurer</h2><p>Les variables d’environnement Supabase sont absentes. Vérifie NEXT_PUBLIC_SUPABASE_URL et NEXT_PUBLIC_SUPABASE_ANON_KEY dans Vercel.</p></div> : (filteredPosts.length === 0 || (viewingProfile && (profileTab === "tagged" || (profileTab === "reels" && !filteredPosts.some(post => post.media_type === "video"))))) ? <div className="post-card profile-tab-empty" style={{padding:28,textAlign:"center"}}><div className="modal-icon" style={{margin:"0 auto 16px"}}><Sparkles size={23}/></div><h2 style={{fontSize:20}}>{viewingProfile && profileTab === "shared" ? "Aucun repartage pour le moment" : viewingProfile && profileTab === "tagged" ? "Aucune identification pour le moment" : query ? "Aucun résultat" : viewingProfile && profileTab === "reels" ? "Aucun Reel sur ce profil" : active === "Reels" || active === "Vidéos" ? "Aucun Reel pour le moment" : viewingProfile ? "Aucune publication pour le moment" : "Le fil commence ici"}</h2><p style={{color:"#aaa6b7",fontSize:13,lineHeight:1.7}}>{viewingProfile && profileTab === "shared" ? "Les publications que ce membre a repartagées apparaîtront ici." : viewingProfile && profileTab === "tagged" ? "Les publications qui identifient ce membre apparaîtront ici lorsque cette fonction sera disponible." : query ? "Essaie un autre mot." : viewingProfile && profileTab === "reels" ? "Les vidéos publiées par ce membre apparaîtront ici." : viewingProfile ? "Les moments partagés par ce membre apparaîtront ici." : "Aucune publication réelle n’est encore disponible. Sois le premier à partager un moment."}</p>{(!viewingProfile || (user?.id === viewingProfile.id && profileTab === "posts")) && <button className="modal-primary" style={{maxWidth:260}} onClick={() => setComposerOpen(true)}>Créer une publication</button>}</div> :
-        <div className={"feed-list" + (viewingProfile ? " profile-media-grid" : "")}>{(viewingProfile && profileTab === "reels" ? filteredPosts.filter(post => post.media_type === "video" && (post.media_urls || []).length > 0) : viewingProfile && profileTab === "tagged" ? [] : filteredPosts).map(post => { const author = post.profiles?.display_name || post.profiles?.username || "Membre EMi"; return <article id={"emi-post-" + post.id} data-post-id={post.id} className={"emi-feed-post " + (active === "Reels" && post.media_type === "video" ? "post-card reel-post" : "post-card") + (viewingProfile ? " profile-grid-post" : "")} key={post.id}><div className="post-top"><button className="post-avatar-button" onClick={() => void openProfile(post.user_id)} aria-label={"Voir le profil de " + author}><div className="avatar avatar-sunset">{post.profiles?.avatar_url ? <img src={post.profiles.avatar_url} alt=""/> : author.slice(0,2).toUpperCase()}</div></button><button className="post-author post-author-button" onClick={() => void openProfile(post.user_id)}><strong className="emi-author-name">{author}{hasBlueVerificationBadge(author) && <span className="emi-verified-badge" role="img" aria-label="Profil vérifié par EMi" title="Profil vérifié par EMi"><BadgeCheck size={19} fill="#1877F2" stroke="#FFFFFF" strokeWidth={2.2}/></span>}</strong><span>@{post.profiles?.username || "membre"} · {new Date(post.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</span></button><button type="button" className="profile-more-action" aria-label="Options de la publication" aria-haspopup="dialog" onClick={()=>setOpenPostMenu(post)} style={{marginLeft:"auto",border:0,background:"transparent",color:"inherit",padding:8,fontSize:22,lineHeight:1}}>•••</button>{user && user.id !== post.user_id && <button className="emi-reel-follow-button" onClick={() => void toggleFollow(post.user_id)} style={{marginLeft:"8px",border:"1px solid #393643",borderRadius:9,padding:"7px 10px",background:followedIds.includes(post.user_id)?"#282235":"#a78bfa17",color:"#d8c9ff",fontSize:11}}>{followPendingIds.includes(post.user_id) ? "…" : followedIds.includes(post.user_id) ? "Suivi" : "Suivre"}</button>}</div>{post.content && <><div className="post-caption-wrap"><p className="post-caption" style={expandedCaptions.includes(post.id)?undefined:{display:"-webkit-box",WebkitLineClamp:3,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{cleanPostContent(post.content).split("[EMI_MUSIC]")[0].trim()}</p>{cleanPostContent(post.content).split("[EMI_MUSIC]")[0].trim().length>180&&<button type="button" onClick={()=>setExpandedCaptions(old=>old.includes(post.id)?old.filter(id=>id!==post.id):[...old,post.id])} style={{border:0,background:"transparent",color:"#c5b7f6",fontWeight:700,padding:"2px 0 8px"}}>{expandedCaptions.includes(post.id)?"Voir moins":"Voir plus"}</button>}</div>{post.content.includes("[EMI_MUSIC]") && (()=>{try{const track=JSON.parse(post.content.split("[EMI_MUSIC]")[1].split("[/EMI_MUSIC]")[0]) as {url:string;title:string;start?:number;end?:number};const audioId="emi-track-"+post.id;const hasVideo=post.media_type==="video";return <div className="emi-post-music" data-emi-music-row="true" data-post-id={post.id}><span className="emi-post-music-icon"><Music2 size={17}/></span><span className="emi-post-music-title"><strong>{track.title}</strong><small>{hasVideo ? "Musique synchronisée avec la vidéo" : "Musique du moment · EMi Music"}</small></span><audio id={audioId} className="emi-post-audio" preload="none" src={track.url} data-track-start={track.start||0} aria-label={"Musique "+track.title} onPlay={e=>{if((track.start||0)>0 && e.currentTarget.currentTime<(track.start||0))e.currentTarget.currentTime=track.start||0;document.querySelectorAll<HTMLAudioElement>(".emi-post-music audio").forEach(other=>{if(other!==e.currentTarget)other.pause();});}} onTimeUpdate={e=>{if((track.end||0)>0 && e.currentTarget.currentTime>= (track.end||0)){e.currentTarget.pause();e.currentTarget.currentTime=track.start||0;}}}/></div>}catch{return null}})()}</>}{(post.media_urls || []).length > 1 ? <div style={{position:"relative",width:"100%"}}><div className="emi-post-gallery" id={"emi-gallery-"+post.id} aria-label={"Carrousel de "+post.media_urls.length+" photos"} style={{width:"100%",height:"min(100vw,650px)",minHeight:320,maxHeight:650,display:"flex",flexDirection:"row",flexWrap:"nowrap",overflowX:"auto",overflowY:"hidden",scrollSnapType:"x mandatory",scrollBehavior:"smooth",overscrollBehaviorX:"contain",WebkitOverflowScrolling:"touch",touchAction:"pan-x",background:"#09090d",scrollbarWidth:"none"}}>{(post.media_urls || []).map((url,i) => <div key={url+i} style={{flex:"0 0 100%",flexShrink:0,minWidth:"100%",width:"100%",height:"100%",scrollSnapAlign:"start",scrollSnapStop:"always",position:"relative",display:"grid",placeItems:"center",background:"#09090d"}}>{post.media_type === "video" ? <video src={url} controls={active === "Reels"} muted={!postSoundEnabled[post.id]} playsInline preload="metadata" className={active === "Reels" ? "reel-video" : "emi-feed-video"} onClick={()=>{if(post.media_type==="video"&&active!=="Reels"){setSelectedReelId(post.id);setViewingProfile(null);setActive("Reels");window.scrollTo({top:0,behavior:"instant"});}}} style={{width:"100%",height:"100%",objectFit:"contain",cursor:post.media_type==="video"&&active!=="Reels"?"pointer":"auto"}} onPlay={e=>{const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio){audio.currentTime=e.currentTarget.currentTime;audio.muted=!postSoundEnabled[post.id];if(!audio.muted)void audio.play().catch(()=>undefined);}}}/> : <img src={url} alt={"Photo "+(i+1)+" de la publication"} loading="lazy" decoding="async" onClick={()=>{setSelectedPostDetail(post);setPostDetailView("post");}} style={{width:"100%",height:"100%",objectFit:"contain",cursor:"zoom-in"}}/>}<span style={{position:"absolute",top:12,right:12,padding:"6px 10px",borderRadius:99,background:"#092b20dd",color:"#f6d85f",fontSize:12,fontWeight:700}}>{i+1}/{post.media_urls.length}</span></div>)}</div>{active!=="Reels"&&!viewingProfile&&(post.media_type==="video"||post.content.includes("[EMI_MUSIC]"))&&<button type="button" className="emi-feed-sound-toggle emi-gallery-sound-toggle emi-photo-music-toggle" style={{position:"absolute",right:12,bottom:12,zIndex:100,display:"flex",visibility:"visible",opacity:1,pointerEvents:"auto"}} aria-label={postSoundEnabled[post.id]?"Couper le son":"Activer le son"} aria-pressed={!!postSoundEnabled[post.id]} onClick={()=>{const next=!(postSoundEnabled[post.id]??false);setPostSoundEnabled(old=>({...old,[post.id]:next}));const card=document.getElementById("emi-post-"+post.id);const video=card?.querySelector<HTMLVideoElement>("video.emi-feed-video");const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(video)video.muted=!next;if(audio){audio.muted=!next;if(next){if(video)audio.currentTime=video.currentTime;audio.volume=1;void audio.play().catch(()=>undefined);}else audio.pause();}}}>{postSoundEnabled[post.id]?<Volume2 size={17}/>:<VolumeX size={17}/>}<span>{postSoundEnabled[post.id]?"Son activé":"Son coupé"}</span></button>}<button type="button" aria-label="Photo précédente" onClick={()=>{const el=document.getElementById("emi-gallery-"+post.id);el?.scrollBy({left:-(el.clientWidth||300),behavior:"smooth"});}} style={{position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",width:38,height:38,borderRadius:"50%",border:"1px solid #ffffff66",background:"#10101099",color:"#fff",fontSize:25,zIndex:2,display:"grid",placeItems:"center"}}>‹</button><button type="button" aria-label="Photo suivante" onClick={()=>{const el=document.getElementById("emi-gallery-"+post.id);el?.scrollBy({left:el.clientWidth||300,behavior:"smooth"});}} style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",width:38,height:38,borderRadius:"50%",border:"1px solid #ffffff66",background:"#10101099",color:"#fff",fontSize:25,zIndex:2,display:"grid",placeItems:"center"}}>›</button></div> : (post.media_urls || []).map((url,i) => post.media_type === "video" ? <div key={url+i} className="emi-feed-media-wrap"><video src={url} controls={active === "Reels"} autoPlay={false} muted={active === "Reels" ? !reelSoundOn : !postSoundEnabled[post.id]} loop={active === "Reels"} playsInline preload="metadata" className={active === "Reels" ? "reel-video" : "emi-feed-video"} onClick={()=>{if(post.media_type==="video"&&active!=="Reels"){setSelectedReelId(post.id);setViewingProfile(null);setActive("Reels");window.scrollTo({top:0,behavior:"instant"});}}} onPlay={e=>{const video=e.currentTarget;const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio){audio.currentTime=video.currentTime;audio.muted=active === "Reels" ? !reelSoundOn : !postSoundEnabled[post.id];if(!audio.muted)void audio.play().catch(()=>undefined);}}} onPause={e=>{const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio)audio.pause();}} onSeeking={e=>{const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio)audio.currentTime=e.currentTarget.currentTime;}} onTimeUpdate={e=>{const video=e.currentTarget;const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio&&Math.abs(audio.currentTime-video.currentTime)>0.35)audio.currentTime=video.currentTime;}} onEnded={()=>{const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio){audio.pause();audio.currentTime=0;}}} style={active === "Reels" ? undefined : {width:"100%",maxHeight:560,borderRadius:0,background:"#09090d",objectFit:"contain",cursor:post.media_type==="video"&&active!=="Reels"?"pointer":"auto"}}/>{active!=="Reels"&&!viewingProfile&&<button type="button" className="emi-feed-sound-toggle" aria-label={postSoundEnabled[post.id]?"Couper le son":"Activer le son"} aria-pressed={!!postSoundEnabled[post.id]} onClick={()=>{const next=!(postSoundEnabled[post.id]??false);setPostSoundEnabled(old=>({...old,[post.id]:next}));const card=document.getElementById("emi-post-"+post.id);const video=card?.querySelector<HTMLVideoElement>("video.emi-feed-video");const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(video){video.muted=!next;if(next)void video.play().catch(()=>undefined);}if(audio){audio.muted=!next;if(next){if(video){try{audio.currentTime=video.currentTime;}catch{}}audio.volume=1;void audio.play().catch(()=>undefined);}else audio.pause();}}}>{postSoundEnabled[post.id]?<Volume2 size={17}/>:<VolumeX size={17}/>}</button>}</div> : <div key={url+i} className="emi-feed-media-wrap"><img src={url} alt="Publication partagée sur EMi" loading="lazy" decoding="async" onClick={()=>{setSelectedPostDetail(post);setPostDetailView("post");}} style={{width:"100%",maxHeight:650,objectFit:"contain",borderRadius:0,background:"#09090d",cursor:"zoom-in"}}/>{active!=="Reels"&&!viewingProfile&&post.content.includes("EMI_MUSIC")&&<button type="button" className="emi-feed-sound-toggle emi-photo-music-toggle" style={{position:"absolute",right:12,bottom:12,zIndex:100,display:"flex",visibility:"visible",opacity:1,pointerEvents:"auto"}} aria-label={postSoundEnabled[post.id]?"Couper la musique":"Écouter la musique"} aria-pressed={!!postSoundEnabled[post.id]} onClick={e=>{e.preventDefault();e.stopPropagation();const next=!(postSoundEnabled[post.id]??false);setPostSoundEnabled(old=>({...old,[post.id]:next}));const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio){document.querySelectorAll<HTMLAudioElement>(".emi-post-music audio").forEach(other=>{if(other!==audio)other.pause();});audio.muted=!next;if(next){audio.volume=1;void audio.play().catch(()=>undefined);}else audio.pause();}}}>{postSoundEnabled[post.id]?<Volume2 size={17}/>:<VolumeX size={17}/>}<span>{postSoundEnabled[post.id]?"Son activé":"Son coupé"}</span></button>}</div>)}<div className="post-actions emi-reel-social-actions"><button className={liked.includes(post.id) ? "liked" : ""} onClick={() => void toggleLike(post.id)} aria-label={liked.includes(post.id) ? "Retirer le J’aime" : "J’aime"}><Heart size={27} fill={liked.includes(post.id) ? "currentColor" : "none"}/><span>{formatSocialCount(likes[post.id] || 0)}</span></button><button onClick={() => { setSelectedPostDetail(post); setPostDetailView("comments"); void loadComments(post.id); }} aria-label="Ouvrir les commentaires"><MessageCircle size={27}/><span>{formatSocialCount(commentCounts[post.id] || 0)}</span></button><button className={reposted.includes(post.id) ? "liked" : ""} onClick={() => void toggleRepost(post.id)} aria-label={reposted.includes(post.id) ? "Annuler le repartage" : "Repartager"}><Repeat2 size={27}/><span>{formatSocialCount(repostCounts[post.id] || 0)}</span></button><button onClick={() => { if (navigator.share) void navigator.share({title:"EMi",text:post.content,url:location.href}).catch(()=>{}); else setMessage("Utilise le menu de partage de ton navigateur pour partager EMi."); }} aria-label="Partager"><Send size={27}/><span>Partager</span></button>{active === "Reels" && !viewingProfile && <button type="button" className="emi-reel-sound-toggle" aria-label={reelSoundOn ? "Désactiver le son" : "Activer le son"} aria-pressed={reelSoundOn} onClick={e=>{e.preventDefault();e.stopPropagation();const card=document.getElementById("emi-post-"+post.id);const video=card?.querySelector<HTMLVideoElement>("video.reel-video");const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;const nextMuted=video?!video.muted:reelSoundOn;if(video){video.volume=1;video.muted=nextMuted;if(!nextMuted)void video.play().catch(()=>undefined);}if(audio){audio.volume=1;audio.muted=nextMuted;if(nextMuted)audio.pause();else{if(video){try{audio.currentTime=Math.max(Number(audio.dataset.trackStart||0),video.currentTime);}catch{}}void audio.play().catch(()=>undefined);}}setReelSoundOn(!nextMuted);}}>{reelSoundOn?<Volume2 size={25}/>:<VolumeX size={25}/>}<span>{reelSoundOn?"Son activé":"Activer le son"}</span></button>}<button className={savedPostIds.includes(post.id) ? "is-saved" : ""} onClick={() => togglePostPreference("saved-posts",savedPostIds,setSavedPostIds,post.id,"Enregistrement")} aria-label={savedPostIds.includes(post.id) ? "Retirer des enregistrements" : "Enregistrer"}><Bookmark size={26} fill={savedPostIds.includes(post.id) ? "currentColor" : "none"}/></button></div>{active === "Reels" && !viewingProfile && <form className="emi-reel-comment-bar" onSubmit={e=>void addComment(post.id,e)}><button type="button" className="emi-reel-emoji-button" aria-label="Ajouter un emoji" onClick={()=>setCommentDrafts(old=>({...old,[post.id]:(old[post.id]||"")+"😊"}))}><Smile size={20}/></button><input aria-label="Ajouter un commentaire au Reel" value={commentDrafts[post.id] || ""} onChange={e=>setCommentDrafts(old=>({...old,[post.id]:e.target.value}))} maxLength={2000} placeholder="Ajouter un commentaire…"/><button type="submit" disabled={busy || !(commentDrafts[post.id]||"").trim()} aria-label="Envoyer le commentaire"><Send size={18}/></button></form>}{openComments.includes(post.id) && <div className="comments-panel" style={{borderTop:"1px solid #2b2b35",marginTop:14,paddingTop:12}}><div style={{display:"grid",gap:10,marginBottom:12}}>{(comments[post.id] || []).map(comment => <div key={comment.id} style={{fontSize:12,lineHeight:1.6}}><strong>{comment.profiles?.display_name || comment.profiles?.username || "Membre"} </strong><span style={{color:"#d0ced9",overflowWrap:"anywhere"}}>{comment.content}</span></div>)}{comments[post.id]?.length === 0 && <p style={{fontSize:12,color:"#92919f"}}>Aucun commentaire. Lance la conversation !</p>}</div><form onSubmit={e => void addComment(post.id,e)} style={{display:"flex",gap:8}}><input aria-label="Écrire un commentaire" value={commentDrafts[post.id] || ""} onChange={e=>setCommentDrafts(old=>({...old,[post.id]:e.target.value}))} maxLength={2000} placeholder="Écrire un commentaire…" style={{flex:1,minWidth:0,padding:10,borderRadius:9,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><button type="submit" disabled={busy} className="modal-primary" style={{width:"auto",padding:"0 14px"}}>Envoyer</button></form></div>}</article>; })}</div>
+        <div className={"feed-list" + (viewingProfile ? " profile-media-grid" : "")}>{(viewingProfile && profileTab === "reels" ? filteredPosts.filter(post => post.media_type === "video" && (post.media_urls || []).length > 0) : viewingProfile && profileTab === "tagged" ? [] : filteredPosts).map(post => { const author = post.profiles?.display_name || post.profiles?.username || "Membre EMi"; return <article id={"emi-post-" + post.id} data-post-id={post.id} className={"emi-feed-post " + (active === "Reels" && post.media_type === "video" ? "post-card reel-post" : "post-card") + (viewingProfile ? " profile-grid-post" : "")} key={post.id}><div className="post-top"><button className="post-avatar-button" onClick={() => void openProfile(post.user_id)} aria-label={"Voir le profil de " + author}><div className="avatar avatar-sunset">{post.profiles?.avatar_url ? <img src={post.profiles.avatar_url} alt=""/> : author.slice(0,2).toUpperCase()}</div></button><button className="post-author post-author-button" onClick={() => void openProfile(post.user_id)}><strong className="emi-author-name">{author}{hasBlueVerificationBadge(author) && <span className="emi-verified-badge" role="img" aria-label="Profil vérifié par EMi" title="Profil vérifié par EMi"><BadgeCheck size={19} fill="#1877F2" stroke="#FFFFFF" strokeWidth={2.2}/></span>}</strong><span>@{post.profiles?.username || "membre"} · {new Date(post.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</span></button><button type="button" className="profile-more-action" aria-label="Options de la publication" aria-haspopup="dialog" onClick={()=>setOpenPostMenu(post)} style={{marginLeft:"auto",border:0,background:"transparent",color:"inherit",padding:8,fontSize:22,lineHeight:1}}>•••</button>{user && user.id !== post.user_id && <button className="emi-reel-follow-button" onClick={() => void toggleFollow(post.user_id)} style={{marginLeft:"8px",border:"1px solid #393643",borderRadius:9,padding:"7px 10px",background:followedIds.includes(post.user_id)?"#282235":"#a78bfa17",color:"#d8c9ff",fontSize:11}}>{followPendingIds.includes(post.user_id) ? "…" : followedIds.includes(post.user_id) ? "Suivi" : "Suivre"}</button>}</div>{post.content && <><div className="post-caption-wrap"><p className="post-caption" style={expandedCaptions.includes(post.id)?undefined:{display:"-webkit-box",WebkitLineClamp:3,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{cleanPostContent(post.content).split("[EMI_MUSIC]")[0].trim()}</p>{cleanPostContent(post.content).split("[EMI_MUSIC]")[0].trim().length>180&&<button type="button" onClick={()=>setExpandedCaptions(old=>old.includes(post.id)?old.filter(id=>id!==post.id):[...old,post.id])} style={{border:0,background:"transparent",color:"#c5b7f6",fontWeight:700,padding:"2px 0 8px"}}>{expandedCaptions.includes(post.id)?"Voir moins":"Voir plus"}</button>}</div>{post.content.includes("[EMI_MUSIC]") && (()=>{try{const track=JSON.parse(post.content.split("[EMI_MUSIC]")[1].split("[/EMI_MUSIC]")[0]) as {url:string;title:string;start?:number;end?:number};const audioId="emi-track-"+post.id;const hasVideo=post.media_type==="video";return <div className="emi-post-music" data-emi-music-row="true" data-post-id={post.id}><span className="emi-post-music-icon"><Music2 size={17}/></span><span className="emi-post-music-title"><strong>{track.title}</strong><small>{hasVideo ? "Musique synchronisée avec la vidéo" : "Musique du moment · EMi Music"}</small></span><audio id={audioId} className="emi-post-audio" preload="none" src={track.url} data-track-start={track.start||0} aria-label={"Musique "+track.title} onPlay={e=>{if((track.start||0)>0 && e.currentTarget.currentTime<(track.start||0))e.currentTarget.currentTime=track.start||0;document.querySelectorAll<HTMLAudioElement>(".emi-post-music audio").forEach(other=>{if(other!==e.currentTarget)other.pause();});}} onTimeUpdate={e=>{if((track.end||0)>0 && e.currentTarget.currentTime>= (track.end||0)){e.currentTarget.pause();e.currentTarget.currentTime=track.start||0;}}}/></div>}catch{return null}})()}</>}{(post.media_urls || []).length > 1 ? <div style={{position:"relative",width:"100%"}}><div className="emi-post-gallery" id={"emi-gallery-"+post.id} aria-label={"Carrousel de "+post.media_urls.length+" photos"} style={{width:"100%",height:"min(100vw,650px)",minHeight:320,maxHeight:650,display:"flex",flexDirection:"row",flexWrap:"nowrap",overflowX:"auto",overflowY:"hidden",scrollSnapType:"x mandatory",scrollBehavior:"smooth",overscrollBehaviorX:"contain",WebkitOverflowScrolling:"touch",touchAction:"pan-x",background:"#09090d",scrollbarWidth:"none"}}>{(post.media_urls || []).map((url,i) => <div key={url+i} style={{flex:"0 0 100%",flexShrink:0,minWidth:"100%",width:"100%",height:"100%",scrollSnapAlign:"start",scrollSnapStop:"always",position:"relative",display:"grid",placeItems:"center",background:"#09090d"}}>{post.media_type === "video" ? <video src={url} controls={active === "Reels"} muted={!postSoundEnabled[post.id]} playsInline preload="metadata" className={active === "Reels" ? "reel-video" : "emi-feed-video"} onClick={()=>{if(post.media_type==="video"&&active!=="Reels"){setSelectedReelId(post.id);setViewingProfile(null);setActive("Reels");window.scrollTo({top:0,behavior:"instant"});}}} style={{width:"100%",height:"100%",objectFit:"contain",cursor:post.media_type==="video"&&active!=="Reels"?"pointer":"auto"}} onPlay={e=>{const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio){audio.currentTime=e.currentTarget.currentTime;audio.muted=!postSoundEnabled[post.id];if(!audio.muted)void audio.play().catch(()=>undefined);}}}/> : <img src={url} alt={"Photo "+(i+1)+" de la publication"} loading="lazy" decoding="async" onClick={()=>{setSelectedPostDetail(post);setPostDetailView("post");}} style={{width:"100%",height:"100%",objectFit:"contain",cursor:"zoom-in"}}/>}<span style={{position:"absolute",top:12,right:12,padding:"6px 10px",borderRadius:99,background:"#092b20dd",color:"#f6d85f",fontSize:12,fontWeight:700}}>{i+1}/{post.media_urls.length}</span></div>)}</div>{active!=="Reels"&&!viewingProfile&&(post.media_type==="video"||post.content.includes("[EMI_MUSIC]"))&&<button type="button" className="emi-feed-sound-toggle emi-gallery-sound-toggle emi-photo-music-toggle" style={{position:"absolute",right:12,bottom:12,zIndex:100,display:"flex",visibility:"visible",opacity:1,pointerEvents:"auto"}} aria-label={postSoundEnabled[post.id]?"Couper le son":"Activer le son"} aria-pressed={!!postSoundEnabled[post.id]} onClick={()=>{const next=!(postSoundEnabled[post.id]??false);setPostSoundEnabled(old=>({...old,[post.id]:next}));const card=document.getElementById("emi-post-"+post.id);const video=card?.querySelector<HTMLVideoElement>("video.emi-feed-video");const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(video)video.muted=!next;if(audio){audio.muted=!next;if(next){if(video)audio.currentTime=video.currentTime;audio.volume=1;void audio.play().catch(()=>undefined);}else audio.pause();}}}>{postSoundEnabled[post.id]?<Volume2 size={17}/>:<VolumeX size={17}/>}<span>{postSoundEnabled[post.id]?"Son activé":"Son coupé"}</span></button>}<button type="button" aria-label="Photo précédente" onClick={()=>{const el=document.getElementById("emi-gallery-"+post.id);el?.scrollBy({left:-(el.clientWidth||300),behavior:"smooth"});}} style={{position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",width:38,height:38,borderRadius:"50%",border:"1px solid #ffffff66",background:"#10101099",color:"#fff",fontSize:25,zIndex:2,display:"grid",placeItems:"center"}}>‹</button><button type="button" aria-label="Photo suivante" onClick={()=>{const el=document.getElementById("emi-gallery-"+post.id);el?.scrollBy({left:el.clientWidth||300,behavior:"smooth"});}} style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",width:38,height:38,borderRadius:"50%",border:"1px solid #ffffff66",background:"#10101099",color:"#fff",fontSize:25,zIndex:2,display:"grid",placeItems:"center"}}>›</button></div> : (post.media_urls || []).map((url,i) => post.media_type === "video" ? <div key={url+i} className="emi-feed-media-wrap"><video src={url} controls={active === "Reels"} autoPlay={false} muted={active === "Reels" ? !reelSoundOn : !postSoundEnabled[post.id]} loop={active === "Reels"} playsInline preload="metadata" className={active === "Reels" ? "reel-video" : "emi-feed-video"} onClick={()=>{if(post.media_type==="video"&&active!=="Reels"){setSelectedReelId(post.id);setViewingProfile(null);setActive("Reels");window.scrollTo({top:0,behavior:"instant"});}}} onPlay={e=>{const video=e.currentTarget;const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio){audio.currentTime=video.currentTime;audio.muted=active === "Reels" ? !reelSoundOn : !postSoundEnabled[post.id];if(!audio.muted)void audio.play().catch(()=>undefined);}}} onPause={e=>{const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio)audio.pause();}} onSeeking={e=>{const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio)audio.currentTime=e.currentTarget.currentTime;}} onTimeUpdate={e=>{const video=e.currentTarget;const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio&&Math.abs(audio.currentTime-video.currentTime)>0.35)audio.currentTime=video.currentTime;}} onEnded={()=>{const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio){audio.pause();audio.currentTime=0;}}} style={active === "Reels" ? undefined : {width:"100%",maxHeight:560,borderRadius:0,background:"#09090d",objectFit:"contain",cursor:post.media_type==="video"&&active!=="Reels"?"pointer":"auto"}}/>{active!=="Reels"&&!viewingProfile&&<button type="button" className="emi-feed-sound-toggle" aria-label={postSoundEnabled[post.id]?"Couper le son":"Activer le son"} aria-pressed={!!postSoundEnabled[post.id]} onClick={()=>{const next=!(postSoundEnabled[post.id]??false);setPostSoundEnabled(old=>({...old,[post.id]:next}));const card=document.getElementById("emi-post-"+post.id);const video=card?.querySelector<HTMLVideoElement>("video.emi-feed-video");const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(video){video.muted=!next;if(next)void video.play().catch(()=>undefined);}if(audio){audio.muted=!next;if(next){if(video){try{audio.currentTime=video.currentTime;}catch{}}audio.volume=1;void audio.play().catch(()=>undefined);}else audio.pause();}}}>{postSoundEnabled[post.id]?<Volume2 size={17}/>:<VolumeX size={17}/>}</button>}</div> : <div key={url+i} className="emi-feed-media-wrap"><img src={url} alt="Publication partagée sur EMi" loading="lazy" decoding="async" onClick={()=>{setSelectedPostDetail(post);setPostDetailView("post");}} style={{width:"100%",maxHeight:650,objectFit:"contain",borderRadius:0,background:"#09090d",cursor:"zoom-in"}}/>{active!=="Reels"&&!viewingProfile&&post.content.includes("EMI_MUSIC")&&<button type="button" className="emi-feed-sound-toggle emi-photo-music-toggle" style={{position:"absolute",right:12,bottom:12,zIndex:100,display:"flex",visibility:"visible",opacity:1,pointerEvents:"auto"}} aria-label={postSoundEnabled[post.id]?"Couper la musique":"Écouter la musique"} aria-pressed={!!postSoundEnabled[post.id]} onClick={e=>{e.preventDefault();e.stopPropagation();const next=!(postSoundEnabled[post.id]??false);setPostSoundEnabled(old=>({...old,[post.id]:next}));const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;if(audio){document.querySelectorAll<HTMLAudioElement>(".emi-post-music audio").forEach(other=>{if(other!==audio)other.pause();});audio.muted=!next;if(next){audio.volume=1;void audio.play().catch(()=>undefined);}else audio.pause();}}}>{postSoundEnabled[post.id]?<Volume2 size={17}/>:<VolumeX size={17}/>}<span>{postSoundEnabled[post.id]?"Son activé":"Son coupé"}</span></button>}</div>)}<div className="post-actions emi-reel-social-actions"><button className={liked.includes(post.id) ? "liked" : ""} onClick={() => void toggleLike(post.id)} aria-label={liked.includes(post.id) ? "Retirer le J’aime" : "J’aime"}><Heart size={27} fill={liked.includes(post.id) ? "currentColor" : "none"}/><span>{formatSocialCount(likes[post.id] || 0)}</span></button><button onClick={() => { setSelectedPostDetail(post); setPostDetailView("comments"); void loadComments(post.id); }} aria-label="Ouvrir les commentaires"><MessageCircle size={27}/><span>{formatSocialCount(commentCounts[post.id] || 0)}</span></button><button className={reposted.includes(post.id) ? "liked" : ""} onClick={() => void toggleRepost(post.id)} aria-label={reposted.includes(post.id) ? "Annuler le repartage" : "Repartager"}><Repeat2 size={27}/><span>{formatSocialCount(repostCounts[post.id] || 0)}</span></button><button type="button" className="emi-reel-share-button" onClick={() => void sharePost(post)} aria-label="Partager cette vidéo" title="Partager cette vidéo"><Share2 size={27}/></button><button className={savedPostIds.includes(post.id) ? "is-saved" : ""} onClick={() => togglePostPreference("saved-posts",savedPostIds,setSavedPostIds,post.id,"Enregistrement")} aria-label={savedPostIds.includes(post.id) ? "Retirer des enregistrements" : "Enregistrer"}><Bookmark size={26} fill={savedPostIds.includes(post.id) ? "currentColor" : "none"}/></button></div>{active === "Reels" && !viewingProfile && <button type="button" className="emi-reel-sound-toggle" aria-label={reelSoundOn ? "Désactiver le son" : "Activer le son"} aria-pressed={reelSoundOn} onClick={e=>{e.preventDefault();e.stopPropagation();const card=document.getElementById("emi-post-"+post.id);const video=card?.querySelector<HTMLVideoElement>("video.reel-video");const audio=document.getElementById("emi-track-"+post.id) as HTMLAudioElement|null;const nextMuted=video?!video.muted:reelSoundOn;if(video){video.volume=1;video.muted=nextMuted;if(!nextMuted)void video.play().catch(()=>undefined);}if(audio){audio.volume=1;audio.muted=nextMuted;if(nextMuted)audio.pause();else{if(video){try{audio.currentTime=Math.max(Number(audio.dataset.trackStart||0),video.currentTime);}catch{}}void audio.play().catch(()=>undefined);}}setReelSoundOn(!nextMuted);}}>{reelSoundOn?<Volume2 size={25}/>:<VolumeX size={25}/>}<span>{reelSoundOn?"Son activé":"Activer le son"}</span></button>}{active === "Reels" && !viewingProfile && <form className="emi-reel-comment-bar" onSubmit={e=>void addComment(post.id,e)}><button type="button" className="emi-reel-emoji-button" aria-label="Ajouter un emoji" onClick={()=>setCommentDrafts(old=>({...old,[post.id]:(old[post.id]||"")+"😊"}))}><Smile size={20}/></button><input aria-label="Ajouter un commentaire au Reel" value={commentDrafts[post.id] || ""} onChange={e=>setCommentDrafts(old=>({...old,[post.id]:e.target.value}))} maxLength={2000} placeholder="Ajouter un commentaire…"/><button type="submit" disabled={busy || !(commentDrafts[post.id]||"").trim()} aria-label="Envoyer le commentaire"><Send size={18}/></button></form>}{openComments.includes(post.id) && <div className="comments-panel" style={{borderTop:"1px solid #2b2b35",marginTop:14,paddingTop:12}}><div style={{display:"grid",gap:10,marginBottom:12}}>{(comments[post.id] || []).map(comment => <div key={comment.id} style={{fontSize:12,lineHeight:1.6}}><strong>{comment.profiles?.display_name || comment.profiles?.username || "Membre"} </strong><span style={{color:"#d0ced9",overflowWrap:"anywhere"}}>{comment.content}</span></div>)}{comments[post.id]?.length === 0 && <p style={{fontSize:12,color:"#92919f"}}>Aucun commentaire. Lance la conversation !</p>}</div><form onSubmit={e => void addComment(post.id,e)} style={{display:"flex",gap:8}}><input aria-label="Écrire un commentaire" value={commentDrafts[post.id] || ""} onChange={e=>setCommentDrafts(old=>({...old,[post.id]:e.target.value}))} maxLength={2000} placeholder="Écrire un commentaire…" style={{flex:1,minWidth:0,padding:10,borderRadius:9,border:"1px solid #393643",background:"#121218",color:"#f7f6fb"}}/><button type="submit" disabled={busy} className="modal-primary" style={{width:"auto",padding:"0 14px"}}>Envoyer</button></form></div>}</article>; })}</div>
       }
       </section>
 
@@ -2313,6 +2474,244 @@ function decodeVapidKey(base64String: string) {
       }
       .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-caption-wrap>button{
         display:inline-block!important;visibility:visible!important;color:#f7d774!important;
+      }
+
+      /* Colonne Reels fidèle à la maquette : J’aime, commentaires, repartage, partage, favoris. */
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions{
+        position:absolute!important;z-index:85!important;top:50%!important;right:18px!important;left:auto!important;
+        bottom:auto!important;transform:translateY(-50%)!important;width:58px!important;max-width:58px!important;
+        display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+        gap:14px!important;margin:0!important;padding:0!important;background:transparent!important;overflow:visible!important;
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>button{
+        position:relative!important;display:flex!important;visibility:visible!important;opacity:1!important;
+        pointer-events:auto!important;width:58px!important;min-width:58px!important;max-width:58px!important;
+        height:64px!important;min-height:64px!important;max-height:64px!important;flex:0 0 64px!important;
+        flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important;
+        margin:0!important;padding:0!important;border:0!important;border-radius:0!important;
+        background:transparent!important;color:#fff!important;text-shadow:0 2px 8px #000!important;
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>button svg{
+        display:block!important;width:34px!important;height:34px!important;stroke-width:2!important;
+        filter:drop-shadow(0 2px 5px #000)!important;
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>button span{
+        display:block!important;color:#fff!important;font-size:14px!important;font-weight:700!important;line-height:18px!important;
+        text-shadow:0 2px 6px #000!important;
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>.emi-reel-share-button{
+        border:0!important;background:transparent!important;color:#fff!important;
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>.emi-reel-share-button span{
+        font-size:14px!important;font-weight:600!important;
+      }
+      .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.emi-reel-sound-toggle{
+        top:auto!important;right:22px!important;bottom:calc(106px + env(safe-area-inset-bottom))!important;
+        width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;
+        border:1.5px solid rgba(242,212,119,.85)!important;background:rgba(3,12,9,.82)!important;
+        box-shadow:0 2px 10px #0008!important;
+      }
+      @media(max-width:390px){
+        .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions{right:8px!important;gap:9px!important}
+        .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>button{height:58px!important;min-height:58px!important;flex-basis:58px!important}
+        .emi-reels-screen .feed-list>.emi-feed-post.reel-post>.post-actions.emi-reel-social-actions>button svg{width:30px!important;height:30px!important}
+      }
+
+      /* Override final anti-masquage : les cinq actions restent dans une seule colonne compacte. */
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions{
+        position:absolute!important;z-index:160!important;top:48%!important;right:8px!important;left:auto!important;
+        bottom:auto!important;transform:translateY(-50%)!important;width:54px!important;max-width:54px!important;
+        height:auto!important;max-height:none!important;overflow:visible!important;
+        display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+        gap:5px!important;padding:4px 0!important;margin:0!important;background:transparent!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button,
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(n){
+        position:relative!important;inset:auto!important;transform:none!important;
+        display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+        flex:0 0 52px!important;width:54px!important;min-width:54px!important;max-width:54px!important;
+        height:52px!important;min-height:52px!important;max-height:52px!important;
+        flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;
+        padding:0!important;margin:0!important;border:0!important;border-radius:0!important;
+        background:transparent!important;color:#fff!important;overflow:visible!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button svg{
+        display:block!important;visibility:visible!important;width:29px!important;height:29px!important;
+        opacity:1!important;stroke-width:2!important;filter:drop-shadow(0 2px 5px #000)!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button span{
+        display:block!important;visibility:visible!important;opacity:1!important;color:#fff!important;
+        font-size:11px!important;line-height:13px!important;font-weight:700!important;text-align:center!important;
+        text-shadow:0 2px 6px #000!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button{
+        position:relative!important;inset:auto!important;transform:none!important;
+        width:54px!important;height:52px!important;min-width:54px!important;min-height:52px!important;
+        flex:0 0 52px!important;border:0!important;border-radius:0!important;background:transparent!important;
+        color:#fff!important;box-shadow:none!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button span{
+        color:#fff!important;font-size:11px!important;font-weight:700!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(4),
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(5){
+        display:flex!important;visibility:visible!important;opacity:1!important;
+      }
+      .emi-reels-screen .feed-list .reel-post>.emi-reel-share-button{display:none!important}
+      .emi-reels-screen .feed-list .reel-post>.emi-reel-sound-toggle{
+        z-index:165!important;right:13px!important;bottom:calc(72px + env(safe-area-inset-bottom))!important;
+        width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;
+      }
+      @media(max-width:390px){
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions{
+          right:5px!important;top:47%!important;gap:3px!important;width:50px!important;max-width:50px!important;
+        }
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button,
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(n){
+          width:50px!important;min-width:50px!important;max-width:50px!important;height:49px!important;
+          min-height:49px!important;max-height:49px!important;flex-basis:49px!important;
+        }
+      }
+
+      /* Compacte les cinq actions dans la zone centrale : le signet ne doit jamais sortir de l’écran. */
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions{
+        top:43%!important;right:8px!important;transform:translateY(-25%)!important;
+        width:52px!important;max-width:52px!important;gap:0!important;padding:0!important;
+        height:auto!important;max-height:none!important;overflow:visible!important;
+        display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button,
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(n){
+        width:52px!important;min-width:52px!important;max-width:52px!important;
+        height:48px!important;min-height:48px!important;max-height:48px!important;flex:0 0 48px!important;
+        display:flex!important;visibility:visible!important;opacity:1!important;
+        align-items:center!important;justify-content:center!important;flex-direction:column!important;
+        gap:0!important;padding:0!important;margin:0!important;overflow:visible!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button svg{
+        width:25px!important;height:25px!important;flex:0 0 25px!important;display:block!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button span{
+        display:block!important;visibility:visible!important;opacity:1!important;
+        font-size:10px!important;line-height:12px!important;font-weight:700!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button span{
+        font-size:10px!important;
+      }
+      @media(max-width:390px){
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions{
+          top:41%!important;right:5px!important;width:48px!important;max-width:48px!important;
+        }
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button,
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(n){
+          width:48px!important;min-width:48px!important;max-width:48px!important;
+          height:45px!important;min-height:45px!important;max-height:45px!important;flex-basis:45px!important;
+        }
+      }
+
+      /* Reels: colonne fixe de 5 actions, chaque rang possède sa propre position. */
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions{
+        position:absolute!important;z-index:220!important;top:34%!important;right:7px!important;left:auto!important;
+        bottom:auto!important;transform:none!important;width:58px!important;height:310px!important;
+        min-height:310px!important;max-height:310px!important;display:block!important;overflow:visible!important;
+        padding:0!important;margin:0!important;background:transparent!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button,
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(n){
+        position:absolute!important;left:0!important;right:0!important;top:auto!important;bottom:auto!important;
+        transform:none!important;display:flex!important;visibility:visible!important;opacity:1!important;
+        pointer-events:auto!important;width:58px!important;min-width:58px!important;max-width:58px!important;
+        height:56px!important;min-height:56px!important;max-height:56px!important;flex:none!important;
+        flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;
+        margin:0!important;padding:0!important;border:0!important;border-radius:0!important;
+        background:transparent!important;color:#fff!important;overflow:visible!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(1){top:0!important}
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(2){top:62px!important}
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(3){top:124px!important}
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(4){top:186px!important}
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(5){top:248px!important}
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button svg{
+        display:block!important;visibility:visible!important;opacity:1!important;width:31px!important;height:31px!important;flex:none!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button span{
+        display:block!important;visibility:visible!important;opacity:1!important;color:#fff!important;
+        font-size:11px!important;line-height:13px!important;font-weight:700!important;text-align:center!important;
+        text-shadow:0 2px 6px #000!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button{
+        border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#fff!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button.is-saved svg{
+        fill:#f4d477!important;color:#f4d477!important;
+      }
+      @media(max-width:390px){
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions{
+          top:32%!important;right:4px!important;width:52px!important;height:285px!important;min-height:285px!important;max-height:285px!important;
+        }
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button,
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(n){
+          width:52px!important;min-width:52px!important;max-width:52px!important;height:51px!important;min-height:51px!important;max-height:51px!important;
+        }
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(1){top:0!important}
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(2){top:57px!important}
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(3){top:114px!important}
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(4){top:171px!important}
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(5){top:228px!important}
+      }
+
+      /* Finition luxe mobile : actions icon-only, cercles identiques et colonne respirante. */
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions{
+        position:absolute!important;z-index:230!important;top:37%!important;right:12px!important;left:auto!important;
+        bottom:auto!important;transform:none!important;width:52px!important;height:286px!important;
+        min-height:286px!important;max-height:286px!important;display:flex!important;flex-direction:column!important;
+        align-items:center!important;justify-content:space-between!important;gap:0!important;
+        padding:0!important;margin:0!important;overflow:visible!important;background:transparent!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button,
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(n){
+        position:static!important;inset:auto!important;transform:none!important;
+        display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+        flex:0 0 48px!important;width:48px!important;min-width:48px!important;max-width:48px!important;
+        height:48px!important;min-height:48px!important;max-height:48px!important;
+        align-items:center!important;justify-content:center!important;flex-direction:column!important;
+        gap:0!important;padding:0!important;margin:0!important;border:1px solid rgba(235,207,119,.72)!important;
+        border-radius:50%!important;background:linear-gradient(145deg,rgba(12,35,26,.92),rgba(0,8,5,.88))!important;
+        color:#fff!important;box-shadow:0 3px 12px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.12)!important;
+        overflow:visible!important;text-shadow:none!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button svg{
+        display:block!important;visibility:visible!important;opacity:1!important;width:23px!important;height:23px!important;
+        stroke-width:2!important;filter:drop-shadow(0 1px 3px #000)!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button span{
+        display:none!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button.is-saved{
+        border-color:#f0d27b!important;background:linear-gradient(145deg,#173b2b,#07170f)!important;color:#f6dc91!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button.is-saved svg{
+        fill:#f0d27b!important;stroke:#f0d27b!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button{
+        border:1px solid rgba(235,207,119,.72)!important;border-radius:50%!important;
+        background:linear-gradient(145deg,rgba(12,35,26,.92),rgba(0,8,5,.88))!important;color:#fff!important;
+        box-shadow:0 3px 12px rgba(0,0,0,.38)!important;
+      }
+      .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>.emi-reel-share-button svg{
+        width:23px!important;height:23px!important;
+      }
+      @media(max-width:390px){
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions{
+          top:35%!important;right:9px!important;width:46px!important;height:266px!important;
+          min-height:266px!important;max-height:266px!important;
+        }
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button,
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button:nth-child(n){
+          flex-basis:44px!important;width:44px!important;min-width:44px!important;max-width:44px!important;
+          height:44px!important;min-height:44px!important;max-height:44px!important;
+        }
+        .emi-reels-screen .feed-list .reel-post .post-actions.emi-reel-social-actions>button svg{width:21px!important;height:21px!important}
       }
     `}</style>
     </main>
