@@ -5732,6 +5732,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 /* EMi Royal Signature — compact, premium profile hero */
 .emi-profile-pro { gap: 0 !important; padding: 0 0 24px !important; }
 .emi-profile-pro .emi-profile-cover {
+  position: relative !important;
   height: 184px !important;
   min-height: 184px !important;
   margin: 0 !important;
@@ -5741,7 +5742,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   background:
     radial-gradient(ellipse at 78% 38%,rgba(212,170,48,.22),transparent 27%),
     radial-gradient(ellipse at 16% 110%,rgba(0,201,103,.30),transparent 46%),
-    linear-gradient(112deg,#03170f 0%,#06452b 48%,#031b13 100%) !important;
+    linear-gradient(112deg,#03170f 0%,#06452b 48%,#031b13 100%);
 }
 .emi-profile-pro .emi-profile-cover:before { width:62%;height:185%;right:-8%;top:-72%;border-color:rgba(231,194,76,.48); }
 .emi-profile-pro .emi-profile-cover:after { width:48%;height:150%;right:7%;top:-63%;border-color:rgba(0,214,111,.28); }
