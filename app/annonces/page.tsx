@@ -161,6 +161,7 @@ export default function AnnoncesPage() {
         </section>
         <div className="emi-market-toolbar">
           <div className="emi-market-toolbar-heading"><span>LA SÉLECTION EMi</span><strong>Qu’allez-vous découvrir ?</strong></div>
+          <Link href="/annonces/business" className="emi-shop-sell" aria-label="Ouvrir les boutiques et le catalogue EMi Business" style={{textDecoration:"none",background:"linear-gradient(120deg,#0b6847,#123c2c)",color:"#f5dfa0",border:"1px solid rgba(231,205,101,.55)"}}><ShoppingBag size={15}/> Boutique & catalogue</Link>
           <button type="button" className="emi-shop-sell" aria-label="Ouvrir le formulaire pour vendre un produit" aria-expanded={open} onClick={()=>{setOpen(true);setSpacesOpen(false);setRoyalOpen(false);setNotice("");window.setTimeout(()=>document.getElementById("emi-sell-form")?.scrollIntoView({behavior:"smooth",block:"start"}),100);}}><Plus size={15}/> Vendre</button>
         </div>
         <label htmlFor="annonces-search" className="emi-shop-search"><Search size={18}/><input id="annonces-search" type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un produit, une marque…"/><span><Search size={15}/></span></label>
