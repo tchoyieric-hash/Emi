@@ -318,10 +318,21 @@ function decodeVapidKey(base64String: string) {
   }
   async function sharePost(post: Post) {
     const url = window.location.origin + "/?publication=" + encodeURIComponent(post.id);
+    const isAlbum = post.media_type === "carousel" && (post.media_urls || []).length > 1;
+    const mediaCount = (post.media_urls || []).length;
+    const shareText = isAlbum
+      ? `Découvre cet album de ${mediaCount} photos sur EMi. ${post.content || ""}`.trim()
+      : post.content || "Découvre cette publication sur EMi";
     try {
-      if (navigator.share) await navigator.share({ title: "Publication EMi", text: post.content || "Découvre cette publication sur EMi", url });
-      else { await navigator.clipboard.writeText(url); setMessage("Lien de la publication copié."); }
-    } catch (error) { if (error instanceof Error && error.name !== "AbortError") setMessage("Partage indisponible sur cet appareil."); }
+      if (navigator.share) {
+        await navigator.share({ title: isAlbum ? "Album photo · EMi" : "Publication EMi", text: shareText, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setMessage(isAlbum ? "Lien de l’album photo copié. Toutes les photos sont accessibles depuis ce lien." : "Lien de la publication copié.");
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name !== "AbortError") setMessage("Partage indisponible sur cet appareil. Tu peux copier le lien depuis les options de la publication.");
+    }
   }
   async function copyPostLink(post: Post) {
     const url = window.location.origin + "/?publication=" + encodeURIComponent(post.id);
