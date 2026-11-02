@@ -5727,3 +5727,84 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .emi-profile-cover-brand { display: none !important; }
   .emi-profile-cover { min-height: 82px !important; }
 }
+
+
+/* EMi Royal Signature — compact, premium profile hero */
+.emi-profile-pro { gap: 0 !important; padding: 0 0 24px !important; }
+.emi-profile-pro .emi-profile-cover {
+  height: 184px !important;
+  min-height: 184px !important;
+  margin: 0 !important;
+  border: 1px solid rgba(226,190,77,.62) !important;
+  border-radius: 20px 20px 0 0 !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(ellipse at 78% 38%,rgba(212,170,48,.22),transparent 27%),
+    radial-gradient(ellipse at 16% 110%,rgba(0,201,103,.30),transparent 46%),
+    linear-gradient(112deg,#03170f 0%,#06452b 48%,#031b13 100%) !important;
+}
+.emi-profile-pro .emi-profile-cover:before { width:62%;height:185%;right:-8%;top:-72%;border-color:rgba(231,194,76,.48); }
+.emi-profile-pro .emi-profile-cover:after { width:48%;height:150%;right:7%;top:-63%;border-color:rgba(0,214,111,.28); }
+.emi-profile-pro .emi-profile-cover-glow { height:3px !important; }
+.emi-profile-pro .emi-profile-more-trigger {
+  z-index:3 !important; top:14px !important; right:14px !important;
+  width:42px !important;height:42px !important;border-radius:14px !important;
+  border:1px solid rgba(241,211,112,.72) !important;
+  background:rgba(2,20,13,.76) !important;color:#f4d879 !important;
+  box-shadow:0 8px 22px rgba(0,0,0,.25) !important;
+}
+.emi-profile-pro .emi-profile-identity-card {
+  z-index:1 !important; align-items:center !important; gap:18px !important;
+  margin-top:-1px !important; padding:18px 22px 20px !important;
+  background:linear-gradient(115deg,#062719 0%,#071b19 58%,#091b25 100%) !important;
+  border:1px solid rgba(222,190,86,.35) !important;border-top:0 !important;
+}
+.emi-profile-pro .emi-profile-avatar-frame {
+  width:118px !important;height:118px !important;margin:0 !important;
+  padding:5px !important;flex:0 0 118px !important;
+  background:linear-gradient(145deg,#fff0a0 0%,#c69b32 48%,#00c96b 100%) !important;
+  box-shadow:0 0 0 4px rgba(2,22,15,.9),0 10px 28px rgba(0,0,0,.3) !important;
+}
+.emi-profile-pro .emi-profile-name-block { padding:0 !important; }
+.emi-profile-pro .emi-profile-name-line h2 { font-size:clamp(23px,4.5vw,32px) !important; }
+.emi-profile-pro .emi-profile-bio { margin-top:9px !important; }
+.emi-profile-pro .emi-profile-stats {
+  padding:14px 12px !important;
+  background:linear-gradient(110deg,#061c15,#0a2028) !important;
+  border:1px solid rgba(222,190,86,.25) !important;border-top:0 !important;
+}
+.emi-profile-pro .emi-profile-stats strong { font-size:26px !important; }
+.emi-profile-pro .emi-profile-actions {
+  display:grid !important;grid-template-columns:1fr 1fr !important;
+  gap:10px !important;padding:14px 16px 16px !important;
+  background:#091d23 !important;border:1px solid rgba(222,190,86,.24) !important;border-top:0 !important;
+}
+.emi-profile-pro .emi-profile-actions>button { min-width:0 !important;min-height:50px !important;border-radius:14px !important; }
+.emi-profile-pro .emi-profile-actions>.emi-profile-settings-entry { grid-column:1/-1 !important; }
+.emi-profile-pro .emi-profile-business {
+  margin:14px 12px 4px !important;padding:18px !important;
+  border-radius:19px !important;border-color:rgba(222,190,86,.55) !important;
+  background:linear-gradient(125deg,#063c27 0%,#061e19 70%,#091b20 100%) !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.06) !important;
+}
+.emi-profile-pro .emi-profile-business .emi-profile-section-heading>span { font-size:10px !important;letter-spacing:.2em !important; }
+.emi-profile-pro .emi-profile-business .emi-profile-section-heading>strong { font-size:25px !important; }
+@media(max-width:520px) {
+  .emi-profile-pro .emi-profile-cover { height:112px !important;min-height:112px !important;border-radius:15px 15px 0 0 !important; }
+  .emi-profile-pro .emi-profile-identity-card { gap:12px !important;padding:14px 13px 15px !important; }
+  .emi-profile-pro .emi-profile-avatar-frame { width:88px !important;height:88px !important;flex-basis:88px !important;padding:4px !important; }
+  .emi-profile-pro .emi-profile-name-line h2 { font-size:20px !important; }
+  .emi-profile-pro .emi-profile-name-block .profile-username { font-size:12px !important; }
+  .emi-profile-pro .emi-profile-bio { margin-top:6px !important;font-size:12px !important;line-height:1.35 !important; }
+  .emi-profile-pro .emi-profile-stats { padding:12px 4px !important; }
+  .emi-profile-pro .emi-profile-stats strong { font-size:21px !important; }
+  .emi-profile-pro .emi-profile-stats span { font-size:10px !important; }
+  .emi-profile-pro .emi-profile-actions { padding:11px 10px 13px !important;gap:8px !important; }
+  .emi-profile-pro .emi-profile-actions>button { min-height:44px !important;font-size:12px !important; }
+  .emi-profile-pro .emi-profile-business { margin:12px 9px 4px !important;padding:15px !important; }
+}
+/* Keep the mobile wordmark clean: the brand is shown once, without a slogan line. */
+@media(max-width:700px) {
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark small,
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark::after { display:none !important;content:none !important; }
+}
