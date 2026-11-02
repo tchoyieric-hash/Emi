@@ -2075,7 +2075,7 @@ function decodeVapidKey(base64String: string) {
               <button className="emi-profile-primary-action" onClick={()=>void toggleFollow(viewingProfile.id)}>{followPendingIds.includes(viewingProfile.id) ? "En cours…" : followedIds.includes(viewingProfile.id) ? "Abonné(e)" : "Suivre"}</button>
               <button className="emi-profile-secondary-action" onClick={()=>void startConversation(viewingProfile)} disabled={chatLoading}><MessageCircle size={17}/> Message</button>
             </> : <button className="emi-profile-primary-action" onClick={()=>setAuthOpen(true)}>Se connecter</button>}
-            {user?.id===viewingProfile.id && profileMoreOpen && <div className="emi-profile-menu-backdrop" onClick={()=>setProfileMoreOpen(false)} aria-hidden="true"/>}
+            {profileMoreOpen && <div className="emi-profile-menu-backdrop" onClick={()=>setProfileMoreOpen(false)} aria-hidden="true"/>}
             {profileMoreOpen && <div className="emi-profile-action-menu" role="menu">
               <button role="menuitem" onClick={()=>{setProfileMoreOpen(false);void shareProfile(viewingProfile);}}><Share2 size={17}/> Partager le profil</button>
               <button role="menuitem" onClick={()=>{setProfileMoreOpen(false);void copyProfileLink(viewingProfile);}}><Copy size={17}/> Copier le lien du profil</button>
@@ -2094,7 +2094,7 @@ function decodeVapidKey(base64String: string) {
             </div>
           </section>}
           <div className="emi-profile-content-tabs" role="tablist" aria-label="Contenus du profil">
-            <button role="tab" aria-selected={profileTab==="posts"} className={profileTab==="posts"?"selected":""} onClick={()=>setProfileTab("posts")}><Grid3X3 size={17}/> Publications</button>
+            <button role="tab" aria-selected={profileTab==="posts"} className={profileTab==="posts"?"selected":""} onClick={()=>setProfileTab("posts")}><ImageIcon size={17}/> Publications</button>
             <button role="tab" aria-selected={profileTab==="shared"} className={profileTab==="shared"?"selected":""} onClick={()=>setProfileTab("shared")}><Repeat2 size={17}/> Reposts</button>
             <button role="tab" aria-selected={profileTab==="tagged"} className={profileTab==="tagged"?"selected":""} onClick={()=>setProfileTab("tagged")}><UserRound size={17}/> Identifications</button>
           </div>
