@@ -291,7 +291,7 @@ function decodeVapidKey(base64String: string) {
       const { error } = await supabase.from("push_subscriptions").upsert({ user_id: user.id, endpoint, p256dh, auth, updated_at: new Date().toISOString() }, { onConflict: "endpoint" });
       if (error) throw error;
       setPushEnabled(true);
-      setSettingsNotice("Notifications activées sur cet appareil. L’envoi côté serveur doit aussi être relié aux nouveaux messages.");
+      setSettingsNotice("Notifications EMi activées sur cet appareil : messages, abonnements, J’aime, commentaires et réactions aux stories.");
     } catch (err) {
       setSettingsNotice(err instanceof Error ? err.message : "Impossible d’activer les notifications pour le moment.");
     } finally {
