@@ -5626,3 +5626,32 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .emi-notification-scope{margin-top:18px;padding:14px;border:1px solid rgba(120,157,165,.23);border-radius:14px;background:rgba(4,24,31,.7)}
 .emi-notification-scope ul{margin:10px 0 0;padding-left:19px;color:#b8c8cc;font-size:12px;line-height:1.9}
 @media(max-width:520px){.emi-profile-settings-entry{flex-basis:100%}.emi-notification-status{align-items:flex-start;flex-direction:column;gap:5px}.emi-notification-status strong{text-align:left}}
+
+
+/* EMi — compact luxury mobile header and refined profile actions */
+@media(max-width:700px){
+  .app-shell:not(.emi-reels-shell) .emi-royal-masthead{margin:0 0 12px!important;border-radius:0 0 15px 15px!important;min-height:0!important}
+  .app-shell:not(.emi-reels-shell) .emi-royal-topline{min-height:64px!important;padding:9px 13px!important;gap:10px!important}
+  .app-shell:not(.emi-reels-shell) .emi-royal-logo{gap:9px!important}
+  .app-shell:not(.emi-reels-shell) .emi-royal-emblem{width:42px!important;height:42px!important;flex-basis:42px!important;border-radius:13px!important}
+  .app-shell:not(.emi-reels-shell) .emi-royal-emblem>span{font-size:30px!important}
+  .app-shell:not(.emi-reels-shell) .emi-royal-emblem i{font-size:13px!important;top:-7px!important}
+  .app-shell:not(.emi-reels-shell) .emi-royal-wordmark strong{font-size:25px!important;letter-spacing:-1px!important}
+  .app-shell:not(.emi-reels-shell) .emi-royal-wordmark small{font-size:7px!important;letter-spacing:.13em!important}
+  .app-shell:not(.emi-reels-shell) .emi-royal-tools{gap:7px!important}
+  .app-shell:not(.emi-reels-shell) .emi-royal-tools button{min-height:36px!important;height:36px!important;width:36px!important;min-width:36px!important;padding:0!important;border-radius:12px!important}
+  .app-shell:not(.emi-reels-shell) .emi-royal-tools button span{display:none!important}
+  .emi-mobile-royal-header{min-height:54px!important;height:54px!important;padding:6px 12px!important;gap:10px!important}
+  .emi-mobile-royal-header .icon-button{width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;padding:6px!important}
+  .emi-mobile-royal-header .emi-mobile-royal-account{width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;flex-basis:34px!important}
+  .emi-mobile-royal-emblem{width:34px!important;height:34px!important;flex-basis:34px!important;font-size:24px!important}
+  .emi-mobile-royal-wordmark strong{font-size:21px!important}
+  .emi-mobile-royal-wordmark small{font-size:7px!important;letter-spacing:.12em!important}
+  .emi-profile-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important;padding:10px 12px 12px!important}
+  .emi-profile-actions>button{min-height:39px!important;padding:7px 9px!important;gap:6px!important;border-radius:11px!important;font-size:11px!important;font-weight:750!important;line-height:1.2!important}
+  .emi-profile-actions>button svg{width:15px!important;height:15px!important;flex:none!important}
+  .emi-profile-actions .emi-profile-settings-entry{grid-column:1/-1!important;min-height:38px!important;flex-basis:auto!important}
+}
+@media(min-width:701px){
+  .emi-profile-actions>button{min-height:42px;padding:9px 12px;font-size:13px}
+}
