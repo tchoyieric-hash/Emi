@@ -5914,3 +5914,71 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
     background:linear-gradient(145deg,#09251b,#0a1d26) !important;
   }
 }
+
+
+/* EMi settings: native-feeling full-screen navigation */
+.app-shell.emi-settings-fullscreen {
+  display:block !important; width:100% !important; max-width:none !important;
+  min-height:100dvh !important; padding:0 !important; margin:0 !important;
+  background:linear-gradient(180deg,#071b18 0%,#071724 100%) !important;
+}
+.app-shell.emi-settings-fullscreen > .sidebar,
+.app-shell.emi-settings-fullscreen > .right-column,
+.app-shell.emi-settings-fullscreen > .mobile-nav { display:none !important; }
+.app-shell.emi-settings-fullscreen > .main-column {
+  width:100% !important; max-width:920px !important; min-width:0 !important;
+  min-height:100dvh !important; margin:0 auto !important;
+  padding:0 0 max(28px,env(safe-area-inset-bottom)) !important;
+}
+.emi-settings-mobile-topbar {
+  position:sticky !important; top:0 !important; z-index:80 !important;
+  display:flex !important; align-items:center !important; gap:13px !important;
+  width:100% !important; min-height:66px !important;
+  padding:calc(8px + env(safe-area-inset-top)) 16px 8px !important;
+  border-bottom:1px solid rgba(220,190,94,.32) !important;
+  background:linear-gradient(105deg,rgba(3,23,16,.98),rgba(5,48,32,.98) 55%,rgba(3,22,17,.98)) !important;
+  box-shadow:0 8px 25px rgba(0,0,0,.22) !important;
+  backdrop-filter:blur(18px) !important;
+}
+.emi-settings-back {
+  width:42px !important;height:42px !important;flex:0 0 42px !important;
+  display:grid !important;place-items:center !important;
+  border:1px solid rgba(230,203,123,.35) !important;border-radius:13px !important;
+  background:rgba(255,255,255,.045) !important;color:#f1d98c !important;
+}
+.emi-settings-topbar-title { flex:1 1 auto !important;min-width:0 !important;display:flex !important;flex-direction:column !important;gap:3px !important; }
+.emi-settings-topbar-title span { color:#80d9b5 !important;font-size:8px !important;font-weight:800 !important;letter-spacing:.19em !important; }
+.emi-settings-topbar-title strong { color:#fff8df !important;font:800 16px/1.2 Manrope,sans-serif !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important; }
+.emi-settings-topbar-mark { color:#f5d875 !important;font:900 23px Manrope,sans-serif !important;letter-spacing:-2px !important; }
+.emi-settings-topbar-mark span { color:#00c98b !important; }
+.emi-settings-fullscreen .feed-header { display:none !important; }
+.emi-settings-page {
+  width:100% !important;max-width:100% !important;min-height:calc(100dvh - 66px) !important;
+  margin:0 !important;padding:22px clamp(14px,3vw,28px) 36px !important;
+  border:0 !important;border-radius:0 !important;background:transparent !important;
+}
+.emi-settings-page > .emi-settings-hero { margin:0 0 18px !important; }
+.emi-settings-page > .emi-settings-subhead { display:none !important; }
+.emi-settings-page > .emi-settings-subtitle {
+  margin:0 0 16px !important;padding:8px 0 15px !important;
+  border-bottom:1px solid rgba(220,190,94,.22) !important;
+  color:#f5f2e8 !important;font:800 clamp(21px,4vw,28px)/1.2 Manrope,sans-serif !important;
+}
+.emi-settings-page .emi-settings-detail {
+  min-height:calc(100dvh - 155px) !important;
+  padding:20px !important;border:1px solid rgba(220,190,94,.25) !important;
+  border-radius:18px !important;background:linear-gradient(145deg,#0b251e,#091c27) !important;
+  box-shadow:0 14px 36px rgba(0,0,0,.16) !important;
+}
+.emi-settings-page .emi-settings-detail > p:first-child { margin-top:0 !important; }
+.emi-settings-page .emi-settings-subtitle::before { content:"";display:block; }
+@media(max-width:700px) {
+  .app-shell.emi-settings-fullscreen { overflow:visible !important; }
+  .app-shell.emi-settings-fullscreen > .main-column { padding-bottom:0 !important; }
+  .emi-settings-mobile-topbar { min-height:64px !important;gap:10px !important;padding-left:12px !important;padding-right:15px !important; }
+  .emi-settings-back { width:39px !important;height:39px !important;flex-basis:39px !important; }
+  .emi-settings-topbar-title strong { font-size:14px !important; }
+  .emi-settings-page { padding:16px 13px 28px !important; }
+  .emi-settings-page > .emi-settings-hero { margin-bottom:14px !important; }
+  .emi-settings-page .emi-settings-detail { min-height:calc(100dvh - 145px) !important;padding:17px 14px !important;border-radius:15px !important; }
+}
