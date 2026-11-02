@@ -5808,3 +5808,109 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark small,
   .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark::after { display:none !important;content:none !important; }
 }
+
+
+/* EMi unified profile system — final mobile-first polish */
+@media (max-width:700px) {
+  .mobile-header.emi-mobile-royal-header {
+    height:58px !important; min-height:58px !important;
+    margin:0 0 12px !important; padding:6px 10px !important;
+    border-radius:0 0 13px 13px !important;
+    background:linear-gradient(105deg,#03140e 0%,#073522 52%,#03130e 100%) !important;
+    border-bottom:1px solid rgba(225,190,91,.62) !important;
+  }
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark small { display:none !important; }
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-brand { gap:8px !important; }
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-emblem {
+    width:35px !important;height:35px !important;flex-basis:35px !important;
+    border-radius:10px !important;font-size:24px !important;
+  }
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark strong {
+    font-size:23px !important;line-height:1 !important;letter-spacing:-.8px !important;
+  }
+  .mobile-header.emi-mobile-royal-header .back-navigation,
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-account {
+    width:36px !important;height:36px !important;min-width:36px !important;
+    min-height:36px !important;flex-basis:36px !important;border-radius:12px !important;
+  }
+
+  /* One consistent, compact profile hero */
+  .profile-page.emi-profile-pro {
+    width:100% !important;max-width:100% !important;
+    margin:0 !important;padding:0 0 16px !important;gap:0 !important;
+    overflow:hidden !important;border-radius:16px !important;
+    background:linear-gradient(150deg,#061d17 0%,#071a22 100%) !important;
+    border:1px solid rgba(220,190,94,.28) !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-cover {
+    height:76px !important;min-height:76px !important;max-height:76px !important;
+    margin:0 !important;border:0 !important;border-radius:15px 15px 0 0 !important;
+    background:
+      radial-gradient(ellipse at 78% 22%,rgba(216,178,70,.24),transparent 32%),
+      linear-gradient(112deg,#041b12 0%,#075033 52%,#041b15 100%) !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-cover:before {
+    width:42% !important;height:180% !important;right:8% !important;top:-92% !important;
+    border-color:rgba(226,194,91,.38) !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-cover:after {
+    width:34% !important;height:145% !important;right:17% !important;top:-78% !important;
+    border-color:rgba(0,205,111,.28) !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-more-trigger {
+    top:10px !important;right:10px !important;width:34px !important;height:34px !important;
+    border-radius:11px !important;font-size:17px !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-identity-card {
+    display:flex !important;align-items:center !important;gap:13px !important;
+    margin:0 !important;padding:13px 13px 14px !important;
+    border:0 !important;border-bottom:1px solid rgba(220,190,94,.2) !important;
+    background:linear-gradient(110deg,#06251a,#081d25) !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-avatar-frame {
+    width:82px !important;height:82px !important;flex:0 0 82px !important;
+    padding:4px !important;margin:0 !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-name-block { min-width:0 !important; }
+  .profile-page.emi-profile-pro .emi-profile-name-line { display:flex !important;align-items:center !important;gap:6px !important;flex-wrap:wrap !important; }
+  .profile-page.emi-profile-pro .emi-profile-name-line h2 { margin:0 !important;font-size:20px !important;line-height:1.2 !important; }
+  .profile-page.emi-profile-pro .profile-username { display:block !important;margin-top:4px !important;font-size:12px !important; }
+  .profile-page.emi-profile-pro .emi-profile-bio { margin:5px 0 0 !important;font-size:12px !important;line-height:1.35 !important; }
+  .profile-page.emi-profile-pro .emi-profile-stats {
+    display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:0 !important;margin:0 !important;padding:11px 5px !important;
+    border:0 !important;border-bottom:1px solid rgba(220,190,94,.2) !important;
+    background:#081e25 !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-stats>div,
+  .profile-page.emi-profile-pro .emi-profile-stats>button {
+    min-width:0 !important;padding:0 3px !important;
+    display:flex !important;flex-direction:column !important;align-items:center !important;
+    justify-content:center !important;gap:3px !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-stats> :not(:first-child) { border-left:1px solid rgba(220,190,94,.32) !important; }
+  .profile-page.emi-profile-pro .emi-profile-stats strong { font-size:21px !important;line-height:1.1 !important; }
+  .profile-page.emi-profile-pro .emi-profile-stats span { font-size:10px !important;white-space:nowrap !important; }
+  .profile-page.emi-profile-pro .emi-profile-actions {
+    display:grid !important;grid-template-columns:1fr 1fr !important;
+    gap:8px !important;margin:0 !important;padding:11px 10px 13px !important;
+    border:0 !important;background:#081e25 !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-actions>button {
+    min-width:0 !important;min-height:43px !important;padding:8px 7px !important;
+    border-radius:12px !important;font-size:12px !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-actions>.emi-profile-settings-entry { grid-column:1/-1 !important; }
+  .profile-page.emi-profile-pro .emi-profile-business {
+    margin:10px 10px 2px !important;padding:14px !important;border-radius:15px !important;
+  }
+  .profile-page.emi-profile-pro .emi-profile-content-tabs {
+    margin:8px 10px 0 !important;
+  }
+
+  /* The settings summary stays a separate compact card, aligned to the same visual system. */
+  .emi-settings-profile-card,.settings-profile-summary,.emi-profile-summary-card {
+    border-radius:16px !important;border-color:rgba(220,190,94,.28) !important;
+    background:linear-gradient(145deg,#09251b,#0a1d26) !important;
+  }
+}
