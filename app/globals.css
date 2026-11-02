@@ -5655,3 +5655,32 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(min-width:701px){
   .emi-profile-actions>button{min-height:42px;padding:9px 12px;font-size:13px}
 }
+
+
+/* EMi profile header — remove duplicated brand banner and restore hierarchy */
+.emi-profile-cover{
+  min-height:104px!important;
+  border-radius:18px 18px 0 0!important;
+  border:1px solid rgba(218,190,91,.28)!important;
+  background:
+    radial-gradient(ellipse at 82% 18%,rgba(205,166,64,.18),transparent 34%),
+    linear-gradient(112deg,#061d17 0%,#073b29 52%,#09231e 100%)!important;
+}
+.emi-profile-cover-brand{display:none!important}
+.emi-profile-cover-glow{height:2px!important;opacity:.7}
+.emi-profile-more-trigger{
+  top:12px!important;right:12px!important;
+  width:36px!important;height:36px!important;
+  border:1px solid rgba(226,202,128,.38)!important;
+  border-radius:11px!important;
+  background:rgba(4,24,19,.72)!important;
+  color:#f1d98a!important;
+  font-size:18px!important;
+  letter-spacing:1px!important;
+  box-shadow:0 5px 16px rgba(0,0,0,.18)!important;
+}
+@media(max-width:520px){
+  .emi-profile-cover{min-height:82px!important;border-radius:14px 14px 0 0!important}
+  .emi-profile-more-trigger{top:9px!important;right:9px!important;width:32px!important;height:32px!important}
+  .emi-profile-identity-card{padding-top:0!important}
+}
