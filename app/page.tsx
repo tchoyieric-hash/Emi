@@ -1695,7 +1695,13 @@ function decodeVapidKey(base64String: string) {
       return;
     }
     setProfileMoreOpen(false);
-    setMessage("Compte bloqué. Tu peux le débloquer à tout moment dans Réglages > Comptes bloqués.");
+    setPosts(current => current.filter(post => post.user_id !== profile.id));
+    if (viewingProfile?.id === profile.id) {
+      setViewingProfile(null);
+      setProfileTab("posts");
+      setActive("Accueil");
+    }
+    setMessage("Compte bloqué. Ses publications sont masquées et les messages/abonnements entre vos deux comptes sont empêchés.");
     if (settingsSection === "blocked") void loadBlockedProfiles();
   }
 
@@ -1713,6 +1719,17 @@ function decodeVapidKey(base64String: string) {
   async function openProfile(targetId: string) {
     if (!supabase) return;
     setMessage("");
+    if (user?.id && targetId !== user.id) {
+      const [{ data: iBlocked }, { data: blockedMe }] = await Promise.all([
+        supabase.from("blocked_users").select("blocker_id").eq("blocker_id", user.id).eq("blocked_user_id", targetId).maybeSingle(),
+        supabase.from("blocked_users").select("blocker_id").eq("blocker_id", targetId).eq("blocked_user_id", user.id).maybeSingle()
+      ]);
+      if (iBlocked || blockedMe) {
+        setViewingProfile(null);
+        setMessage("Ce profil n’est pas disponible entre vos deux comptes.");
+        return;
+      }
+    }
     // Charger immédiatement les données indépendantes en parallèle pour réduire l'attente.
     const [{ data: profile, error: profileError }, postsResult, postsCountResult, followersResult, followingResult] = await Promise.all([
       supabase.from("profiles").select("id,username,display_name,avatar_url,cover_url,bio").eq("id", targetId).maybeSingle(),
