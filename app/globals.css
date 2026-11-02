@@ -5684,3 +5684,46 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .emi-profile-more-trigger{top:9px!important;right:9px!important;width:32px!important;height:32px!important}
   .emi-profile-identity-card{padding-top:0!important}
 }
+
+
+/* EMi mobile profile header — one clean brand line, no overlapping slogan */
+@media (max-width: 700px) {
+  .mobile-header.emi-mobile-royal-header {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-height: 58px !important;
+    height: 58px !important;
+    padding: 7px 12px !important;
+    gap: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    overflow: hidden !important;
+  }
+  .emi-mobile-royal-brand {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+  .emi-mobile-royal-emblem {
+    width: 36px !important;
+    height: 36px !important;
+    flex: 0 0 36px !important;
+    border-radius: 11px !important;
+    font-size: 25px !important;
+  }
+  .emi-mobile-royal-wordmark {
+    min-width: 0 !important;
+    gap: 0 !important;
+  }
+  .emi-mobile-royal-wordmark strong {
+    font-size: 23px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+  .emi-mobile-royal-wordmark small { display: none !important; }
+  .emi-profile-cover-brand { display: none !important; }
+  .emi-profile-cover { min-height: 82px !important; }
+}
