@@ -6065,3 +6065,96 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   }
   .emi-mobile-royal-emblem { width: 35px !important; height: 35px !important; flex-basis: 35px !important; }
 }
+
+
+/* EMi investor-ready welcome screen — preserve the family tribute, clarify the product */
+.emi-welcome-screen{
+  z-index:99999!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  place-items:center!important;
+  padding:24px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left))!important;
+  background:#020d08!important;
+  isolation:isolate;
+}
+.emi-welcome-screen:before{
+  opacity:.08!important;
+  background-image:linear-gradient(rgba(224,194,108,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(224,194,108,.14) 1px,transparent 1px)!important;
+}
+.emi-welcome-cover{object-position:center 34%!important;filter:saturate(.88) brightness(.72) contrast(1.06)!important}
+.emi-welcome-photo-shade{
+  background:linear-gradient(90deg,rgba(1,12,8,.88) 0%,rgba(1,12,8,.68) 48%,rgba(1,12,8,.30) 100%),linear-gradient(0deg,rgba(1,12,8,.88) 0%,rgba(1,12,8,.28) 62%,rgba(1,12,8,.12) 100%)!important;
+}
+.emi-welcome-panel{
+  width:min(520px,100%)!important;
+  max-height:calc(100dvh - 48px);
+  overflow-y:auto;
+  justify-self:center!important;
+  margin:0!important;
+  padding:clamp(22px,4vw,38px)!important;
+  border-color:rgba(232,201,111,.48)!important;
+  border-radius:26px!important;
+  background:linear-gradient(150deg,rgba(2,25,16,.95),rgba(2,14,9,.94) 72%)!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.62),inset 0 1px rgba(255,235,170,.09)!important;
+  backdrop-filter:blur(18px) saturate(115%)!important;
+}
+.emi-welcome-emblem{display:none!important}
+.emi-welcome-logo{margin-bottom:24px!important}
+.emi-welcome-overline{margin-bottom:14px!important;color:#e8c96f!important}
+.emi-welcome-panel h1{font-size:clamp(32px,6vw,46px)!important;line-height:1.06!important}
+.emi-welcome-panel h1 span{background:none!important;color:#f0d17b!important}
+.emi-welcome-panel>p{max-width:420px!important;margin:14px 0 12px!important;color:#d6e3da!important;font-size:14px!important;line-height:1.65!important}
+.emi-welcome-tribute{
+  margin:0 0 22px;
+  color:#e3c979;
+  font-size:11px;
+  line-height:1.55;
+  letter-spacing:.015em;
+}
+.emi-welcome-cta{gap:11px!important}
+.emi-welcome-cta button{min-height:54px!important;border-radius:14px!important;font-size:13px!important}
+.emi-cta-primary{
+  border:1px solid #f1d98f!important;
+  background:linear-gradient(115deg,#fff0b5,#d2a640 55%,#f8e4a0)!important;
+  color:#082017!important;
+  box-shadow:0 8px 28px rgba(210,167,55,.2)!important;
+}
+.emi-cta-secondary{
+  background:rgba(4,28,19,.86)!important;
+  border:1px solid rgba(224,190,99,.58)!important;
+  color:#f3dda0!important;
+}
+.emi-discover-link{margin-top:15px!important;color:#d5e6da!important;font-size:12px!important}
+.emi-welcome-footer{margin-top:22px!important;padding-top:14px!important;color:#bdcfc4!important}
+.emi-welcome-caption{display:none!important}
+@media(max-width:700px){
+  .emi-welcome-screen{
+    place-items:center!important;
+    padding: max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))!important;
+  }
+  .emi-welcome-cover{object-position:58% 28%!important}
+  .emi-welcome-photo-shade{
+    background:linear-gradient(0deg,rgba(1,10,7,.94) 0%,rgba(1,10,7,.82) 52%,rgba(1,10,7,.35) 100%)!important;
+  }
+  .emi-welcome-panel{
+    width:100%!important;
+    max-width:500px!important;
+    max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px)!important;
+    padding:23px 21px 20px!important;
+    border-radius:23px!important;
+  }
+  .emi-welcome-logo{margin-bottom:20px!important;font-size:25px!important}
+  .emi-welcome-panel h1{font-size:clamp(31px,8.5vw,39px)!important}
+  .emi-welcome-panel>p{font-size:13px!important;margin:12px 0 9px!important}
+  .emi-welcome-tribute{font-size:10px;margin-bottom:17px}
+  .emi-welcome-cta button{min-height:52px!important}
+  .emi-welcome-footer{font-size:7px!important;letter-spacing:.8px!important;margin-top:18px!important}
+}
+@media(max-height:720px){
+  .emi-welcome-screen{padding-top:10px!important;padding-bottom:10px!important}
+  .emi-welcome-panel{max-height:calc(100dvh - 20px)!important;padding-top:18px!important;padding-bottom:16px!important}
+  .emi-welcome-logo{margin-bottom:14px!important}
+  .emi-welcome-panel>p{margin-top:9px!important}
+  .emi-welcome-tribute{margin-bottom:12px}
+  .emi-welcome-footer{margin-top:14px!important}
+}
