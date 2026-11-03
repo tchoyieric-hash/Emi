@@ -237,7 +237,7 @@ export default function HomePage() {
   const [profileFollowerCount, setProfileFollowerCount] = useState(0);
   const [profileFollowingCount, setProfileFollowingCount] = useState(0);
   const [profileBusiness, setProfileBusiness] = useState<{name:string;category:string;description:string;phone:string|null;whatsapp:string|null;email:string|null;city:string;address:string}|null>(null);
-  const [conversations, setConversations] = useState<{id:string; title:string; is_group:boolean; other?:Profile; lastMessage?:string; created_at:string}[]>([]);
+  const [conversations, setConversations] = useState<{id:string; title:string; is_group:boolean; other?:Profile; lastMessage?:string; unreadCount?:number; lastSenderId?:string|null; created_at:string}[]>([]);
   const [activeConversation, setActiveConversation] = useState<string | null>(null);
   const [chatMessages, setChatMessages] = useState<{id:string;conversation_id:string;sender_id:string;content:string;media_url?:string|null;media_type?:string|null;created_at:string}[]>([]);
   const [chatDraft, setChatDraft] = useState("");
@@ -1335,7 +1335,7 @@ function decodeVapidKey(base64String: string) {
       if (!ids.length) { setConversations([]); setActiveConversation(null); return; }
       const { data: convs, error: convError } = await supabase.from("conversations").select("id,title,is_group,created_at").in("id", ids).order("updated_at", { ascending: false });
       if (convError) throw convError;
-      const { data: participants, error: partError } = await supabase.from("conversation_participants").select("conversation_id,user_id").in("conversation_id", ids);
+      const { data: participants, error: partError } = await supabase.from("conversation_participants").select("conversation_id,user_id,last_read_at").in("conversation_id", ids);
       if (partError) throw partError;
       const otherIds = [...new Set((participants || []).filter(p => p.user_id !== user.id).map(p => p.user_id as string))];
       const { data: profiles, error: profileError } = otherIds.length ? await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", otherIds) : {data:[],error:null};
@@ -1343,11 +1343,19 @@ function decodeVapidKey(base64String: string) {
       const { data: recent, error: msgError } = await supabase.from("messages").select("id,conversation_id,sender_id,content,created_at").in("conversation_id", ids).order("created_at", {ascending:false}).limit(100);
       if (msgError) throw msgError;
       const pMap = new Map((profiles || []).map(p => [p.id,p as Profile]));
-      const result = (convs || []).map(conv => {
+      const result = await Promise.all((convs || []).map(async conv => {
         const member = (participants || []).find(p => p.conversation_id === conv.id && p.user_id !== user.id);
+        const ownMembership = (participants || []).find(p => p.conversation_id === conv.id && p.user_id === user.id);
         const last = (recent || []).find(m => m.conversation_id === conv.id);
-        return {...conv, other: member ? pMap.get(member.user_id) : undefined, lastMessage: last?.content || (last ? "Média partagé" : "Commence la conversation")};
-      });
+        const unreadQuery = supabase.from("messages").select("id", { count: "exact", head: true })
+          .eq("conversation_id", conv.id).neq("sender_id", user.id);
+        if (ownMembership?.last_read_at) unreadQuery.gt("created_at", ownMembership.last_read_at);
+        const { count, error: unreadError } = await unreadQuery;
+        if (unreadError) throw unreadError;
+        return {...conv, other: member ? pMap.get(member.user_id) : undefined,
+          lastMessage: last?.content || (last ? "Média partagé" : "Commence la conversation"),
+          lastSenderId: last?.sender_id || null, unreadCount: count || 0};
+      }));
       setConversations(result);
       if (activeConversation && !ids.includes(activeConversation)) setActiveConversation(null);
     } catch (err) { setMessage(err instanceof Error ? "Messagerie : " + err.message : "Impossible de charger les conversations."); }
@@ -1361,6 +1369,7 @@ function decodeVapidKey(base64String: string) {
     if (error) { setMessage("Impossible d’ouvrir cette conversation : " + error.message); return; }
     setChatMessages(((data || []).reverse()) as typeof chatMessages);
     await supabase.from("conversation_participants").update({last_read_at:new Date().toISOString()}).eq("conversation_id",conversationId).eq("user_id",user.id);
+    setConversations(current => current.map(conv => conv.id === conversationId ? {...conv, unreadCount:0} : conv));
   }
 
   async function createGroupConversation() {
@@ -2437,7 +2446,7 @@ function decodeVapidKey(base64String: string) {
             <label className="discovery-search emi-chat-search"><Search size={17}/><input value={chatSearch} onChange={e=>setChatSearch(e.target.value)} placeholder="Rechercher une conversation…" aria-label="Rechercher une conversation"/></label>
             <div className="emi-chat-filters" role="group" aria-label="Filtrer les conversations">{(["Tout","Non lus","Groupes"] as const).map(filter=><button key={filter} type="button" className={chatFilter===filter?"is-active":""} onClick={()=>setChatFilter(filter)}>{filter}</button>)}</div>
             <div className="chat-list">
-              {conversations.filter(conv => (chatFilter!=="Groupes" || conv.is_group) && (chatFilter!=="Non lus") && ((conv.is_group ? conv.title || "Groupe EMi" : conv.other?.display_name || conv.other?.username || conv.title || "Conversation").toLowerCase().includes(chatSearch.toLowerCase()))).map(conv => <button key={conv.id} className={"chat-list-item "+(activeConversation===conv.id?"chat-selected":"")} onClick={()=>void openConversation(conv.id)}><span className="chat-avatar">{conv.other?.avatar_url?<img src={conv.other.avatar_url} alt=""/>:(conv.other?.display_name||conv.other?.username||conv.title||"EM").slice(0,2).toUpperCase()}</span><span className="chat-list-copy"><strong>{conv.is_group ? conv.title || "Groupe EMi" : conv.other?.display_name||conv.other?.username||conv.title||"Conversation"}</strong><small>{conv.lastMessage}</small></span></button>)}
+              {conversations.filter(conv => (chatFilter!=="Groupes" || conv.is_group) && (chatFilter!=="Non lus" || (conv.unreadCount||0)>0) && ((conv.is_group ? conv.title || "Groupe EMi" : conv.other?.display_name || conv.other?.username || conv.title || "Conversation").toLowerCase().includes(chatSearch.toLowerCase()))).map(conv => <button key={conv.id} className={"chat-list-item "+(activeConversation===conv.id?"chat-selected":"")} onClick={()=>void openConversation(conv.id)}><span className="chat-avatar">{conv.other?.avatar_url?<img src={conv.other.avatar_url} alt=""/>:(conv.other?.display_name||conv.other?.username||conv.title||"EM").slice(0,2).toUpperCase()}</span><span className="chat-list-copy"><strong>{conv.is_group ? conv.title || "Groupe EMi" : conv.other?.display_name||conv.other?.username||conv.title||"Conversation"}</strong><small>{conv.lastMessage}</small></span>{(conv.unreadCount||0)>0&&<span className="emi-chat-unread-count" aria-label={`${conv.unreadCount} message(s) non lu(s)`}>{conv.unreadCount>99?"99+":`+${conv.unreadCount}`}</span>}</button>)}
               {!conversations.length && <p className="chat-empty">{chatLoading?"Chargement…":"Pas encore de conversation. Va dans Découvrir et choisis un membre pour lui écrire."}</p>}
             </div>
             <button className="modal-primary" style={{width:"100%",marginTop:10}} onClick={()=>void createGroupConversation()} disabled={chatLoading}>+ Créer un groupe</button>
