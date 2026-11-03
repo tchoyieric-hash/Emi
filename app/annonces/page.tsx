@@ -55,7 +55,7 @@ export default function AnnoncesPage() {
     if(!current) { setNotice("Connecte-toi à EMi avant de publier une annonce."); return; }
     const digits=telephone.replace(/[^0-9]/g,"");
     if(digits.length<8||digits.length>15) { setNotice("Entre un numéro WhatsApp avec indicatif international (ex. 2376XXXXXXXX)."); return; }
-    if(!titre.trim()||Number(prix)<0||prix.trim()===""||!Number.isFinite(Number(prix))) { setNotice("Vérifie le titre et le prix."); return; }
+    if(!titre.trim()||prix.trim()===""||!Number.isFinite(Number(prix))||Number(prix)<=0) { setNotice("Le titre est obligatoire et le prix doit être supérieur à 0 FCFA."); return; }
     setSaving(true);
     try {
       let image_urls:string[]=[];
@@ -171,7 +171,7 @@ export default function AnnoncesPage() {
       {open&&<form id="emi-sell-form" onSubmit={publier} className="mb-8 scroll-mt-6 grid gap-4 rounded-3xl border border-amber-200/30 bg-white/[.04] p-5 shadow-xl shadow-black/20 sm:grid-cols-2 sm:p-7">
         <h2 className="sm:col-span-2 text-xl font-semibold">Publier une annonce</h2>
         <label className="grid gap-2 text-sm">Nom de l'article<input required minLength={3} maxLength={120} value={titre} onChange={e=>setTitre(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="Ex. Smartphone en bon état"/></label>
-        <label className="grid gap-2 text-sm">Prix (FCFA)<input required type="number" min="0" step="1" value={prix} onChange={e=>setPrix(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="Ex. 75000"/></label>
+        <label className="grid gap-2 text-sm">Prix (FCFA)<input required type="number" min="1" step="1" value={prix} onChange={e=>setPrix(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="Ex. 75000"/></label>
         <label className="grid gap-2 text-sm sm:col-span-2">Description<textarea maxLength={5000} rows={3} value={description} onChange={e=>setDescription(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="État, détails, lieu…"/></label>
         <label className="grid gap-2 text-sm">WhatsApp du vendeur (indicatif pays inclus)<input required inputMode="tel" value={telephone} onChange={e=>setTelephone(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 outline-none focus:border-amber-200" placeholder="2376XXXXXXXX"/><span className="text-xs text-white/45">Ce numéro sera visible sur l'annonce via le bouton WhatsApp.</span></label>
         <label className="grid cursor-pointer gap-2 text-sm sm:col-span-2">Photos de l'article <span className="flex items-center gap-2 rounded-xl border border-dashed border-amber-200/35 bg-emerald-950/30 px-4 py-4 text-white/75"><ImagePlus size={20}/><span><strong className="block text-sm text-amber-100">Sélectionner plusieurs photos</strong><small className="mt-1 block text-xs text-white/50">Jusqu'à 10 images · sélectionne plusieurs photos dans ta galerie</small></span></span><input type="file" accept="image/*" multiple className="hidden" onChange={e=>setPhotos(Array.from(e.target.files||[]).slice(0,10))}/></label>
