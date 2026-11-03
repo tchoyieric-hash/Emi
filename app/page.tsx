@@ -1372,7 +1372,7 @@ function decodeVapidKey(base64String: string) {
 
   async function resolveChatMediaUrl(value: string | null | undefined) {
     if (!value || !supabase || value.startsWith("http://") || value.startsWith("https://")) return value || null;
-    const { data, error } = await supabase.storage.from("message-media").createSignedUrl(value, 60 * 60);
+    const { data, error } = await supabase.storage.from("message-media").createSignedUrl(value, 15 * 60);
     if (error) throw error;
     return data.signedUrl;
   }
