@@ -1672,7 +1672,7 @@ function decodeVapidKey(base64String: string) {
     try {
       const { data, error } = await supabase.from("notifications").select("id,actor_id,type,post_id,comment_id,story_id,order_id,message,is_read,created_at").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
       if (error) throw error;
-      const rows = (data || []) as {id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;story_id:string|null;message:string;is_read:boolean;created_at:string}[];
+      const rows = (data || []) as {id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;story_id:string|null;order_id:string|null;message:string;is_read:boolean;created_at:string}[];
       const actorIds = [...new Set(rows.map(row => row.actor_id).filter((id): id is string => !!id))];
       const { data: people, error: peopleError } = actorIds.length ? await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", actorIds) : { data: [], error: null };
       if (peopleError) throw peopleError;
