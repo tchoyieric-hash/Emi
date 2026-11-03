@@ -6136,3 +6136,62 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
  .story-viewer .story-viewer-footer button{padding:9px 8px!important;font-size:11px!important}
  .story-viewer .story-viewer-footer span{font-size:8px!important;letter-spacing:.04em!important}
 }
+
+
+/* EMi Royal Stories — full-screen premium viewer */
+.emi-royal-story-backdrop{position:fixed!important;inset:0!important;z-index:100000!important;display:grid!important;place-items:center!important;padding:0!important;background:#020805!important;}
+.emi-royal-story-screen{position:relative!important;isolation:isolate!important;width:min(100vw,560px)!important;height:100dvh!important;max-height:100dvh!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;color:#fff!important;background:#03130d!important;border:1px solid rgba(225,190,91,.55)!important;box-shadow:0 0 70px #000b!important;}
+.emi-royal-story-progress{position:absolute!important;z-index:20!important;top:max(9px,env(safe-area-inset-top))!important;left:14px!important;right:14px!important;height:4px!important;overflow:hidden!important;border-radius:99px!important;background:rgba(255,255,255,.28)!important;}
+.emi-royal-story-progress span{display:block!important;width:100%!important;height:100%!important;transform-origin:left!important;background:linear-gradient(90deg,#fff0b0,#d9ad3f)!important;animation:emiRoyalStoryProgress linear forwards!important;}
+@keyframes emiRoyalStoryProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.emi-royal-story-header{position:absolute!important;z-index:22!important;top:calc(max(18px,env(safe-area-inset-top)) + 13px)!important;left:16px!important;right:14px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;min-height:54px!important;}
+.emi-royal-story-author{display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;}
+.emi-royal-story-avatar{width:45px!important;height:45px!important;flex:0 0 45px!important;display:grid!important;place-items:center!important;overflow:hidden!important;border:2px solid #e9c96f!important;border-radius:50%!important;background:#0b3324!important;box-shadow:0 0 0 3px #06150dcc!important;}
+.emi-royal-story-avatar img{width:100%!important;height:100%!important;object-fit:cover!important;}
+.emi-royal-story-author-meta{display:flex!important;flex-direction:column!important;gap:3px!important;min-width:0!important;text-shadow:0 2px 8px #000!important;}
+.emi-royal-story-author-meta strong{display:flex!important;align-items:center!important;gap:5px!important;max-width:48vw!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:14px!important;font-weight:850!important;}
+.emi-royal-story-author-meta small{color:#eee9d8!important;font-size:11px!important;}
+.emi-royal-story-header-actions{display:flex!important;align-items:center!important;gap:8px!important;}
+.emi-royal-story-views,.emi-royal-story-close{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;min-width:42px!important;height:42px!important;padding:0 12px!important;border:1px solid rgba(229,194,100,.65)!important;border-radius:999px!important;background:rgba(2,14,9,.78)!important;color:#f8e5a8!important;backdrop-filter:blur(15px)!important;}
+.emi-royal-story-views strong{font-size:12px!important;}
+.emi-royal-story-close{width:42px!important;padding:0!important;border-radius:50%!important;}
+.emi-royal-story-media-stage{position:absolute!important;inset:0!important;overflow:hidden!important;display:grid!important;place-items:center!important;background:#020805!important;}
+.emi-royal-story-media{width:100%!important;height:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;background:#020805!important;}
+.emi-royal-story-shade{position:absolute!important;inset:0!important;pointer-events:none!important;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,transparent 25%,transparent 56%,rgba(0,0,0,.25) 73%,rgba(0,0,0,.78) 100%)!important;}
+.emi-royal-story-zone{position:absolute!important;z-index:3!important;top:23%!important;bottom:31%!important;width:28%!important;border:0!important;background:transparent!important;}
+.emi-royal-story-zone-left{left:0!important;}.emi-royal-story-zone-right{right:0!important;}
+.emi-royal-story-caption{position:absolute!important;z-index:5!important;left:22px!important;right:22px!important;bottom:calc(158px + env(safe-area-inset-bottom))!important;margin:0!important;padding:13px 15px!important;border-left:3px solid #e9c96f!important;border-radius:0 13px 13px 0!important;background:linear-gradient(90deg,rgba(2,20,13,.82),rgba(2,20,13,.08))!important;color:#fff!important;font-size:clamp(14px,3.7vw,18px)!important;font-weight:650!important;line-height:1.45!important;text-shadow:0 2px 8px #000!important;pointer-events:none!important;}
+.emi-royal-story-actions{position:absolute!important;z-index:24!important;left:13px!important;right:13px!important;bottom:calc(24px + env(safe-area-inset-bottom))!important;display:flex!important;flex-direction:column!important;gap:12px!important;}
+.emi-royal-story-reactions{display:flex!important;align-items:center!important;gap:7px!important;width:max-content!important;max-width:100%!important;padding:7px 10px!important;border:1px solid rgba(230,197,105,.55)!important;border-radius:999px!important;background:rgba(2,15,10,.82)!important;backdrop-filter:blur(16px)!important;}
+.emi-royal-story-reactions button{width:39px!important;height:39px!important;display:grid!important;place-items:center!important;border:0!important;border-radius:50%!important;background:transparent!important;font-size:23px!important;transition:transform .18s,background .18s!important;}
+.emi-royal-story-reactions button.is-selected{transform:scale(1.12)!important;background:rgba(222,183,76,.22)!important;box-shadow:0 0 0 1px #e8c96f!important;}
+.emi-royal-story-reply{display:flex!important;align-items:center!important;gap:9px!important;min-width:0!important;min-height:57px!important;padding:6px 7px 6px 15px!important;border:1px solid rgba(230,197,105,.78)!important;border-radius:999px!important;background:rgba(2,14,9,.88)!important;color:#f5dda0!important;backdrop-filter:blur(18px)!important;}
+.emi-royal-story-reply>svg{flex:0 0 auto!important;}
+.emi-royal-story-reply input{flex:1 1 auto!important;min-width:0!important;height:42px!important;border:0!important;outline:0!important;background:transparent!important;color:#fff!important;font-size:13px!important;}
+.emi-royal-story-reply input::placeholder{color:#e2e5dc!important;opacity:.9!important;}
+.emi-royal-story-reply button{width:43px!important;height:43px!important;flex:0 0 43px!important;display:grid!important;place-items:center!important;border:0!important;border-radius:50%!important;background:linear-gradient(135deg,#fff0b4,#d4a63c)!important;color:#082017!important;}
+.emi-royal-story-feedback{position:absolute!important;z-index:30!important;left:16px!important;right:16px!important;bottom:calc(150px + env(safe-area-inset-bottom))!important;margin:0!important;padding:9px 12px!important;border:1px solid rgba(230,197,105,.4)!important;border-radius:12px!important;background:rgba(2,17,11,.94)!important;color:#fff!important;font-size:12px!important;text-align:center!important;}
+.emi-royal-story-footer{position:absolute!important;z-index:15!important;left:16px!important;right:16px!important;bottom:calc(5px + env(safe-area-inset-bottom))!important;display:flex!important;justify-content:space-between!important;color:#d9c98f!important;font-size:8px!important;font-weight:800!important;letter-spacing:.13em!important;pointer-events:none!important;}
+.emi-royal-story-footer i{display:inline-block!important;width:4px!important;height:4px!important;margin:0 5px 1px!important;border-radius:50%!important;background:#e9c96f!important;}
+.emi-royal-story-viewers{position:absolute!important;z-index:28!important;top:calc(94px + env(safe-area-inset-top))!important;right:12px!important;width:min(300px,calc(100% - 24px))!important;max-height:48%!important;overflow:auto!important;padding:13px!important;border:1px solid rgba(230,197,105,.75)!important;border-radius:19px!important;background:rgba(2,15,10,.94)!important;box-shadow:0 18px 60px #000b!important;backdrop-filter:blur(20px)!important;}
+.emi-royal-story-viewers-heading{display:flex!important;align-items:center!important;justify-content:space-between!important;margin-bottom:10px!important;color:#f5dfa0!important;}
+.emi-royal-story-viewers-heading span{display:flex!important;align-items:center!important;gap:7px!important;}
+.emi-royal-story-viewers-heading button{width:32px!important;height:32px!important;display:grid!important;place-items:center!important;border:0!important;border-radius:50%!important;background:#ffffff12!important;color:#fff!important;}
+.emi-royal-story-viewer-person{display:flex!important;align-items:center!important;gap:10px!important;padding:8px 2px!important;border-top:1px solid #e8c96f24!important;font-size:12px!important;}
+.emi-royal-story-viewer-person img,.emi-royal-story-viewer-fallback{width:34px!important;height:34px!important;flex:0 0 34px!important;border-radius:50%!important;object-fit:cover!important;background:#17432f!important;display:grid!important;place-items:center!important;}
+.emi-royal-story-online-mark{width:8px!important;height:8px!important;margin-left:auto!important;border-radius:50%!important;background:#36d68b!important;}
+.emi-royal-story-empty-viewers{color:#c9d6ce!important;font-size:12px!important;}
+/* Keep the story rail and creation studio in the same emerald-and-gold design system. */
+.stories-card{border:1px solid rgba(220,190,94,.28)!important;border-radius:19px!important;background:linear-gradient(145deg,#09251b,#071b17)!important;box-shadow:0 12px 30px rgba(0,0,0,.18)!important;}
+.stories-card .section-label strong{color:#f3dfa0!important;letter-spacing:.02em!important;}
+.stories-card .section-label button{color:#e8c96f!important;font-weight:800!important;}
+.stories-row{gap:14px!important;padding:10px 3px 8px!important;}
+.stories-row .story{min-width:66px!important;gap:7px!important;}
+.stories-row .story-ring{width:61px!important;height:61px!important;padding:3px!important;border:2px solid #d9b85d!important;border-radius:50%!important;background:linear-gradient(135deg,#fff0b4,#b98c2c,#08734a)!important;box-shadow:0 4px 15px #0005!important;}
+.stories-row .story-avatar{border:2px solid #071b14!important;background:#123a2a!important;}
+.stories-row .story-name{max-width:78px!important;color:#f0eee4!important;font-size:11px!important;font-weight:700!important;}
+.emi-story-studio{border:1px solid rgba(230,197,105,.55)!important;border-radius:24px!important;background:linear-gradient(145deg,#08251a,#061610)!important;box-shadow:0 25px 80px #000b!important;}
+.emi-story-brand h2{color:#f5dfa0!important;}
+.emi-story-format{border:1px solid rgba(230,197,105,.22)!important;border-radius:15px!important;background:#ffffff08!important;}
+@media(max-width:600px){.emi-royal-story-screen{width:100vw!important;border:0!important;}.emi-royal-story-header{left:12px!important;right:10px!important;}.emi-royal-story-avatar{width:41px!important;height:41px!important;flex-basis:41px!important;}.emi-royal-story-author-meta strong{font-size:13px!important;max-width:42vw!important;}.emi-royal-story-views,.emi-royal-story-close{height:39px!important;min-width:39px!important;padding:0 9px!important;}.emi-royal-story-close{width:39px!important;}.emi-royal-story-actions{left:10px!important;right:10px!important;gap:10px!important;}.emi-royal-story-reactions{gap:4px!important;padding:6px 7px!important;}.emi-royal-story-reactions button{width:35px!important;height:35px!important;font-size:21px!important;}.emi-royal-story-reply{min-height:53px!important;}.emi-royal-story-reply input{font-size:12px!important;}.emi-royal-story-caption{left:15px!important;right:15px!important;bottom:calc(145px + env(safe-area-inset-bottom))!important;font-size:14px!important;}.emi-royal-story-feedback{bottom:calc(135px + env(safe-area-inset-bottom))!important;}}
+@media(min-width:700px){.emi-royal-story-screen{height:min(100dvh,980px)!important;border-radius:22px!important;}.emi-royal-story-backdrop{padding:18px!important;background:rgba(0,0,0,.92)!important;}}
