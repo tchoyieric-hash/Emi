@@ -682,14 +682,16 @@ function decodeVapidKey(base64String: string) {
     const { data: viewRows } = await supabase.from("post_views").select("post_id").in("post_id", realPosts.map(post => post.id));
     const viewCounts: Record<string, number> = {}; (viewRows || []).forEach((row: {post_id:string}) => { viewCounts[row.post_id] = (viewCounts[row.post_id] || 0) + 1; }); setPostViewCounts(old => ({...old, ...viewCounts}));
     // Synchroniser les offres du Marché avec l'accueil, avec leur badge d'origine.
-    const [{data:marketRows},{data:eliteRows},{data:trocRows},{data:flowRows}] = await Promise.all([
+    const [{data:marketRows},{data:productRows},{data:eliteRows},{data:trocRows},{data:flowRows}] = await Promise.all([
       supabase.from("annonces").select("id,titre,description,prix,image_urls,created_at").eq("statut","active").order("created_at",{ascending:false}).limit(8),
+      supabase.from("products").select("id,name,description,price,image_urls,created_at,businesses(name,city)").eq("status","active").gt("stock",0).order("created_at",{ascending:false}).limit(8),
       supabase.from("elite_directory_profiles").select("id,nom,specialite,ville,bio,image_url,created_at").eq("published",true).order("created_at",{ascending:false}).limit(5),
       supabase.from("troc_offres").select("id,bien_offert,bien_recherche,description,created_at").eq("statut","active").order("created_at",{ascending:false}).limit(4),
       supabase.from("tontine_cercles").select("id,nom_article,prix_cible,membres_max,created_at").order("created_at",{ascending:false}).limit(4)
     ]);
     const marketCards: MarketHighlight[] = [
       ...((marketRows || []) as any[]).map((a): MarketHighlight => ({ id: a.id, title: a.titre, description: a.description || "Découvre cette offre de la communauté.", badge: "🛍️ EMi MARKET", viewType: "market", image: Array.isArray(a.image_urls) ? a.image_urls[0] || null : null, href: "/annonce/" + a.id, created_at: a.created_at, price: Number(a.prix) || 0 })),
+      ...((productRows || []) as any[]).map((p): MarketHighlight => ({ id: p.id, title: p.name, description: p.description || p.businesses?.name || "Produit disponible dans une boutique EMi.", badge: "🛒 EMi BOUTIQUE", viewType: "market", image: Array.isArray(p.image_urls) ? p.image_urls[0] || null : null, href: "/annonces/business", created_at: p.created_at, price: Number(p.price) || 0, meta: [p.businesses?.name, p.businesses?.city].filter(Boolean).join(" · ") })),
       ...((eliteRows || []) as any[]).map((a): MarketHighlight => ({ id: a.id, title: a.nom, description: a.bio || a.specialite || "Professionnel de la communauté EMi.", badge: "ELITE HOSPITALITY", viewType: "elite", image: a.image_url || null, href: "/annonces/elite-directory", created_at: a.created_at, meta: [a.specialite, a.ville].filter(Boolean).join(" · ") })),
       ...((trocRows || []) as any[]).map((a): MarketHighlight => ({ id: a.id, title: a.bien_offert, description: "Recherche en échange : " + a.bien_recherche + (a.description ? " — " + a.description : ""), badge: "EMi TROC", viewType: "troc", image: null, href: "/annonces/troc", created_at: a.created_at })),
       ...((flowRows || []) as any[]).map((a): MarketHighlight => ({ id: a.id, title: a.nom_article, description: "Rejoins ce cercle d’achat groupé de la communauté.", badge: "DJANGUI FLOW", viewType: "flow", image: null, href: "/annonces/tontine", created_at: a.created_at, meta: a.prix_cible ? new Intl.NumberFormat("fr-FR").format(Number(a.prix_cible)) + " FCFA" : "" }))
