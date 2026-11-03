@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bell, Camera, Copy, ChevronLeft, Compass, Heart, Home, Repeat2, LogIn, LogOut, MessageCircle, Plus, Search, Send, Settings, Sparkles, UserRound, Video, Phone, Mic, Square, X, Image as ImageIcon, Clapperboard, ShieldCheck, BadgeCheck, LockKeyhole, Bookmark, Archive, Languages, Palette, CircleHelp, Ban, Eye, SlidersHorizontal, Smartphone, ChevronRight, Clock3, Share2, UserRoundCog, Music2, Headphones, TrendingUp, Mic2, Disc3, ShoppingBag, Users, Volume2, VolumeX, Smile } from "lucide-react";
+import { Bell, Camera, Copy, ChevronLeft, Compass, Heart, Home, Repeat2, LogIn, LogOut, MessageCircle, Plus, Search, Send, Settings, Sparkles, UserRound, Video, Phone, Mic, Square, X, Image as ImageIcon, Clapperboard, ShieldCheck, BadgeCheck, LockKeyhole, Bookmark, Archive, Languages, Palette, CircleHelp, Ban, Eye, SlidersHorizontal, Smartphone, ChevronRight, Clock3, Share2, UserRoundCog, Music2, Headphones, TrendingUp, Mic2, Disc3, ShoppingBag, BriefcaseBusiness, Users, Volume2, VolumeX, Smile } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 import ReelsRoyalScreen from "@/components/ReelsRoyalScreen";
 
