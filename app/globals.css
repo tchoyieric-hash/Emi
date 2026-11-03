@@ -6340,3 +6340,74 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
     margin: 0 !important;
   }
 }
+
+
+/* EMi Royal — dedicated conversation workspace */
+.chat-shell-conversation {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  height: min(820px, calc(100dvh - 250px)) !important;
+  margin: 10px 0 18px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(219,185,89,.38) !important;
+  border-radius: 24px !important;
+  background: linear-gradient(180deg,#08271b 0%,#061a14 100%) !important;
+  box-shadow: 0 22px 60px rgba(0,0,0,.32) !important;
+}
+.chat-shell-conversation .chat-window {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+.chat-shell-conversation .emi-chat-topbar {
+  flex: 0 0 auto !important;
+  min-height: 76px !important;
+}
+.chat-shell-conversation .emi-chat-modebar { flex: 0 0 auto !important; }
+.chat-shell-conversation .emi-chat-messages {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-y: contain !important;
+}
+.chat-shell-conversation .emi-chat-compose {
+  position: relative !important;
+  inset: auto !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+}
+@media (max-width: 760px) {
+  .chat-shell-conversation {
+    height: calc(100dvh - 265px) !important;
+    min-height: 420px !important;
+    max-height: none !important;
+    margin: 6px 0 12px !important;
+    border-radius: 20px !important;
+  }
+  .chat-shell-conversation .emi-chat-topbar {
+    min-height: 72px !important;
+    padding: 9px 11px !important;
+  }
+  .chat-shell-conversation .emi-chat-modebar {
+    padding: 8px 9px !important;
+  }
+  .chat-shell-conversation .emi-chat-messages {
+    min-height: 0 !important;
+    padding: 16px 13px 26px !important;
+  }
+  .chat-shell-conversation .emi-chat-compose {
+    padding: 9px 10px max(9px, env(safe-area-inset-bottom)) !important;
+  }
+}
