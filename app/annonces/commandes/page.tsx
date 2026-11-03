@@ -34,6 +34,7 @@ export default function CommandesPage() {
   const [saving, setSaving] = useState("");
   const [notice, setNotice] = useState("");
   const [mode, setMode] = useState<"buyer" | "seller">("buyer");
+  const [targetOrderId, setTargetOrderId] = useState("");
 
   const load = useCallback(async () => {
     if (!supabase) { setNotice("Connexion Supabase indisponible."); setLoading(false); return; }
@@ -96,6 +97,14 @@ export default function CommandesPage() {
   }, []);
 
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("mode") === "seller") setMode("seller");
+    setTargetOrderId(params.get("order") || "");
+  }, []);
+  useEffect(() => {
+    if (!loading && targetOrderId) document.getElementById("emi-order-" + targetOrderId)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [loading, orders, targetOrderId]);
 
   const visible = orders.filter(o => mode === "buyer" ? o.buyer_id === userId : o.businesses?.owner_id === userId);
 
@@ -135,7 +144,7 @@ export default function CommandesPage() {
       </section>
       {notice && <p role="status" className="mt-4 rounded-xl border border-[#d8b85f]/25 bg-[#d8b85f]/10 p-3 text-sm text-[#ffe7a1]">{notice}</p>}
       {loading ? <p className="py-12 text-center text-white/55">Chargement des commandes…</p> : !userId ? <p className="mt-5 rounded-2xl border border-white/10 p-6">Connecte-toi à ton compte EMi.</p> : visible.length === 0 ? <div className="mt-5 rounded-2xl border border-white/10 bg-white/[.025] p-8 text-center"><Package className="mx-auto text-[#f3d77c]" size={32}/><h2 className="mt-3 font-bold">{mode === "buyer" ? "Aucun achat pour le moment" : "Aucune commande reçue"}</h2><p className="mt-1 text-sm text-white/50">{mode === "buyer" ? "Tes commandes passées apparaîtront ici." : "Les commandes de tes produits apparaîtront ici."}</p><Link href="/annonces/business" className="mt-4 inline-flex rounded-full bg-[#f3d77c] px-5 py-2.5 text-sm font-black text-[#102318]">Découvrir les boutiques</Link></div> : <section className="mt-5 space-y-3">
-        {visible.map(order => <article key={order.id} className="rounded-2xl border border-[#d8b85f]/20 bg-white/[.035] p-4 sm:p-5">
+        {visible.map(order => <article id={"emi-order-" + order.id} key={order.id} className={"rounded-2xl border p-4 sm:p-5 " + (targetOrderId === order.id ? "border-[#f3d77c] bg-[#f3d77c]/10 ring-2 ring-[#f3d77c]/30" : "border-[#d8b85f]/20 bg-white/[.035]")}>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div><p className="text-[10px] font-black tracking-[.15em] text-[#f3d77c]">{mode === "buyer" ? "ACHAT AUPRÈS DE" : "COMMANDE POUR"} · {order.businesses?.name || "Boutique EMi"}</p><p className="mt-1 text-xs text-white/45">Réf. {order.id.slice(0, 8).toUpperCase()} · {new Date(order.created_at).toLocaleString("fr-FR")}</p></div>
             <span className="rounded-full border border-[#d8b85f]/30 bg-[#d8b85f]/10 px-3 py-1.5 text-xs font-bold text-[#ffe7a1]">{LABELS[order.status]}</span>
