@@ -248,6 +248,7 @@ export default function HomePage() {
   const [chatFilter, setChatFilter] = useState<"Tout"|"Non lus"|"Groupes">("Tout");
   const [notifications, setNotifications] = useState<{id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;story_id:string|null;message:string;is_read:boolean;created_at:string;actor?:Profile|null}[]>([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
+  const [messagesInboxTab, setMessagesInboxTab] = useState<"chats"|"activity">("chats");
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [incomingMessageNotice, setIncomingMessageNotice] = useState("");
@@ -1586,6 +1587,57 @@ function decodeVapidKey(base64String: string) {
     finally { setNotificationsLoading(false); }
   }
 
+  async function loadMessageActivity() {
+    if (!supabase || !user) { setAuthOpen(true); return; }
+    setNotificationsLoading(true);
+    try {
+      const { data, error } = await supabase.from("notifications")
+        .select("id,actor_id,type,post_id,comment_id,story_id,message,is_read,created_at")
+        .eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
+      if (error) throw error;
+      const rows = (data || []) as typeof notifications;
+      const actorIds = [...new Set(rows.map(row => row.actor_id).filter((id): id is string => !!id))];
+      const { data: people, error: peopleError } = actorIds.length
+        ? await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", actorIds)
+        : { data: [], error: null };
+      if (peopleError) throw peopleError;
+      const byId = new Map((people || []).map(person => [person.id, person as Profile]));
+      setNotifications(rows.map(row => ({ ...row, actor: row.actor_id ? byId.get(row.actor_id) || null : null })));
+    } catch (err) {
+      setMessage(err instanceof Error ? "Activité Messages : " + err.message : "Impossible de charger l’activité.");
+    } finally { setNotificationsLoading(false); }
+  }
+
+  async function openMessageActivity(note: typeof notifications[number]) {
+    if (!supabase || !user) return;
+    if (!note.is_read) {
+      const { error } = await supabase.from("notifications").update({ is_read: true }).eq("id", note.id).eq("recipient_id", user.id);
+      if (!error) {
+        setNotifications(old => old.map(item => item.id === note.id ? { ...item, is_read: true } : item));
+        setUnreadNotifications(value => Math.max(0, value - 1));
+      }
+    }
+    if ((note.type === "story_reaction" || note.type === "story_reply") && note.story_id) {
+      const story = stories.find(item => item.id === note.story_id);
+      if (story) { setActiveStory(story); return; }
+      setActive("Accueil");
+      await loadStories();
+      setMessage("Cette story a peut-être expiré. Consulte les stories encore disponibles.");
+      return;
+    }
+    if (note.post_id) {
+      setActive("Accueil");
+      setViewingProfile(null);
+      await loadFeed();
+      setMessage("Ouvre la publication concernée dans le fil EMi.");
+      return;
+    }
+    if (note.actor_id) {
+      setViewingProfile(null);
+      await openProfile(note.actor_id);
+    }
+  }
+
   async function loadFollowingFeed() {
     if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour voir tes abonnements."); return; }
     const { data: follows, error: followError } = await supabase.from("follows").select("following_id").eq("follower_id", user.id);
@@ -2366,8 +2418,22 @@ function decodeVapidKey(base64String: string) {
           {!notificationsLoading && notifications.length===0 && <div className="empty-feature"><Bell size={28}/><h2>Tu es à jour</h2><p>Les nouveaux abonnements, likes et commentaires apparaîtront ici.</p></div>}</div>
         </section>}
         {active === "Messages" && !viewingProfile && <section className="chat-shell">
-          <header className="emi-messages-heading"><div><span className="emi-messages-kicker">EMi · RESTONS CONNECTÉS</span><h2>Messages <span>✦</span></h2><p>Reste proche de ceux qui comptent.</p></div><div className="emi-messages-head-actions"><button type="button" aria-label="Trouver des membres" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}><Search size={19}/></button><button type="button" aria-label="Créer un groupe" onClick={()=>void createGroupConversation()}><Plus size={21}/></button></div></header>
-          <aside className="chat-sidebar">
+          <header className="emi-messages-heading"><div><span className="emi-messages-kicker">EMi · RESTONS CONNECTÉS</span><h2>Messages <span>✦</span></h2><p>Conversations et actions reçues au même endroit.</p></div><div className="emi-messages-head-actions"><button type="button" aria-label="Trouver des membres" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}><Search size={19}/></button><button type="button" aria-label="Créer un groupe" onClick={()=>void createGroupConversation()}><Plus size={21}/></button></div></header>
+          <div className="emi-inbox-tabs" role="tablist" aria-label="Boîte de réception EMi">
+            <button type="button" role="tab" aria-selected={messagesInboxTab==="chats"} className={messagesInboxTab==="chats"?"is-active":""} onClick={()=>setMessagesInboxTab("chats")}><MessageCircle size={16}/> Conversations</button>
+            <button type="button" role="tab" aria-selected={messagesInboxTab==="activity"} className={messagesInboxTab==="activity"?"is-active":""} onClick={()=>{setMessagesInboxTab("activity");void loadMessageActivity();}}><Bell size={16}/> Activité {unreadNotifications>0&&<span>{unreadNotifications>99?"99+":unreadNotifications}</span>}</button>
+          </div>
+          {messagesInboxTab==="activity" ? <section className="emi-message-activity" aria-label="Activité reçue">
+            <div className="section-label"><strong>Actions reçues</strong><button type="button" onClick={()=>void loadMessageActivity()}>Actualiser ↻</button></div>
+            {notificationsLoading&&<p className="chat-empty">Chargement de ton activité…</p>}
+            {!notificationsLoading&&notifications.length===0&&<div className="empty-feature"><Bell size={27}/><h2>Aucune activité pour le moment</h2><p>Les réactions, réponses, commentaires et abonnements reçus apparaîtront ici.</p></div>}
+            <div className="discovery-list">{notifications.map(note=><article key={note.id} className="discovery-person emi-activity-item" style={{opacity:note.is_read?0.76:1}}>
+              <span className="discovery-avatar">{note.actor?.avatar_url?<img src={note.actor.avatar_url} alt=""/>:(note.actor?.display_name||note.actor?.username||"EM").slice(0,2).toUpperCase()}</span>
+              <button type="button" className="discovery-person-main" onClick={()=>void openMessageActivity(note)}><span><strong>{note.actor?.display_name||note.actor?.username||"EMi"}</strong><small>{note.message||"Nouvelle activité sur EMi"}</small><small>{new Date(note.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small></span></button>
+              {!note.is_read&&<span className="notification-unread-dot" aria-label="Non lue"/>}
+              <button type="button" className="emi-activity-open" onClick={()=>void openMessageActivity(note)} aria-label="Ouvrir cette activité"><ChevronRight size={18}/></button>
+            </article>)}</div>
+          </section> : <><aside className="chat-sidebar">
             <label className="discovery-search emi-chat-search"><Search size={17}/><input value={chatSearch} onChange={e=>setChatSearch(e.target.value)} placeholder="Rechercher une conversation…" aria-label="Rechercher une conversation"/></label>
             <div className="emi-chat-filters" role="group" aria-label="Filtrer les conversations">{(["Tout","Non lus","Groupes"] as const).map(filter=><button key={filter} type="button" className={chatFilter===filter?"is-active":""} onClick={()=>setChatFilter(filter)}>{filter}</button>)}</div>
             <div className="chat-list">
@@ -2383,7 +2449,7 @@ function decodeVapidKey(base64String: string) {
               <div className="chat-messages" aria-live="polite">{chatMessages.map(msg=><div key={msg.id} className={"chat-bubble "+(msg.sender_id===user?.id?"chat-mine":"chat-theirs")}><p>{msg.content}</p>{msg.media_url && (msg.media_type === "video" ? <video src={msg.media_url} controls playsInline className="chat-media"/> : <img src={msg.media_url} alt="Média partagé" className="chat-media"/>)}<time>{new Date(msg.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</time></div>)}</div>
               <form className="chat-compose" onSubmit={sendChatMessage}><input ref={chatMediaInput} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" onChange={e=>setChatMediaFile(e.target.files?.[0]||null)} hidden/><button type="button" className="profile-back-button" aria-label="Joindre une image ou vidéo" onClick={()=>chatMediaInput.current?.click()}><ImageIcon size={17}/></button><input value={chatDraft} onChange={e=>setChatDraft(e.target.value)} maxLength={5000} placeholder={chatMediaFile ? chatMediaFile.name : "Écris un message…"} aria-label="Écris un message" disabled={!user}/><button className="modal-primary" type="submit" disabled={!chatDraft.trim()&&!chatMediaFile||chatLoading}><Send size={17}/> Envoyer</button></form>
             </>}
-          </section>
+          </section></>}
         </section>}
         {publishSuccess && <div role="dialog" aria-modal="true" aria-labelledby="emi-publish-success-title" style={{position:"fixed",inset:0,zIndex:10000,display:"grid",placeItems:"center",padding:20,background:"rgba(5,7,12,.82)",backdropFilter:"blur(14px)"}}><section style={{width:"min(100%,420px)",borderRadius:28,padding:24,background:"linear-gradient(155deg,#171522,#0b1118 72%)",border:"1px solid rgba(177,143,255,.45)",boxShadow:"0 24px 100px #0009",color:"#fff",textAlign:"center"}}><div style={{width:76,height:76,margin:"4px auto 18px",display:"grid",placeItems:"center",borderRadius:"50%",background:"rgba(42,210,137,.13)",border:"2px solid #35d99a",color:"#35d99a"}}><ShieldCheck size={40}/></div><span style={{fontSize:11,letterSpacing:2,color:"#c9adff",fontWeight:800}}>EMi · PUBLICATION</span><h2 id="emi-publish-success-title" style={{fontSize:25,lineHeight:1.2,margin:"10px 0"}}>Publication envoyée avec succès !</h2><p style={{color:"#c6c2d3",fontSize:14,lineHeight:1.6,margin:"0 0 18px"}}>Ton contenu a bien été enregistré sur EMi. Il est prêt à être découvert par la communauté.</p>{publishSuccess.caption&&<p style={{fontSize:13,color:"#f0edf7",margin:"0 0 18px",overflowWrap:"anywhere"}}>{publishSuccess.caption}</p>}<button type="button" onClick={()=>{setPublishSuccess(null);setActive("Accueil");void loadFeed();window.scrollTo({top:0,behavior:"smooth"});}} style={{width:"100%",padding:"14px 18px",border:0,borderRadius:15,background:"linear-gradient(100deg,#7545ff,#9a55f5)",color:"#fff",fontWeight:800,fontSize:15,boxShadow:"0 8px 26px #7545ff55"}}>Voir ma publication</button><button type="button" onClick={()=>setPublishSuccess(null)} style={{width:"100%",padding:13,marginTop:9,borderRadius:15,border:"1px solid #51485f",background:"transparent",color:"#f3efff",fontWeight:700}}>Retour à EMi</button></section></div>}{incomingMessageNotice && <button className="emi-incoming-toast" role="status" onClick={() => { setIncomingMessageNotice(""); setActive("Messages"); }}><MessageCircle size={18}/><span><strong>EMi · Nouveau message</strong><small>{incomingMessageNotice}</small></span></button>}
         {message && <div className="demo-note" role="status"><Sparkles size={16}/><span>{message}</span><button style={{marginLeft:"auto",background:"none",border:0,color:"inherit"}} onClick={() => setMessage("")} aria-label="Fermer"><X size={15}/></button></div>}
