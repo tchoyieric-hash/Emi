@@ -2401,7 +2401,7 @@ function decodeVapidKey(base64String: string) {
             <a href="/annonces/elite-directory" className="emi-nexus-tile emi-nexus-pro"><span className="emi-nexus-icon"><BriefcaseBusiness size={22}/></span><strong>EMi PRO</strong><small>Annuaire professionnel</small><b>Découvrir <ChevronRight size={13}/></b></a>
             <a href="/annonces" className="emi-nexus-tile"><span className="emi-nexus-icon"><ShoppingBag size={22}/></span><strong>Marché</strong><small>Achats & annonces</small><b>Explorer <ChevronRight size={13}/></b></a>
             <a href="/annonces/tontine" className="emi-nexus-tile"><span className="emi-nexus-icon"><Users size={22}/></span><strong>Djangui Flow</strong><small>Solidarité collective</small><b>Accéder <ChevronRight size={13}/></b></a>
-            <a href="/annonces" className="emi-nexus-tile"><span className="emi-nexus-icon"><Repeat2 size={22}/></span><strong>EMi Troc</strong><small>Échange & don</small><b>Découvrir <ChevronRight size={13}/></b></a>
+            <a href="/annonces/troc" className="emi-nexus-tile"><span className="emi-nexus-icon"><Repeat2 size={22}/></span><strong>EMi Troc</strong><small>Échange & don</small><b>Découvrir <ChevronRight size={13}/></b></a>
             <a href="/annonces/philanthropy" className="emi-nexus-tile"><span className="emi-nexus-icon"><Heart size={22}/></span><strong>EMi Fondation</strong><small>Actions sociales</small><b>Participer <ChevronRight size={13}/></b></a>
           </div>
         </section>}
