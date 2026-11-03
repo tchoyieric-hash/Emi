@@ -126,7 +126,7 @@ export default function HomePage() {
   const [offlineDrafts, setOfflineDrafts] = useState<OfflinePostDraft[]>([]);
   const [offlineDraftsOpen, setOfflineDraftsOpen] = useState(false);
   const [createStudioOpen, setCreateStudioOpen] = useState(false);
-  const [ecosystemOpen, setEcosystemOpen] = useState(true);
+  const [ecosystemOpen, setEcosystemOpen] = useState(false);
   const [peopleDiscoveryOpen, setPeopleDiscoveryOpen] = useState(false);
   const [manageContentOpen, setManageContentOpen] = useState(false);
   const [managedPosts, setManagedPosts] = useState<Post[]>([]);
