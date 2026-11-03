@@ -250,7 +250,7 @@ export default function HomePage() {
   const voiceChunksRef = useRef<Blob[]>([]);
   const [chatSearch, setChatSearch] = useState("");
   const [chatFilter, setChatFilter] = useState<"Tout"|"Non lus"|"Groupes">("Tout");
-  const [notifications, setNotifications] = useState<{id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;story_id:string|null;message:string;is_read:boolean;created_at:string;actor?:Profile|null}[]>([]);
+  const [notifications, setNotifications] = useState<{id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;story_id:string|null;order_id:string|null;message:string;is_read:boolean;created_at:string;actor?:Profile|null}[]>([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [messagesInboxTab, setMessagesInboxTab] = useState<"chats"|"activity">("chats");
   const [unreadNotifications, setUnreadNotifications] = useState(0);
@@ -302,7 +302,7 @@ function decodeVapidKey(base64String: string) {
       const { error } = await supabase.from("push_subscriptions").upsert({ user_id: user.id, endpoint, p256dh, auth, updated_at: new Date().toISOString() }, { onConflict: "endpoint" });
       if (error) throw error;
       setPushEnabled(true);
-      setSettingsNotice("Notifications EMi activées sur cet appareil : messages, abonnements, J’aime, commentaires et réactions aux stories.");
+      setSettingsNotice("Notifications EMi activées sur cet appareil : messages, abonnements, J’aime, commentaires, réactions aux stories et commandes de tes boutiques.");
     } catch (err) {
       setSettingsNotice(err instanceof Error ? err.message : "Impossible d’activer les notifications pour le moment.");
     } finally {
@@ -1670,7 +1670,7 @@ function decodeVapidKey(base64String: string) {
     if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour consulter tes notifications."); return; }
     setNotificationsLoading(true);
     try {
-      const { data, error } = await supabase.from("notifications").select("id,actor_id,type,post_id,comment_id,story_id,message,is_read,created_at").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
+      const { data, error } = await supabase.from("notifications").select("id,actor_id,type,post_id,comment_id,story_id,order_id,message,is_read,created_at").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
       if (error) throw error;
       const rows = (data || []) as {id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;story_id:string|null;message:string;is_read:boolean;created_at:string}[];
       const actorIds = [...new Set(rows.map(row => row.actor_id).filter((id): id is string => !!id))];
@@ -1717,6 +1717,7 @@ function decodeVapidKey(base64String: string) {
         setUnreadNotifications(value => Math.max(0, value - 1));
       }
     }
+    if (note.type === "order_received" && note.order_id) { window.location.href = "/annonces/commandes?mode=seller&order=" + encodeURIComponent(note.order_id); return; }
     if ((note.type === "story_reaction" || note.type === "story_reply") && note.story_id) {
       const story = stories.find(item => item.id === note.story_id);
       if (story) { setActiveStory(story); return; }
@@ -2532,10 +2533,10 @@ function decodeVapidKey(base64String: string) {
           {notificationsLoading && <p className="chat-empty">Chargement des notifications…</p>}
           <div className="discovery-list">{notifications.map(note => <article key={note.id} className="discovery-person" style={{opacity:note.is_read?0.72:1,borderColor:note.is_read?"var(--line)":"#8d6de0"}}>
             <span className="discovery-avatar">{note.actor?.avatar_url?<img src={note.actor.avatar_url} alt=""/>:(note.actor?.display_name||note.actor?.username||"EM").slice(0,2).toUpperCase()}</span>
-            <button className="discovery-person-main" onClick={() => { if((note.type==="story_reaction"||note.type==="story_reply")&&note.story_id){const target=stories.find(item=>item.id===note.story_id);if(target){setActiveStory(target);return;}setActive("Accueil");void loadStories().then(()=>setMessage("Cette story n’est plus disponible ou a expiré."));return;}if(note.actor_id)void openProfile(note.actor_id); }}><span><strong>{note.actor?.display_name||note.actor?.username||"EMi"}</strong><small>{note.message}</small><small>{new Date(note.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small></span></button>
+            <button className="discovery-person-main" onClick={() => { if(note.type==="order_received"&&note.order_id){void openMessageActivity(note);return;}if((note.type==="story_reaction"||note.type==="story_reply")&&note.story_id){const target=stories.find(item=>item.id===note.story_id);if(target){setActiveStory(target);return;}setActive("Accueil");void loadStories().then(()=>setMessage("Cette story n’est plus disponible ou a expiré."));return;}if(note.actor_id)void openProfile(note.actor_id); }}><span><strong>{note.actor?.display_name||note.actor?.username||"EMi"}</strong><small>{note.message}</small><small>{new Date(note.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small></span></button>
             {!note.is_read && <span className="notification-unread-dot" aria-label="Non lue"/>}
           </article>)}
-          {!notificationsLoading && notifications.length===0 && <div className="empty-feature"><Bell size={28}/><h2>Tu es à jour</h2><p>Les nouveaux abonnements, likes et commentaires apparaîtront ici.</p></div>}</div>
+          {!notificationsLoading && notifications.length===0 && <div className="empty-feature"><Bell size={28}/><h2>Tu es à jour</h2><p>Les nouveaux abonnements, interactions, messages et commandes apparaîtront ici.</p></div>}</div>
         </section>}
         {active === "Messages" && !viewingProfile && <section className="emi-messenger" aria-label="Messagerie EMi">
           <aside className={`emi-messenger-inbox ${activeConversation ? "is-conversation-open" : ""}`}>
