@@ -64,7 +64,7 @@ export default function CommandesPage() {
   async function updateStatus(order: Order, status: Order["status"]) {
     if (!supabase || !userId) return;
     setSaving(order.id); setNotice("");
-    const { error } = await supabase.from("orders").update({ status, updated_at: new Date().toISOString() }).eq("id", order.id);
+    const { error } = await supabase.rpc("emi_update_order_status", { p_order_id: order.id, p_status: status });
     if (error) setNotice("Mise à jour impossible : " + error.message);
     else { setNotice("Commande mise à jour."); await load(); }
     setSaving("");
