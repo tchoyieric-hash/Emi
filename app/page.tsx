@@ -1370,12 +1370,25 @@ function decodeVapidKey(base64String: string) {
     finally { setChatLoading(false); }
   }
 
+  async function resolveChatMediaUrl(value: string | null | undefined) {
+    if (!value || !supabase || /^https?:\\/\\//i.test(value)) return value || null;
+    const { data, error } = await supabase.storage.from("message-media").createSignedUrl(value, 60 * 60);
+    if (error) throw error;
+    return data.signedUrl;
+  }
+
   async function openConversation(conversationId: string) {
     if (!supabase || !user) { setAuthOpen(true); return; }
     setActiveConversation(conversationId);
     const { data, error } = await supabase.from("messages").select("id,conversation_id,sender_id,content,media_url,media_type,created_at").eq("conversation_id", conversationId).order("created_at", {ascending:false}).limit(200);
     if (error) { setMessage("Impossible d’ouvrir cette conversation : " + error.message); return; }
-    setChatMessages(((data || []).reverse()) as typeof chatMessages);
+    try {
+      const rows = await Promise.all(((data || []).reverse()).map(async row => ({...row, media_url: await resolveChatMediaUrl(row.media_url)})));
+      setChatMessages(rows as typeof chatMessages);
+    } catch (mediaError) {
+      setMessage("Impossible de charger un média privé : " + describeUnknownError(mediaError));
+      setChatMessages(((data || []).reverse()).map(row => ({...row,media_url:null})) as typeof chatMessages);
+    }
     await supabase.from("conversation_participants").update({last_read_at:new Date().toISOString()}).eq("conversation_id",conversationId).eq("user_id",user.id);
     setConversations(current => current.map(conv => conv.id === conversationId ? {...conv, unreadCount:0} : conv));
   }
@@ -1516,13 +1529,13 @@ function decodeVapidKey(base64String: string) {
         setChatLoading(true);
         try {
           const ext = blob.type.includes("mp4") ? "m4a" : "webm";
-          const path = user.id + "/chat/" + crypto.randomUUID() + "." + ext;
-          const {error: uploadError} = await supabase.storage.from("post-media").upload(path,blob,{contentType:blob.type,upsert:false});
+          const path = activeConversation + "/" + user.id + "/" + crypto.randomUUID() + "." + ext;
+          const {error: uploadError} = await supabase.storage.from("message-media").upload(path,blob,{contentType:blob.type,upsert:false});
           if (uploadError) throw uploadError;
-          const url = supabase.storage.from("post-media").getPublicUrl(path).data.publicUrl;
-          const {data,error} = await supabase.from("messages").insert({conversation_id:activeConversation,sender_id:user.id,content:"Message vocal",media_url:url,media_type:"audio"}).select("id,conversation_id,sender_id,content,media_url,media_type,created_at").single();
+          const {data,error} = await supabase.from("messages").insert({conversation_id:activeConversation,sender_id:user.id,content:"Message vocal",media_url:path,media_type:"audio"}).select("id,conversation_id,sender_id,content,media_url,media_type,created_at").single();
           if (error) throw error;
-          setChatMessages(old => old.some(item=>item.id===data.id)?old:[...old,data as typeof chatMessages[number]]);
+          const signedUrl = await resolveChatMediaUrl(data.media_url);
+          setChatMessages(old => old.some(item=>item.id===data.id)?old:[...old,{...data,media_url:signedUrl} as typeof chatMessages[number]]);
           await supabase.from("conversations").update({updated_at:new Date().toISOString()}).eq("id",activeConversation);
           void loadConversations();
         } catch(err) { setMessage("Envoi du vocal impossible : " + describeUnknownError(err)); }
@@ -1557,16 +1570,17 @@ function decodeVapidKey(base64String: string) {
         if (!["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime","audio/webm","audio/mp4","audio/mpeg","audio/ogg"].includes(file.type)) throw new Error("Format non pris en charge. Choisis une image, une vidéo ou un audio.");
         if (file.size > 25 * 1024 * 1024) throw new Error("Un média de messagerie doit faire moins de 25 Mo.");
         const ext = file.name.split(".").pop()?.replace(/[^a-zA-Z0-9]/g,"") || "bin";
-        const path = user.id + "/chat/" + crypto.randomUUID() + "." + ext;
-        const { error: uploadError } = await supabase.storage.from("post-media").upload(path,file,{contentType:file.type,upsert:false});
+        const path = activeConversation + "/" + user.id + "/" + crypto.randomUUID() + "." + ext;
+        const { error: uploadError } = await supabase.storage.from("message-media").upload(path,file,{contentType:file.type,upsert:false});
         if (uploadError) throw uploadError;
-        mediaUrl = supabase.storage.from("post-media").getPublicUrl(path).data.publicUrl;
+        mediaUrl = path;
         mediaType = file.type.startsWith("video/") ? "video" : file.type.startsWith("audio/") ? "audio" : "image";
       }
       const { data, error } = await supabase.from("messages").insert({conversation_id:activeConversation,sender_id:user.id,content,media_url:mediaUrl,media_type:mediaType}).select("id,conversation_id,sender_id,content,media_url,media_type,created_at").single();
       if (error) throw error;
       setChatDraft(""); setChatMediaFile(null);
-      setChatMessages(old => old.some(m => m.id === data.id) ? old : [...old, data as typeof chatMessages[number]]);
+      const signedUrl = await resolveChatMediaUrl(data.media_url);
+      setChatMessages(old => old.some(m => m.id === data.id) ? old : [...old, {...data,media_url:signedUrl} as typeof chatMessages[number]]);
       await supabase.from("conversations").update({updated_at:new Date().toISOString()}).eq("id",activeConversation);
       void loadConversations();
     } catch (err) {
@@ -1584,7 +1598,15 @@ function decodeVapidKey(base64String: string) {
     const channel = supabase.channel("emi-chat-" + activeConversation)
       .on("postgres_changes", {event:"INSERT",schema:"public",table:"messages",filter:"conversation_id=eq." + activeConversation}, payload => {
         const row = payload.new as typeof chatMessages[number];
-        setChatMessages(old => old.some(message => message.id === row.id) ? old : [...old,row]);
+        void (async () => {
+          try {
+            const signedUrl = await resolveChatMediaUrl(row.media_url);
+            setChatMessages(old => old.some(message => message.id === row.id) ? old : [...old,{...row,media_url:signedUrl}]);
+          } catch (mediaError) {
+            console.warn("EMi private chat media:", describeUnknownError(mediaError));
+            setChatMessages(old => old.some(message => message.id === row.id) ? old : [...old,{...row,media_url:null}]);
+          }
+        })();
         void loadConversations();
       }).subscribe();
     return () => { void supabase.removeChannel(channel); };
