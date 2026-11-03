@@ -6195,3 +6195,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .emi-story-format{border:1px solid rgba(230,197,105,.22)!important;border-radius:15px!important;background:#ffffff08!important;}
 @media(max-width:600px){.emi-royal-story-screen{width:100vw!important;border:0!important;}.emi-royal-story-header{left:12px!important;right:10px!important;}.emi-royal-story-avatar{width:41px!important;height:41px!important;flex-basis:41px!important;}.emi-royal-story-author-meta strong{font-size:13px!important;max-width:42vw!important;}.emi-royal-story-views,.emi-royal-story-close{height:39px!important;min-width:39px!important;padding:0 9px!important;}.emi-royal-story-close{width:39px!important;}.emi-royal-story-actions{left:10px!important;right:10px!important;gap:10px!important;}.emi-royal-story-reactions{gap:4px!important;padding:6px 7px!important;}.emi-royal-story-reactions button{width:35px!important;height:35px!important;font-size:21px!important;}.emi-royal-story-reply{min-height:53px!important;}.emi-royal-story-reply input{font-size:12px!important;}.emi-royal-story-caption{left:15px!important;right:15px!important;bottom:calc(145px + env(safe-area-inset-bottom))!important;font-size:14px!important;}.emi-royal-story-feedback{bottom:calc(135px + env(safe-area-inset-bottom))!important;}}
 @media(min-width:700px){.emi-royal-story-screen{height:min(100dvh,980px)!important;border-radius:22px!important;}.emi-royal-story-backdrop{padding:18px!important;background:rgba(0,0,0,.92)!important;}}
+
+/* EMi Messages inbox — conversations and received activity */
+.emi-inbox-tabs{display:flex;gap:8px;padding:10px 12px;margin:0 0 14px;border:1px solid rgba(220,190,94,.25);border-radius:16px;background:linear-gradient(135deg,#09251b,#061710)}
+.emi-inbox-tabs button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;flex:1;border:1px solid transparent;border-radius:12px;background:transparent;color:#d9e4dc;font-size:13px;font-weight:750}
+.emi-inbox-tabs button.is-active{border-color:rgba(232,201,111,.65);background:linear-gradient(135deg,rgba(232,201,111,.2),rgba(13,104,68,.25));color:#f6dfa0;box-shadow:inset 0 0 18px rgba(232,201,111,.06)}
+.emi-inbox-tabs button>span{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;border-radius:99px;background:#d6ad4c;color:#10251b;font-size:10px;font-weight:900}
+.emi-message-activity{min-width:0;padding:16px;border:1px solid rgba(220,190,94,.25);border-radius:18px;background:linear-gradient(145deg,rgba(8,35,25,.96),rgba(4,19,14,.98))}
+.emi-message-activity .section-label strong{color:#f1d995}
+.emi-activity-item{position:relative;border:1px solid rgba(220,190,94,.18)!important;border-radius:14px!important;background:rgba(255,255,255,.025)!important;margin:8px 0;padding:10px!important}
+.emi-activity-item:not([style*="0.76"]){border-color:rgba(226,190,88,.5)!important;background:rgba(214,173,76,.07)!important}
+.emi-activity-item .discovery-person-main{min-width:0;flex:1;text-align:left}
+.emi-activity-item .discovery-person-main span{display:flex;flex-direction:column;gap:4px}
+.emi-activity-item .discovery-person-main strong{color:#fff;font-size:13px}
+.emi-activity-item .discovery-person-main small{color:#c8d4cc;font-size:12px;line-height:1.4}
+.emi-activity-item .discovery-person-main small:last-child{color:#b7a979;font-size:10px}
+.emi-activity-open{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border:1px solid rgba(232,201,111,.35);border-radius:50%;background:#d6ad4c12;color:#f0d78f}
+@media(max-width:640px){.emi-inbox-tabs{position:sticky;top:0;z-index:8;margin:0 -2px 12px;padding:8px;background:#061b13f2;backdrop-filter:blur(12px)}.emi-inbox-tabs button{font-size:12px;min-height:40px}.emi-message-activity{padding:10px;border-radius:14px}.emi-activity-item{gap:8px!important;padding:8px!important}.emi-activity-item .discovery-avatar{width:40px;height:40px;flex:0 0 40px}}
