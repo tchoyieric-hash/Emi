@@ -108,11 +108,33 @@ export default function EliteDirectoryPage() {
     if (!window.confirm("Supprimer ton profil professionnel public ? Cette action ne supprime pas ton compte EMi.")) return;
     setDeleting(true); setNotice("");
     try {
-      const { error } = await supabase.from("elite_directory_profiles").delete().eq("user_id", userId);
+      // Demande les lignes réellement supprimées : PostgREST peut ne renvoyer
+      // aucune erreur lorsqu'une politique RLS bloque silencieusement le DELETE.
+      const { data: deletedRows, error } = await supabase
+        .from("elite_directory_profiles")
+        .delete()
+        .eq("user_id", userId)
+        .select("id,user_id");
       if (error) throw new Error(error.message);
+      if (!deletedRows?.length) {
+        throw new Error("Aucun profil n’a été supprimé. Vérifie que tu es connecté avec le compte propriétaire et que la politique Supabase autorise la suppression de ses propres profils (user_id = auth.uid()).");
+      }
+
+      // Recharge l'annuaire depuis la base pour éviter de masquer seulement
+      // la carte localement alors que la ligne serait toujours présente.
+      const { data: list, error: listError } = await supabase
+        .from("elite_directory_profiles")
+        .select("id,user_id,nom,specialite,telephone,ville,bio,created_at")
+        .eq("published", true)
+        .order("created_at", { ascending: false })
+        .limit(40);
+      if (listError) throw new Error("Profil supprimé, mais actualisation de l’annuaire impossible : " + listError.message);
+
       setNom(""); setSpecialite(""); setTelephone(""); setVille("Yaoundé"); setBio(""); setImageUrl(""); setImageFile(null);
-      setProfiles(current => current.filter(profile => profile.user_id !== userId));
-      setNotice("Ton profil professionnel a été supprimé. Ton compte EMi personnel reste intact.");
+      setProfiles((list || []) as Profile[]);
+      setNotice(deletedRows.length === 1
+        ? "Ton profil professionnel a bien été supprimé. Ton compte EMi personnel reste intact."
+        : deletedRows.length + " profils professionnels ont bien été supprimés. Ton compte EMi personnel reste intact.");
     } catch (error) { setNotice(error instanceof Error ? "Suppression impossible : " + error.message : "Suppression impossible."); }
     finally { setDeleting(false); }
   }
