@@ -6279,3 +6279,23 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
  .emi-chat-tool,.emi-chat-send{width:45px;height:45px}
  .emi-chat-compose>input:not([type=file]){height:48px;padding:0 13px!important;font-size:14px!important}
 }
+
+
+/* Correctif réel après contrôle vidéo : conversation mobile EMi */
+.chat-shell{display:flex!important;flex-direction:column!important;min-width:0!important;overflow:visible!important}
+.chat-shell:has(.chat-window){gap:0!important}
+.chat-shell .chat-window{display:flex!important;flex-direction:column!important;min-width:0!important;min-height:0!important;flex:1 1 auto!important;overflow:visible!important;background:transparent!important}
+.chat-shell .chat-topbar.emi-chat-topbar{position:relative!important;top:auto!important;z-index:2!important;flex-wrap:nowrap!important;min-height:88px!important}
+.chat-shell .emi-chat-modebar{position:relative!important;z-index:1!important;flex:none!important}
+.chat-shell .emi-chat-messages{flex:1 1 auto!important;min-height:260px!important;max-height:none!important;height:auto!important;overflow-y:auto!important;overscroll-behavior:contain!important;padding-bottom:28px!important}
+.chat-shell .emi-chat-compose{position:sticky!important;bottom:calc(68px + env(safe-area-inset-bottom))!important;z-index:30!important;flex:none!important;width:100%!important;min-height:72px!important;margin-top:0!important;box-sizing:border-box!important}
+.chat-shell .emi-chat-compose>input:not([type=file]){min-width:0!important;display:block!important;opacity:1!important;visibility:visible!important}
+.chat-shell .emi-chat-call-actions button:disabled{opacity:.55!important}
+@media(max-width:760px){
+ .chat-shell{margin:0!important;border-radius:20px!important;min-height:calc(100dvh - 190px)!important}
+ .chat-shell .chat-window{min-height:calc(100dvh - 310px)!important}
+ .chat-shell .chat-topbar.emi-chat-topbar{min-height:78px!important;padding:10px!important}
+ .chat-shell .emi-chat-messages{min-height:38dvh!important;max-height:none!important}
+ .chat-shell .emi-chat-compose{bottom:calc(66px + env(safe-area-inset-bottom))!important;padding:10px!important}
+ .chat-shell .emi-chat-modebar span{white-space:nowrap!important}
+}
