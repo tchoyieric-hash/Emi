@@ -2474,12 +2474,12 @@ function decodeVapidKey(base64String: string) {
           </article>)}
           {!notificationsLoading && notifications.length===0 && <div className="empty-feature"><Bell size={28}/><h2>Tu es à jour</h2><p>Les nouveaux abonnements, likes et commentaires apparaîtront ici.</p></div>}</div>
         </section>}
-        {active === "Messages" && !viewingProfile && <section className="chat-shell">
-          <header className="emi-messages-heading"><div><span className="emi-messages-kicker">EMi · RESTONS CONNECTÉS</span><h2>Messages <span>✦</span></h2><p>Conversations et actions reçues au même endroit.</p></div><div className="emi-messages-head-actions"><button type="button" aria-label="Trouver des membres" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}><Search size={19}/></button><button type="button" aria-label="Créer un groupe" onClick={()=>void createGroupConversation()}><Plus size={21}/></button></div></header>
-          <div className="emi-inbox-tabs" role="tablist" aria-label="Boîte de réception EMi">
+        {active === "Messages" && !viewingProfile && <section className={`chat-shell ${activeConversation ? "chat-shell-conversation" : ""}`}>
+          {!activeConversation && <header className="emi-messages-heading"><div><span className="emi-messages-kicker">EMi · RESTONS CONNECTÉS</span><h2>Messages <span>✦</span></h2><p>Conversations et actions reçues au même endroit.</p></div><div className="emi-messages-head-actions"><button type="button" aria-label="Trouver des membres" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}><Search size={19}/></button><button type="button" aria-label="Créer un groupe" onClick={()=>void createGroupConversation()}><Plus size={21}/></button></div></header>}
+          {!activeConversation && <div className="emi-inbox-tabs" role="tablist" aria-label="Boîte de réception EMi">
             <button type="button" role="tab" aria-selected={messagesInboxTab==="chats"} className={messagesInboxTab==="chats"?"is-active":""} onClick={()=>setMessagesInboxTab("chats")}><MessageCircle size={16}/> Conversations</button>
             <button type="button" role="tab" aria-selected={messagesInboxTab==="activity"} className={messagesInboxTab==="activity"?"is-active":""} onClick={()=>{setMessagesInboxTab("activity");void loadMessageActivity();}}><Bell size={16}/> Activité {unreadNotifications>0&&<span>{unreadNotifications>99?"99+":unreadNotifications}</span>}</button>
-          </div>
+          </div>}
           {messagesInboxTab==="activity" ? <section className="emi-message-activity" aria-label="Activité reçue">
             <div className="section-label"><strong>Actions reçues</strong><button type="button" onClick={()=>void loadMessageActivity()}>Actualiser ↻</button></div>
             {notificationsLoading&&<p className="chat-empty">Chargement de ton activité…</p>}
@@ -2490,7 +2490,7 @@ function decodeVapidKey(base64String: string) {
               {!note.is_read&&<span className="notification-unread-dot" aria-label="Non lue"/>}
               <button type="button" className="emi-activity-open" onClick={()=>void openMessageActivity(note)} aria-label="Ouvrir cette activité"><ChevronRight size={18}/></button>
             </article>)}</div>
-          </section> : <><aside className="chat-sidebar">
+          </section> : <>{!activeConversation && <aside className="chat-sidebar">
             <label className="discovery-search emi-chat-search"><Search size={17}/><input value={chatSearch} onChange={e=>setChatSearch(e.target.value)} placeholder="Rechercher une conversation…" aria-label="Rechercher une conversation"/></label>
             <div className="emi-chat-filters" role="group" aria-label="Filtrer les conversations">{(["Tout","Non lus","Groupes"] as const).map(filter=><button key={filter} type="button" className={chatFilter===filter?"is-active":""} onClick={()=>setChatFilter(filter)}>{filter}</button>)}</div>
             <div className="chat-list">
@@ -2499,7 +2499,7 @@ function decodeVapidKey(base64String: string) {
             </div>
             <button className="modal-primary" style={{width:"100%",marginTop:10}} onClick={()=>void createGroupConversation()} disabled={chatLoading}>+ Créer un groupe</button>
             <button className="profile-back-button" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}>Trouver des membres</button>
-          </aside>
+          </aside>}
           <section className="chat-window">
             {!activeConversation ? <div className="chat-welcome"><MessageCircle size={30}/><h2>Ta messagerie EMi</h2><p>Choisis une conversation ou découvre un membre pour envoyer un message privé.</p><button className="modal-primary" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}>Découvrir des membres</button></div> : <>
               <div className="chat-topbar emi-chat-topbar"><button className="profile-back-button emi-chat-back" onClick={()=>setActiveConversation(null)} aria-label="Retour aux conversations"><ChevronLeft size={19}/></button><span className="emi-chat-person-avatar">{conversations.find(c=>c.id===activeConversation)?.other?.avatar_url?<img src={conversations.find(c=>c.id===activeConversation)?.other?.avatar_url||""} alt=""/>:(conversations.find(c=>c.id===activeConversation)?.other?.display_name||"EM").slice(0,2).toUpperCase()}</span><span className="emi-chat-person-copy"><strong>{conversations.find(conv=>conv.id===activeConversation)?.is_group ? conversations.find(conv=>conv.id===activeConversation)?.title || "Groupe EMi" : conversations.find(conv=>conv.id===activeConversation)?.other?.display_name || conversations.find(conv=>conv.id===activeConversation)?.other?.username || "Conversation privée"}</strong><small>{conversations.find(c => c.id === activeConversation)?.is_group ? "Groupe privé · temps réel" : "Conversation privée · temps réel"}</small></span><div className="emi-chat-call-actions"><button type="button" title="Appel audio — bientôt disponible" disabled><Phone size={18}/><small>Appel</small></button><button type="button" title="Appel vidéo — bientôt disponible" disabled><Video size={18}/><small>Vidéo</small></button></div>{conversations.find(c => c.id === activeConversation)?.is_group && <div className="chat-group-actions"><button className="profile-back-button" onClick={() => void addGroupMembers()} disabled={chatLoading}>+ Membres</button><button className="profile-back-button" onClick={() => void leaveGroupConversation()} disabled={chatLoading}>Quitter</button></div>}</div><div className="emi-chat-modebar"><span><MessageCircle size={15}/> Message</span><span className="emi-mode-disabled"><Mic size={15}/> Audio</span><span className="emi-mode-disabled"><Phone size={15}/> Appel</span><span className="emi-mode-disabled"><Video size={15}/> Vidéo</span></div>
