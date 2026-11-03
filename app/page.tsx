@@ -1785,6 +1785,15 @@ function decodeVapidKey(base64String: string) {
   }
 
   function goBack() {
+    // Dans une conversation, le retour prioritaire mène à la boîte de réception,
+    // sans quitter l'espace Messages ni perdre l'historique.
+    if (active === "Messages" && activeConversation) {
+      setActiveConversation(null);
+      setChatMessages([]);
+      setMessagesInboxTab("chats");
+      setChatFilter("Tout");
+      return;
+    }
     if (viewingProfile) {
       setViewingProfile(null);
       setProfileTab("posts");
