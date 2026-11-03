@@ -37,14 +37,61 @@ export default function CommandesPage() {
 
   const load = useCallback(async () => {
     if (!supabase) { setNotice("Connexion Supabase indisponible."); setLoading(false); return; }
-    const { data: auth } = await supabase.auth.getUser();
-    if (!auth.user) { setNotice("Connecte-toi à EMi pour consulter tes commandes."); setLoading(false); return; }
-    setUserId(auth.user.id);
-    const { data, error } = await supabase.from("orders")
-      .select("id,buyer_id,business_id,status,subtotal,currency,buyer_note,created_at,businesses(name,owner_id),order_items(quantity,unit_price,products(name,image_urls))")
-      .order("created_at", { ascending: false }).limit(100);
-    if (error) setNotice("Chargement des commandes impossible : " + error.message);
-    else setOrders((data || []) as unknown as Order[]);
+    setLoading(true);
+    const { data: auth, error: authError } = await supabase.auth.getUser();
+    if (authError || !auth.user) {
+      setNotice("Connecte-toi à EMi pour consulter tes commandes.");
+      setOrders([]);
+      setUserId("");
+      setLoading(false);
+      return;
+    }
+    const currentUserId = auth.user.id;
+    setUserId(currentUserId);
+
+    const [buyerResult, businessesResult] = await Promise.all([
+      supabase.from("orders")
+        .select("id,buyer_id,business_id,status,subtotal,currency,buyer_note,created_at,businesses(name,owner_id),order_items(quantity,unit_price,products(name,image_urls))")
+        .eq("buyer_id", currentUserId)
+        .order("created_at", { ascending: false }).limit(100),
+      supabase.from("businesses")
+        .select("id,name,owner_id")
+        .eq("owner_id", currentUserId)
+    ]);
+
+    if (buyerResult.error) {
+      setNotice("Chargement des achats impossible : " + buyerResult.error.message);
+      setOrders([]);
+      setLoading(false);
+      return;
+    }
+    if (businessesResult.error) {
+      setNotice("Impossible de retrouver tes boutiques : " + businessesResult.error.message);
+      setOrders((buyerResult.data || []) as unknown as Order[]);
+      setLoading(false);
+      return;
+    }
+
+    const businessIds = (businessesResult.data || []).map((business: { id: string }) => business.id);
+    let sellerOrders: Order[] = [];
+    if (businessIds.length > 0) {
+      const { data, error } = await supabase.from("orders")
+        .select("id,buyer_id,business_id,status,subtotal,currency,buyer_note,created_at,businesses(name,owner_id),order_items(quantity,unit_price,products(name,image_urls))")
+        .in("business_id", businessIds)
+        .order("created_at", { ascending: false }).limit(100);
+      if (error) {
+        setNotice("Tes boutiques sont trouvées, mais les commandes reçues ne peuvent pas être chargées : " + error.message);
+        setOrders((buyerResult.data || []) as unknown as Order[]);
+        setLoading(false);
+        return;
+      }
+      sellerOrders = (data || []) as unknown as Order[];
+    }
+
+    const merged = new Map<string, Order>();
+    [...((buyerResult.data || []) as unknown as Order[]), ...sellerOrders].forEach(order => merged.set(order.id, order));
+    setOrders([...merged.values()].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+    setNotice(businessIds.length === 0 ? "Aucune boutique n'est rattachée à ce compte vendeur." : "");
     setLoading(false);
   }, []);
 
