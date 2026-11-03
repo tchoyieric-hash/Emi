@@ -141,7 +141,7 @@ export default function EmiBusinessPage() {
     if(!supabase)return;
     if(!userId){setNotice("Connecte-toi pour publier un produit.");return;}
     if(!businessId){setNotice("Choisis d'abord une boutique.");return;}
-    if(productName.trim().length<2 || price==="" || !Number.isFinite(Number(price)) || Number(price)<0){setNotice("Vérifie le nom et le prix du produit.");return;}
+    if(productName.trim().length<2 || price==="" || !Number.isFinite(Number(price)) || Number(price)<=0){setNotice("Le nom est obligatoire et le prix doit être supérieur à 0 FCFA.");return;}
     setSaving(true);
     try{
       let image_urls:string[]=[];
@@ -212,7 +212,7 @@ export default function EmiBusinessPage() {
         <h2 className="sm:col-span-2 text-xl font-black">Ajouter un produit au catalogue</h2>
         <label className="grid gap-1.5 text-sm">Boutique<select required value={businessId} onChange={e=>setBusinessId(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3">{ownBusinesses.map(b=><option value={b.id} key={b.id}>{b.name}</option>)}</select></label>
         <label className="grid gap-1.5 text-sm">Nom du produit<input required minLength={2} maxLength={160} value={productName} onChange={e=>setProductName(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3" placeholder="Ex. Smartphone Samsung"/></label>
-        <label className="grid gap-1.5 text-sm">Prix (FCFA)<input required type="number" min="0" step="1" value={price} onChange={e=>setPrice(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3" placeholder="75000"/></label>
+        <label className="grid gap-1.5 text-sm">Prix (FCFA)<input required type="number" min="1" step="1" value={price} onChange={e=>setPrice(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3" placeholder="75000"/></label>
         <label className="grid gap-1.5 text-sm">Stock disponible<input type="number" min="0" step="1" value={stock} onChange={e=>setStock(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3"/></label>
         <label className="grid gap-1.5 text-sm sm:col-span-2">Description<textarea rows={3} maxLength={5000} value={productDescription} onChange={e=>setProductDescription(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3" placeholder="État, taille, couleur, livraison…"/></label>
         <label className="grid gap-2 text-sm sm:col-span-2"><span>Photo du produit</span><span className="inline-flex items-center gap-2 rounded-xl border border-dashed border-[#d8b85f]/40 bg-black/20 p-4 text-[#ffe8a2]"><ImagePlus size={19}/> {photo?photo.name:"Choisir une image depuis le téléphone"}</span><input type="file" accept="image/*" className="text-xs text-white/60" onChange={e=>setPhoto(e.target.files?.[0]||null)}/></label>
