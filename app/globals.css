@@ -6643,3 +6643,46 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
  .emi-messenger-emoji,.emi-messenger-mic{width:35px;height:35px;flex-basis:35px}
  .emi-messenger-send{width:42px;height:42px;flex-basis:42px}
 }
+
+
+
+/* EMi Messenger — reliable, visible audio controls on mobile */
+.emi-messenger-bubble audio.emi-chat-audio,
+.emi-messenger-bubble audio{
+  display:block!important;
+  width: min(300px, 72vw)!important;
+  min-width:240px!important;
+  max-width: min(300px, 72vw)!important;
+  height:54px!important;
+  min-height:54px!important;
+  margin:7px 0 3px!important;
+  border:1px solid rgba(221,193,105,.48)!important;
+  border-radius:28px!important;
+  background:#e8eee9!important;
+  color-scheme:light!important;
+  opacity:1!important;
+  visibility:visible!important;
+  flex:0 0 auto!important;
+  overflow:hidden!important;
+}
+.emi-messenger-message-row .emi-messenger-bubble:has(audio){
+  width:fit-content!important;
+  min-width:260px!important;
+  max-width:min(88%,360px)!important;
+}
+.emi-messenger-message-row.mine .emi-messenger-bubble:has(audio){
+  background:linear-gradient(145deg,#087b49,#075a37)!important;
+}
+@media(max-width:760px){
+ .emi-messenger-bubble audio.emi-chat-audio,
+ .emi-messenger-bubble audio{
+   width:min(280px,76vw)!important;
+   min-width:230px!important;
+   max-width:76vw!important;
+   height:54px!important;
+ }
+ .emi-messenger-message-row .emi-messenger-bubble:has(audio){
+   min-width:250px!important;
+   max-width:92%!important;
+ }
+}
