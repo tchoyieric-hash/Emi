@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bell, Camera, Copy, ChevronLeft, Compass, Heart, Home, Repeat2, LogIn, LogOut, MessageCircle, Plus, Search, Send, Settings, Sparkles, UserRound, Video, X, Image as ImageIcon, Clapperboard, ShieldCheck, BadgeCheck, LockKeyhole, Bookmark, Archive, Languages, Palette, CircleHelp, Ban, Eye, SlidersHorizontal, Smartphone, ChevronRight, Clock3, Share2, UserRoundCog, Music2, Headphones, TrendingUp, Mic2, Disc3, ShoppingBag, Users, Volume2, VolumeX, Smile } from "lucide-react";
+import { Bell, Camera, Copy, ChevronLeft, Compass, Heart, Home, Repeat2, LogIn, LogOut, MessageCircle, Plus, Search, Send, Settings, Sparkles, UserRound, Video, Phone, Mic, Square, X, Image as ImageIcon, Clapperboard, ShieldCheck, BadgeCheck, LockKeyhole, Bookmark, Archive, Languages, Palette, CircleHelp, Ban, Eye, SlidersHorizontal, Smartphone, ChevronRight, Clock3, Share2, UserRoundCog, Music2, Headphones, TrendingUp, Mic2, Disc3, ShoppingBag, Users, Volume2, VolumeX, Smile } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 import ReelsRoyalScreen from "@/components/ReelsRoyalScreen";
 
@@ -244,6 +244,10 @@ export default function HomePage() {
   const [chatMediaFile, setChatMediaFile] = useState<File | null>(null);
   const chatMediaInput = useRef<HTMLInputElement>(null);
   const [chatLoading, setChatLoading] = useState(false);
+  const [voiceRecording, setVoiceRecording] = useState(false);
+  const [voiceSeconds, setVoiceSeconds] = useState(0);
+  const voiceRecorderRef = useRef<MediaRecorder | null>(null);
+  const voiceChunksRef = useRef<Blob[]>([]);
   const [chatSearch, setChatSearch] = useState("");
   const [chatFilter, setChatFilter] = useState<"Tout"|"Non lus"|"Groupes">("Tout");
   const [notifications, setNotifications] = useState<{id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;story_id:string|null;message:string;is_read:boolean;created_at:string;actor?:Profile|null}[]>([]);
@@ -1476,6 +1480,50 @@ function decodeVapidKey(base64String: string) {
     } finally { setChatLoading(false); }
   }
 
+  async function startVoiceRecording() {
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      setMessage("L’enregistrement vocal n’est pas disponible sur cet appareil ou ce navigateur."); return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+      const mimeType = ["audio/webm;codecs=opus","audio/webm","audio/mp4"].find(type => MediaRecorder.isTypeSupported(type));
+      const recorder = new MediaRecorder(stream, mimeType ? {mimeType} : undefined);
+      voiceChunksRef.current = [];
+      recorder.ondataavailable = event => { if (event.data.size) voiceChunksRef.current.push(event.data); };
+      recorder.onstop = async () => {
+        stream.getTracks().forEach(track => track.stop());
+        const blob = new Blob(voiceChunksRef.current, {type:recorder.mimeType || "audio/webm"});
+        if (!blob.size || !supabase || !user || !activeConversation) return;
+        setChatLoading(true);
+        try {
+          const ext = blob.type.includes("mp4") ? "m4a" : "webm";
+          const path = user.id + "/chat/" + crypto.randomUUID() + "." + ext;
+          const {error: uploadError} = await supabase.storage.from("post-media").upload(path,blob,{contentType:blob.type,upsert:false});
+          if (uploadError) throw uploadError;
+          const url = supabase.storage.from("post-media").getPublicUrl(path).data.publicUrl;
+          const {data,error} = await supabase.from("messages").insert({conversation_id:activeConversation,sender_id:user.id,content:"Message vocal",media_url:url,media_type:"audio"}).select("id,conversation_id,sender_id,content,media_url,media_type,created_at").single();
+          if (error) throw error;
+          setChatMessages(old => old.some(item=>item.id===data.id)?old:[...old,data as typeof chatMessages[number]]);
+          await supabase.from("conversations").update({updated_at:new Date().toISOString()}).eq("id",activeConversation);
+          void loadConversations();
+        } catch(err) { setMessage("Envoi du vocal impossible : " + describeUnknownError(err)); }
+        finally { setChatLoading(false); }
+      };
+      voiceRecorderRef.current = recorder;
+      recorder.start();
+      setVoiceSeconds(0);
+      setVoiceRecording(true);
+      const started = Date.now();
+      const tick = () => { if (voiceRecorderRef.current?.state==="recording") { setVoiceSeconds(Math.floor((Date.now()-started)/1000)); window.setTimeout(tick,500); } };
+      tick();
+    } catch(err) { setMessage("Microphone inaccessible : " + describeUnknownError(err)); }
+  }
+  function stopVoiceRecording() {
+    if (voiceRecorderRef.current?.state==="recording") voiceRecorderRef.current.stop();
+    voiceRecorderRef.current = null;
+    setVoiceRecording(false);
+  }
+
   async function sendChatMessage(e: React.FormEvent) {
     e.preventDefault();
     const content = chatDraft.trim();
@@ -1487,14 +1535,14 @@ function decodeVapidKey(base64String: string) {
     try {
       if (chatMediaFile) {
         const file = chatMediaFile;
-        if (!["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime"].includes(file.type)) throw new Error("Format non pris en charge. Choisis une image ou une vidéo.");
+        if (!["image/jpeg","image/png","image/webp","image/gif","video/mp4","video/webm","video/quicktime","audio/webm","audio/mp4","audio/mpeg","audio/ogg"].includes(file.type)) throw new Error("Format non pris en charge. Choisis une image, une vidéo ou un audio.");
         if (file.size > 25 * 1024 * 1024) throw new Error("Un média de messagerie doit faire moins de 25 Mo.");
         const ext = file.name.split(".").pop()?.replace(/[^a-zA-Z0-9]/g,"") || "bin";
         const path = user.id + "/chat/" + crypto.randomUUID() + "." + ext;
         const { error: uploadError } = await supabase.storage.from("post-media").upload(path,file,{contentType:file.type,upsert:false});
         if (uploadError) throw uploadError;
         mediaUrl = supabase.storage.from("post-media").getPublicUrl(path).data.publicUrl;
-        mediaType = file.type.startsWith("video/") ? "video" : "image";
+        mediaType = file.type.startsWith("video/") ? "video" : file.type.startsWith("audio/") ? "audio" : "image";
       }
       const { data, error } = await supabase.from("messages").insert({conversation_id:activeConversation,sender_id:user.id,content,media_url:mediaUrl,media_type:mediaType}).select("id,conversation_id,sender_id,content,media_url,media_type,created_at").single();
       if (error) throw error;
@@ -2454,9 +2502,9 @@ function decodeVapidKey(base64String: string) {
           </aside>
           <section className="chat-window">
             {!activeConversation ? <div className="chat-welcome"><MessageCircle size={30}/><h2>Ta messagerie EMi</h2><p>Choisis une conversation ou découvre un membre pour envoyer un message privé.</p><button className="modal-primary" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}>Découvrir des membres</button></div> : <>
-              <div className="chat-topbar"><button className="profile-back-button" onClick={()=>setActiveConversation(null)}>← Conversations</button><strong>{conversations.find(conv=>conv.id===activeConversation)?.is_group ? conversations.find(conv=>conv.id===activeConversation)?.title || "Groupe EMi" : conversations.find(conv=>conv.id===activeConversation)?.other?.display_name || conversations.find(conv=>conv.id===activeConversation)?.other?.username || "Conversation privée"}</strong><span className="chat-secure-label">{conversations.find(c => c.id === activeConversation)?.is_group ? "Groupe · temps réel" : "Privé · temps réel"}</span>{conversations.find(c => c.id === activeConversation)?.is_group && <div className="chat-group-actions"><button className="profile-back-button" onClick={() => void addGroupMembers()} disabled={chatLoading}>+ Ajouter membres</button><button className="profile-back-button" onClick={() => void leaveGroupConversation()} disabled={chatLoading}>Quitter</button></div>}</div>
-              <div className="chat-messages" aria-live="polite">{chatMessages.map(msg=><div key={msg.id} className={"chat-bubble "+(msg.sender_id===user?.id?"chat-mine":"chat-theirs")}><p>{msg.content}</p>{msg.media_url && (msg.media_type === "video" ? <video src={msg.media_url} controls playsInline className="chat-media"/> : <img src={msg.media_url} alt="Média partagé" className="chat-media"/>)}<time>{new Date(msg.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</time></div>)}</div>
-              <form className="chat-compose" onSubmit={sendChatMessage}><input ref={chatMediaInput} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime" onChange={e=>setChatMediaFile(e.target.files?.[0]||null)} hidden/><button type="button" className="profile-back-button" aria-label="Joindre une image ou vidéo" onClick={()=>chatMediaInput.current?.click()}><ImageIcon size={17}/></button><input value={chatDraft} onChange={e=>setChatDraft(e.target.value)} maxLength={5000} placeholder={chatMediaFile ? chatMediaFile.name : "Écris un message…"} aria-label="Écris un message" disabled={!user}/><button className="modal-primary" type="submit" disabled={!chatDraft.trim()&&!chatMediaFile||chatLoading}><Send size={17}/> Envoyer</button></form>
+              <div className="chat-topbar emi-chat-topbar"><button className="profile-back-button emi-chat-back" onClick={()=>setActiveConversation(null)} aria-label="Retour aux conversations"><ChevronLeft size={19}/></button><span className="emi-chat-person-avatar">{conversations.find(c=>c.id===activeConversation)?.other?.avatar_url?<img src={conversations.find(c=>c.id===activeConversation)?.other?.avatar_url||"" alt=""/>:(conversations.find(c=>c.id===activeConversation)?.other?.display_name||"EM").slice(0,2).toUpperCase()}</span><span className="emi-chat-person-copy"><strong>{conversations.find(conv=>conv.id===activeConversation)?.is_group ? conversations.find(conv=>conv.id===activeConversation)?.title || "Groupe EMi" : conversations.find(conv=>conv.id===activeConversation)?.other?.display_name || conversations.find(conv=>conv.id===activeConversation)?.other?.username || "Conversation privée"}</strong><small>{conversations.find(c => c.id === activeConversation)?.is_group ? "Groupe privé · temps réel" : "Conversation privée · temps réel"}</small></span><div className="emi-chat-call-actions"><button type="button" title="Appel audio — bientôt disponible" disabled><Phone size={18}/><small>Appel</small></button><button type="button" title="Appel vidéo — bientôt disponible" disabled><Video size={18}/><small>Vidéo</small></button></div>{conversations.find(c => c.id === activeConversation)?.is_group && <div className="chat-group-actions"><button className="profile-back-button" onClick={() => void addGroupMembers()} disabled={chatLoading}>+ Membres</button><button className="profile-back-button" onClick={() => void leaveGroupConversation()} disabled={chatLoading}>Quitter</button></div>}</div><div className="emi-chat-modebar"><span><MessageCircle size={15}/> Message</span><span className="emi-mode-disabled"><Mic size={15}/> Audio</span><span className="emi-mode-disabled"><Phone size={15}/> Appel</span><span className="emi-mode-disabled"><Video size={15}/> Vidéo</span></div>
+              <div className="chat-messages emi-chat-messages" aria-live="polite">{chatMessages.map(msg=><div key={msg.id} className={"chat-bubble "+(msg.sender_id===user?.id?"chat-mine":"chat-theirs")}><p>{msg.content}</p>{msg.media_url && (msg.media_type === "video" ? <video src={msg.media_url} controls playsInline className="chat-media"/> : msg.media_type==="audio" ? <audio src={msg.media_url} controls preload="metadata" className="emi-chat-audio"/> : <img src={msg.media_url} alt="Média partagé" className="chat-media"/>)}<time>{new Date(msg.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</time></div>)}</div>
+              <form className="chat-compose emi-chat-compose" onSubmit={sendChatMessage}><input ref={chatMediaInput} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime,audio/webm,audio/mp4,audio/mpeg,audio/ogg" onChange={e=>setChatMediaFile(e.target.files?.[0]||null)} hidden/><button type="button" className="emi-chat-tool" aria-label="Joindre une image, vidéo ou audio" onClick={()=>chatMediaInput.current?.click()}><ImageIcon size={19}/></button>{voiceRecording?<><span className="emi-recording-label">● Enregistrement {voiceSeconds}s</span><button type="button" className="emi-chat-send" onClick={stopVoiceRecording} aria-label="Terminer et envoyer le vocal"><Send size={19}/></button></>:<><input value={chatDraft} onChange={e=>setChatDraft(e.target.value)} maxLength={5000} placeholder={chatMediaFile ? chatMediaFile.name : "Écris un message…"} aria-label="Écris un message" disabled={!user}/><button type="button" className="emi-chat-tool emi-chat-mic" onClick={()=>void startVoiceRecording()} disabled={chatLoading} aria-label="Enregistrer un message vocal"><Mic size={19}/></button><button className="emi-chat-send" type="submit" disabled={!chatDraft.trim()&&!chatMediaFile||chatLoading}><Send size={19}/></button></>}</form>
             </>}
           </section></>}
         </section>}
