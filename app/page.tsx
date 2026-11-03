@@ -973,7 +973,7 @@ function decodeVapidKey(base64String: string) {
           .eq("story_id", activeStory.id);
         if (cancelled || error) return;
         if (typeof count === "number") setStoryViewCounts(old => ({ ...old, [activeStory.id]: count }));
-        const viewerIds = [...new Set((viewRows || []).map(row => row.viewer_key).filter((key): key is string => !!key && key !== user.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(key)))];
+        const viewerIds = [...new Set((viewRows || []).map(row => row.viewer_key).filter((key): key is string => !!key && key !== activeStory.user_id && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(key)))];
         if (!viewerIds.length) { setStoryViewers(old => ({ ...old, [activeStory.id]: [] })); return; }
         const { data: profiles, error: profileError } = await supabase
           .from("profiles")
