@@ -1484,6 +1484,21 @@ function decodeVapidKey(base64String: string) {
     } finally { setChatLoading(false); }
   }
 
+  useEffect(() => {
+    if (!user?.id || typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const targetId = params.get("messageTo");
+    if (!targetId) return;
+    params.delete("messageTo");
+    const nextUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
+    window.history.replaceState({}, "", nextUrl);
+    void (async () => {
+      const { data, error } = await supabase!.from("profiles").select("id,username,display_name,avatar_url").eq("id", targetId).maybeSingle();
+      if (error || !data) { setMessage("Ce professionnel n’est pas disponible pour la messagerie."); return; }
+      await startConversation(data as Profile);
+    })();
+  }, [user?.id]);
+
   async function startVoiceRecording() {
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
       setMessage("L’enregistrement vocal n’est pas disponible sur cet appareil ou ce navigateur."); return;
