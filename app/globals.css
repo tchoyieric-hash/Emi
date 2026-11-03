@@ -6411,3 +6411,109 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
     padding: 9px 10px max(9px, env(safe-area-inset-bottom)) !important;
   }
 }
+
+
+/* EMi Messenger refresh — compact, readable, mobile-first conversation workspace */
+.chat-shell-conversation{
+  width:100%!important;
+  height:calc(100dvh - 188px)!important;
+  min-height:480px!important;
+  max-height:none!important;
+  margin:4px 0 10px!important;
+  border:1px solid rgba(222,190,99,.34)!important;
+  border-radius:22px!important;
+  background:linear-gradient(160deg,#061d14 0%,#04150f 100%)!important;
+  box-shadow:0 18px 52px rgba(0,0,0,.28)!important;
+}
+.chat-shell-conversation .chat-window{min-height:0!important;overflow:hidden!important}
+.chat-shell-conversation .emi-chat-topbar{
+  min-height:68px!important;
+  padding:9px 13px!important;
+  gap:10px!important;
+  background:linear-gradient(105deg,#06271a,#082116 68%,#071b14)!important;
+  border-bottom:1px solid rgba(222,190,99,.2)!important;
+}
+.chat-shell-conversation .emi-chat-back{
+  width:38px!important;height:38px!important;flex:0 0 38px!important;
+  display:grid!important;place-items:center!important;border:1px solid rgba(226,197,111,.25)!important;
+  border-radius:50%!important;background:#ffffff08!important;color:#f2d98f!important;
+}
+.chat-shell-conversation .emi-chat-person-avatar{width:43px!important;height:43px!important;flex:0 0 43px!important}
+.chat-shell-conversation .emi-chat-person-copy{gap:3px!important}
+.chat-shell-conversation .emi-chat-person-copy strong{font-size:14px!important;line-height:1.2!important;color:#fff!important}
+.chat-shell-conversation .emi-chat-person-copy small{font-size:11px!important;color:#91b8a3!important}
+.chat-shell-conversation .emi-chat-call-actions{gap:7px!important;margin-left:auto!important}
+.chat-shell-conversation .emi-chat-call-actions button{
+  width:39px!important;height:39px!important;flex:0 0 39px!important;
+  display:grid!important;place-items:center!important;padding:0!important;
+  border:1px solid rgba(226,197,111,.24)!important;border-radius:50%!important;
+  background:#ffffff08!important;color:#e8cc7c!important;
+}
+.chat-shell-conversation .emi-chat-call-actions button:disabled{opacity:.42!important}
+.chat-shell-conversation .emi-chat-messages{
+  flex:1 1 0!important;min-height:0!important;height:0!important;max-height:none!important;
+  overflow-x:hidden!important;overflow-y:auto!important;
+  padding:18px 15px 24px!important;
+  background:radial-gradient(ellipse at 90% 100%,rgba(14,111,69,.13),transparent 45%),#061a13!important;
+  scroll-behavior:smooth!important;
+}
+.chat-shell-conversation .emi-chat-messages .chat-bubble{
+  max-width:min(82%,460px)!important;margin-bottom:12px!important;
+  padding:11px 13px!important;border-radius:18px!important;
+  box-shadow:0 5px 18px rgba(0,0,0,.16)!important;
+}
+.chat-shell-conversation .emi-chat-messages .chat-mine{
+  background:linear-gradient(145deg,#126342,#0d4a32)!important;
+  border:1px solid rgba(226,197,111,.25)!important;border-bottom-right-radius:5px!important;
+}
+.chat-shell-conversation .emi-chat-messages .chat-theirs{
+  background:#10291f!important;border:1px solid rgba(220,236,225,.1)!important;border-bottom-left-radius:5px!important;
+}
+.chat-shell-conversation .emi-chat-messages .chat-bubble p{font-size:14px!important;line-height:1.48!important;color:#f6f7f2!important}
+.chat-shell-conversation .emi-chat-messages .chat-bubble time{font-size:10px!important;color:#b5c9bd!important}
+.chat-shell-conversation .emi-chat-compose{
+  position:relative!important;bottom:auto!important;inset:auto!important;
+  flex:0 0 auto!important;display:flex!important;align-items:center!important;
+  gap:8px!important;padding:10px 11px max(10px,env(safe-area-inset-bottom))!important;
+  background:#04170f!important;border-top:1px solid rgba(222,190,99,.2)!important;
+}
+.chat-shell-conversation .emi-chat-compose>input:not([type=file]){
+  height:46px!important;min-width:0!important;flex:1 1 auto!important;
+  border:1px solid rgba(222,190,99,.2)!important;border-radius:25px!important;
+  background:#0a2419!important;padding:0 15px!important;color:#fff!important;font-size:14px!important;
+}
+.chat-shell-conversation .emi-chat-tool,.chat-shell-conversation .emi-chat-send{
+  width:42px!important;height:42px!important;flex:0 0 42px!important;
+  display:grid!important;place-items:center!important;border-radius:50%!important;
+}
+.chat-shell-conversation .emi-chat-tool{background:#0d3021!important;border:1px solid rgba(222,190,99,.24)!important;color:#e7c976!important}
+.chat-shell-conversation .emi-chat-send{background:linear-gradient(135deg,#f4df9a,#c49a3e)!important;color:#102219!important}
+.chat-shell-conversation .emi-chat-send:disabled{opacity:.38!important}
+.chat-shell .chat-sidebar{min-width:0!important}
+.chat-shell .chat-list{display:flex!important;flex-direction:column!important;gap:7px!important}
+.chat-shell .chat-list-item{
+  width:100%!important;min-height:76px!important;padding:11px 12px!important;
+  border:1px solid rgba(222,190,99,.14)!important;border-radius:17px!important;
+  background:linear-gradient(110deg,rgba(10,43,29,.92),rgba(5,27,18,.94))!important;
+  text-align:left!important;transition:border-color .18s ease,background .18s ease!important;
+}
+.chat-shell .chat-list-item:active,.chat-shell .chat-list-item.chat-selected{
+  border-color:rgba(231,199,111,.65)!important;background:linear-gradient(110deg,#123b28,#09271a)!important;
+}
+.chat-shell .chat-list-copy strong{color:#fff!important;font-size:14px!important;font-weight:750!important}
+.chat-shell .chat-list-copy small{color:#a9bdb1!important;font-size:12px!important;line-height:1.35!important}
+.chat-shell .chat-avatar{width:49px!important;height:49px!important;flex:0 0 49px!important;border:2px solid rgba(225,192,96,.65)!important}
+@media(max-width:760px){
+ .chat-shell-conversation{height:calc(100dvh - 174px)!important;min-height:430px!important;margin:2px 0 8px!important;border-radius:18px!important}
+ .chat-shell-conversation .emi-chat-topbar{min-height:62px!important;padding:7px 9px!important;gap:8px!important}
+ .chat-shell-conversation .emi-chat-person-avatar{width:39px!important;height:39px!important;flex-basis:39px!important}
+ .chat-shell-conversation .emi-chat-person-copy strong{font-size:13px!important}
+ .chat-shell-conversation .emi-chat-call-actions button{width:35px!important;height:35px!important;flex-basis:35px!important}
+ .chat-shell-conversation .emi-chat-messages{padding:14px 11px 20px!important}
+ .chat-shell-conversation .emi-chat-compose{gap:6px!important;padding:8px 8px max(8px,env(safe-area-inset-bottom))!important}
+ .chat-shell-conversation .emi-chat-tool,.chat-shell-conversation .emi-chat-send{width:39px!important;height:39px!important;flex-basis:39px!important}
+ .chat-shell-conversation .emi-chat-compose>input:not([type=file]){height:43px!important;font-size:13px!important;padding:0 12px!important}
+}
+@media(max-height:620px) and (max-width:760px){
+ .chat-shell-conversation{height:calc(100dvh - 142px)!important;min-height:360px!important}
+}
