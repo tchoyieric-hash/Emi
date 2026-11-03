@@ -2496,7 +2496,7 @@ function decodeVapidKey(base64String: string) {
                   <span className="emi-messenger-item-meta"><time>{conv.created_at?new Date(conv.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):""}</time>{(conv.unreadCount||0)>0&&<b>{conv.unreadCount>99?"99+":conv.unreadCount}</b>}</span>
                 </button>)}
                 {conversations.length===0&&<div className="emi-messenger-empty">{chatLoading?"Chargement des conversations…":"Aucune conversation pour le moment."}</div>}
-                {conversations.length>0&&conversations.filter(conv=>(chatFilter!=="Groupes"||conv.is_group)&&(chatFilter!=="Non lus"||(conv.unreadCount||0)>0)&&((conv.is_group?conv.title||"Groupe EMi":conv.other?.display_name||conv.other?.username||conv.title||"Conversation").toLowerCase().includes(chatSearch.toLowerCase())).length===0&&<div className="emi-messenger-empty">Aucun résultat pour cette recherche.</div>}
+                {conversations.length>0&&conversations.filter((conv)=>{const title=(conv.is_group?conv.title||"Groupe EMi":conv.other?.display_name||conv.other?.username||conv.title||"Conversation").toLowerCase();return (chatFilter!=="Groupes"||conv.is_group)&&(chatFilter!=="Non lus"||(conv.unreadCount||0)>0)&&title.includes(chatSearch.toLowerCase());}).length===0&&<div className="emi-messenger-empty">Aucun résultat pour cette recherche.</div>}
               </div>
               <button type="button" className="emi-messenger-new" onClick={()=>{setActive("Découvrir");void loadExploreProfiles();}}><Plus size={18}/> Nouveau message</button>
               <button type="button" className="emi-messenger-create-group" onClick={()=>void createGroupConversation()} disabled={chatLoading}>+ Créer un groupe</button>
