@@ -2407,7 +2407,8 @@ function decodeVapidKey(base64String: string) {
           <div className="emi-welcome-emblem" aria-hidden="true"><div className="emi-emblem-ring"><span>e</span></div><i className="emi-emblem-spark">✦</i></div>
           <span className="emi-welcome-overline"><Sparkles size={13}/> UN NOUVEL UNIVERS DE LIENS</span>
           <h1>Bienvenue dans<br/><span>ton univers.</span></h1>
-          <p>Des moments vrais. Des rencontres inspirantes. Une communauté qui rapproche les cœurs.</p>
+          <p>Un réseau social pour partager, échanger, découvrir des vidéos et faire grandir les opportunités commerciales.</p>
+          <div className="emi-welcome-tribute">Un projet inspiré par une histoire familiale, tourné vers l’avenir.</div>
           <div className="emi-welcome-cta">
             <button className="emi-cta-primary" onClick={() => { setSignup(true); setRecoveryMode(false); setAuthOpen(true); setWelcomeDismissed(true); setMessage(""); }}>Créer mon compte <span aria-hidden="true">↗</span></button>
             <button className="emi-cta-secondary" onClick={() => { setSignup(false); setRecoveryMode(false); setAuthOpen(true); setWelcomeDismissed(true); setMessage(""); }}>J’ai déjà un compte <span aria-hidden="true">→</span></button>
