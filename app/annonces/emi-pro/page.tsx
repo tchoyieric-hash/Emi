@@ -43,7 +43,16 @@ export default function EmiProPage() {
       .eq("user_id", uid).maybeSingle();
     if (error) throw error;
     if (data) {
-      const p = data as Profile;
+      let p = data as Profile;
+      // Réutilise la photo déjà enregistrée sur le profil personnel EMi.
+      if (!p.image_url) {
+        const { data: account } = await supabase.from("profiles").select("avatar_url").eq("id", uid).maybeSingle();
+        const avatar = account?.avatar_url || null;
+        if (avatar) {
+          const { error: avatarSyncError } = await supabase.from("elite_directory_profiles").update({ image_url: avatar }).eq("id", p.id).eq("user_id", uid);
+          if (!avatarSyncError) p = { ...p, image_url: avatar };
+        }
+      }
       setProfile(p);
       setForm({ nom: p.nom || "", specialite: p.specialite || "", telephone: p.telephone || "", ville: p.ville || "Yaoundé", bio: p.bio || "", email: p.email || "", website: p.website || "", visibility: p.visibility || "public" });
       const { data: rows, error: mediaError } = await supabase.from("elite_directory_media")
@@ -193,7 +202,7 @@ export default function EmiProPage() {
                 <div className="ep-cover-tools"><button className="ep-pill" onClick={() => profile ? coverInput.current?.click() : (setTab("settings"), setNotice("Crée d’abord ta vitrine en renseignant son nom et son activité."))}><Camera size={14} style={{display:"inline",verticalAlign:"middle"}}/> Modifier la couverture</button></div>
               </div>
               <div className="ep-profile">
-                <img className="ep-avatar" src={profile?.image_url || "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&q=80"} alt="Photo du profil professionnel"/>
+                <img className="ep-avatar" src={profile?.image_url || undefined} alt="Photo du profil professionnel" onError={e => { e.currentTarget.style.visibility = "hidden"; }}/> 
                 <button className="ep-edit-avatar" aria-label="Modifier la photo de profil" onClick={() => profile ? avatarInput.current?.click() : (setTab("settings"), setNotice("Crée d’abord ta vitrine en renseignant son nom et son activité."))}><Pencil size={15}/></button>
                 <div className="ep-name">{profile?.nom || "Ta vitrine professionnelle"}</div>
                 <div className="ep-muted">{profile?.specialite || "Présente ton activité sur EMi"} · <MapPin size={13} style={{display:"inline"}}/> {profile?.ville || "Yaoundé"}</div>
