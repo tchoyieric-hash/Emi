@@ -6299,3 +6299,44 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
  .chat-shell .emi-chat-compose{bottom:calc(66px + env(safe-area-inset-bottom))!important;padding:10px!important}
  .chat-shell .emi-chat-modebar span{white-space:nowrap!important}
 }
+
+
+/* EMi chat scroll: keep the message list in a bounded flex viewport on mobile */
+@media (max-width: 760px) {
+  .chat-shell:has(.emi-chat-topbar) {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .chat-shell .chat-window:has(.emi-chat-topbar) {
+    display: flex !important;
+    flex-direction: column !important;
+    height: calc(100dvh - 360px) !important;
+    min-height: 360px !important;
+    max-height: 900px !important;
+    flex: none !important;
+    overflow: hidden !important;
+    overscroll-behavior: contain !important;
+  }
+  .chat-shell .emi-chat-messages {
+    display: flex !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    max-height: none !important;
+    overflow-x: hidden !important;
+    overflow-y: scroll !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
+    padding-bottom: 24px !important;
+  }
+  .chat-shell .emi-chat-compose {
+    position: relative !important;
+    inset: auto !important;
+    flex: 0 0 auto !important;
+    z-index: 4 !important;
+    margin: 0 !important;
+  }
+}
