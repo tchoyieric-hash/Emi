@@ -60,13 +60,22 @@ export default function EmiBusinessPage() {
   function addToCart(product:Product){
     if(product.stock<1){setNotice("Ce produit est momentanément indisponible.");return;}
     const existingBusiness=cartProducts[0]?.product.business_id;
-    if(existingBusiness && existingBusiness!==product.business_id){setNotice("Une commande EMi concerne une seule boutique. Termine ou vide ton panier avant de choisir un autre vendeur.");setCartOpen(true);return;}
-    setCart(current=>{
-      const found=current.find(x=>x.product_id===product.id);
-      if(found && found.quantity>=product.stock){setNotice("La quantité demandée dépasse le stock disponible.");return current;}
-      setNotice(product.name+" ajouté au panier.");
-      return found?current.map(x=>x.product_id===product.id?{...x,quantity:x.quantity+1}:x):[...current,{product_id:product.id,quantity:1}];
-    });
+    if(existingBusiness && existingBusiness!==product.business_id){
+      setNotice("Une commande EMi concerne une seule boutique. Termine ou vide ton panier avant de choisir un autre vendeur.");
+      setCartOpen(true);
+      return;
+    }
+    const found=cart.find(x=>x.product_id===product.id);
+    if(found && found.quantity>=product.stock){
+      setNotice("La quantité demandée dépasse le stock disponible.");
+      setCartOpen(true);
+      return;
+    }
+    setCart(found
+      ?cart.map(x=>x.product_id===product.id?{...x,quantity:x.quantity+1}:x)
+      :[...cart,{product_id:product.id,quantity:1}]);
+    setNotice(product.name+" ajouté au panier.");
+    setCartOpen(true);
   }
   function changeQuantity(product:Product,delta:number){
     setCart(current=>current.flatMap(x=>{
