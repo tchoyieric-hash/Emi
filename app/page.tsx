@@ -961,6 +961,21 @@ function decodeVapidKey(base64String: string) {
     };
   }, [active, viewingProfile?.id, posts.length, postSoundEnabled]);
 
+  // Keep the selected reaction scoped to the currently displayed story.
+  // Without this read, the previous story's emoji remains selected and can block a new reaction.
+  useEffect(() => {
+    let cancelled = false;
+    setStoryReaction(null);
+    setStoryViewersOpen(false);
+    if (!supabase || !activeStory || !user?.id) return () => { cancelled = true; };
+    void supabase.from("story_reactions").select("reaction")
+      .eq("story_id", activeStory.id).eq("user_id", user.id).maybeSingle()
+      .then(({ data, error }) => {
+        if (!cancelled && !error) setStoryReaction(data?.reaction || null);
+      });
+    return () => { cancelled = true; };
+  }, [activeStory?.id, user?.id]);
+
   useEffect(() => {
     if (!supabase || !activeStory) return;
     let cancelled = false;
