@@ -987,9 +987,13 @@ function decodeVapidKey(base64String: string) {
     const refreshOwnStoryInsights = async () => {
       if (user?.id !== activeStory.user_id) {
         if (!user?.id) return;
+        // Une insertion simple évite les permissions SELECT/UPDATE exigées par upsert.
+        // L'index unique (story_id, viewer_key) garantit une seule vue par membre.
         const { error } = await supabase.from("story_views")
-          .upsert({ story_id: activeStory.id, viewer_key: user.id }, { onConflict: "story_id,viewer_key", ignoreDuplicates: true });
-        if (error) console.error("Impossible d’enregistrer la vue de story", error.message);
+          .insert({ story_id: activeStory.id, viewer_key: user.id });
+        if (error && error.code !== "23505") {
+          console.error("Impossible d’enregistrer la vue de story", error.code, error.message);
+        }
         return;
       }
       const { data: viewRows, count, error } = await supabase
@@ -2589,7 +2593,7 @@ function decodeVapidKey(base64String: string) {
               <span className="emi-royal-story-author-meta"><strong>{activeStory.profiles?.display_name||activeStory.profiles?.username||"Membre EMi"}{hasBlueVerificationBadge(activeStory.profiles?.display_name,activeStory.profiles?.username)&&<span className="emi-verified-badge" role="img" aria-label="Profil vérifié par EMi"><BadgeCheck size={14} fill="#1877F2" stroke="#FFFFFF" strokeWidth={2.2}/></span>}</strong><small>{new Date(activeStory.created_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})} · <span>24 h</span></small></span>
             </div>
             <div className="emi-royal-story-header-actions">
-              {user?.id===activeStory.user_id&&<button type="button" className="emi-royal-story-views" onClick={()=>setStoryViewersOpen(v=>!v)} aria-label="Afficher les personnes qui ont vu la story"><Eye size={17}/><strong>{formatSocialCount(storyViewCounts[activeStory.id]||0)}</strong></button>}
+              {user?.id===activeStory.user_id&&<button type="button" className="emi-royal-story-views" onClick={async()=>{const opening=!storyViewersOpen;setStoryViewersOpen(opening);if(opening&&supabase){const {data:rows,count,error}=await supabase.from("story_views").select("viewer_key",{count:"exact"}).eq("story_id",activeStory.id);if(!error){setStoryViewCounts(old=>({...old,[activeStory.id]:count??(rows||[]).length}));const ids=[...new Set((rows||[]).map(row=>row.viewer_key).filter((key):key is string=>!!key&&key!==activeStory.user_id&&/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(key)))];if(ids.length){const {data:profiles}=await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id",ids);setStoryViewers(old=>({...old,[activeStory.id]:(profiles||[]) as Profile[]}));}else setStoryViewers(old=>({...old,[activeStory.id]:[]}));}}} aria-label="Afficher les personnes qui ont vu la story"><Eye size={17}/><strong>{formatSocialCount(storyViewCounts[activeStory.id]||0)}</strong></button>}
               <button type="button" className="emi-royal-story-close" onClick={()=>{setActiveStory(null);setStoryViewersOpen(false);}} aria-label="Fermer"><X size={22}/></button>
             </div>
           </header>
