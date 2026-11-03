@@ -979,32 +979,31 @@ function decodeVapidKey(base64String: string) {
   useEffect(() => {
     if (!supabase || !activeStory) return;
     let cancelled = false;
-    const loadOwnStoryInsights = async () => {
-      // A creator never counts as a viewer of their own story.
-      if (user?.id === activeStory.user_id) {
-        const { data: viewRows, count, error } = await supabase
-          .from("story_views")
-          .select("viewer_key", { count: "exact" })
-          .eq("story_id", activeStory.id);
-        if (cancelled || error) return;
-        if (typeof count === "number") setStoryViewCounts(old => ({ ...old, [activeStory.id]: count }));
-        const viewerIds = [...new Set((viewRows || []).map(row => row.viewer_key).filter((key): key is string => !!key && key !== activeStory.user_id && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(key)))];
-        if (!viewerIds.length) { setStoryViewers(old => ({ ...old, [activeStory.id]: [] })); return; }
-        const { data: profiles, error: profileError } = await supabase
-          .from("profiles")
-          .select("id,username,display_name,avatar_url")
-          .in("id", viewerIds);
-        if (!cancelled && !profileError) setStoryViewers(old => ({ ...old, [activeStory.id]: (profiles || []) as Profile[] }));
+    const refreshOwnStoryInsights = async () => {
+      if (user?.id !== activeStory.user_id) {
+        if (!user?.id) return;
+        const { error } = await supabase.from("story_views")
+          .upsert({ story_id: activeStory.id, viewer_key: user.id }, { onConflict: "story_id,viewer_key", ignoreDuplicates: true });
+        if (error) console.error("Impossible d’enregistrer la vue de story", error.message);
         return;
       }
-      // Only signed-in members have a profile that can appear in the WhatsApp-style viewer list.
-      if (!user?.id || user.id === activeStory.user_id) return;
-      const { error } = await supabase.from("story_views")
-        .upsert({ story_id: activeStory.id, viewer_key: user.id }, { onConflict: "story_id,viewer_key", ignoreDuplicates: true });
-      if (error) console.error("Impossible d’enregistrer la vue de story", error.message);
+      const { data: viewRows, count, error } = await supabase
+        .from("story_views").select("viewer_key", { count: "exact" }).eq("story_id", activeStory.id);
+      if (cancelled || error) { if (error) console.error("Impossible de charger les vues", error.message); return; }
+      if (typeof count === "number") setStoryViewCounts(old => ({ ...old, [activeStory.id]: count }));
+      const viewerIds = [...new Set((viewRows || []).map(row => row.viewer_key).filter((key): key is string => !!key && key !== activeStory.user_id && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9]{3}-[89ab][0-9]{3}-[0-9a-f]{3}-[0-9a-f]{12}$/i.test(key)))];
+      if (!viewerIds.length) { setStoryViewers(old => ({ ...old, [activeStory.id]: [] })); return; }
+      const { data: profiles, error: profileError } = await supabase.from("profiles")
+        .select("id,username,display_name,avatar_url").in("id", viewerIds);
+      if (!cancelled && !profileError) setStoryViewers(old => ({ ...old, [activeStory.id]: (profiles || []) as Profile[] }));
     };
-    void loadOwnStoryInsights();
-    return () => { cancelled = true; };
+    void refreshOwnStoryInsights();
+    const channel = user?.id === activeStory.user_id
+      ? supabase.channel("emi-story-views-" + activeStory.id)
+          .on("postgres_changes", { event: "*", schema: "public", table: "story_views", filter: "story_id=eq." + activeStory.id }, () => { void refreshOwnStoryInsights(); })
+          .subscribe()
+      : null;
+    return () => { cancelled = true; if (channel) void supabase.removeChannel(channel); };
   }, [activeStory?.id, user?.id]);
 
   useEffect(() => {
@@ -2361,7 +2360,7 @@ function decodeVapidKey(base64String: string) {
           {notificationsLoading && <p className="chat-empty">Chargement des notifications…</p>}
           <div className="discovery-list">{notifications.map(note => <article key={note.id} className="discovery-person" style={{opacity:note.is_read?0.72:1,borderColor:note.is_read?"var(--line)":"#8d6de0"}}>
             <span className="discovery-avatar">{note.actor?.avatar_url?<img src={note.actor.avatar_url} alt=""/>:(note.actor?.display_name||note.actor?.username||"EM").slice(0,2).toUpperCase()}</span>
-            <button className="discovery-person-main" onClick={() => { if(note.type==="story_reaction"&&note.story_id){const target=stories.find(item=>item.id===note.story_id);if(target){setActiveStory(target);return;}void loadStories().then(()=>{setActive("Accueil");setMessage("Story recherchée. Ouvre-la depuis les Stories EMi si elle est encore active.");});return;}if(note.actor_id)void openProfile(note.actor_id); }}><span><strong>{note.actor?.display_name||note.actor?.username||"EMi"}</strong><small>{note.message}</small><small>{new Date(note.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small></span></button>
+            <button className="discovery-person-main" onClick={() => { if((note.type==="story_reaction"||note.type==="story_reply")&&note.story_id){const target=stories.find(item=>item.id===note.story_id);if(target){setActiveStory(target);return;}setActive("Accueil");void loadStories().then(()=>setMessage("Cette story n’est plus disponible ou a expiré."));return;}if(note.actor_id)void openProfile(note.actor_id); }}><span><strong>{note.actor?.display_name||note.actor?.username||"EMi"}</strong><small>{note.message}</small><small>{new Date(note.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small></span></button>
             {!note.is_read && <span className="notification-unread-dot" aria-label="Non lue"/>}
           </article>)}
           {!notificationsLoading && notifications.length===0 && <div className="empty-feature"><Bell size={28}/><h2>Tu es à jour</h2><p>Les nouveaux abonnements, likes et commentaires apparaîtront ici.</p></div>}</div>
