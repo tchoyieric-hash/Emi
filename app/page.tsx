@@ -1687,7 +1687,7 @@ function decodeVapidKey(base64String: string) {
     setNotificationsLoading(true);
     try {
       const { data, error } = await supabase.from("notifications")
-        .select("id,actor_id,type,post_id,comment_id,story_id,message,is_read,created_at")
+        .select("id,actor_id,type,post_id,comment_id,story_id,order_id,message,is_read,created_at")
         .eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
       if (error) throw error;
       const rows = (data || []) as typeof notifications;
