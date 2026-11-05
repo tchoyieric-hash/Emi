@@ -6854,3 +6854,42 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .stories-card .section-label > button { min-height: 38px; padding: 0 11px !important; font-size: 11px !important; }
   .stories-row { gap: 12px !important; }
 }
+
+
+/* Stories EMi — présentation premium inspirée de WhatsApp */
+.stories-card{
+  position:relative!important;overflow:hidden!important;margin:0 0 20px!important;
+  padding:17px 16px 15px!important;border:1px solid rgba(67,190,125,.32)!important;
+  border-radius:22px!important;background:linear-gradient(145deg,#071c14 0%,#06110d 58%,#0a2017 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 12px 28px rgba(0,0,0,.18)!important;
+}
+.stories-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.stories-heading>div{display:flex;flex-direction:column;gap:3px}
+.stories-heading strong{font-size:20px!important;line-height:1.15!important;letter-spacing:-.45px;color:#f5f8f5!important}
+.stories-eyebrow{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#a9c7b6}
+.stories-create{display:inline-flex!important;align-items:center;justify-content:center;gap:7px;min-height:37px;padding:0 12px!important;border:1px solid rgba(232,201,111,.45)!important;border-radius:999px!important;background:rgba(224,190,91,.09)!important;color:#f0d783!important;font-size:11px!important;font-weight:750!important;white-space:nowrap}
+.stories-row{display:flex!important;align-items:flex-start!important;gap:17px!important;overflow-x:auto!important;padding:2px 2px 5px!important;scrollbar-width:none!important}
+.stories-row::-webkit-scrollbar{display:none!important}
+.stories-row .story{flex:0 0 78px!important;min-width:78px!important;gap:6px!important;color:#f3f6f3!important}
+.stories-row .story-ring{width:76px!important;height:76px!important;padding:3px!important;border-radius:50%!important;background:linear-gradient(145deg,#31d78b 0%,#0c8e5a 52%,#d9b95c 100%)!important;box-shadow:0 0 0 1px rgba(43,213,137,.12),0 5px 16px rgba(0,0,0,.25)!important}
+.stories-row .story-add{background:linear-gradient(145deg,#0d3929,#071c14)!important;border:1px solid rgba(58,219,143,.55)!important}
+.stories-row .story-avatar{width:100%!important;height:100%!important;overflow:hidden!important;border:3px solid #07170f!important;border-radius:50%!important;background:#102b20!important;color:#c7f2dc!important}
+.stories-row .story-avatar img{width:100%!important;height:100%!important;object-fit:cover!important}
+.stories-row .story-media-thumb{position:relative!important}
+.stories-row .story-media-thumb>img{width:100%!important;height:100%!important;object-fit:cover!important}
+.stories-row .story-author-avatar{position:absolute!important;inset:0!important;z-index:1!important;border-radius:50%!important}
+.stories-row .story-plus{right:-2px!important;bottom:0!important;width:25px!important;height:25px!important;border:2px solid #07170f!important;border-radius:50%!important;background:#16cf79!important;color:#032216!important}
+.stories-row .story-name{max-width:78px!important;color:#f0f5f1!important;font-size:11px!important;font-weight:750!important;line-height:1.2!important;text-align:center!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.stories-row .story-time{display:block!important;color:#9db3a6!important;font-size:9px!important;line-height:1.1!important}
+.stories-row .story-stack-count{top:-2px!important;right:-2px!important;min-width:18px!important;height:18px!important;border:2px solid #07170f!important;background:#d7b85d!important;color:#17251a!important;font-size:9px!important}
+.stories-row .story-online-dot{right:1px!important;bottom:2px!important;width:12px!important;height:12px!important;border:2px solid #07170f!important;box-shadow:none!important}
+.stories-row .story-own-views{display:none!important}
+@media(max-width:520px){
+ .stories-card{padding:15px 12px 13px!important;border-radius:20px!important}
+ .stories-heading strong{font-size:19px!important}
+ .stories-create{min-height:35px!important;padding:0 10px!important;font-size:10px!important}
+ .stories-row{gap:14px!important}
+ .stories-row .story{flex-basis:72px!important;min-width:72px!important}
+ .stories-row .story-ring{width:70px!important;height:70px!important}
+ .stories-row .story-name{max-width:72px!important}
+}
