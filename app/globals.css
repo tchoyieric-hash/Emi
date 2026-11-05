@@ -6806,3 +6806,51 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .app-shell:not(.emi-reels-shell) .emi-home-nexus-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .app-shell:not(.emi-reels-shell) .emi-home-market-card{flex-basis:82%!important;width:82%!important}
 }
+
+
+/* EMi Stories — finition premium, lisible et légère */
+.stories-card {
+  padding: 18px 18px 16px !important;
+  border: 1px solid rgba(71, 190, 145, .24) !important;
+  border-radius: 24px !important;
+  background: linear-gradient(145deg, rgba(7, 42, 31, .96), rgba(4, 20, 17, .98)) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .18), inset 0 1px rgba(255,255,255,.035) !important;
+}
+.stories-card .section-label { align-items: center; gap: 12px; margin-bottom: 17px !important; }
+.stories-card .section-label strong { font-size: clamp(19px, 4vw, 24px) !important; letter-spacing: -.035em; }
+.stories-card .section-label > button {
+  min-height: 42px; padding: 0 15px !important; border: 1px solid rgba(89, 221, 177, .38) !important;
+  border-radius: 14px !important; background: rgba(30, 143, 105, .14) !important;
+  color: #9be9cb !important; box-shadow: none !important; font-size: 12px !important; font-weight: 750;
+}
+.stories-row { display: flex; align-items: flex-start; gap: 15px !important; overflow-x: auto; padding: 3px 2px 7px !important; scrollbar-width: none; }
+.stories-row::-webkit-scrollbar { display: none; }
+.stories-row .story { flex: 0 0 78px; width: 78px; gap: 8px !important; }
+.stories-row .story-ring {
+  width: 72px !important; height: 72px !important; padding: 3px !important;
+  border: 2px solid #39c995 !important; border-radius: 50% !important;
+  background: #071b16 !important; box-shadow: 0 0 0 3px rgba(57,201,149,.10) !important;
+}
+.stories-row .story-ring.story-add { border: 2px dashed rgba(125, 218, 184, .68) !important; box-shadow: none !important; }
+.stories-row .story-avatar { border: 0 !important; border-radius: 50% !important; overflow: hidden; background: #102b23 !important; }
+.stories-row .story-media-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.stories-row .story-name { max-width: 84px; color: #e9f3ed !important; font-size: 12px !important; font-weight: 650 !important; line-height: 1.25; text-align: center; }
+.story-stack-count {
+  position: absolute; top: -3px; right: -4px; z-index: 2; min-width: 19px; height: 19px;
+  display: grid; place-items: center; padding: 0 5px; border: 2px solid #08251c; border-radius: 99px;
+  background: #123e30; color: #baf5dc; font-size: 10px; font-weight: 800;
+}
+.stories-row .story-online-dot { width: 12px !important; height: 12px !important; border: 2px solid #08251c !important; background: #31d58d !important; }
+.stories-row .story-own-views {
+  right: -4px !important; bottom: -3px !important; top: auto !important; min-height: 18px;
+  display: inline-flex; align-items: center; gap: 3px; padding: 2px 6px !important;
+  border: 1px solid rgba(137, 224, 190, .35) !important; border-radius: 99px !important;
+  background: #071c16 !important; color: #c7f5df !important; font-size: 10px !important;
+}
+.emi-notification-bell { position: relative; }
+.emi-notification-badge { min-width: 18px; height: 18px; padding: 0 4px; display: grid; place-items: center; border: 2px solid #06251b; border-radius: 99px; background: #e6c86f; color: #10251b; font-size: 10px; font-weight: 900; }
+@media (max-width: 520px) {
+  .stories-card { padding: 15px 13px 13px !important; border-radius: 21px !important; }
+  .stories-card .section-label > button { min-height: 38px; padding: 0 11px !important; font-size: 11px !important; }
+  .stories-row { gap: 12px !important; }
+}
