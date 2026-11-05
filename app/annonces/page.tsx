@@ -1,10 +1,9 @@
-import NouveauMarchePage from "./nouveau-marche/page";
+import { redirect } from "next/navigation";
 
 /**
- * EMi Market — nouvelle expérience principale.
- * L'ancien écran du marché est remplacé par la nouvelle vitrine premium.
- * Les espaces communautaires voisins (Troc, Djangui, Fondation, Help) restent indépendants.
+ * Ancienne route EMi Market désactivée.
+ * Redirige vers l'accueil sans modifier les autres espaces de l'application.
  */
-export default function AnnoncesPage() {
-  return <NouveauMarchePage />;
+export default function AnnoncesPage(): never {
+  redirect("/");
 }
