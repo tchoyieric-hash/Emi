@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowUpRight, Building2, CheckCircle2, ImagePlus, LoaderCirc
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 type Business = { id:string; owner_id:string; name:string; category:string; description:string; logo_url:string|null; cover_url:string|null; city:string; address:string; phone:string|null; whatsapp:string|null; is_published:boolean; created_at:string };
-type Product = { id:string; business_id:string; owner_id:string; name:string; description:string; price:number; currency:string; stock:number; image_urls:string[]; status:string; created_at:string; businesses?:{name:string;city:string}|null };
+type Product = { id:string; business_id:string; owner_id:string; category_id:string|null; name:string; description:string; price:number; currency:string; stock:number; image_urls:string[]; status:string; created_at:string; businesses?:{name:string;city:string}|null; product_categories?:{name:string}|null };
 const supabase = createSupabaseBrowserClient();
 
 type CartLine = { product_id:string; quantity:number };
@@ -23,7 +23,7 @@ export default function EmiBusinessPage() {
   const [search,setSearch] = useState("");
   const [category,setCategory] = useState("Tout");
   const [showBusinessForm,setShowBusinessForm] = useState(false);
-  const [showProductForm,setShowProductForm] = useState(false);
+  const [showProductForm,setShowProductForm] = useState(false);\n  const [editingProduct,setEditingProduct] = useState<Product|null>(null);
   const [businessName,setBusinessName] = useState("");
   const [businessCategory,setBusinessCategory] = useState("Commerce");
   const [businessDescription,setBusinessDescription] = useState("");
@@ -45,7 +45,7 @@ export default function EmiBusinessPage() {
   useEffect(()=>{
     try {
       const raw=window.localStorage.getItem("emi-market-cart-v1");
-      if(raw){const parsed=JSON.parse(raw);if(Array.isArray(parsed))setCart(parsed.filter((x:any)=>typeof x.product_id==="string" && Number.isInteger(x.quantity) && x.quantity>0));}
+      if(raw){const parsed=JSON.parse(raw);if(Array.isArray(parsed))setCart(parsed.filter((x:any)=>typeof x.product_id==="string" && Number.isInteger(x.quantity) && x.quantity>0));}\n      if(new URLSearchParams(window.location.search).get("openCart")==="1")setCartOpen(true);
     } catch { window.localStorage.removeItem("emi-market-cart-v1"); }
     setCartReady(true);
   },[]);
@@ -109,7 +109,7 @@ export default function EmiBusinessPage() {
     const [{data:auth},{data:biz,error:bizError},{data:items,error:productError}] = await Promise.all([
       supabase.auth.getUser(),
       supabase.from("businesses").select("id,owner_id,name,category,description,logo_url,cover_url,city,address,phone,whatsapp,is_published,created_at").order("created_at",{ascending:false}).limit(100),
-      supabase.from("products").select("id,business_id,owner_id,name,description,price,currency,stock,image_urls,status,created_at,businesses(name,city)").eq("status","active").order("created_at",{ascending:false}).limit(100)
+      supabase.from("products").select("id,business_id,owner_id,category_id,name,description,price,currency,stock,image_urls,status,created_at,businesses(name,city),product_categories(name)").order("created_at",{ascending:false}).limit(150)
     ]);
     setUserId(auth.user?.id||"");
     if(bizError && !/permission|policy/i.test(bizError.message)) setNotice("Chargement des boutiques : "+bizError.message);
@@ -123,8 +123,8 @@ export default function EmiBusinessPage() {
   const visibleProducts = useMemo(()=>products.filter(p=>{
     const business=businesses.find(b=>b.id===p.business_id);
     const q=search.trim().toLocaleLowerCase("fr");
-    return (!q || (p.name+" "+p.description+" "+(business?.name||"")).toLocaleLowerCase("fr").includes(q)) && (category==="Tout" || business?.category===category || productCategory===category);
-  }),[products,businesses,search,category,productCategory]);
+    return (!q || (p.name+" "+p.description+" "+(business?.name||"")).toLocaleLowerCase("fr").includes(q)) && (category==="Tout" || business?.category===category || p.product_categories?.name===category) && (p.status==="active" || p.owner_id===userId);
+  }),[products,businesses,search,category,userId]);
   const ownBusinesses=businesses.filter(b=>b.owner_id===userId);
   const publicBusinesses=businesses.filter(b=>b.is_published || b.owner_id===userId);
 
@@ -172,7 +172,7 @@ export default function EmiBusinessPage() {
     finally{setSaving(false);}
   }
 
-  return <main className="min-h-screen bg-[#030906] text-white">
+  function editProduct(p:Product){setEditingProduct(p);setBusinessId(p.business_id);setProductName(p.name);setProductDescription(p.description||"");setPrice(String(p.price));setStock(String(p.stock));setShowProductForm(true);window.scrollTo({top:0,behavior:"smooth"});}\n\n  async function archiveProduct(p:Product){if(!supabase||!userId)return;if(!window.confirm("Retirer ce produit du catalogue ? Il sera archivé et les commandes historiques seront conservées."))return;const {error}=await supabase.from("products").update({status:"archived"}).eq("id",p.id).eq("owner_id",userId);if(error){setNotice("Archivage impossible : "+error.message);return;}setNotice("Produit retiré du catalogue. L’historique des commandes est conservé.");await load();}\n\n  return <main className="min-h-screen bg-[#030906] text-white">
     <div className="mx-auto max-w-6xl px-4 pb-16 pt-5 sm:px-6">
       <Link href="/annonces" className="inline-flex items-center gap-2 rounded-full border border-[#d6b45c]/35 bg-white/[.03] px-4 py-2 text-sm font-semibold text-[#f5dfa0]"><ArrowLeft size={16}/> Retour au Marché</Link>
       <section className="relative mt-4 overflow-hidden rounded-[30px] border border-[#d8b85f]/55 bg-[radial-gradient(ellipse_at_80%_0%,rgba(197,151,44,.24),transparent_40%),linear-gradient(130deg,#073b2b,#06160f_55%,#080906)] p-6 shadow-[0_20px_60px_rgba(0,0,0,.4)] sm:p-10">
@@ -218,20 +218,20 @@ export default function EmiBusinessPage() {
       </form>}
 
       {showProductForm&&<form onSubmit={createProduct} className="mt-5 grid gap-3 rounded-3xl border border-[#d8b85f]/35 bg-white/[.035] p-5 sm:grid-cols-2 sm:p-7">
-        <h2 className="sm:col-span-2 text-xl font-black">Ajouter un produit au catalogue</h2>
+        <h2 className="sm:col-span-2 text-xl font-black">{editingProduct?"Modifier le produit":"Ajouter un produit au catalogue"}</h2>
         <label className="grid gap-1.5 text-sm">Boutique<select required value={businessId} onChange={e=>setBusinessId(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3">{ownBusinesses.map(b=><option value={b.id} key={b.id}>{b.name}</option>)}</select></label>
         <label className="grid gap-1.5 text-sm">Nom du produit<input required minLength={2} maxLength={160} value={productName} onChange={e=>setProductName(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3" placeholder="Ex. Smartphone Samsung"/></label>
         <label className="grid gap-1.5 text-sm">Prix (FCFA)<input required type="number" min="1" step="1" value={price} onChange={e=>setPrice(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3" placeholder="75000"/></label>
         <label className="grid gap-1.5 text-sm">Stock disponible<input type="number" min="0" step="1" value={stock} onChange={e=>setStock(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3"/></label>
         <label className="grid gap-1.5 text-sm sm:col-span-2">Description<textarea rows={3} maxLength={5000} value={productDescription} onChange={e=>setProductDescription(e.target.value)} className="rounded-xl border border-white/15 bg-black/30 px-4 py-3" placeholder="État, taille, couleur, livraison…"/></label>
         <label className="grid gap-2 text-sm sm:col-span-2"><span>Photo du produit</span><span className="inline-flex items-center gap-2 rounded-xl border border-dashed border-[#d8b85f]/40 bg-black/20 p-4 text-[#ffe8a2]"><ImagePlus size={19}/> {photo?photo.name:"Choisir une image depuis le téléphone"}</span><input type="file" accept="image/*" className="text-xs text-white/60" onChange={e=>setPhoto(e.target.files?.[0]||null)}/></label>
-        <div className="sm:col-span-2 flex flex-wrap gap-3"><button disabled={saving} className="inline-flex items-center gap-2 rounded-full bg-[#f1d575] px-5 py-3 font-black text-[#102218] disabled:opacity-60">{saving&&<LoaderCircle size={17} className="animate-spin"/>}Publier le produit</button><button type="button" onClick={()=>setShowProductForm(false)} className="rounded-full border border-white/15 px-5 py-3">Annuler</button></div>
+        <div className="sm:col-span-2 flex flex-wrap gap-3"><button disabled={saving} className="inline-flex items-center gap-2 rounded-full bg-[#f1d575] px-5 py-3 font-black text-[#102218] disabled:opacity-60">{saving&&<LoaderCircle size={17} className="animate-spin"/>}{editingProduct?"Enregistrer les modifications":"Publier le produit"}</button><button type="button" onClick={()=>{setShowProductForm(false);setEditingProduct(null);}} className="rounded-full border border-white/15 px-5 py-3">Annuler</button></div>
       </form>}
 
       <section className="mt-8">
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end"><div><span className="text-[10px] font-black tracking-[.2em] text-[#e7c96f]">DÉCOUVERTE NATIONALE</span><h2 className="mt-1 text-2xl font-black sm:text-3xl">Boutiques & produits</h2><p className="mt-1 text-sm text-white/55">Une vitrine, un catalogue, une communauté.</p></div><label className="flex items-center gap-2 rounded-full border border-white/15 bg-white/[.04] px-4 py-3 sm:min-w-72"><Search size={17} className="text-[#f3d77b]"/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Chercher un produit ou commerce…" className="w-full bg-transparent text-sm outline-none"/></label></div>
         <div className="mt-4 flex gap-2 overflow-x-auto pb-2">{["Tout",...CATEGORIES].map(c=><button key={c} onClick={()=>setCategory(c)} className={"shrink-0 rounded-full border px-4 py-2 text-xs font-bold "+(category===c?"border-[#f0d575] bg-[#f0d575] text-[#102218]":"border-white/15 bg-white/[.03] text-white/65")}>{c}</button>)}</div>
-        {loading?<div className="mt-8 flex items-center justify-center gap-3 py-14 text-white/60"><LoaderCircle className="animate-spin"/>Chargement de l'écosystème…</div>:visibleProducts.length===0?<div className="mt-6 rounded-3xl border border-white/10 bg-white/[.025] p-8 text-center"><ShoppingBag className="mx-auto text-[#f0d575]" size={30}/><h3 className="mt-3 text-lg font-bold">Les premiers produits arrivent ici</h3><p className="mt-1 text-sm text-white/50">Crée une vitrine et publie un produit pour lancer ton catalogue EMi.</p></div>:<div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">{visibleProducts.map(p=>{const b=businesses.find(x=>x.id===p.business_id);const img=p.image_urls?.[0];return <article key={p.id} className="overflow-hidden rounded-2xl border border-[#d8b85f]/20 bg-[#0a1711]"><div className="relative aspect-square bg-white/[.04]">{img?<img src={img} alt={p.name} loading="lazy" className="h-full w-full object-cover"/>:<div className="grid h-full place-items-center text-[#e8cd78]"><Package size={35}/></div>}<span className="absolute left-2 top-2 rounded-full bg-black/75 px-2 py-1 text-[9px] font-black tracking-wide text-[#f4d777]">{b?.category||"EMi MARKET"}</span></div><div className="p-3"><h3 className="line-clamp-2 text-sm font-bold">{p.name}</h3><p className="mt-1 line-clamp-2 text-xs text-white/50">{p.description||b?.name}</p><strong className="mt-3 block text-base font-black text-[#f4d777]">{new Intl.NumberFormat("fr-FR").format(Number(p.price))} FCFA</strong><span className="mt-2 flex items-center gap-1 text-[10px] text-white/45"><MapPin size={11}/>{b?.city||"Cameroun"} · {b?.name||"Boutique EMi"}</span><button onClick={()=>addToCart(p)} disabled={p.stock<1} className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full bg-[#f1d575] px-3 text-xs font-black text-[#102218] disabled:cursor-not-allowed disabled:opacity-40"><ShoppingCart size={14}/>{p.stock<1?"Rupture de stock":"Ajouter au panier"}</button></div></article>})}</div>}
+        {loading?<div className="mt-8 flex items-center justify-center gap-3 py-14 text-white/60"><LoaderCircle className="animate-spin"/>Chargement de l'écosystème…</div>:visibleProducts.length===0?<div className="mt-6 rounded-3xl border border-white/10 bg-white/[.025] p-8 text-center"><ShoppingBag className="mx-auto text-[#f0d575]" size={30}/><h3 className="mt-3 text-lg font-bold">Les premiers produits arrivent ici</h3><p className="mt-1 text-sm text-white/50">Crée une vitrine et publie un produit pour lancer ton catalogue EMi.</p></div>:<div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">{visibleProducts.map(p=>{const b=businesses.find(x=>x.id===p.business_id);const img=p.image_urls?.[0];return <article key={p.id} className="overflow-hidden rounded-2xl border border-[#d8b85f]/20 bg-[#0a1711]"><div className="relative aspect-square bg-white/[.04]">{img?<img src={img} alt={p.name} loading="lazy" className="h-full w-full object-cover"/>:<div className="grid h-full place-items-center text-[#e8cd78]"><Package size={35}/></div>}<span className="absolute left-2 top-2 rounded-full bg-black/75 px-2 py-1 text-[9px] font-black tracking-wide text-[#f4d777]">{b?.category||"EMi MARKET"}</span></div><div className="p-3"><h3 className="line-clamp-2 text-sm font-bold">{p.name}</h3><p className="mt-1 line-clamp-2 text-xs text-white/50">{p.description||b?.name}</p><strong className="mt-3 block text-base font-black text-[#f4d777]">{new Intl.NumberFormat("fr-FR").format(Number(p.price))} FCFA</strong><span className="mt-2 flex items-center gap-1 text-[10px] text-white/45"><MapPin size={11}/>{b?.city||"Cameroun"} · {b?.name||"Boutique EMi"}</span><button onClick={()=>addToCart(p)} disabled={p.stock<1 || p.status!=="active"} className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full bg-[#f1d575] px-3 text-xs font-black text-[#102218] disabled:cursor-not-allowed disabled:opacity-40"><ShoppingCart size={14}/>{p.status!=="active"?"Non publié":p.stock<1?"Rupture de stock":"Ajouter au panier"}</button>{p.owner_id===userId&&<div className="mt-2 flex gap-2"><button onClick={()=>editProduct(p)} className="flex-1 rounded-full border border-white/15 py-2 text-[11px] font-bold">Modifier</button><button onClick={()=>void archiveProduct(p)} className="rounded-full border border-red-300/25 px-3 py-2 text-[11px] text-red-200">Archiver</button></div>}</div></article>})}</div>}
       </section>
 
       <section className="mt-10 rounded-3xl border border-[#d8b85f]/25 bg-gradient-to-r from-[#092d20] to-[#080c09] p-5 sm:p-7"><div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl border border-[#e4c56a]/40 bg-black/20 text-[#f4d777]"><CheckCircle2 size={22}/></span><div><h2 className="font-black">Un écosystème, des opportunités</h2><p className="mt-1 text-xs text-white/55">Les boutiques et produits sont reliés à Supabase avec des règles d’accès par propriétaire.</p></div></div><div className="mt-4 grid grid-cols-2 gap-3 text-xs text-white/65 sm:grid-cols-4">{["Vitrines professionnelles","Catalogue de produits","Prix en FCFA","Contrôle d’accès"].map(x=><div key={x} className="rounded-xl border border-white/10 bg-black/15 p-3">{x}</div>)}</div></section>
