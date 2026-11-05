@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Search, ShoppingBag, Store, SlidersHorizontal, Sparkles, ShieldCheck, MapPin, Plus, Package, Heart } from "lucide-react";
+import { ArrowLeft, ArrowRight, Search, ShoppingBag, Store, SlidersHorizontal, Sparkles, ShieldCheck, MapPin, Plus, Package, Heart, ShoppingCart } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 type Product = {
@@ -14,7 +14,7 @@ type Product = {
   stock: number;
   image_urls: unknown;
   status: string;
-  business_id: string;
+  business_id: string;\n  owner_id: string;\n  category_id: string | null;\n  product_categories?: { name?: string } | { name?: string }[] | null;
   businesses?: { name?: string; city?: string; is_published?: boolean } | { name?: string; city?: string; is_published?: boolean }[] | null;
 };
 const supabase = createSupabaseBrowserClient();
@@ -29,7 +29,7 @@ function imageOf(value: unknown) {
   }
   return "";
 }
-function businessOf(p: Product) {
+function productCategoryOf(p: Product) { return Array.isArray(p.product_categories) ? p.product_categories[0]?.name : p.product_categories?.name; }\nfunction businessOf(p: Product) {
   return Array.isArray(p.businesses) ? p.businesses[0] : p.businesses;
 }
 function money(value: number, currency: string) {
@@ -42,7 +42,7 @@ export default function NouveauMarchePage() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Tout");
   const [error, setError] = useState("");
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState("");\n  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -51,14 +51,14 @@ export default function NouveauMarchePage() {
       const [{ data: auth }, { data, error: queryError }] = await Promise.all([
         supabase.auth.getUser(),
         supabase.from("products")
-          .select("id,name,description,price,currency,stock,image_urls,status,business_id,businesses(name,city,is_published)")
+          .select("id,name,description,price,currency,stock,image_urls,status,business_id,owner_id,category_id,businesses(name,city,is_published),product_categories(name)")
           .eq("status", "active")
           .gt("stock", 0)
           .order("created_at", { ascending: false })
           .limit(48)
       ]);
       if (!active) return;
-      setUserId(auth.user?.id || "");
+      setUserId(auth.user?.id || "");\n      try { const raw = localStorage.getItem("emi-market-cart-v1"); const lines = raw ? JSON.parse(raw) : []; setCartCount(Array.isArray(lines) ? lines.reduce((n: number, x: any) => n + (Number(x.quantity) || 0), 0) : 0); } catch { setCartCount(0); }
       if (queryError) setError("Les produits ne peuvent pas être chargés pour le moment. " + queryError.message);
       else setProducts((data || []) as unknown as Product[]);
       setLoading(false);
@@ -79,7 +79,7 @@ export default function NouveauMarchePage() {
       <div className="emi-market-v2-wrap">
         <header className="emi-v2-top">
           <Link href="/" className="emi-v2-back"><ArrowLeft size={16}/> EMi</Link>
-          <Link href="/annonces/commandes" className="emi-v2-top-link"><Package size={17}/> Mes commandes</Link>
+          <Link href="/annonces/business" className="emi-v2-top-link"><ShoppingCart size={17}/> Panier & catalogue</Link>
         </header>
 
         <section className="emi-v2-hero">
@@ -96,7 +96,7 @@ export default function NouveauMarchePage() {
           </div>
           <div className="emi-v2-hero-actions">
             <Link href="/annonces/business"><Store size={17}/> Explorer les boutiques <ArrowRight size={16}/></Link>
-            <Link href="/annonces/espace-vendeur"><Plus size={17}/> Espace vendeur</Link>
+            <Link href="/annonces/business"><Plus size={17}/> Gérer ma boutique</Link>
           </div>
         </section>
 
@@ -109,7 +109,7 @@ export default function NouveauMarchePage() {
           <div className="emi-v2-category-row">
             {categories.map((c,i)=><button key={c} onClick={()=>setCategory(c)} className={category===c?"active":""}><span>{categoryIcons[i]}</span>{c}</button>)}
           </div>
-          {category !== "Tout" && <p className="emi-v2-category-hint">La catégorie « {category} » sera reliée au classement détaillé des produits dans la prochaine étape. La recherche ci-dessus filtre déjà les produits par nom et description.</p>}
+          {category !== "Tout" && <p className="emi-v2-category-hint">Produits classés dans : {category}</p> }
         </section>
 
         <section className="emi-v2-products">
@@ -117,8 +117,8 @@ export default function NouveauMarchePage() {
           {error && <div className="emi-v2-message" role="status">{error}</div>}
           {loading ? <div className="emi-v2-empty"><span className="emi-v2-loader"/>Chargement des produits du marché…</div> :
             visible.length ? <div className="emi-v2-grid">{visible.map(p=>{const b=businessOf(p);const img=imageOf(p.image_urls);return <article className="emi-v2-product" key={p.id}>
-              <div className="emi-v2-product-image">{img ? <img src={img} alt={p.name} loading="lazy"/> : <div className="emi-v2-no-image"><ShoppingBag size={32}/><span>EMi MARKET</span></div>}<span className="emi-v2-stock">En stock · {p.stock}</span><button className="emi-v2-fav" aria-label="Favori bientôt disponible" title="Favoris bientôt disponibles"><Heart size={17}/></button></div>
-              <div className="emi-v2-product-body"><span className="emi-v2-shop-name"><Store size={13}/>{b?.name || "Boutique EMi"}</span><h3>{p.name}</h3><p>{p.description || "Découvrez ce produit auprès de son vendeur."}</p><div className="emi-v2-product-bottom"><strong>{money(p.price,p.currency)}</strong><Link href={"/annonces/business?product="+encodeURIComponent(p.id)} aria-label={"Voir "+p.name}><ArrowRight size={18}/></Link></div>{b?.city && <small className="emi-v2-city"><MapPin size={12}/>{b.city}</small>}</div>
+              <div className="emi-v2-product-image">{img ? <img src={img} alt={p.name} loading="lazy"/> : <div className="emi-v2-no-image"><ShoppingBag size={32}/><span>EMi MARKET</span></div>}<span className="emi-v2-stock">En stock · {p.stock}</span><button className="emi-v2-fav" aria-label="Favoris bientôt disponibles" title="Favoris bientôt disponibles" disabled><Heart size={17}/></button></div>
+              <div className="emi-v2-product-body"><span className="emi-v2-shop-name"><Store size={13}/>{b?.name || "Boutique EMi"}</span><h3>{p.name}</h3><p>{p.description || "Découvrez ce produit auprès de son vendeur."}</p><div className="emi-v2-product-bottom"><strong>{money(p.price,p.currency)}</strong><button onClick={()=>addToCart(p)} aria-label={"Ajouter "+p.name+" au panier"} title="Ajouter au panier"><ShoppingCart size={17}/></button></div>{b?.city && <small className="emi-v2-city"><MapPin size={12}/>{b.city}</small>}</div>
             </article>})}</div> : <div className="emi-v2-empty"><ShoppingBag size={30}/><strong>Aucun produit disponible pour le moment</strong><p>Les nouveaux produits publiés par les vendeurs apparaîtront ici.</p><Link href="/annonces/espace-vendeur"><Plus size={16}/> Publier un produit</Link></div>
           }
         </section>
@@ -126,7 +126,7 @@ export default function NouveauMarchePage() {
         <section className="emi-v2-seller-banner"><div><span className="emi-v2-kicker">VOUS ÊTES COMMERÇANT ?</span><h2>Votre boutique mérite<br/>une vitrine à sa hauteur.</h2><p>Présentez vos produits et gérez votre activité depuis votre espace vendeur.</p></div><Link href="/annonces/espace-vendeur">Accéder à mon espace <ArrowRight size={17}/></Link></section>
         <footer className="emi-v2-footer"><span>EMi MARKET</span><span>Un marché. Des opportunités. Une communauté.</span></footer>
       </div>
-      <nav className="emi-v2-mobile-nav"><Link href="/">Accueil</Link><a href="#top" onClick={e=>{e.preventDefault();window.scrollTo({top:0,behavior:"smooth"})}} className="selected">Marché</a><Link href="/annonces/commandes">Commandes</Link><Link href="/annonces/espace-vendeur">Vendre</Link></nav>
+      <nav className="emi-v2-mobile-nav"><Link href="/">Accueil</Link><a href="#top" onClick={e=>{e.preventDefault();window.scrollTo({top:0,behavior:"smooth"})}} className="selected">Marché</a><Link href="/annonces/business">Panier</Link><Link href="/annonces/business">Vendre</Link></nav>
       <style jsx global>{`
         .emi-market-v2{background:#06130f;color:#f8f5e9;background-image:radial-gradient(ellipse at 50% -10%,rgba(17,100,65,.35),transparent 45%),linear-gradient(180deg,#071a13 0%,#050c09 100%);font-family:Arial, sans-serif;padding:0 0 40px}
         .emi-market-v2-wrap{max-width:1180px;margin:auto;padding:18px 24px 50px}
@@ -142,7 +142,7 @@ export default function NouveauMarchePage() {
         .emi-v2-search-area{margin:28px 0 35px}.emi-v2-search{display:flex;align-items:center;gap:13px;padding:15px 18px;border:1px solid #d5b65355;border-radius:15px;background:#0b2118;box-shadow:0 10px 25px #0003;color:#e0c46c}.emi-v2-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:white;font-size:14px}.emi-v2-search input::placeholder{color:#8fa397}
         .emi-v2-section-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:17px}.emi-v2-section-head h2{margin:6px 0 0;font-size:25px;letter-spacing:-.6px}.emi-v2-section-head p{margin:6px 0 0;color:#94a99d;font-size:12px}.emi-v2-count{color:#cbb46b;font-size:9px;font-weight:800;letter-spacing:1.4px;white-space:nowrap}
         .emi-v2-category-row{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px}.emi-v2-category-row button{display:flex;min-width:0;min-height:86px;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 5px;border:1px solid #294538;border-radius:15px;background:#0c2119;color:#cbd7cd;font-size:10px;text-align:center}.emi-v2-category-row button span{font-size:22px;color:#dfc36b}.emi-v2-category-row button.active{border-color:#d9ba5b;background:linear-gradient(145deg,#173d2b,#0b2017);color:#f4e5b1;box-shadow:inset 0 0 0 1px #d9ba5b22}.emi-v2-category-hint{font-size:11px;color:#b5a16a;margin:10px 0 0}
-        .emi-v2-products{margin-top:42px}.emi-v2-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.emi-v2-product{min-width:0;overflow:hidden;border:1px solid #294638;border-radius:17px;background:linear-gradient(180deg,#10291f,#091a13);transition:transform .2s,border-color .2s}.emi-v2-product:hover{transform:translateY(-3px);border-color:#c8a94f99}.emi-v2-product-image{height:190px;position:relative;overflow:hidden;background:#132b20}.emi-v2-product-image img{width:100%;height:100%;object-fit:cover}.emi-v2-stock{position:absolute;left:10px;top:10px;padding:6px 8px;border-radius:99px;background:#071b13df;color:#d9e7d9;font-size:9px;font-weight:700}.emi-v2-fav{position:absolute;right:10px;top:10px;width:32px;height:32px;display:grid;place-items:center;border:1px solid #ffffff4a;border-radius:50%;background:#06130f9c;color:white}.emi-v2-no-image{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#cbb46b}.emi-v2-no-image span{font-size:9px;letter-spacing:2px}.emi-v2-product-body{padding:13px}.emi-v2-shop-name{display:flex;align-items:center;gap:6px;color:#d3bc73;font-size:10px}.emi-v2-product h3{margin:9px 0 5px;font-size:15px;line-height:1.3}.emi-v2-product-body>p{height:34px;overflow:hidden;margin:0;color:#9db0a3;font-size:10px;line-height:1.6}.emi-v2-product-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}.emi-v2-product-bottom strong{color:#f1d981;font-size:15px}.emi-v2-product-bottom a{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#d9ba5d;color:#102419}.emi-v2-city{display:flex;align-items:center;gap:5px;margin-top:8px;color:#92a79a;font-size:9px}
+        .emi-v2-products{margin-top:42px}.emi-v2-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.emi-v2-product{min-width:0;overflow:hidden;border:1px solid #294638;border-radius:17px;background:linear-gradient(180deg,#10291f,#091a13);transition:transform .2s,border-color .2s}.emi-v2-product:hover{transform:translateY(-3px);border-color:#c8a94f99}.emi-v2-product-image{height:190px;position:relative;overflow:hidden;background:#132b20}.emi-v2-product-image img{width:100%;height:100%;object-fit:cover}.emi-v2-stock{position:absolute;left:10px;top:10px;padding:6px 8px;border-radius:99px;background:#071b13df;color:#d9e7d9;font-size:9px;font-weight:700}.emi-v2-fav{position:absolute;right:10px;top:10px;width:32px;height:32px;display:grid;place-items:center;border:1px solid #ffffff4a;border-radius:50%;background:#06130f9c;color:white}.emi-v2-no-image{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#cbb46b}.emi-v2-no-image span{font-size:9px;letter-spacing:2px}.emi-v2-product-body{padding:13px}.emi-v2-shop-name{display:flex;align-items:center;gap:6px;color:#d3bc73;font-size:10px}.emi-v2-product h3{margin:9px 0 5px;font-size:15px;line-height:1.3}.emi-v2-product-body>p{height:34px;overflow:hidden;margin:0;color:#9db0a3;font-size:10px;line-height:1.6}.emi-v2-product-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}.emi-v2-product-bottom strong{color:#f1d981;font-size:15px}.emi-v2-product-bottom button{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#d9ba5d;color:#102419}.emi-v2-city{display:flex;align-items:center;gap:5px;margin-top:8px;color:#92a79a;font-size:9px}
         .emi-v2-empty{min-height:190px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;border:1px dashed #3c5949;border-radius:18px;color:#cbb66f;text-align:center}.emi-v2-empty p{margin:0;color:#9daf9f;font-size:12px}.emi-v2-empty a{display:inline-flex;align-items:center;gap:7px;margin-top:7px;padding:10px 14px;border-radius:10px;background:#d8ba60;color:#102419;font-size:11px;font-weight:800}.emi-v2-message{padding:13px;border:1px solid #b58a4566;border-radius:12px;background:#5a421b33;color:#f3d98c;font-size:12px}.emi-v2-loader{width:25px;height:25px;border:2px solid #d8ba6055;border-top-color:#d8ba60;border-radius:50%;animation:emiV2Spin .8s linear infinite}@keyframes emiV2Spin{to{transform:rotate(360deg)}}
         .emi-v2-seller-banner{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:45px;padding:27px 30px;border:1px solid #c7a84d77;border-radius:20px;background:radial-gradient(ellipse at 90% 0,#d6b95720,transparent 45%),linear-gradient(120deg,#0b2c1e,#07160f)}.emi-v2-seller-banner h2{margin:9px 0;font-size:25px;line-height:1.2}.emi-v2-seller-banner p{margin:0;color:#9fb3a5;font-size:12px;line-height:1.7}.emi-v2-seller-banner>a{display:inline-flex;align-items:center;gap:10px;flex:none;padding:13px 16px;border-radius:12px;background:#dfc36b;color:#10271b;font-size:11px;font-weight:800}.emi-v2-footer{display:flex;justify-content:space-between;gap:15px;padding:25px 0 0;color:#809487;font-size:10px}.emi-v2-footer span:first-child{color:#d9bd67;font-weight:900;letter-spacing:2px}.emi-v2-mobile-nav{display:none}
         @media(max-width:900px){.emi-v2-category-row{grid-template-columns:repeat(4,minmax(0,1fr))}.emi-v2-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.emi-v2-product-image{height:170px}}
