@@ -6912,20 +6912,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 }
 
 
-/* Header logo spacing: keep the gold emblem clear of the royal tagline */
+/* Final single-line-source fix: render the original tagline once, below EMi */
 @media (max-width:700px) {
-  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-brand {
-    align-items:center!important;
-    gap:10px!important;
-    overflow:visible!important;
-  }
   .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark {
     display:flex!important;
     flex-direction:column!important;
     align-items:flex-start!important;
     justify-content:center!important;
-    gap:8px!important;
-    min-width:max-content!important;
+    gap:3px!important;
+    min-width:0!important;
+    height:auto!important;
     overflow:visible!important;
   }
   .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark strong {
@@ -6937,9 +6933,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
     position:static!important;
     margin:0!important;
     padding:0!important;
-    line-height:1.35!important;
+    line-height:1.2!important;
     white-space:nowrap!important;
-    letter-spacing:.13em!important;
+    font-size:7px!important;
+    letter-spacing:.12em!important;
     transform:none!important;
+  }
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark::before,
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark::after {
+    content:none!important;
+    display:none!important;
+  }
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-brand {
+    align-items:center!important;
+    gap:8px!important;
   }
 }
