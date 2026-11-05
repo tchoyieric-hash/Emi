@@ -49,10 +49,10 @@ export default function CommandesVendeurPage(){
   const result:Invoice[]=list.map(x=>({...x,business:byBusiness.get(x.business_id)!,items:grouped.get(x.id)||[],buyer:buyers.get(x.buyer_id)||null}));
   setRows(result);
   const queryId=typeof window!=="undefined"?(new URLSearchParams(window.location.search).get("order")||""):"";
-  const target=preferred||queryId||selectedId;
+  const target=preferred||queryId;
   setSelectedId(result.some(x=>x.id===target)?target:result[0].id);
   setLoading(false);
- },[selectedId]);
+ },[]);
  useEffect(()=>{void load();},[load]);
  const visible=useMemo(()=>filter==="all"?rows:rows.filter(x=>x.status===filter),[rows,filter]);
  const selected=rows.find(x=>x.id===selectedId)||null;
