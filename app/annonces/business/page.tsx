@@ -189,7 +189,7 @@ export default function EmiBusinessPage() {
     }
     if(!window.confirm("Supprimer définitivement « "+p.name+" » ? Cette action est irréversible."))return;
     const {data,error}=await supabase.from("products").delete().eq("id",p.id).eq("owner_id",userId).select("id");
-    if(error){setNotice("Suppression impossible : "+error.message);return;}
+    if(error){if((error as {code?:string}).code==="23503"||error.message.includes("order_items_product_id_fkey")){setNotice("Ce produit est déjà lié à une commande. Il a été archivé pour préserver l’historique des achats.");await supabase.from("products").update({status:"archived"}).eq("id",p.id).eq("owner_id",userId);await load();return;}setNotice("Suppression impossible : "+error.message);return;}
     if(!data?.length){setNotice("Aucun produit supprimé. Vérifie que tu es connecté au compte vendeur propriétaire.");return;}
     setNotice("Produit supprimé définitivement du catalogue.");
     await load();
