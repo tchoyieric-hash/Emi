@@ -23,7 +23,8 @@ export default function EmiBusinessPage() {
   const [search,setSearch] = useState("");
   const [category,setCategory] = useState("Tout");
   const [showBusinessForm,setShowBusinessForm] = useState(false);
-  const [showProductForm,setShowProductForm] = useState(false);\n  const [editingProduct,setEditingProduct] = useState<Product|null>(null);
+  const [showProductForm,setShowProductForm] = useState(false);
+  const [editingProduct,setEditingProduct] = useState<Product|null>(null);
   const [businessName,setBusinessName] = useState("");
   const [businessCategory,setBusinessCategory] = useState("Commerce");
   const [businessDescription,setBusinessDescription] = useState("");
@@ -45,7 +46,8 @@ export default function EmiBusinessPage() {
   useEffect(()=>{
     try {
       const raw=window.localStorage.getItem("emi-market-cart-v1");
-      if(raw){const parsed=JSON.parse(raw);if(Array.isArray(parsed))setCart(parsed.filter((x:any)=>typeof x.product_id==="string" && Number.isInteger(x.quantity) && x.quantity>0));}\n      if(new URLSearchParams(window.location.search).get("openCart")==="1")setCartOpen(true);
+      if(raw){const parsed=JSON.parse(raw);if(Array.isArray(parsed))setCart(parsed.filter((x:any)=>typeof x.product_id==="string" && Number.isInteger(x.quantity) && x.quantity>0));}
+      if(new URLSearchParams(window.location.search).get("openCart")==="1")setCartOpen(true);
     } catch { window.localStorage.removeItem("emi-market-cart-v1"); }
     setCartReady(true);
   },[]);
@@ -172,7 +174,11 @@ export default function EmiBusinessPage() {
     finally{setSaving(false);}
   }
 
-  function editProduct(p:Product){setEditingProduct(p);setBusinessId(p.business_id);setProductName(p.name);setProductDescription(p.description||"");setPrice(String(p.price));setStock(String(p.stock));setShowProductForm(true);window.scrollTo({top:0,behavior:"smooth"});}\n\n  async function archiveProduct(p:Product){if(!supabase||!userId)return;if(!window.confirm("Retirer ce produit du catalogue ? Il sera archivé et les commandes historiques seront conservées."))return;const {error}=await supabase.from("products").update({status:"archived"}).eq("id",p.id).eq("owner_id",userId);if(error){setNotice("Archivage impossible : "+error.message);return;}setNotice("Produit retiré du catalogue. L’historique des commandes est conservé.");await load();}\n\n  return <main className="min-h-screen bg-[#030906] text-white">
+  function editProduct(p:Product){setEditingProduct(p);setBusinessId(p.business_id);setProductName(p.name);setProductDescription(p.description||"");setPrice(String(p.price));setStock(String(p.stock));setShowProductForm(true);window.scrollTo({top:0,behavior:"smooth"});}
+
+  async function archiveProduct(p:Product){if(!supabase||!userId)return;if(!window.confirm("Retirer ce produit du catalogue ? Il sera archivé et les commandes historiques seront conservées."))return;const {error}=await supabase.from("products").update({status:"archived"}).eq("id",p.id).eq("owner_id",userId);if(error){setNotice("Archivage impossible : "+error.message);return;}setNotice("Produit retiré du catalogue. L’historique des commandes est conservé.");await load();}
+
+  return <main className="min-h-screen bg-[#030906] text-white">
     <div className="mx-auto max-w-6xl px-4 pb-16 pt-5 sm:px-6">
       <Link href="/annonces" className="inline-flex items-center gap-2 rounded-full border border-[#d6b45c]/35 bg-white/[.03] px-4 py-2 text-sm font-semibold text-[#f5dfa0]"><ArrowLeft size={16}/> Retour au Marché</Link>
       <section className="relative mt-4 overflow-hidden rounded-[30px] border border-[#d8b85f]/55 bg-[radial-gradient(ellipse_at_80%_0%,rgba(197,151,44,.24),transparent_40%),linear-gradient(130deg,#073b2b,#06160f_55%,#080906)] p-6 shadow-[0_20px_60px_rgba(0,0,0,.4)] sm:p-10">
