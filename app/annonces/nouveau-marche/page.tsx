@@ -77,8 +77,27 @@ export default function NouveauMarchePage() {
     const q = query.trim().toLocaleLowerCase("fr");
     const b = businessOf(p);
     const textMatch = !q || [p.name, p.description, b?.name, b?.city].some(v => String(v || "").toLocaleLowerCase("fr").includes(q));
-    return textMatch;
-  }), [products, query]);
+    const categoryMatch = category === "Tout" || productCategoryOf(p) === category;
+    return textMatch && categoryMatch;
+  }), [products, query, category]);
+
+  function addToCart(p: Product) {
+    try {
+      const raw = localStorage.getItem("emi-market-cart-v1");
+      const lines: { product_id: string; quantity: number }[] = raw ? JSON.parse(raw) : [];
+      const otherLine = lines.find(line => {
+        const product = products.find(item => item.id === line.product_id);
+        return product && product.business_id !== p.business_id;
+      });
+      if (otherLine) { window.location.assign("/annonces/business"); return; }
+      const found = lines.find(line => line.product_id === p.id);
+      if (found) found.quantity = Math.min(found.quantity + 1, p.stock);
+      else lines.push({ product_id: p.id, quantity: 1 });
+      localStorage.setItem("emi-market-cart-v1", JSON.stringify(lines));
+      setCartCount(lines.reduce((sum, line) => sum + line.quantity, 0));
+      window.location.assign("/annonces/business?openCart=1");
+    } catch { window.location.assign("/annonces/business"); }
+  }
 
   return (
     <main className="emi-market-v2 min-h-screen text-white">
