@@ -6718,3 +6718,91 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .bt-store-empty b{color:#fff;font-size:13px}
 .bt-store-empty p{margin:0;font-size:11px}
 @media(max-width:600px){.bt-store-intro{grid-template-columns:1fr;gap:12px}.bt-store-cover{height:150px}.bt-store-copy h3{font-size:19px}.bt-store-catalogue h3{font-size:15px}}
+
+
+/* EMi home refresh — social first, commerce second, discovery third */
+.app-shell:not(.emi-reels-shell) .stories-card{
+  margin:10px 0 18px!important;padding:14px 13px 12px!important;
+  border:1px solid rgba(46,190,128,.28)!important;border-radius:19px!important;
+  background:linear-gradient(145deg,#09251b,#061610)!important;
+}
+.app-shell:not(.emi-reels-shell) .stories-row .story-ring{
+  border:2px solid #20c982!important;
+  background:linear-gradient(145deg,#25d18b,#08794d)!important;
+  box-shadow:0 0 0 2px rgba(32,201,130,.08)!important;
+}
+.app-shell:not(.emi-reels-shell) .stories-row .story-add{
+  border:1px dashed #36d99a!important;background:#0b2118!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-feed-discovery-bar{
+  margin:4px 0 12px!important;padding:12px 13px!important;
+  border:1px solid rgba(46,190,128,.2)!important;border-radius:15px!important;
+  background:linear-gradient(120deg,rgba(9,48,33,.92),rgba(6,24,17,.96))!important;
+}
+.app-shell:not(.emi-reels-shell) .feed-list{gap:14px!important}
+.app-shell:not(.emi-reels-shell) .emi-feed-post{
+  border:1px solid rgba(46,190,128,.2)!important;border-radius:19px!important;
+  background:linear-gradient(155deg,#0b1d16,#07120e)!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.2)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-market{
+  margin:18px 0 16px!important;padding:15px 13px!important;
+  border:1px solid rgba(46,190,128,.32)!important;border-radius:20px!important;
+  background:radial-gradient(ellipse at 100% 0%,rgba(38,190,125,.13),transparent 52%),linear-gradient(145deg,#09271c,#06150f 85%)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-market-heading h2{font-size:18px!important}
+.app-shell:not(.emi-reels-shell) .emi-home-market-card{
+  flex-basis:min(76%,270px)!important;width:min(76%,270px)!important;
+  border:1px solid rgba(46,190,128,.3)!important;border-radius:16px!important;
+  background:linear-gradient(155deg,#103625,#071b12)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-market-image{height:158px!important}
+.app-shell:not(.emi-reels-shell) .emi-market-card-cta{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  padding-top:9px!important;border-top:1px solid rgba(46,190,128,.18)!important;
+  color:#9ce8c7!important;font-weight:800!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-nexus{
+  margin:16px 0 20px!important;padding:15px 13px!important;
+  border:1px solid rgba(210,177,83,.27)!important;border-radius:20px!important;
+  background:linear-gradient(145deg,#0a2118,#07140f)!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-nexus-heading{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:10px!important;margin-bottom:13px!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-nexus-heading span{
+  color:#d9bd68!important;font-size:9px!important;font-weight:900!important;letter-spacing:.16em!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-nexus-heading h2{
+  margin:5px 0 0!important;color:#fff5d8!important;font-size:17px!important;line-height:1.25!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-nexus-heading>button{
+  display:flex!important;align-items:center!important;gap:3px!important;flex:none!important;
+  color:#e6ca75!important;font-size:11px!important;font-weight:800!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-home-nexus-grid{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-nexus-tile{
+  display:flex!important;min-width:0!important;min-height:112px!important;flex-direction:column!important;
+  align-items:flex-start!important;gap:6px!important;padding:11px 9px!important;
+  border:1px solid rgba(210,177,83,.28)!important;border-radius:15px!important;
+  background:linear-gradient(150deg,rgba(20,67,46,.85),rgba(7,24,16,.98))!important;
+  color:#f7efd8!important;text-decoration:none!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-nexus-icon{
+  display:grid!important;place-items:center!important;width:32px!important;height:32px!important;
+  border:1px solid rgba(224,194,105,.42)!important;border-radius:10px!important;
+  background:rgba(222,190,102,.1)!important;color:#e5c76c!important;
+}
+.app-shell:not(.emi-reels-shell) .emi-nexus-tile>strong{font-size:11px!important;line-height:1.2!important}
+.app-shell:not(.emi-reels-shell) .emi-nexus-tile>small{font-size:9px!important;line-height:1.35!important;color:#b9c9bd!important}
+.app-shell:not(.emi-reels-shell) .emi-nexus-tile>b{
+  display:flex!important;align-items:center!important;gap:2px!important;margin-top:auto!important;
+  color:#e5c76c!important;font-size:9px!important;font-weight:850!important;
+}
+@media(max-width:390px){
+  .app-shell:not(.emi-reels-shell) .emi-home-nexus-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .app-shell:not(.emi-reels-shell) .emi-home-market-card{flex-basis:82%!important;width:82%!important}
+}
