@@ -66,6 +66,16 @@ export default function BoutiquesPage() {
   setLoading(false);
  },[]);
  useEffect(()=>{void load();},[load]);
+ useEffect(()=>{
+  if(!products.length||typeof window==="undefined")return;
+  const productId=new URLSearchParams(window.location.search).get("product");
+  if(!productId)return;
+  const product=products.find(item=>item.id===productId);
+  if(!product)return;
+  setTab("explore");
+  setSelected(shops.find(shop=>shop.id===product.business_id)||null);
+  setProductOpen(product);
+ },[products,shops]);
  useEffect(()=>{if(!supabase||!user)return;const channel=supabase.channel("emi-boutiques-notifications-"+user.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"notifications",filter:"recipient_id=eq."+user.id},payload=>{const n=payload.new as any;if(n.type==="order_received"){setAlerts(old=>[n,...old]);setMessage("Nouvelle commande reçue !");}}).subscribe();return()=>{void supabase.removeChannel(channel);};},[user?.id]);
  useEffect(()=>{if(!products.length)return;try{const raw=localStorage.getItem("emi-boutiques-cart");if(raw){const saved=JSON.parse(raw) as {id:string;quantity:number}[];setCart(saved.flatMap(x=>{const p=products.find(y=>y.id===x.id);return p?[{product:p,quantity:x.quantity}]:[]}));}}catch{}},[products]);
  function saveCart(next:Line[]){setCart(next);try{localStorage.setItem("emi-boutiques-cart",JSON.stringify(next.map(x=>({id:x.product.id,quantity:x.quantity}))))}catch{}}
