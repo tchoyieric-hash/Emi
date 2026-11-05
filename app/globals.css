@@ -6910,3 +6910,36 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
  .discovery-list .discovery-person-actions{gap:6px}
  .discovery-list .discovery-person-actions button{font-size:11px!important;padding:8px 3px!important}
 }
+
+
+/* Header logo spacing: keep the gold emblem clear of the royal tagline */
+@media (max-width:700px) {
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-brand {
+    align-items:center!important;
+    gap:10px!important;
+    overflow:visible!important;
+  }
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark {
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    gap:8px!important;
+    min-width:max-content!important;
+    overflow:visible!important;
+  }
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark strong {
+    display:block!important;
+    line-height:1!important;
+  }
+  .mobile-header.emi-mobile-royal-header .emi-mobile-royal-wordmark small {
+    display:block!important;
+    position:static!important;
+    margin:0!important;
+    padding:0!important;
+    line-height:1.35!important;
+    white-space:nowrap!important;
+    letter-spacing:.13em!important;
+    transform:none!important;
+  }
+}
