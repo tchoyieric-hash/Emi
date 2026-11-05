@@ -14,7 +14,10 @@ type Product = {
   stock: number;
   image_urls: unknown;
   status: string;
-  business_id: string;\n  owner_id: string;\n  category_id: string | null;\n  product_categories?: { name?: string } | { name?: string }[] | null;
+  business_id: string;
+  owner_id: string;
+  category_id: string | null;
+  product_categories?: { name?: string } | { name?: string }[] | null;
   businesses?: { name?: string; city?: string; is_published?: boolean } | { name?: string; city?: string; is_published?: boolean }[] | null;
 };
 const supabase = createSupabaseBrowserClient();
@@ -29,7 +32,8 @@ function imageOf(value: unknown) {
   }
   return "";
 }
-function productCategoryOf(p: Product) { return Array.isArray(p.product_categories) ? p.product_categories[0]?.name : p.product_categories?.name; }\nfunction businessOf(p: Product) {
+function productCategoryOf(p: Product) { return Array.isArray(p.product_categories) ? p.product_categories[0]?.name : p.product_categories?.name; }
+function businessOf(p: Product) {
   return Array.isArray(p.businesses) ? p.businesses[0] : p.businesses;
 }
 function money(value: number, currency: string) {
@@ -42,7 +46,8 @@ export default function NouveauMarchePage() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Tout");
   const [error, setError] = useState("");
-  const [userId, setUserId] = useState("");\n  const [cartCount, setCartCount] = useState(0);
+  const [userId, setUserId] = useState("");
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -58,7 +63,8 @@ export default function NouveauMarchePage() {
           .limit(48)
       ]);
       if (!active) return;
-      setUserId(auth.user?.id || "");\n      try { const raw = localStorage.getItem("emi-market-cart-v1"); const lines = raw ? JSON.parse(raw) : []; setCartCount(Array.isArray(lines) ? lines.reduce((n: number, x: any) => n + (Number(x.quantity) || 0), 0) : 0); } catch { setCartCount(0); }
+      setUserId(auth.user?.id || "");
+      try { const raw = localStorage.getItem("emi-market-cart-v1"); const lines = raw ? JSON.parse(raw) : []; setCartCount(Array.isArray(lines) ? lines.reduce((n: number, x: any) => n + (Number(x.quantity) || 0), 0) : 0); } catch { setCartCount(0); }
       if (queryError) setError("Les produits ne peuvent pas être chargés pour le moment. " + queryError.message);
       else setProducts((data || []) as unknown as Product[]);
       setLoading(false);
