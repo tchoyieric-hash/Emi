@@ -1654,6 +1654,7 @@ function decodeVapidKey(base64String: string) {
       const { count, error } = await supabase.from("notifications")
         .select("id", { count: "exact", head: true })
         .eq("recipient_id", user.id)
+        .neq("type", "order_received")
         .eq("is_read", false);
       if (active && !error) setUnreadNotifications(count || 0);
     };
@@ -1670,7 +1671,7 @@ function decodeVapidKey(base64String: string) {
     if (!supabase || !user) { setAuthOpen(true); setMessage("Connecte-toi pour consulter tes notifications."); return; }
     setNotificationsLoading(true);
     try {
-      const { data, error } = await supabase.from("notifications").select("id,actor_id,type,post_id,comment_id,story_id,order_id,message,is_read,created_at").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
+      const { data, error } = await supabase.from("notifications").select("id,actor_id,type,post_id,comment_id,story_id,order_id,message,is_read,created_at").eq("recipient_id", user.id).neq("type", "order_received").order("created_at", { ascending: false }).limit(100);
       if (error) throw error;
       const rows = (data || []) as {id:string;actor_id:string|null;type:string;post_id:string|null;comment_id:string|null;story_id:string|null;order_id:string|null;message:string;is_read:boolean;created_at:string}[];
       const actorIds = [...new Set(rows.map(row => row.actor_id).filter((id): id is string => !!id))];
@@ -1688,7 +1689,7 @@ function decodeVapidKey(base64String: string) {
     try {
       const { data, error } = await supabase.from("notifications")
         .select("id,actor_id,type,post_id,comment_id,story_id,order_id,message,is_read,created_at")
-        .eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
+        .eq("recipient_id", user.id).neq("type", "order_received").order("created_at", { ascending: false }).limit(100);
       if (error) throw error;
       const rows = (data || []) as typeof notifications;
       const actorIds = [...new Set(rows.map(row => row.actor_id).filter((id): id is string => !!id))];
@@ -2506,7 +2507,7 @@ function decodeVapidKey(base64String: string) {
             <button className="discovery-person-main" onClick={() => void openMessageActivity(note)}><span><strong>{note.actor?.display_name||note.actor?.username||"EMi"}</strong><small>{note.message}</small><small>{new Date(note.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small></span></button>
             {!note.is_read && <span className="notification-unread-dot" aria-label="Non lue"/>}
           </article>)}
-          {!notificationsLoading && notifications.length===0 && <div className="empty-feature"><Bell size={28}/><h2>Tu es à jour</h2><p>Les nouveaux abonnements, interactions, messages et commandes apparaîtront ici.</p></div>}</div>
+          {!notificationsLoading && notifications.length===0 && <div className="empty-feature"><Bell size={28}/><h2>Tu es à jour</h2><p>Les nouveaux abonnements, interactions et messages apparaîtront ici. Les commandes sont réservées à l’espace vendeur.</p></div>}</div>
         </section>}
         {active === "Messages" && !viewingProfile && <section className="emi-messenger" aria-label="Messagerie EMi">
           <aside className={`emi-messenger-inbox ${activeConversation ? "is-conversation-open" : ""}`}>
