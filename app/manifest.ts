@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Partage tes moments et reste proche de ta communauté.",
     start_url: "/",
     display: "standalone",
-    background_color: "#171044",
-    theme_color: "#5520c9",
+    background_color: "#061713",
+    theme_color: "#061713",
     orientation: "portrait",
     icons: [
       { src: "/icon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }
