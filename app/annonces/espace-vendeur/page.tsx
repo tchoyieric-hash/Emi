@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 type Listing = { id: string; titre: string; prix: number; devise: string; latitude: number | null; longitude: number | null; statut: string; };
+type MarketProduct = { id: string; name: string; description: string | null; price: number; currency: string; stock: number; status: string; owner_id: string; };
 type Verification = { status: "pending" | "approved" | "rejected"; submitted_at: string };
 declare global { interface Window { L?: any } }
 const supabase = createSupabaseBrowserClient();
@@ -12,6 +13,8 @@ const supabase = createSupabaseBrowserClient();
 export default function EspaceVendeurPage() {
   const [userId, setUserId] = useState("");
   const [listings, setListings] = useState<Listing[]>([]);
+  const [marketProducts, setMarketProducts] = useState<MarketProduct[]>([]);
+  const [productBusy, setProductBusy] = useState("");
   const [views, setViews] = useState(0);
   const [clicks, setClicks] = useState(0);
   const [verification, setVerification] = useState<Verification | null>(null);
@@ -33,6 +36,9 @@ export default function EspaceVendeurPage() {
     const user = auth.user;
     if (!user) { setNotice("Connecte-toi à EMi pour accéder à ton espace vendeur."); setLoading(false); return; }
     setUserId(user.id);
+    const { data: productRows, error: productError } = await supabase.from("products").select("id,name,description,price,currency,stock,status,owner_id").eq("owner_id", user.id).order("created_at", { ascending: false });
+    setMarketProducts((productRows || []) as MarketProduct[]);
+    if (productError) setNotice("Impossible de charger le catalogue EMi Market : " + productError.message);
     const { data: rows, error } = await supabase.from("annonces")
       .select("id,titre,prix,devise,latitude,longitude,statut")
       .eq("seller_id", user.id).order("created_at", { ascending: false });
@@ -60,6 +66,34 @@ export default function EspaceVendeurPage() {
       if (saved) setCaisseHistory(JSON.parse(saved));
     } catch { /* ignore corrupted local cache */ }
   }, []);
+
+
+  async function modifierProduit(product: MarketProduct) {
+    if (!supabase || product.owner_id !== userId) return;
+    const name = window.prompt("Nom du produit :", product.name);
+    if (name === null) return;
+    const description = window.prompt("Description :", product.description || "");
+    if (description === null) return;
+    const priceText = window.prompt("Prix en FCFA :", String(product.price));
+    if (priceText === null) return;
+    const price = Number(priceText.replace(/\\s/g, "").replace(",", "."));
+    if (!name.trim() || !Number.isFinite(price) || price < 0) { setNotice("Nom ou prix invalide."); return; }
+    setProductBusy(product.id);
+    const { error } = await supabase.from("products").update({ name: name.trim(), description: description.trim(), price }).eq("id", product.id).eq("owner_id", userId);
+    if (error) setNotice("Modification impossible : " + error.message);
+    else { setMarketProducts(items => items.map(item => item.id === product.id ? { ...item, name: name.trim(), description: description.trim(), price } : item)); setNotice("Produit modifié avec succès."); }
+    setProductBusy("");
+  }
+
+  async function supprimerProduit(product: MarketProduct) {
+    if (!supabase || product.owner_id !== userId) return;
+    if (!window.confirm("Supprimer « " + product.name + " » du catalogue ?")) return;
+    setProductBusy(product.id);
+    const { error } = await supabase.from("products").delete().eq("id", product.id).eq("owner_id", userId);
+    if (error) setNotice("Suppression impossible : " + error.message);
+    else { setMarketProducts(items => items.filter(item => item.id !== product.id)); setNotice("Produit supprimé du catalogue."); }
+    setProductBusy("");
+  }
 
   function enregistrerCaisse() {
     const cashValue = Number(cash);
@@ -194,7 +228,14 @@ export default function EspaceVendeurPage() {
           <p className="mt-3 text-xs text-white/45">La carte affiche uniquement les annonces auxquelles des coordonnées GPS ont été ajoutées. Elle ne suit pas ta position sans ton accord.</p>
         </section>
         <section className="mt-6 rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6">
-          <h2 className="mb-4 text-lg font-semibold">Mes annonces</h2>
+                  <section className="mt-6 rounded-2xl border border-amber-200/20 bg-gradient-to-br from-emerald-950/70 to-black/40 p-5 sm:p-6">
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-200">EMi Market</p><h2 className="mt-1 text-xl font-semibold">Mon catalogue de produits</h2><p className="mb-4 mt-1 text-sm text-white/55">Gère ici les produits visibles dans la vitrine du Marché.</p>
+          {marketProducts.length ? <div className="space-y-3">{marketProducts.map(product => <article key={product.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
+            <div className="min-w-0 flex-1"><p className="font-semibold">{product.name}</p><p className="mt-1 text-sm text-amber-200">{Number(product.price).toLocaleString("fr-FR")} {product.currency === "XAF" ? "FCFA" : product.currency}</p><p className="mt-1 text-xs text-white/45">Stock : {product.stock} · {product.status === "active" ? "En ligne" : product.status}</p></div>
+            <div className="flex gap-2"><button disabled={productBusy === product.id} onClick={() => void modifierProduit(product)} className="min-h-10 rounded-lg border border-amber-200/50 px-3 text-sm font-semibold text-amber-100 disabled:opacity-50">Modifier</button><button disabled={productBusy === product.id} onClick={() => void supprimerProduit(product)} className="min-h-10 rounded-lg border border-red-300/40 px-3 text-sm font-semibold text-red-200 disabled:opacity-50">Supprimer</button></div>
+          </article>)}</div> : <p className="rounded-xl bg-black/20 p-4 text-sm text-white/55">Aucun produit de ton catalogue n’est associé à ce compte. Si ton produit apparaît dans la vitrine mais pas ici, son propriétaire enregistré ne correspond probablement pas au compte connecté.</p>}
+        </section>
+<h2 className="mb-4 text-lg font-semibold">Mes annonces</h2>
           {listings.length ? <div className="divide-y divide-white/10">{listings.map(item=><div key={item.id} className="flex flex-wrap items-center justify-between gap-2 py-3"><span>{item.titre}</span><span className="text-sm text-amber-200">{Number(item.prix).toLocaleString("fr-FR")} {item.devise || "XAF"}</span></div>)}</div> : <p className="text-sm text-white/50">Aucune annonce pour le moment. <Link href="/annonces" className="text-amber-200 underline">Publier une annonce</Link></p>}
         </section>
       </>}
