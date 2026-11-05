@@ -180,7 +180,7 @@ export default function EspaceVendeurPage() {
     <div className="mx-auto w-full max-w-6xl min-w-0">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
         <Link href="/annonces" className="text-sm text-amber-200">← Retour au marché</Link>
-        <span className="font-semibold tracking-[.22em] text-amber-200">EMi · ESPACE PRO</span>
+        <div className="flex flex-wrap items-center gap-2"><Link href="/annonces/commandes" className="inline-flex min-h-10 items-center rounded-xl border border-emerald-300/30 bg-emerald-300/10 px-3 text-sm font-semibold text-emerald-100">Factures reçues</Link><span className="font-semibold tracking-[.22em] text-amber-200">EMi · ESPACE PRO</span></div>
       </header>
       <section className="mb-6 rounded-3xl border border-amber-200/15 bg-gradient-to-br from-amber-200/10 to-transparent p-5 sm:p-9">
         <p className="text-xs uppercase tracking-[.3em] text-amber-200">Espace vendeur</p>
