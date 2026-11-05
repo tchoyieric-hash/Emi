@@ -2633,6 +2633,38 @@ function decodeVapidKey(base64String: string) {
 .emi-ecosystem-panel{border-radius:20px!important;margin-top:10px!important}
 @media(max-width:420px){.emi-explorer-hero{padding:17px 15px 15px;border-radius:21px}.emi-explorer-hero-actions button{flex:1 1 145px;padding:0 9px;font-size:11px}.emi-explorer-trust{gap:8px}.emi-explorer-trust span{font-size:9px}.emi-people-discovery-content{padding-left:11px!important;padding-right:11px!important}}
 
+/* Structural Explorer refresh: one search area and a unified universe directory */
+.emi-explorer-page{display:flex;flex-direction:column;gap:15px;padding:10px 0 22px}
+.emi-explorer-heading{display:flex;align-items:center;gap:14px;padding:19px 17px;border:1px solid rgba(211,190,119,.26);border-radius:22px;background:radial-gradient(ellipse at 100% 0%,rgba(31,153,119,.18),transparent 54%),linear-gradient(135deg,#0c241b,#07140f 72%,#0b1c20);box-shadow:0 12px 28px rgba(0,0,0,.18)}
+.emi-explorer-heading-mark{width:54px;height:54px;flex:0 0 54px;display:grid;place-items:center;border-radius:17px;color:#e3cf8d;background:linear-gradient(145deg,rgba(218,195,125,.2),rgba(218,195,125,.045));border:1px solid rgba(218,195,125,.3)}
+.emi-explorer-kicker,.emi-explorer-eyebrow{display:block;color:#d9c787;font-size:9px;letter-spacing:1.8px;font-weight:900}
+.emi-explorer-heading h1{margin:5px 0;color:#f5f0df;font-size:26px;line-height:1.1;font-weight:900;letter-spacing:-.8px}
+.emi-explorer-heading h1 em{font-style:normal;color:#dfc77f}
+.emi-explorer-heading p,.emi-explorer-section-title p{margin:0;color:#aebfb5;font-size:12px;line-height:1.5}
+.emi-explorer-search-panel,.emi-explorer-univers{padding:16px;border:1px solid rgba(202,188,129,.2);border-radius:21px;background:linear-gradient(160deg,rgba(12,32,24,.98),rgba(6,17,14,.98));box-shadow:0 10px 25px rgba(0,0,0,.16)}
+.emi-explorer-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.emi-explorer-section-title h2{margin:4px 0 4px;color:#f2eee1;font-size:18px;line-height:1.2;font-weight:900}
+.emi-explorer-title-icon{width:44px;height:44px;flex:0 0 44px;display:grid;place-items:center;border-radius:14px;color:#e2ce91;border:1px solid rgba(217,194,124,.27);background:rgba(217,194,124,.09)}
+.emi-explorer-title-icon.cyan{color:#72d7e9;border-color:rgba(103,202,222,.25);background:rgba(54,156,179,.1)}
+.emi-explorer-search-row{display:flex;align-items:stretch;gap:8px}
+.emi-explorer-search-row .discovery-search{flex:1;min-width:0;min-height:48px;border-radius:13px;background:#06110d;border:1px solid rgba(212,194,133,.25)}
+.emi-explorer-search-row .emi-people-search-button{min-width:112px;border-radius:13px;min-height:48px}
+.emi-explorer-list-heading{display:flex;align-items:center;justify-content:space-between;margin:17px 0 11px}
+.emi-explorer-list-heading strong{display:block;color:#f0eee4;font-size:14px}
+.emi-explorer-list-heading small{display:block;margin-top:3px;color:#a7b9ae;font-size:11px}
+.emi-explorer-list-heading>span{min-width:34px;height:34px;display:grid;place-items:center;border:1px solid rgba(217,194,124,.25);border-radius:50%;color:#e2ce91;font-size:12px}
+.emi-explorer-empty{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:15px;border:1px dashed rgba(217,194,124,.2);border-radius:15px;color:#b6c6bd;font-size:12px}
+.emi-explorer-empty svg{color:#d8c787}.emi-explorer-empty strong{color:#f0eee4}.emi-explorer-empty span{flex-basis:100%;padding-left:33px}
+.emi-explorer-univers{background:linear-gradient(145deg,#0c202b,#081721);border-color:rgba(103,172,194,.23)}
+.emi-explorer-univers-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.emi-explorer-universe-card{min-width:0;display:flex;align-items:center;gap:9px;padding:12px 10px;border:1px solid rgba(120,170,181,.18);border-radius:15px;background:linear-gradient(135deg,rgba(17,43,53,.95),rgba(9,25,33,.95));color:inherit;text-decoration:none}
+.emi-explorer-universe-card:last-child{grid-column:1/-1}
+.emi-explorer-universe-icon{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;border-radius:12px;color:#83d9e9;background:rgba(70,167,188,.11);border:1px solid rgba(103,202,222,.2)}
+.emi-explorer-universe-copy{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.emi-explorer-universe-copy strong{color:#f1eee2;font-size:12px;font-weight:850}
+.emi-explorer-universe-copy small{color:#a9bdc5;font-size:10px;line-height:1.35}
+.emi-explorer-universe-card>svg{flex:0 0 auto;color:#dfc77f}
+@media(max-width:390px){.emi-explorer-page{gap:11px}.emi-explorer-heading{padding:15px 13px}.emi-explorer-heading h1{font-size:23px}.emi-explorer-search-panel,.emi-explorer-univers{padding:12px}.emi-explorer-search-row{flex-direction:column}.emi-explorer-search-row .emi-people-search-button{width:100%}.emi-explorer-univers-grid{grid-template-columns:1fr}.emi-explorer-universe-card:last-child{grid-column:auto}}
 `}
 /* Structural Explorer refresh: one search area and a unified universe directory */
 .emi-explorer-page{display:flex;flex-direction:column;gap:15px;padding:10px 0 22px}
