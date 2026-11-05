@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Search, ShoppingBag, Store, SlidersHorizontal, Sparkles, ShieldCheck, MapPin, Plus, Package, Heart, ShoppingCart } from "lucide-react";
+import { ArrowLeft, ArrowRight, Search, ShoppingBag, Store, SlidersHorizontal, Sparkles, ShieldCheck, MapPin, Plus, Package, Heart, ShoppingCart, Share2, Pencil, Trash2 } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase";
 
 type Product = {
@@ -48,6 +48,8 @@ export default function NouveauMarchePage() {
   const [error, setError] = useState("");
   const [userId, setUserId] = useState("");
   const [cartCount, setCartCount] = useState(0);
+  const [actionNotice, setActionNotice] = useState("");
+  const [busyProduct, setBusyProduct] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -80,6 +82,55 @@ export default function NouveauMarchePage() {
     const categoryMatch = category === "Tout" || productCategoryOf(p) === category;
     return textMatch && categoryMatch;
   }), [products, query, category]);
+
+  async function shareProduct(p: Product) {
+    const url = window.location.origin + "/annonces/business?product=" + encodeURIComponent(p.id);
+    const payload = { title: p.name, text: p.description || "Découvre ce produit sur EMi Market", url };
+    try {
+      if (navigator.share) await navigator.share(payload);
+      else { await navigator.clipboard.writeText(url); setActionNotice("Lien du produit copié."); }
+    } catch (e) {
+      if (e instanceof Error && e.name !== "AbortError") setActionNotice("Partage indisponible sur cet appareil.");
+    }
+  }
+
+  async function editProduct(p: Product) {
+    if (!supabase || p.owner_id !== userId) return;
+    const name = window.prompt("Nom du produit :", p.name);
+    if (name === null) return;
+    const description = window.prompt("Description :", p.description || "");
+    if (description === null) return;
+    const priceText = window.prompt("Prix en FCFA :", String(p.price));
+    if (priceText === null) return;
+    const price = Number(priceText.replace(/\\s/g, "").replace(",", "."));
+    if (!name.trim() || !Number.isFinite(price) || price < 0) {
+      setActionNotice("Nom ou prix invalide. Aucune modification enregistrée."); return;
+    }
+    setBusyProduct(p.id); setActionNotice("");
+    const { error: updateError } = await supabase.from("products")
+      .update({ name: name.trim(), description: description.trim(), price })
+      .eq("id", p.id).eq("owner_id", userId);
+    if (updateError) setActionNotice("Modification impossible : " + updateError.message);
+    else {
+      setProducts(current => current.map(item => item.id === p.id ? { ...item, name: name.trim(), description: description.trim(), price } : item));
+      setActionNotice("Produit modifié avec succès.");
+    }
+    setBusyProduct("");
+  }
+
+  async function deleteProduct(p: Product) {
+    if (!supabase || p.owner_id !== userId) return;
+    if (!window.confirm("Supprimer « " + p.name + " » du catalogue ? Cette action est définitive pour ce produit.")) return;
+    setBusyProduct(p.id); setActionNotice("");
+    const { error: deleteError } = await supabase.from("products")
+      .delete().eq("id", p.id).eq("owner_id", userId);
+    if (deleteError) setActionNotice("Suppression impossible : " + deleteError.message);
+    else {
+      setProducts(current => current.filter(item => item.id !== p.id));
+      setActionNotice("Produit supprimé du catalogue.");
+    }
+    setBusyProduct("");
+  }
 
   function addToCart(p: Product) {
     try {
@@ -139,11 +190,11 @@ export default function NouveauMarchePage() {
 
         <section className="emi-v2-products">
           <div className="emi-v2-section-head"><div><span className="emi-v2-kicker">SÉLECTION EMi</span><h2>À découvrir maintenant</h2><p>Les produits publiés et disponibles dans les boutiques.</p></div><span className="emi-v2-count">{loading ? "…" : visible.length + " PRODUIT(S)"}</span></div>
-          {error && <div className="emi-v2-message" role="status">{error}</div>}
+          {(error || actionNotice) && <div className="emi-v2-message" role="status">{actionNotice || error}</div>}
           {loading ? <div className="emi-v2-empty"><span className="emi-v2-loader"/>Chargement des produits du marché…</div> :
             visible.length ? <div className="emi-v2-grid">{visible.map(p=>{const b=businessOf(p);const img=imageOf(p.image_urls);return <article className="emi-v2-product" key={p.id}>
-              <div className="emi-v2-product-image">{img ? <img src={img} alt={p.name} loading="lazy"/> : <div className="emi-v2-no-image"><ShoppingBag size={32}/><span>EMi MARKET</span></div>}<span className="emi-v2-stock">En stock · {p.stock}</span><button className="emi-v2-fav" aria-label="Favoris bientôt disponibles" title="Favoris bientôt disponibles" disabled><Heart size={17}/></button></div>
-              <div className="emi-v2-product-body"><span className="emi-v2-shop-name"><Store size={13}/>{b?.name || "Boutique EMi"}</span><h3>{p.name}</h3><p>{p.description || "Découvrez ce produit auprès de son vendeur."}</p><div className="emi-v2-product-bottom"><strong>{money(p.price,p.currency)}</strong><button onClick={()=>addToCart(p)} aria-label={"Ajouter "+p.name+" au panier"} title="Ajouter au panier"><ShoppingCart size={17}/></button></div>{b?.city && <small className="emi-v2-city"><MapPin size={12}/>{b.city}</small>}</div>
+              <div className="emi-v2-product-image">{img ? <img src={img} alt={p.name} loading="lazy"/> : <div className="emi-v2-no-image"><ShoppingBag size={32}/><span>EMi MARKET</span></div>}<span className="emi-v2-stock">En stock · {p.stock}</span><button className="emi-v2-fav" onClick={()=>void shareProduct(p)} aria-label={"Partager "+p.name} title="Partager"><Share2 size={16}/></button></div>
+              <div className="emi-v2-product-body"><span className="emi-v2-shop-name"><Store size={13}/>{b?.name || "Boutique EMi"}</span><h3>{p.name}</h3><p>{p.description || "Découvrez ce produit auprès de son vendeur."}</p><div className="emi-v2-product-bottom"><strong>{money(p.price,p.currency)}</strong><div className="emi-v2-product-actions">{p.owner_id === userId && <><button className="emi-v2-edit" disabled={busyProduct===p.id} onClick={()=>void editProduct(p)} title="Modifier le produit" aria-label="Modifier le produit"><Pencil size={15}/></button><button className="emi-v2-delete" disabled={busyProduct===p.id} onClick={()=>void deleteProduct(p)} title="Supprimer le produit" aria-label="Supprimer le produit"><Trash2 size={15}/></button></>}<button className="emi-v2-add" onClick={()=>addToCart(p)} aria-label={"Ajouter "+p.name+" au panier"} title="Ajouter au panier"><ShoppingCart size={17}/></button></div></div>{b?.city && <small className="emi-v2-city"><MapPin size={12}/>{b.city}</small>}</div>
             </article>})}</div> : <div className="emi-v2-empty"><ShoppingBag size={30}/><strong>Aucun produit disponible pour le moment</strong><p>Les nouveaux produits publiés par les vendeurs apparaîtront ici.</p><Link href="/annonces/espace-vendeur"><Plus size={16}/> Publier un produit</Link></div>
           }
         </section>
@@ -167,11 +218,11 @@ export default function NouveauMarchePage() {
         .emi-v2-search-area{margin:28px 0 35px}.emi-v2-search{display:flex;align-items:center;gap:13px;padding:15px 18px;border:1px solid #d5b65355;border-radius:15px;background:#0b2118;box-shadow:0 10px 25px #0003;color:#e0c46c}.emi-v2-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:white;font-size:14px}.emi-v2-search input::placeholder{color:#8fa397}
         .emi-v2-section-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:17px}.emi-v2-section-head h2{margin:6px 0 0;font-size:25px;letter-spacing:-.6px}.emi-v2-section-head p{margin:6px 0 0;color:#94a99d;font-size:12px}.emi-v2-count{color:#cbb46b;font-size:9px;font-weight:800;letter-spacing:1.4px;white-space:nowrap}
         .emi-v2-category-row{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px}.emi-v2-category-row button{display:flex;min-width:0;min-height:86px;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px 5px;border:1px solid #294538;border-radius:15px;background:#0c2119;color:#cbd7cd;font-size:10px;text-align:center}.emi-v2-category-row button span{font-size:22px;color:#dfc36b}.emi-v2-category-row button.active{border-color:#d9ba5b;background:linear-gradient(145deg,#173d2b,#0b2017);color:#f4e5b1;box-shadow:inset 0 0 0 1px #d9ba5b22}.emi-v2-category-hint{font-size:11px;color:#b5a16a;margin:10px 0 0}
-        .emi-v2-products{margin-top:42px}.emi-v2-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.emi-v2-product{min-width:0;overflow:hidden;border:1px solid #294638;border-radius:17px;background:linear-gradient(180deg,#10291f,#091a13);transition:transform .2s,border-color .2s}.emi-v2-product:hover{transform:translateY(-3px);border-color:#c8a94f99}.emi-v2-product-image{height:190px;position:relative;overflow:hidden;background:#132b20}.emi-v2-product-image img{width:100%;height:100%;object-fit:cover}.emi-v2-stock{position:absolute;left:10px;top:10px;padding:6px 8px;border-radius:99px;background:#071b13df;color:#d9e7d9;font-size:9px;font-weight:700}.emi-v2-fav{position:absolute;right:10px;top:10px;width:32px;height:32px;display:grid;place-items:center;border:1px solid #ffffff4a;border-radius:50%;background:#06130f9c;color:white}.emi-v2-no-image{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#cbb46b}.emi-v2-no-image span{font-size:9px;letter-spacing:2px}.emi-v2-product-body{padding:13px}.emi-v2-shop-name{display:flex;align-items:center;gap:6px;color:#d3bc73;font-size:10px}.emi-v2-product h3{margin:9px 0 5px;font-size:15px;line-height:1.3}.emi-v2-product-body>p{height:34px;overflow:hidden;margin:0;color:#9db0a3;font-size:10px;line-height:1.6}.emi-v2-product-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}.emi-v2-product-bottom strong{color:#f1d981;font-size:15px}.emi-v2-product-bottom button{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#d9ba5d;color:#102419}.emi-v2-city{display:flex;align-items:center;gap:5px;margin-top:8px;color:#92a79a;font-size:9px}
+        .emi-v2-products{margin-top:42px}.emi-v2-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.emi-v2-product{min-width:0;overflow:hidden;border:1px solid #294638;border-radius:17px;background:linear-gradient(180deg,#10291f,#091a13);transition:transform .2s,border-color .2s}.emi-v2-product:hover{transform:translateY(-3px);border-color:#c8a94f99}.emi-v2-product-image{height:190px;position:relative;overflow:hidden;background:#132b20}.emi-v2-product-image img{width:100%;height:100%;object-fit:cover}.emi-v2-stock{position:absolute;left:10px;top:10px;padding:6px 8px;border-radius:99px;background:#071b13df;color:#d9e7d9;font-size:9px;font-weight:700}.emi-v2-fav{position:absolute;right:10px;top:10px;width:32px;height:32px;display:grid;place-items:center;border:1px solid #ffffff4a;border-radius:50%;background:#06130f9c;color:white}.emi-v2-no-image{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#cbb46b}.emi-v2-no-image span{font-size:9px;letter-spacing:2px}.emi-v2-product-body{padding:13px}.emi-v2-shop-name{display:flex;align-items:center;gap:6px;color:#d3bc73;font-size:10px}.emi-v2-product h3{margin:9px 0 5px;font-size:15px;line-height:1.3}.emi-v2-product-body>p{height:34px;overflow:hidden;margin:0;color:#9db0a3;font-size:10px;line-height:1.6}.emi-v2-product-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}.emi-v2-product-bottom strong{color:#f1d981;font-size:15px}.emi-v2-product-actions{display:flex;align-items:center;gap:6px}.emi-v2-product-actions button{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;border:1px solid #d9ba5d66;background:#10291f;color:#e7d28d}.emi-v2-product-actions button.emi-v2-add{background:#d9ba5d;color:#102419;border-color:#d9ba5d}.emi-v2-product-actions button.emi-v2-delete{color:#ffb3a8;border-color:#a75a4e88}.emi-v2-product-actions button:disabled{opacity:.45}.emi-v2-city{display:flex;align-items:center;gap:5px;margin-top:8px;color:#92a79a;font-size:9px}
         .emi-v2-empty{min-height:190px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;border:1px dashed #3c5949;border-radius:18px;color:#cbb66f;text-align:center}.emi-v2-empty p{margin:0;color:#9daf9f;font-size:12px}.emi-v2-empty a{display:inline-flex;align-items:center;gap:7px;margin-top:7px;padding:10px 14px;border-radius:10px;background:#d8ba60;color:#102419;font-size:11px;font-weight:800}.emi-v2-message{padding:13px;border:1px solid #b58a4566;border-radius:12px;background:#5a421b33;color:#f3d98c;font-size:12px}.emi-v2-loader{width:25px;height:25px;border:2px solid #d8ba6055;border-top-color:#d8ba60;border-radius:50%;animation:emiV2Spin .8s linear infinite}@keyframes emiV2Spin{to{transform:rotate(360deg)}}
         .emi-v2-seller-banner{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:45px;padding:27px 30px;border:1px solid #c7a84d77;border-radius:20px;background:radial-gradient(ellipse at 90% 0,#d6b95720,transparent 45%),linear-gradient(120deg,#0b2c1e,#07160f)}.emi-v2-seller-banner h2{margin:9px 0;font-size:25px;line-height:1.2}.emi-v2-seller-banner p{margin:0;color:#9fb3a5;font-size:12px;line-height:1.7}.emi-v2-seller-banner>a{display:inline-flex;align-items:center;gap:10px;flex:none;padding:13px 16px;border-radius:12px;background:#dfc36b;color:#10271b;font-size:11px;font-weight:800}.emi-v2-footer{display:flex;justify-content:space-between;gap:15px;padding:25px 0 0;color:#809487;font-size:10px}.emi-v2-footer span:first-child{color:#d9bd67;font-weight:900;letter-spacing:2px}.emi-v2-mobile-nav{display:none}
         @media(max-width:900px){.emi-v2-category-row{grid-template-columns:repeat(4,minmax(0,1fr))}.emi-v2-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.emi-v2-product-image{height:170px}}
-        @media(max-width:640px){.emi-market-v2-wrap{padding:13px 13px 95px}.emi-v2-top{margin-bottom:14px}.emi-v2-hero{padding:20px 17px 0;border-radius:21px}.emi-v2-brand b{font-size:17px}.emi-v2-hero-content{grid-template-columns:1fr;min-height:unset;padding-top:23px}.emi-v2-hero h1{font-size:37px;margin:13px 0 10px}.emi-v2-hero-copy>p{font-size:12px;line-height:1.7}.emi-v2-orb{height:175px;margin-top:2px}.emi-v2-orb-ring{width:155px;height:155px}.emi-v2-cube{width:86px;height:86px;font-size:55px}.emi-v2-orb>span{bottom:-2px}.emi-v2-hero-actions{padding:14px 0 16px}.emi-v2-hero-actions a{padding:11px 12px;font-size:10px}.emi-v2-search-area{margin:21px 0 27px}.emi-v2-search{padding:13px}.emi-v2-search input{font-size:12px}.emi-v2-section-head h2{font-size:21px}.emi-v2-category-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.emi-v2-category-row button{min-height:76px;font-size:9px;padding:8px 3px}.emi-v2-category-row button span{font-size:19px}.emi-v2-products{margin-top:32px}.emi-v2-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.emi-v2-product-image{height:145px}.emi-v2-product-body{padding:10px}.emi-v2-product h3{font-size:13px}.emi-v2-product-body>p{font-size:9px;height:31px}.emi-v2-product-bottom strong{font-size:12px}.emi-v2-seller-banner{align-items:flex-start;flex-direction:column;padding:21px;margin-top:32px}.emi-v2-seller-banner h2{font-size:22px}.emi-v2-footer{flex-direction:column;gap:6px}.emi-v2-mobile-nav{position:fixed;z-index:20;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:12px 8px calc(12px + env(safe-area-inset-bottom));background:#07140ff2;border-top:1px solid #b99b4a55;backdrop-filter:blur(14px)}.emi-v2-mobile-nav a{font-size:10px;color:#b5c4b8}.emi-v2-mobile-nav a.selected{color:#e7ce7d;font-weight:900}}
+        @media(max-width:640px){.emi-market-v2-wrap{padding:13px 13px 95px}.emi-v2-top{margin-bottom:14px}.emi-v2-hero{padding:20px 17px 0;border-radius:21px}.emi-v2-brand b{font-size:17px}.emi-v2-hero-content{grid-template-columns:1fr;min-height:unset;padding-top:23px}.emi-v2-hero h1{font-size:37px;margin:13px 0 10px}.emi-v2-hero-copy>p{font-size:12px;line-height:1.7}.emi-v2-orb{height:175px;margin-top:2px}.emi-v2-orb-ring{width:155px;height:155px}.emi-v2-cube{width:86px;height:86px;font-size:55px}.emi-v2-orb>span{bottom:-2px}.emi-v2-hero-actions{padding:14px 0 16px}.emi-v2-hero-actions a{padding:11px 12px;font-size:10px}.emi-v2-search-area{margin:21px 0 27px}.emi-v2-search{padding:13px}.emi-v2-search input{font-size:12px}.emi-v2-section-head h2{font-size:21px}.emi-v2-category-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.emi-v2-category-row button{min-height:76px;font-size:9px;padding:8px 3px}.emi-v2-category-row button span{font-size:19px}.emi-v2-products{margin-top:32px}.emi-v2-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.emi-v2-product-image{height:145px}.emi-v2-product-body{padding:10px}.emi-v2-product h3{font-size:13px}.emi-v2-product-body>p{font-size:9px;height:31px}.emi-v2-product-bottom strong{font-size:12px}.emi-v2-product-actions{gap:4px}.emi-v2-product-actions button{width:29px;height:29px}.emi-v2-seller-banner{align-items:flex-start;flex-direction:column;padding:21px;margin-top:32px}.emi-v2-seller-banner h2{font-size:22px}.emi-v2-footer{flex-direction:column;gap:6px}.emi-v2-mobile-nav{position:fixed;z-index:20;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:12px 8px calc(12px + env(safe-area-inset-bottom));background:#07140ff2;border-top:1px solid #b99b4a55;backdrop-filter:blur(14px)}.emi-v2-mobile-nav a{font-size:10px;color:#b5c4b8}.emi-v2-mobile-nav a.selected{color:#e7ce7d;font-weight:900}}
         @media(prefers-reduced-motion:reduce){.emi-v2-loader{animation:none}.emi-v2-product{transition:none}}
       `}</style>
     </main>
