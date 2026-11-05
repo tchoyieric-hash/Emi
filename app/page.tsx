@@ -2343,7 +2343,7 @@ function decodeVapidKey(base64String: string) {
             </div>
           </div>
         </section>
-/>}
+        </>}
         <div className={"feed-header" + (active === "Accueil" && !viewingProfile ? " home-feed-header" : "")}>{(viewingProfile || active !== "Accueil") && <button className="icon-button desktop-back-navigation" aria-label="Retour à l’accueil" onClick={goBack}><ChevronLeft size={22}/></button>}<div><span className="eyebrow">{viewingProfile ? "EMi · PROFIL PERSONNEL" : "TON UNIVERS, TES LIENS"}</span><h1>{viewingProfile ? currentProfileName : active === "Accueil" ? "Le fil des moments" : active === "EMi Pulse" ? "EMi Pulse" : active === "Découvrir" ? "Découvrir EMi" : active === "Vidéos" ? "Vidéos" : active === "Messages" ? "Ta messagerie" : active === "Paramètres" ? "Paramètres et activité" : active}</h1><p>{viewingProfile ? "@" + (viewingProfile.username || "membre") : active === "Découvrir" ? "Explore les univers, rencontre des personnes et découvre les nouveautés de la communauté." : active === "Messages" ? "Retrouve tes conversations au même endroit." : active === "Vidéos" ? "Les vidéos de la communauté." : user ? "Connecté en tant que " + displayName : "Découvre les publications publiques."}</p></div>{active !== "Découvrir" && <button className="round-action" onClick={() => setCreateStudioOpen(true)} aria-label="Créer une publication"><Plus size={22}/></button>}</div>
         {viewingProfile && <section className="profile-page emi-profile-pro">
           <div className="emi-profile-cover" style={viewingProfile.cover_url ? {backgroundImage:"linear-gradient(180deg,rgba(4,20,14,.08),rgba(4,20,14,.55)),url("+JSON.stringify(viewingProfile.cover_url)+")",backgroundSize:"cover",backgroundPosition:"center"} : undefined}>
