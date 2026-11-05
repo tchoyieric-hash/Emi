@@ -6893,3 +6893,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
  .stories-row .story-ring{width:70px!important;height:70px!important}
  .stories-row .story-name{max-width:72px!important}
 }
+
+
+/* Explorer mobile profile cards: identity first, actions on a dedicated row */
+.discovery-list .discovery-person{display:grid;grid-template-columns:minmax(0,1fr);align-items:stretch;gap:12px;min-width:0}
+.discovery-list .discovery-person-main{width:100%;min-width:0;flex:none;display:flex;align-items:center;gap:12px;padding:2px 0}
+.discovery-list .discovery-person-main>span:last-child{flex:1;min-width:0}
+.discovery-list .discovery-person-main strong{display:block;white-space:normal;overflow-wrap:anywhere;word-break:normal;font-size:15px}
+.discovery-list .discovery-person-main small{display:block;white-space:normal;overflow-wrap:anywhere;word-break:normal}
+.discovery-list .discovery-avatar{width:58px;height:58px;flex:0 0 58px}
+.discovery-list .discovery-person-actions{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.discovery-list .discovery-person-actions button{min-width:0;width:100%;min-height:42px;padding:8px 5px!important;font-size:12px!important;white-space:nowrap}
+@media(max-width:390px){
+ .discovery-list .discovery-person{padding:12px}
+ .discovery-list .discovery-avatar{width:52px;height:52px;flex-basis:52px}
+ .discovery-list .discovery-person-actions{gap:6px}
+ .discovery-list .discovery-person-actions button{font-size:11px!important;padding:8px 3px!important}
+}
