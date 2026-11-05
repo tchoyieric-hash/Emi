@@ -2423,6 +2423,7 @@ function decodeVapidKey(base64String: string) {
         {active === "Accueil" && !viewingProfile && <section className="emi-home-nexus" aria-label="Accès rapide aux univers EMi">
           <div className="emi-home-nexus-heading"><div><span>EMi · ROYAL NEXUS</span><h2>Un seul univers. Toutes tes possibilités.</h2></div><button type="button" onClick={()=>{setActive("Découvrir");setEcosystemOpen(true);window.scrollTo({top:0,behavior:"smooth"});}}>Tout voir <ChevronRight size={15}/></button></div>
           <div className="emi-home-nexus-grid">
+            <a href="/boutiques" className="emi-nexus-tile emi-nexus-pro"><span className="emi-nexus-icon"><ShoppingBag size={22}/></span><strong>EMi Boutiques</strong><small>Crée ta vitrine et commande</small><b>Découvrir <ChevronRight size={13}/></b></a>
             <a href="/annonces/elite-directory" className="emi-nexus-tile emi-nexus-pro"><span className="emi-nexus-icon"><BriefcaseBusiness size={22}/></span><strong>EMi PRO</strong><small>Annuaire professionnel</small><b>Découvrir <ChevronRight size={13}/></b></a>
 
             <a href="/annonces/tontine" className="emi-nexus-tile"><span className="emi-nexus-icon"><Users size={22}/></span><strong>Djangui Flow</strong><small>Solidarité collective</small><b>Accéder <ChevronRight size={13}/></b></a>
