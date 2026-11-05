@@ -133,12 +133,36 @@ export default function NouveauMarchePage() {
 
   async function deleteProduct(p: Product) {
     if (!supabase || p.owner_id !== userId) return;
-    if (!window.confirm("Supprimer « " + p.name + " » du catalogue ? Cette action est définitive pour ce produit.")) return;
+    if (!window.confirm("Retirer « " + p.name + " » du Marché ? Si des commandes existent, le produit sera archivé pour préserver leur historique.")) return;
     setBusyProduct(p.id); setActionNotice("");
+    const { count, error: countError } = await supabase.from("order_items")
+      .select("id", { count: "exact", head: true }).eq("product_id", p.id);
+    if (countError) {
+      setActionNotice("Impossible de vérifier les commandes : " + countError.message);
+      setBusyProduct(""); return;
+    }
+    if ((count || 0) > 0) {
+      const { error: archiveError } = await supabase.from("products")
+        .update({ status: "archived" }).eq("id", p.id).eq("owner_id", userId);
+      if (archiveError) setActionNotice("Archivage impossible : " + archiveError.message);
+      else {
+        setProducts(current => current.filter(item => item.id !== p.id));
+        setActionNotice("Produit archivé : il est retiré du Marché et l'historique des commandes est conservé.");
+      }
+      setBusyProduct(""); return;
+    }
     const { error: deleteError } = await supabase.from("products")
       .delete().eq("id", p.id).eq("owner_id", userId);
-    if (deleteError) setActionNotice("Suppression impossible : " + deleteError.message);
-    else {
+    if (deleteError) {
+      if ((deleteError as { code?: string }).code === "23503" || deleteError.message.includes("order_items_product_id_fkey")) {
+        const { error: archiveError } = await supabase.from("products")
+          .update({ status: "archived" }).eq("id", p.id).eq("owner_id", userId);
+        if (!archiveError) {
+          setProducts(current => current.filter(item => item.id !== p.id));
+          setActionNotice("Produit archivé pour préserver l'historique des commandes.");
+        } else setActionNotice("Suppression bloquée et archivage impossible : " + archiveError.message);
+      } else setActionNotice("Suppression impossible : " + deleteError.message);
+    } else {
       setProducts(current => current.filter(item => item.id !== p.id));
       setActionNotice("Produit supprimé du catalogue.");
     }
